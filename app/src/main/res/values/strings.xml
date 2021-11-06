@@ -1,6 +1,21 @@
 <resources>
     <string name="app_name">GymLog</string>
-    <string name="title_home">Home</string>
     <string name="title_workout">Workout</string>
     <string name="title_history">History</string>
+    <string name="title_exercises">Exercises</string>
+
+    <string name="group_pectoral">Chest (Pectoral)</string>
+    <string name="group_upper_back">Upper Back</string>
+    <string name="group_lower_back">Lower Back</string>
+    <string name="group_deltoid">Shoulders (Deltoid)</string>
+    <string name="group_trapezius">Trapezius</string>
+    <string name="group_biceps">Biceps</string>
+    <string name="group_triceps">Triceps</string>
+    <string name="group_forearm">Forearm</string>
+    <string name="group_quadriceps">Quadriceps</string>
+    <string name="group_hamstrings">Hamstrings</string>
+    <string name="group_glutes">Glutes</string>
+    <string name="group_calves">Calves</string>
+    <string name="group_abdominals">Abdominals</string>
+    <string name="group_cardio">Cardio</string>
 </resources>
