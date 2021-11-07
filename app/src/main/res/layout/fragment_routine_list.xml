@@ -10,4 +10,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".ui.routines.RoutineFragment"
-    tools:listitem="@layout/fragment_routine_element" />
+    tools:listitem="@layout/fragment_list_element" />

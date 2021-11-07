@@ -9,4 +9,5 @@ import lombok.Setter;
 public class MuscularGroup {
 	private int id;
 	private int text;
+	private int icon;
 }

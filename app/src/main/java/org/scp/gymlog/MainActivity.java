@@ -14,9 +14,8 @@ import org.scp.gymlog.databinding.ActivityMainBinding;
 import org.scp.gymlog.model.Data;
 import org.scp.gymlog.model.MuscularGroup;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,26 +46,23 @@ public class MainActivity extends AppCompatActivity {
 	private void initialLoading() {
 		List<MuscularGroup> groups = Data.getInstance().getGroups();
 
-		final int[] texts = new int[]{
-				R.string.group_pectoral,
-				R.string.group_upper_back,
-				R.string.group_lower_back,
-				R.string.group_deltoid,
-				R.string.group_trapezius,
-				R.string.group_biceps,
-				R.string.group_triceps,
-				R.string.group_forearm,
-				R.string.group_quadriceps,
-				R.string.group_hamstrings,
-				R.string.group_glutes,
-				R.string.group_calves,
-				R.string.group_abdominals,
-				R.string.group_cardio
-		};
-
 		groups.clear();
-		IntStream.range(0, texts.length)
-				.mapToObj(idx -> new MuscularGroup(idx, texts[idx]))
-				.forEach(groups::add);
+		int id = 0;
+		Arrays.asList(
+				new MuscularGroup(++id, R.string.group_pectoral, R.drawable.muscle_pectoral),
+				new MuscularGroup(++id, R.string.group_upper_back, R.drawable.muscle_upper_back),
+				new MuscularGroup(++id, R.string.group_lower_back, R.drawable.muscle_lower_back),
+				new MuscularGroup(++id, R.string.group_deltoid, R.drawable.muscle_deltoid),
+				new MuscularGroup(++id, R.string.group_trapezius, R.drawable.muscle_trapezius),
+				new MuscularGroup(++id, R.string.group_biceps, R.drawable.muscle_biceps),
+				new MuscularGroup(++id, R.string.group_triceps, R.drawable.muscle_triceps),
+				new MuscularGroup(++id, R.string.group_forearm, R.drawable.muscle_forearm),
+				new MuscularGroup(++id, R.string.group_quadriceps, R.drawable.muscle_quadriceps),
+				new MuscularGroup(++id, R.string.group_hamstrings, R.drawable.muscle_hamstring),
+				new MuscularGroup(++id, R.string.group_calves, R.drawable.muscle_calves),
+				new MuscularGroup(++id, R.string.group_glutes, R.drawable.muscle_glutes),
+				new MuscularGroup(++id, R.string.group_abdominals, R.drawable.muscle_abdominals),
+				new MuscularGroup(++id, R.string.group_cardio, R.drawable.muscle_cardio)
+		).forEach(groups::add);
 	}
 }

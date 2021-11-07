@@ -10,4 +10,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".ui.exercises.ExerciseGroupFragment"
-    tools:listitem="@layout/fragment_exercise_group_element" />
+    tools:listitem="@layout/fragment_list_element" />

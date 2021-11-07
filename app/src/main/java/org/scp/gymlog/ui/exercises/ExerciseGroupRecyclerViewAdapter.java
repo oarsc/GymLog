@@ -4,9 +4,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.scp.gymlog.databinding.FragmentExerciseGroupElementBinding;
+import org.scp.gymlog.databinding.FragmentListElementBinding;
 import org.scp.gymlog.model.Data;
 import org.scp.gymlog.model.MuscularGroup;
 
@@ -23,7 +24,7 @@ public class ExerciseGroupRecyclerViewAdapter extends RecyclerView.Adapter<Exerc
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		return new ViewHolder(
-				FragmentExerciseGroupElementBinding.inflate(
+				FragmentListElementBinding.inflate(
 						LayoutInflater.from(parent.getContext()), parent, false
 				)
 		);
@@ -33,6 +34,7 @@ public class ExerciseGroupRecyclerViewAdapter extends RecyclerView.Adapter<Exerc
 	public void onBindViewHolder(final ViewHolder holder, int position) {
 		holder.muscularGroup = muscularGroups.get(position);
 		holder.mContentView.setText(holder.muscularGroup.getText());
+		holder.mImageView.setImageResource(holder.muscularGroup.getIcon());
 	}
 
 	@Override
@@ -43,10 +45,12 @@ public class ExerciseGroupRecyclerViewAdapter extends RecyclerView.Adapter<Exerc
 	public class ViewHolder extends RecyclerView.ViewHolder {
 		public MuscularGroup muscularGroup;
 		public final TextView mContentView;
+		public final ImageView mImageView;
 
-		public ViewHolder(FragmentExerciseGroupElementBinding binding) {
+		public ViewHolder(FragmentListElementBinding binding) {
 			super(binding.getRoot());
 			mContentView = binding.content;
+			mImageView = binding.image;
 
 			binding.getRoot().setOnClickListener(a->System.out.println("CLICK"));
 		}

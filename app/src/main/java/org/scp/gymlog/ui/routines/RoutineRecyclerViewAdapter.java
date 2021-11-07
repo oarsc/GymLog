@@ -6,9 +6,10 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.scp.gymlog.ui.exercises.ExerciseGroupRecyclerViewAdapter;
 import org.scp.gymlog.ui.routines.placeholder.PlaceholderContent;
 import org.scp.gymlog.ui.routines.placeholder.PlaceholderContent.PlaceholderItem;
-import org.scp.gymlog.databinding.FragmentRoutineElementBinding;
+import org.scp.gymlog.databinding.FragmentListElementBinding;
 
 import java.util.List;
 
@@ -27,14 +28,15 @@ public class RoutineRecyclerViewAdapter extends RecyclerView.Adapter<RoutineRecy
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		return new ViewHolder(
-				FragmentRoutineElementBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false)
+				FragmentListElementBinding.inflate(
+						LayoutInflater.from(parent.getContext()), parent, false
+				)
 		);
 	}
 
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, int position) {
 		holder.mItem = mValues.get(position);
-		holder.mIdView.setText(mValues.get(position).id);
 		holder.mContentView.setText(mValues.get(position).content);
 	}
 
@@ -44,13 +46,11 @@ public class RoutineRecyclerViewAdapter extends RecyclerView.Adapter<RoutineRecy
 	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder {
-		public final TextView mIdView;
 		public final TextView mContentView;
 		public PlaceholderItem mItem;
 
-		public ViewHolder(FragmentRoutineElementBinding binding) {
+		public ViewHolder(FragmentListElementBinding binding) {
 			super(binding.getRoot());
-			mIdView = binding.itemNumber;
 			mContentView = binding.content;
 		}
 
