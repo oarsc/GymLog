@@ -35,13 +35,11 @@ public class ExerciseGroupFragment extends Fragment {
 	                         Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_exercise_group_list, container, false);
 
-		// Set the adapter
-		if (view instanceof RecyclerView) {
-			Context context = view.getContext();
-			RecyclerView recyclerView = (RecyclerView) view;
-			recyclerView.setLayoutManager(new LinearLayoutManager(context));
-			recyclerView.setAdapter(new ExerciseGroupRecyclerViewAdapter());
-		}
+		Context context = view.getContext();
+		RecyclerView recyclerView = view.findViewById(R.id.exercise_list);
+		recyclerView.setLayoutManager(new LinearLayoutManager(context));
+		recyclerView.setAdapter(new ExerciseGroupRecyclerViewAdapter());
+
 		return view;
 	}
 }

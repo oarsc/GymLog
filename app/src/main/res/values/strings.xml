@@ -18,4 +18,6 @@
     <string name="group_calves">Calves</string>
     <string name="group_abdominals">Abdominals</string>
     <string name="group_cardio">Cardio</string>
+
+    <string name="text_add">Add</string>
 </resources>
