@@ -1,4 +1,4 @@
-package org.scp.gymlog.ui.routines;
+package org.scp.gymlog.ui.main.routines;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -6,9 +6,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.scp.gymlog.ui.exercises.ExerciseGroupRecyclerViewAdapter;
-import org.scp.gymlog.ui.routines.placeholder.PlaceholderContent;
-import org.scp.gymlog.ui.routines.placeholder.PlaceholderContent.PlaceholderItem;
+import org.scp.gymlog.ui.main.routines.placeholder.PlaceholderContent;
+import org.scp.gymlog.ui.main.routines.placeholder.PlaceholderContent.PlaceholderItem;
 import org.scp.gymlog.databinding.FragmentListElementBinding;
 
 import java.util.List;

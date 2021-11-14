@@ -10,17 +10,17 @@
         android:id="@+id/exercise_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.exercises.ExerciseGroupFragment"
+        tools:context=".ui.main.exercises.ExercisesFragment"
         tools:listitem="@layout/fragment_list_element" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_exercise"
+        android:id="@+id/fab_add_exercise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
-        app:backgroundTint="@color/teal_200"
+        app:backgroundTint="@color/green_200"
         android:contentDescription="@string/text_add"
         app:srcCompat="@android:drawable/ic_input_add" />
 

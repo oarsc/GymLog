@@ -1,4 +1,4 @@
-package org.scp.gymlog.ui.routines;
+package org.scp.gymlog.ui.main.routines;
 
 import android.content.Context;
 import android.os.Bundle;

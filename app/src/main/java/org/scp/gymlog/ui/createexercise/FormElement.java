@@ -1,0 +1,66 @@
+package org.scp.gymlog.ui.createexercise;
+
+import android.view.View;
+
+import org.scp.gymlog.util.Function;
+
+import java.util.function.Consumer;
+
+public class FormElement {
+	private int drawable;
+	private int title;
+	private int value;
+	private String valueStr;
+	private Consumer<View> onClick;
+	private Function update;
+
+	public int getDrawable() {
+		return drawable;
+	}
+
+	public void setDrawable(int drawable) {
+		this.drawable = drawable;
+	}
+
+	public int getTitle() {
+		return title;
+	}
+
+	public void setTitle(int title) {
+		this.title = title;
+	}
+
+	public int getValue() {
+		return value;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	public String getValueStr() {
+		return valueStr;
+	}
+
+	public void setValueStr(String valueStr) {
+		this.valueStr = valueStr;
+	}
+
+	public void onClick(View view) {
+		onClick.accept(view);
+	}
+
+	public void setOnClickListener(Consumer<View> onClick) {
+		this.onClick = onClick;
+	}
+
+	public void update() {
+		if (update != null) {
+			update.call();
+		}
+	}
+
+	public void setUpdateListener(Function update) {
+		this.update = update;
+	}
+}

@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_workout"
-        android:name="org.scp.gymlog.ui.routines.RoutineFragment"
+        android:name="org.scp.gymlog.ui.main.routines.RoutineFragment"
         android:label="@string/title_workout"
         tools:layout="@layout/fragment_routine_list" />
 
     <fragment
         android:id="@+id/navigation_exercises"
-        android:name="org.scp.gymlog.ui.exercises.ExerciseGroupFragment"
+        android:name="org.scp.gymlog.ui.main.exercises.ExercisesFragment"
         android:label="@string/title_exercises"
         tools:layout="@layout/fragment_exercise_group_list" />
 
     <fragment
         android:id="@+id/navigation_history"
-        android:name="org.scp.gymlog.ui.history.HistoryFragment"
+        android:name="org.scp.gymlog.ui.main.history.HistoryFragment"
         android:label="@string/title_history"
         tools:layout="@layout/fragment_history" />
 </navigation>

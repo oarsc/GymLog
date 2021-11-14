@@ -1,4 +1,4 @@
-package org.scp.gymlog.ui.history;
+package org.scp.gymlog.ui.main.history;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

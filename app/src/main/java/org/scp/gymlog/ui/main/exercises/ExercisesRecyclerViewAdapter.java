@@ -1,4 +1,4 @@
-package org.scp.gymlog.ui.exercises;
+package org.scp.gymlog.ui.main.exercises;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,11 +13,11 @@ import org.scp.gymlog.model.MuscularGroup;
 
 import java.util.List;
 
-public class ExerciseGroupRecyclerViewAdapter extends RecyclerView.Adapter<ExerciseGroupRecyclerViewAdapter.ViewHolder> {
+public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<ExercisesRecyclerViewAdapter.ViewHolder> {
 
 	private final List<MuscularGroup> muscularGroups;
 
-	public ExerciseGroupRecyclerViewAdapter() {
+	public ExercisesRecyclerViewAdapter() {
 		muscularGroups = Data.getInstance().getGroups();
 	}
 

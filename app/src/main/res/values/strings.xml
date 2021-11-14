@@ -3,6 +3,7 @@
     <string name="title_workout">Workout</string>
     <string name="title_history">History</string>
     <string name="title_exercises">Exercises</string>
+    <string name="title_create_exercise">Create exercise</string>
 
     <string name="group_pectoral">Chest (Pectoral)</string>
     <string name="group_upper_back">Upper Back</string>
@@ -20,4 +21,9 @@
     <string name="group_cardio">Cardio</string>
 
     <string name="text_add">Add</string>
+
+    <string name="button_confirm">Ok</string>
+    <string name="button_cancel">Cancel</string>
+
+    <string name="form_muscle_groups">Muscle Groups</string>
 </resources>

@@ -1,4 +1,4 @@
-package org.scp.gymlog.ui.history;
+package org.scp.gymlog.ui.main.history;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
