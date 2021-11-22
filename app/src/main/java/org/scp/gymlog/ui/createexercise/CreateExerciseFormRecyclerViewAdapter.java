@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.scp.gymlog.databinding.FragmentFormElementBinding;
+import org.scp.gymlog.databinding.FragmentListElementFormBinding;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class CreateExerciseFormRecyclerViewAdapter extends RecyclerView.Adapter<
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		return new ViewHolder(
-				FragmentFormElementBinding.inflate(
+				FragmentListElementFormBinding.inflate(
 						LayoutInflater.from(parent.getContext()), parent, false
 				)
 		);
@@ -48,7 +48,7 @@ public class CreateExerciseFormRecyclerViewAdapter extends RecyclerView.Adapter<
 		public final TextView mContentView;
 		public final ImageView mImageView;
 
-		public ViewHolder(FragmentFormElementBinding binding) {
+		public ViewHolder(FragmentListElementFormBinding binding) {
 			super(binding.getRoot());
 			mTitleView = binding.title;
 			mContentView = binding.content;

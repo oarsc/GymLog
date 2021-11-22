@@ -1,7 +1,5 @@
 package org.scp.gymlog.ui.main.exercises;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,13 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.ui.createexercise.CreateExerciseActivity;
@@ -42,7 +37,7 @@ public class ExercisesFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_exercise_group_list, container, false);
+		View view = inflater.inflate(R.layout.fragment_list_muscles, container, false);
 
 		Context context = view.getContext();
 		RecyclerView recyclerView = view.findViewById(R.id.exercise_list);
