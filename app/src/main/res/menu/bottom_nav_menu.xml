@@ -14,4 +14,9 @@
         android:id="@+id/navigation_history"
         android:icon="@drawable/ic_history_black_24dp"
         android:title="@string/title_history" />
+
+    <item
+        android:id="@+id/navigation_preferences"
+        android:icon="@drawable/ic_gear_black_24dp"
+        android:title="@string/title_settings" />
 </menu>

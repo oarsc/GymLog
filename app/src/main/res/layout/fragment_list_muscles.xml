@@ -20,7 +20,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
-        app:backgroundTint="@color/green_200"
+        app:backgroundTint="@color/green"
         android:contentDescription="@string/text_add"
         app:srcCompat="@android:drawable/ic_input_add" />
 
