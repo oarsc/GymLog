@@ -55,11 +55,13 @@ public class CreateExerciseActivity extends AppCompatActivity {
 
 		FormElement nameOption = new FormElement();
 		form.add(nameOption);
+		nameOption.setDrawable(R.drawable.ic_label_black_24dp);
 		nameOption.setTitle(R.string.form_name);
 		nameOption.setOnClickListener(v -> showExerciseNameDialog(nameOption));
 
 		FormElement muscleOption = new FormElement();
 		form.add(muscleOption);
+		muscleOption.setDrawable(R.drawable.ic_body_black_24dp);
 		muscleOption.setTitle(R.string.form_muscle_groups);
 		muscleOption.setOnClickListener(v -> showMuscleGroupSelector(muscleOption));
 
