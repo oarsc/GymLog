@@ -25,5 +25,7 @@
     <string name="button_confirm">Ok</string>
     <string name="button_cancel">Cancel</string>
 
+    <string name="form_image">Image</string>
+    <string name="form_name">Name</string>
     <string name="form_muscle_groups">Muscle Groups</string>
 </resources>
