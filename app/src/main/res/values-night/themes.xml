@@ -2,18 +2,19 @@
     <!-- Base application theme. -->
     <style name="Theme.GymLog" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Background color. -->
-        <item name="android:windowBackground">#f222</item>
-        <item name="colorSurface">#f222</item>
+        <item name="android:windowBackground">#FF303030</item>
+        <!-- Toolbar color. -->
+        <item name="colorSurface">@color/dark</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryVariant">@color/purple</item>
+        <item name="colorPrimaryVariant">@color/light</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondary">@color/orange_light</item>
+        <item name="colorSecondaryVariant">@color/orange_dark</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorOnPrimary</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSurface</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>

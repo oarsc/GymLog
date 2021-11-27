@@ -28,13 +28,6 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		if (preferences.getBoolean("nightTheme", false)) {
-			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-		}
-
-		initialLoading();
-
 		binding = ActivityMainBinding.inflate(getLayoutInflater());
 		setContentView(binding.getRoot());
 
@@ -50,28 +43,5 @@ public class MainActivity extends AppCompatActivity {
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
 		NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 		NavigationUI.setupWithNavController(binding.navView, navController);
-	}
-
-	private void initialLoading() {
-		List<MuscularGroup> groups = Data.getInstance().getGroups();
-
-		groups.clear();
-		int id = 0;
-		Arrays.asList(
-				new MuscularGroup(++id, R.string.group_pectoral, R.drawable.muscle_pectoral),
-				new MuscularGroup(++id, R.string.group_upper_back, R.drawable.muscle_upper_back),
-				new MuscularGroup(++id, R.string.group_lower_back, R.drawable.muscle_lower_back),
-				new MuscularGroup(++id, R.string.group_deltoid, R.drawable.muscle_deltoid),
-				new MuscularGroup(++id, R.string.group_trapezius, R.drawable.muscle_trapezius),
-				new MuscularGroup(++id, R.string.group_biceps, R.drawable.muscle_biceps),
-				new MuscularGroup(++id, R.string.group_triceps, R.drawable.muscle_triceps),
-				new MuscularGroup(++id, R.string.group_forearm, R.drawable.muscle_forearm),
-				new MuscularGroup(++id, R.string.group_quadriceps, R.drawable.muscle_quadriceps),
-				new MuscularGroup(++id, R.string.group_hamstrings, R.drawable.muscle_hamstring),
-				new MuscularGroup(++id, R.string.group_calves, R.drawable.muscle_calves),
-				new MuscularGroup(++id, R.string.group_glutes, R.drawable.muscle_glutes),
-				new MuscularGroup(++id, R.string.group_abdominals, R.drawable.muscle_abdominals),
-				new MuscularGroup(++id, R.string.group_cardio, R.drawable.muscle_cardio)
-		).forEach(groups::add);
 	}
 }
