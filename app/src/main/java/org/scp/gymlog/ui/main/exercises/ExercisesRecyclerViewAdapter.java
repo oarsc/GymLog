@@ -1,11 +1,11 @@
 package org.scp.gymlog.ui.main.exercises;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.databinding.FragmentListElementBinding;
 import org.scp.gymlog.model.Data;
