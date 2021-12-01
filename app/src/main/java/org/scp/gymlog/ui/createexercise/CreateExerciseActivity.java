@@ -7,7 +7,6 @@ import android.text.InputType;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,12 +14,13 @@ import org.scp.gymlog.R;
 import org.scp.gymlog.model.Data;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.MuscularGroup;
+import org.scp.gymlog.ui.tools.BackAppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CreateExerciseActivity extends AppCompatActivity {
+public class CreateExerciseActivity extends BackAppCompatActivity {
 
 	private Exercise exercise;
 
@@ -30,20 +30,11 @@ public class CreateExerciseActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_create_exercise);
 		setTitle(R.string.title_create_exercise);
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		//getSupportActionBar().setDisplayShowHomeEnabled(true);
-
 		RecyclerView recyclerView = findViewById(R.id.create_exercise_form_list);
 		recyclerView.setLayoutManager(new LinearLayoutManager(this));
 		recyclerView.setAdapter(new CreateExerciseFormRecyclerViewAdapter(createForm()));
 
 		exercise = new Exercise();
-	}
-
-	@Override
-	public boolean onSupportNavigateUp() {
-		onBackPressed();
-		return true;
 	}
 
 	private List<FormElement> createForm() {
