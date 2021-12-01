@@ -32,7 +32,6 @@ public class CreateExerciseFormRecyclerViewAdapter extends RecyclerView.Adapter<
 	public void onBindViewHolder(final ViewHolder holder, int position) {
 		holder.formElement = formElements.get(position);
 		holder.mTitleView.setText(holder.formElement.getTitle());
-		holder.mImageView.setImageResource(holder.formElement.getDrawable());
 		holder.updateValue();
 		holder.formElement.setUpdateListener(holder::updateValue);
 	}
@@ -60,6 +59,8 @@ public class CreateExerciseFormRecyclerViewAdapter extends RecyclerView.Adapter<
 		}
 
 		public void updateValue() {
+			mImageView.setImageDrawable(formElement.getDrawable());
+
 			if (formElement.getValueStr() != null && !formElement.getValueStr().isEmpty())
 				mContentView.setText(formElement.getValueStr());
 			else if (formElement.getValue() == 0)

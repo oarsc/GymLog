@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GymLog">
         <activity
+            android:name=".ui.tools.ImageSelectorActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">

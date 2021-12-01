@@ -1,5 +1,6 @@
 package org.scp.gymlog.ui.createexercise;
 
+import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import org.scp.gymlog.util.Function;
@@ -7,18 +8,18 @@ import org.scp.gymlog.util.Function;
 import java.util.function.Consumer;
 
 public class FormElement {
-	private int drawable;
+	private Drawable drawable;
 	private int title;
 	private int value;
 	private String valueStr;
 	private Consumer<View> onClick;
 	private Function update;
 
-	public int getDrawable() {
+	public Drawable getDrawable() {
 		return drawable;
 	}
 
-	public void setDrawable(int drawable) {
+	public void setDrawable(Drawable drawable) {
 		this.drawable = drawable;
 	}
 

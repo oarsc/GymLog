@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="dark">#F222</color>
+    <color name="gray">#F888</color>
     <color name="light">#FDDD</color>
 </resources>

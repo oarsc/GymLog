@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.scp.gymlog.R;
 
 public abstract class BackAppCompatActivity extends AppCompatActivity {
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

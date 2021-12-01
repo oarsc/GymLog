@@ -17,6 +17,6 @@
 
     <item
         android:id="@+id/navigation_preferences"
-        android:icon="@drawable/ic_gear_black_24dp"
+        android:icon="@drawable/ic_gear_24dp"
         android:title="@string/title_settings" />
 </menu>

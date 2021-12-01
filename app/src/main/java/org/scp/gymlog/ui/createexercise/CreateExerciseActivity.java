@@ -1,12 +1,24 @@
 package org.scp.gymlog.ui.createexercise;
 
+import static org.scp.gymlog.ui.tools.ImageSelectorActivity.CREATE_EXERCISE;
+
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,14 +27,24 @@ import org.scp.gymlog.model.Data;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.MuscularGroup;
 import org.scp.gymlog.ui.tools.BackAppCompatActivity;
+import org.scp.gymlog.ui.tools.ImageSelectorActivity;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CreateExerciseActivity extends BackAppCompatActivity {
 
 	private Exercise exercise;
+	private FormElement iconOption;
+
+	private ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+			new ActivityResultContracts.StartActivityForResult(),
+			this::captureReturn);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,22 +59,84 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 		exercise = new Exercise();
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.confirm_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.confirm_button:
+				onBackPressed();
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	private List<FormElement> createForm() {
+		Resources resources = getResources();
 		List<FormElement> form = new ArrayList<>();
+
+		iconOption = new FormElement();
+		form.add(iconOption);
+		//iconOption.setDrawable(R.drawable.ic_label_black_24dp);
+		iconOption.setTitle(R.string.form_image);
+		iconOption.setValueStr(" ");
+		iconOption.setOnClickListener(v -> openImageSelectorActivity());
 
 		FormElement nameOption = new FormElement();
 		form.add(nameOption);
-		nameOption.setDrawable(R.drawable.ic_label_black_24dp);
+		nameOption.setDrawable(
+				ResourcesCompat.getDrawable(resources, R.drawable.ic_label_black_24dp, null)
+		);
 		nameOption.setTitle(R.string.form_name);
 		nameOption.setOnClickListener(v -> showExerciseNameDialog(nameOption));
 
 		FormElement muscleOption = new FormElement();
 		form.add(muscleOption);
-		muscleOption.setDrawable(R.drawable.ic_body_black_24dp);
+		muscleOption.setDrawable(
+				ResourcesCompat.getDrawable(resources, R.drawable.ic_body_black_24dp, null)
+		);
 		muscleOption.setTitle(R.string.form_muscle_groups);
 		muscleOption.setOnClickListener(v -> showMuscleGroupSelector(muscleOption));
 
 		return form;
+	}
+
+	private void openImageSelectorActivity() {
+		Intent intent = new Intent(this, ImageSelectorActivity.class);
+		intent.putExtra("mode", CREATE_EXERCISE);
+		someActivityResultLauncher.launch(intent);
+	}
+
+	private void captureReturn(ActivityResult result) {
+		if (result.getResultCode() == Activity.RESULT_OK) {
+			Intent data = result.getData();
+			String fileName = data.getStringExtra("fileName");
+			if (fileName != null) {
+
+				Pattern pattern = Pattern.compile(".*?(\\w*)\\.png");
+				Matcher matcher = pattern.matcher(fileName);
+				if (matcher.matches()) {
+					String name = matcher.group(1);
+
+					if (name != null && !name.trim().isEmpty()) {
+						exercise.setName(name);
+						try {
+							InputStream ims = getAssets().open(fileName);
+							Drawable d = Drawable.createFromStream(ims, null);
+							iconOption.setDrawable(d);
+							iconOption.update();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private void showExerciseNameDialog(FormElement option) {
