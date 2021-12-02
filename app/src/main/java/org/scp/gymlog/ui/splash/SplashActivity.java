@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
-import org.scp.gymlog.MainActivity;
+import org.scp.gymlog.ui.main.MainActivity;
 import org.scp.gymlog.R;
 import org.scp.gymlog.model.Data;
 import org.scp.gymlog.model.MuscularGroup;

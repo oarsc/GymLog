@@ -1,4 +1,4 @@
-package org.scp.gymlog;
+package org.scp.gymlog.ui.main;
 
 import android.os.Bundle;
 
@@ -10,6 +10,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.scp.gymlog.R;
 import org.scp.gymlog.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
