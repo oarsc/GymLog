@@ -32,4 +32,8 @@
     <string name="form_name">Name</string>
     <string name="form_muscle_groups">Muscle Groups</string>
 
+    <string name="validation_image">Please, select an image</string>
+    <string name="validation_name">Please, introduce a valid name</string>
+    <string name="validation_muscle_groups">Please, select at least one muscle group</string>
+
 </resources>

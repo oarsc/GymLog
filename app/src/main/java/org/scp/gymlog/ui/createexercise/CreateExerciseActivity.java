@@ -22,12 +22,15 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.scp.gymlog.R;
 import org.scp.gymlog.model.Data;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.MuscularGroup;
 import org.scp.gymlog.ui.tools.BackAppCompatActivity;
 import org.scp.gymlog.ui.tools.ImageSelectorActivity;
+import org.scp.gymlog.service.ContentManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,12 +71,29 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.confirm_button:
-				onBackPressed();
-				break;
+		if (item.getItemId() != R.id.confirm_button) {
+			return false;
 		}
-		return super.onOptionsItemSelected(item);
+
+		if (exercise.getImage() == null || exercise.getImage().trim().isEmpty()) {
+			Snackbar.make(findViewById(android.R.id.content),
+					R.string.validation_image, Snackbar.LENGTH_LONG).show();
+
+		} else if (exercise.getName() == null || exercise.getName().trim().isEmpty()) {
+			Snackbar.make(findViewById(android.R.id.content),
+					R.string.validation_name, Snackbar.LENGTH_LONG).show();
+
+		} else if (exercise.getBelongingGroups().isEmpty()) {
+			Snackbar.make(findViewById(android.R.id.content),
+					R.string.validation_muscle_groups, Snackbar.LENGTH_LONG).show();
+
+		} else {
+			Data.getInstance().getExercises().add(exercise);
+			ContentManager.saveExercises(this);
+			onBackPressed();
+		}
+
+		return true;
 	}
 
 	private List<FormElement> createForm() {
@@ -124,7 +144,7 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 					String name = matcher.group(1);
 
 					if (name != null && !name.trim().isEmpty()) {
-						exercise.setName(name);
+						exercise.setImage(name);
 						try {
 							InputStream ims = getAssets().open(fileName);
 							Drawable d = Drawable.createFromStream(ims, null);

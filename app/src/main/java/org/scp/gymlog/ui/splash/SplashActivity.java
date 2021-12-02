@@ -12,6 +12,7 @@ import org.scp.gymlog.MainActivity;
 import org.scp.gymlog.R;
 import org.scp.gymlog.model.Data;
 import org.scp.gymlog.model.MuscularGroup;
+import org.scp.gymlog.service.ContentManager;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         initialConfigLoading();
+        ContentManager.loadExercises(this);
 
         goMain();
     }
