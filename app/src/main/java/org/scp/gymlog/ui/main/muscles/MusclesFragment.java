@@ -1,4 +1,4 @@
-package org.scp.gymlog.ui.main.exercises;
+package org.scp.gymlog.ui.main.muscles;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,13 +19,13 @@ import org.scp.gymlog.ui.createexercise.CreateExerciseActivity;
 /**
  * A fragment representing a list of Items.
  */
-public class ExercisesFragment extends Fragment {
+public class MusclesFragment extends Fragment {
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).
 	 */
-	public ExercisesFragment() {
+	public MusclesFragment() {
 	}
 
 	@Override
@@ -39,9 +39,9 @@ public class ExercisesFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_list_muscles, container, false);
 
 		Context context = view.getContext();
-		RecyclerView recyclerView = view.findViewById(R.id.exercise_list);
+		RecyclerView recyclerView = view.findViewById(R.id.muscles_list);
 		recyclerView.setLayoutManager(new LinearLayoutManager(context));
-		recyclerView.setAdapter(new ExercisesRecyclerViewAdapter());
+		recyclerView.setAdapter(new MusclesRecyclerViewAdapter());
 
 		FloatingActionButton fab = view.findViewById(R.id.fab_add_exercise);
 		fab.setOnClickListener(v -> {

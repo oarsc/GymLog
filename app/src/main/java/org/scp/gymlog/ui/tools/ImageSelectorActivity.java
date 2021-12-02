@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import com.google.android.flexbox.FlexboxLayout;
 
 import org.scp.gymlog.R;
+import org.scp.gymlog.exceptions.LoadException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +43,7 @@ public class ImageSelectorActivity extends BackAppCompatActivity {
                 try {
                     loadExercises();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new LoadException("Error loading exercises", e);
                 }
                 break;
         }

@@ -7,10 +7,10 @@
     android:layout_height="wrap_content">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/exercise_list"
+        android:id="@+id/muscles_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.exercises.ExercisesFragment"
+        tools:context=".ui.main.muscles.MusclesFragment"
         tools:listitem="@layout/fragment_list_element" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

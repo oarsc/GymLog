@@ -15,7 +15,7 @@ import lombok.Setter;
 
 @Setter @Getter
 public class Exercise implements JsonMapped {
-	private final List<MuscularGroup> belongingGroups = new ArrayList<>();
+	private final List<MuscularGroup> belongingMuscularGroups = new ArrayList<>();
 	private String name;
 	private String image;
 
@@ -25,7 +25,7 @@ public class Exercise implements JsonMapped {
 		json.put("name", name);
 		json.put("image", image);
 
-		JSONArray groups = belongingGroups.stream()
+		JSONArray groups = belongingMuscularGroups.stream()
 				.map(MuscularGroup::getId)
 				.collect(JsonUtils.collector());
 
@@ -37,14 +37,14 @@ public class Exercise implements JsonMapped {
 	public void fromJson(JSONObject json) throws JSONException {
 		this.name = json.getString("name");
 		this.image = json.getString("image");
-		this.belongingGroups.clear();
+		this.belongingMuscularGroups.clear();
 
-		List<MuscularGroup> muscularGroups = Data.getInstance().getGroups();
+		List<MuscularGroup> muscularGroups = Data.getInstance().getMuscularGroups();
 		JSONArray groups = json.optJSONArray("groups");
 		JsonUtils.forEachInt(groups, id -> {
 			for (MuscularGroup muscularGroup : muscularGroups) {
 				if (muscularGroup.getId() == id) {
-					belongingGroups.add(muscularGroup);
+					belongingMuscularGroups.add(muscularGroup);
 					break;
 				}
 			}

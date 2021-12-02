@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_exercises"
-        android:name="org.scp.gymlog.ui.main.exercises.ExercisesFragment"
+        android:name="org.scp.gymlog.ui.main.muscles.MusclesFragment"
         android:label="@string/title_exercises"
         tools:layout="@layout/fragment_list_muscles" />
 

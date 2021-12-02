@@ -36,7 +36,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
     private void initialConfigLoading() {
-        List<MuscularGroup> groups = Data.getInstance().getGroups();
+        List<MuscularGroup> groups = Data.getInstance().getMuscularGroups();
 
         groups.clear();
         int id = 0;

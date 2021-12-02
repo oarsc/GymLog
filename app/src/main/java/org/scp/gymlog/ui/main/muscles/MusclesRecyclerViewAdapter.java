@@ -1,5 +1,7 @@
-package org.scp.gymlog.ui.main.exercises;
+package org.scp.gymlog.ui.main.muscles;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,22 +12,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.scp.gymlog.databinding.FragmentListElementBinding;
 import org.scp.gymlog.model.Data;
 import org.scp.gymlog.model.MuscularGroup;
+import org.scp.gymlog.ui.exercises.ExercisesActivity;
 
 import java.util.List;
 
-public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<ExercisesRecyclerViewAdapter.ViewHolder> {
+public class MusclesRecyclerViewAdapter extends RecyclerView.Adapter<MusclesRecyclerViewAdapter.ViewHolder> {
 
 	private final List<MuscularGroup> muscularGroups;
+	private Context context;
 
-	public ExercisesRecyclerViewAdapter() {
-		muscularGroups = Data.getInstance().getGroups();
+	public MusclesRecyclerViewAdapter() {
+		muscularGroups = Data.getInstance().getMuscularGroups();
 	}
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		this.context = parent.getContext();
 		return new ViewHolder(
 				FragmentListElementBinding.inflate(
-						LayoutInflater.from(parent.getContext()), parent, false
+						LayoutInflater.from(this.context), parent, false
 				)
 		);
 	}
@@ -52,7 +57,11 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
 			mContentView = binding.content;
 			mImageView = binding.image;
 
-			binding.getRoot().setOnClickListener(a->System.out.println("CLICK"));
+			binding.getRoot().setOnClickListener(a-> {
+				Intent intent = new Intent(context, ExercisesActivity.class);
+				intent.putExtra("muscularGroupId", muscularGroup.getId());
+				context.startActivity(intent);
+			});
 		}
 
 		@Override

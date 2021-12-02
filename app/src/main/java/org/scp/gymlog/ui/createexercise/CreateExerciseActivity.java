@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.scp.gymlog.R;
+import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Data;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.MuscularGroup;
@@ -83,7 +84,7 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 			Snackbar.make(findViewById(android.R.id.content),
 					R.string.validation_name, Snackbar.LENGTH_LONG).show();
 
-		} else if (exercise.getBelongingGroups().isEmpty()) {
+		} else if (exercise.getBelongingMuscularGroups().isEmpty()) {
 			Snackbar.make(findViewById(android.R.id.content),
 					R.string.validation_muscle_groups, Snackbar.LENGTH_LONG).show();
 
@@ -151,7 +152,7 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 							iconOption.setDrawable(d);
 							iconOption.update();
 						} catch (IOException e) {
-							e.printStackTrace();
+							throw new LoadException("Could not read \""+fileName+"\"", e);
 						}
 					}
 				}
@@ -184,9 +185,9 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 
 	private void showMuscleGroupSelector(FormElement option) {
 		Resources resources = getResources();
-		List<MuscularGroup> muscularGroups = Data.getInstance().getGroups();
+		List<MuscularGroup> muscularGroups = Data.getInstance().getMuscularGroups();
 		final int size = muscularGroups.size();
-		final List<MuscularGroup> selectedMuscularGroups = exercise.getBelongingGroups();
+		final List<MuscularGroup> selectedMuscularGroups = exercise.getBelongingMuscularGroups();
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(CreateExerciseActivity.this);
 		builder.setTitle(R.string.form_muscle_groups);
