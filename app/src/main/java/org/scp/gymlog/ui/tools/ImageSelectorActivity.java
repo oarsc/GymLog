@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,11 +13,10 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.LoadException;
+import org.scp.gymlog.util.TaskRunner;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import lombok.SneakyThrows;
 
 public class ImageSelectorActivity extends BackAppCompatActivity {
     public static final int CREATE_EXERCISE = 0;
@@ -51,8 +49,11 @@ public class ImageSelectorActivity extends BackAppCompatActivity {
 
     private void loadExercises() throws IOException {
         final String folder = "previews";
+        TaskRunner tr = new TaskRunner();
         for (String asset : assets.list(folder)) {
-            new AssetAsyncLoad().execute(folder +"/" + asset);
+            tr.executeAsync(
+                    () -> getImageViewFromAsset(folder +"/" + asset),
+                    view -> layout.addView(view, defaultLayoutParams));
         }
     }
 
@@ -71,18 +72,5 @@ public class ImageSelectorActivity extends BackAppCompatActivity {
         });
 
         return imageView;
-    }
-
-    private class AssetAsyncLoad extends AsyncTask<String, Void, View> {
-        @SneakyThrows(IOException.class)
-        @Override
-        protected View doInBackground(String... fileNames) {
-            return getImageViewFromAsset(fileNames[0]);
-        }
-
-        @Override
-        protected void onPostExecute(View imageView) {
-            layout.addView(imageView, defaultLayoutParams);
-        }
     }
 }

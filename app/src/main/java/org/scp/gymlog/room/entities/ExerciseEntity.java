@@ -24,6 +24,6 @@ public class ExerciseEntity {
                 entityColumn = "muscleId",
                 associateBy = @Junction(ExerciseMuscleCrossRef.class)
         )
-        public List<MuscleEntity> muscleGroups;
+        public List<MuscleEntity> muscles;
     }
 }

@@ -13,7 +13,7 @@ import org.scp.gymlog.databinding.FragmentListElementBinding;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Data;
 import org.scp.gymlog.model.Exercise;
-import org.scp.gymlog.model.MuscularGroup;
+import org.scp.gymlog.model.Muscle;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,10 +25,10 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
     private final List<Exercise> exercises;
     private Context context;
 
-    public ExercisesRecyclerViewAdapter(MuscularGroup muscularGroup, Context context) {
+    public ExercisesRecyclerViewAdapter(Muscle muscle, Context context) {
         this.context = context;
         this.exercises = Data.getInstance().getExercises().stream()
-                .filter(ex -> ex.getBelongingMuscularGroups().contains(muscularGroup))
+                .filter(ex -> ex.getBelongingMuscles().contains(muscle))
                 .collect(Collectors.toList());
     }
 

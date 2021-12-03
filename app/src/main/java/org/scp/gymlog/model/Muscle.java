@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Setter @Getter
 @AllArgsConstructor
-public class MuscularGroup implements EntityMapped<MuscleEntity> {
+public class Muscle implements EntityMapped<MuscleEntity> {
 	private int id;
 	private int text;
 	private int icon;

@@ -12,7 +12,7 @@ import lombok.Setter;
 
 @Setter @Getter
 public class Exercise implements EntityMapped<ExerciseEntity> {
-	private final List<MuscularGroup> belongingMuscularGroups = new ArrayList<>();
+	private final List<Muscle> belongingMuscles = new ArrayList<>();
 	private int id;
 	private String name;
 	private String image;
@@ -34,12 +34,12 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 	}
 
 	public ExerciseMuscleCrossRef[] toMuscleListEntities() {
-		return belongingMuscularGroups.stream()
-				.map(MuscularGroup::getId)
-				.map(groupId -> {
+		return belongingMuscles.stream()
+				.map(Muscle::getId)
+				.map(muscleId -> {
 					ExerciseMuscleCrossRef xRef = new ExerciseMuscleCrossRef();
 					xRef.exerciseId = id;
-					xRef.muscleId = groupId;
+					xRef.muscleId = muscleId;
 					return xRef;
 				})
 				.toArray(ExerciseMuscleCrossRef[]::new);

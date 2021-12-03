@@ -28,7 +28,7 @@ import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Data;
 import org.scp.gymlog.model.Exercise;
-import org.scp.gymlog.model.MuscularGroup;
+import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.ui.tools.BackAppCompatActivity;
 import org.scp.gymlog.ui.tools.ImageSelectorActivity;
@@ -84,9 +84,9 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 			Snackbar.make(findViewById(android.R.id.content),
 					R.string.validation_name, Snackbar.LENGTH_LONG).show();
 
-		} else if (exercise.getBelongingMuscularGroups().isEmpty()) {
+		} else if (exercise.getBelongingMuscles().isEmpty()) {
 			Snackbar.make(findViewById(android.R.id.content),
-					R.string.validation_muscle_groups, Snackbar.LENGTH_LONG).show();
+					R.string.validation_muscles, Snackbar.LENGTH_LONG).show();
 
 		} else {
 			new DBThread(this, db -> {
@@ -127,8 +127,8 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 		muscleOption.setDrawable(
 				ResourcesCompat.getDrawable(resources, R.drawable.ic_body_black_24dp, null)
 		);
-		muscleOption.setTitle(R.string.form_muscle_groups);
-		muscleOption.setOnClickListener(v -> showMuscleGroupSelector(muscleOption));
+		muscleOption.setTitle(R.string.form_muscles);
+		muscleOption.setOnClickListener(v -> showMuscleSelector(muscleOption));
 
 		return form;
 	}
@@ -189,22 +189,22 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 		input.requestFocus();
 	}
 
-	private void showMuscleGroupSelector(FormElement option) {
+	private void showMuscleSelector(FormElement option) {
 		Resources resources = getResources();
-		List<MuscularGroup> muscularGroups = Data.getInstance().getMuscularGroups();
-		final int size = muscularGroups.size();
-		final List<MuscularGroup> selectedMuscularGroups = exercise.getBelongingMuscularGroups();
+		List<Muscle> muscles = Data.getInstance().getMuscles();
+		final int size = muscles.size();
+		final List<Muscle> selectedMuscles = exercise.getBelongingMuscles();
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(CreateExerciseActivity.this);
-		builder.setTitle(R.string.form_muscle_groups);
+		builder.setTitle(R.string.form_muscles);
 
 		CharSequence[] muscleNames = new CharSequence[size];
 		boolean[] selectedIndexes = new boolean[size];
 
 		int idx = 0;
-		for (MuscularGroup muscularGroup : muscularGroups) {
-			muscleNames[idx] = resources.getString(muscularGroup.getText());
-			selectedIndexes[idx] = selectedMuscularGroups.contains(muscularGroup);
+		for (Muscle muscle : muscles) {
+			muscleNames[idx] = resources.getString(muscle.getText());
+			selectedIndexes[idx] = selectedMuscles.contains(muscle);
 			idx++;
 		}
 
@@ -213,11 +213,11 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 
 		builder.setNegativeButton(R.string.button_cancel, (dialog, which) -> {});
 		builder.setPositiveButton(R.string.button_confirm, (dialog, which) -> {
-			selectedMuscularGroups.clear();
+			selectedMuscles.clear();
 			List<CharSequence> selectedMuscleNames = new ArrayList<>();
 			for (int i = 0; i<size; i++) {
 				if (selectedIndexes[i]) {
-					selectedMuscularGroups.add(muscularGroups.get(i));
+					selectedMuscles.add(muscles.get(i));
 					selectedMuscleNames.add(muscleNames[i]);
 				}
 			}

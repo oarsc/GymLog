@@ -11,18 +11,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.databinding.FragmentListElementBinding;
 import org.scp.gymlog.model.Data;
-import org.scp.gymlog.model.MuscularGroup;
+import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.ui.exercises.ExercisesActivity;
 
 import java.util.List;
 
 public class MusclesRecyclerViewAdapter extends RecyclerView.Adapter<MusclesRecyclerViewAdapter.ViewHolder> {
 
-	private final List<MuscularGroup> muscularGroups;
+	private final List<Muscle> muscles;
 	private Context context;
 
 	public MusclesRecyclerViewAdapter() {
-		muscularGroups = Data.getInstance().getMuscularGroups();
+		muscles = Data.getInstance().getMuscles();
 	}
 
 	@Override
@@ -37,18 +37,18 @@ public class MusclesRecyclerViewAdapter extends RecyclerView.Adapter<MusclesRecy
 
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, int position) {
-		holder.muscularGroup = muscularGroups.get(position);
-		holder.mContentView.setText(holder.muscularGroup.getText());
-		holder.mImageView.setImageResource(holder.muscularGroup.getIcon());
+		holder.muscle = muscles.get(position);
+		holder.mContentView.setText(holder.muscle.getText());
+		holder.mImageView.setImageResource(holder.muscle.getIcon());
 	}
 
 	@Override
 	public int getItemCount() {
-		return muscularGroups.size();
+		return muscles.size();
 	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder {
-		public MuscularGroup muscularGroup;
+		public Muscle muscle;
 		public final TextView mContentView;
 		public final ImageView mImageView;
 
@@ -59,7 +59,7 @@ public class MusclesRecyclerViewAdapter extends RecyclerView.Adapter<MusclesRecy
 
 			binding.getRoot().setOnClickListener(a-> {
 				Intent intent = new Intent(context, ExercisesActivity.class);
-				intent.putExtra("muscularGroupId", muscularGroup.getId());
+				intent.putExtra("muscleId", muscle.getId());
 				context.startActivity(intent);
 			});
 		}

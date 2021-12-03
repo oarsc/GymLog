@@ -12,7 +12,7 @@ import java.util.List;
 @Dao
 public interface MuscleDao {
     @Query("SELECT * FROM muscle")
-    List<MuscleEntity> getOnlyMuscleGroups();
+    List<MuscleEntity> getOnlyMuscles();
 
     @Transaction
     @Query("SELECT * FROM muscle")

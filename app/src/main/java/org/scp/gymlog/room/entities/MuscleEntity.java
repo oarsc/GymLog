@@ -15,7 +15,7 @@ public class MuscleEntity {
 
     public static class WithExercises {
         @Embedded
-        public MuscleEntity muscleGroup;
+        public MuscleEntity muscle;
         @Relation(
                 parentColumn = "muscleId",
                 entityColumn = "exerciseId",
