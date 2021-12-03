@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.InternalException;
-import org.scp.gymlog.model.Data;
+import org.scp.gymlog.util.Data;
 import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.ui.tools.BackAppCompatActivity;
 

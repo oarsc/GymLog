@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import androidx.room.Update;
 
 import org.scp.gymlog.room.entities.ExerciseEntity;
 
@@ -30,5 +31,8 @@ public interface ExerciseDao {
     long[] insertAll(ExerciseEntity... exercises);
 
     @Delete
-    void delete(ExerciseEntity exercise);
+    void delete(ExerciseEntity... exercises);
+
+    @Update
+    void update(ExerciseEntity... exercises);
 }

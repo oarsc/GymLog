@@ -2,5 +2,5 @@ package org.scp.gymlog.room;
 
 public interface EntityMapped<T> {
     T toEntity();
-    void fromEntity(T entity);
+    <E extends EntityMapped> E fromEntity(T entity);
 }

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.registry.RegistryActivity">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/exerciseName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="#1000" />
+
+
+
+    <TextView
+        android:id="@+id/exerciseName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:textSize="@dimen/bold_text"
+        android:textColor="@color/dark"
+        app:layout_constraintBottom_toTopOf="@+id/addWeight"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="@string/text_title" />
+
+
+
+
+
+
+
+    <TextView
+        android:id="@+id/labelWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        app:layout_constraintBottom_toBottomOf="@+id/addWeight"
+        app:layout_constraintTop_toTopOf="@+id/addWeight"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="Weight" />
+
+    <EditText
+        android:id="@+id/editWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:ems="6"
+        app:layout_constraintBottom_toBottomOf="@+id/addWeight"
+        app:layout_constraintRight_toLeftOf="@+id/subWeight"
+        app:layout_constraintLeft_toRightOf="@+id/labelReps"
+        android:inputType="number" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/subWeight"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="3dp"
+        app:layout_constraintBottom_toBottomOf="@+id/addWeight"
+        app:layout_constraintRight_toLeftOf="@+id/addWeight"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/dark">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_substract_24dp"
+            app:tint="@color/white"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/addWeight"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        app:layout_constraintBottom_toTopOf="@+id/addReps"
+        app:layout_constraintRight_toRightOf="parent"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/dark">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_add_24dp"
+            app:tint="@color/white"/>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <TextView
+        android:id="@+id/labelReps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        app:layout_constraintBottom_toBottomOf="@+id/addReps"
+        app:layout_constraintTop_toTopOf="@+id/addReps"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="Reps" />
+
+    <EditText
+        android:id="@+id/editReps"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:ems="6"
+        app:layout_constraintBottom_toBottomOf="@+id/addReps"
+        app:layout_constraintRight_toLeftOf="@+id/subReps"
+        app:layout_constraintLeft_toRightOf="@+id/labelReps"
+        android:inputType="number" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/subReps"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="3dp"
+        app:layout_constraintBottom_toBottomOf="@+id/addReps"
+        app:layout_constraintRight_toLeftOf="@+id/addReps"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/dark">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_substract_24dp"
+            app:tint="@color/white"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/addReps"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        app:layout_constraintBottom_toTopOf="@+id/confirm"
+        app:layout_constraintRight_toRightOf="parent"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/dark">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_add_24dp"
+            app:tint="@color/white"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/confirm"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:paddingVertical="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:src="@drawable/ic_done_24dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

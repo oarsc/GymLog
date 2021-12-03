@@ -1,6 +1,7 @@
 package org.scp.gymlog.ui.exercises;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -11,9 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.databinding.FragmentListElementBinding;
 import org.scp.gymlog.exceptions.LoadException;
-import org.scp.gymlog.model.Data;
+import org.scp.gymlog.util.Data;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
+import org.scp.gymlog.ui.registry.RegistryActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,7 +74,11 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
             mContentView = binding.content;
             mImageView = binding.image;
 
-            binding.getRoot().setOnClickListener(a -> System.out.println("CLICK"));
+            binding.getRoot().setOnClickListener(a-> {
+                Intent intent = new Intent(context, RegistryActivity.class);
+                intent.putExtra("exerciseId", exercise.getId());
+                context.startActivity(intent);
+            });
         }
 
         @Override

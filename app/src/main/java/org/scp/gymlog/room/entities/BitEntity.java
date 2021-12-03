@@ -35,7 +35,7 @@ public class BitEntity {
     public int exerciseId;
     public int reps;
     public int weight;
-    public boolean kilos = true;
+    public boolean kilos;
     public String note;
     public Date timestamp;
 }

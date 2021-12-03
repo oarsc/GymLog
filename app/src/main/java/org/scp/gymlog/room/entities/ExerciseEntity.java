@@ -20,6 +20,8 @@ public class ExerciseEntity {
     public String name;
     public String image;
     public Date lastTrained;
+    public int step;
+    public boolean kilos;
 
     public static class WithMuscles {
         @Embedded

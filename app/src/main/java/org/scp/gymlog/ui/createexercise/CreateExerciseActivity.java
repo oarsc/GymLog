@@ -26,7 +26,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.LoadException;
-import org.scp.gymlog.model.Data;
+import org.scp.gymlog.util.Data;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.room.DBThread;

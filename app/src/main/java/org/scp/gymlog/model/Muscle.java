@@ -22,7 +22,8 @@ public class Muscle implements EntityMapped<MuscleEntity> {
 	}
 
 	@Override
-	public void fromEntity(MuscleEntity entity) {
+	public Muscle fromEntity(MuscleEntity entity) {
 		id = entity.muscleId;
+		return this;
 	}
 }

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.databinding.FragmentListElementBinding;
-import org.scp.gymlog.model.Data;
+import org.scp.gymlog.util.Data;
 import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.ui.exercises.ExercisesActivity;
 

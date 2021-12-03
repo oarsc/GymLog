@@ -13,12 +13,15 @@ import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.EntityMapped;
+import org.scp.gymlog.room.entities.ExerciseEntity;
+import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
 import org.scp.gymlog.room.entities.MuscleEntity;
 import org.scp.gymlog.ui.main.MainActivity;
-import org.scp.gymlog.model.Data;
+import org.scp.gymlog.util.Data;
 import org.scp.gymlog.model.Muscle;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class SplashActivity extends AppCompatActivity {
@@ -68,11 +71,22 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void saveInitialData(AppDatabase db) {
-        MuscleEntity[] muscularGroups = Data.getInstance().getMuscles().stream()
+        MuscleEntity[] muscles = Data.getInstance().getMuscles().stream()
                 .map(EntityMapped::toEntity)
                 .toArray(MuscleEntity[]::new);
 
-        db.muscleDao().insertAll(muscularGroups);
+        db.muscleDao().insertAll(muscles);
+
+        ExerciseEntity ex = new ExerciseEntity();
+        ex.image = "abs_bar_knee_raise_rest_on_arms_1";
+        ex.name = "Test";
+        ex.lastTrained = new Date(0);
+        int id = (int) db.exerciseDao().insert(ex);
+
+        ExerciseMuscleCrossRef exx = new ExerciseMuscleCrossRef();
+        exx.exerciseId = id;
+        exx.muscleId = 1;
+        db.exerciseMuscleCrossRefDao().insert(exx);
     }
 
     private void loadData(AppDatabase db) {
@@ -81,8 +95,7 @@ public class SplashActivity extends AppCompatActivity {
 
         db.exerciseDao().getAll().stream()
                 .map(x -> {
-                    Exercise e = new Exercise();
-                    e.fromEntity(x.exercise);
+                    Exercise e = new Exercise().fromEntity(x.exercise);
                     x.muscles.stream()
                             .map(m -> m.muscleId)
                             .map(id -> groups.stream()

@@ -18,6 +18,8 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 	private String name;
 	private String image;
 	private Date lastTrained = new Date(0L);
+	public int step;
+	public boolean kilos;
 
 	@Override
 	public ExerciseEntity toEntity() {
@@ -26,15 +28,20 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 		entity.name = name;
 		entity.image = image;
 		entity.lastTrained = lastTrained;
+		entity.step = step;
+		entity.kilos = kilos;
 		return entity;
 	}
 
 	@Override
-	public void fromEntity(ExerciseEntity entity) {
+	public Exercise fromEntity(ExerciseEntity entity) {
 		id = entity.exerciseId;
 		name = entity.name;
 		image = entity.image;
 		lastTrained = entity.lastTrained;
+		step = entity.step;
+		kilos = entity.kilos;
+		return this;
 	}
 
 	public ExerciseMuscleCrossRef[] toMuscleListEntities() {
