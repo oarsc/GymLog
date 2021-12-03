@@ -5,6 +5,7 @@ import org.scp.gymlog.room.entities.ExerciseEntity;
 import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 	private int id;
 	private String name;
 	private String image;
+	private Date lastTrained = new Date(0L);
 
 	@Override
 	public ExerciseEntity toEntity() {
@@ -23,6 +25,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 		entity.exerciseId = id;
 		entity.name = name;
 		entity.image = image;
+		entity.lastTrained = lastTrained;
 		return entity;
 	}
 
@@ -31,6 +34,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 		id = entity.exerciseId;
 		name = entity.name;
 		image = entity.image;
+		lastTrained = entity.lastTrained;
 	}
 
 	public ExerciseMuscleCrossRef[] toMuscleListEntities() {

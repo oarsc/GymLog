@@ -4,7 +4,7 @@ import android.content.Context;
 
 import androidx.room.Room;
 
-public class DatabaseConnection {
+public class Connection {
 
     private static AppDatabase db;
 
