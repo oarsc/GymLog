@@ -29,9 +29,9 @@ import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Data;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.MuscularGroup;
+import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.ui.tools.BackAppCompatActivity;
 import org.scp.gymlog.ui.tools.ImageSelectorActivity;
-import org.scp.gymlog.service.ContentManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -89,9 +89,15 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 					R.string.validation_muscle_groups, Snackbar.LENGTH_LONG).show();
 
 		} else {
-			Data.getInstance().getExercises().add(exercise);
-			ContentManager.saveExercises(this);
-			onBackPressed();
+			new DBThread(this, db -> {
+				final int id = (int) db.exerciseDao().insert(exercise.toEntity());
+				exercise.setId(id);
+				db.exerciseMuscleCrossRefDao()
+						.insertAll(exercise.toMuscleListEntities());
+
+				Data.getInstance().getExercises().add(exercise);
+				runOnUiThread(this::onBackPressed);
+			});
 		}
 
 		return true;
