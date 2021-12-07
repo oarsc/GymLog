@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
 import org.scp.gymlog.exceptions.LoadException;
+import org.scp.gymlog.model.Bar;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
@@ -70,21 +71,29 @@ public class SplashActivity extends AppCompatActivity {
 
     private void loadData(AppDatabase db) {
         Data data = Data.getInstance();
-        List<Muscle> groups = data.getMuscles();
 
+        List<Bar> bars = data.getBars();
+        bars.clear();
+        db.barDao().getAll().stream()
+                .map(x -> new Bar().fromEntity(x))
+                .forEach(bars::add);
+
+        List<Muscle> muscles = data.getMuscles();
+        List<Exercise> exercises = data.getExercises();
+        exercises.clear();
         db.exerciseDao().getAll().stream()
                 .map(x -> {
                     Exercise e = new Exercise().fromEntity(x.exercise);
                     x.muscles.stream()
                             .map(m -> m.muscleId)
-                            .map(id -> groups.stream()
+                            .map(id -> muscles.stream()
                                     .filter(group -> group.getId() == id)
                                     .findFirst()
                                     .orElseThrow(()->new LoadException("Muscle "+id+" not found in local structure")))
                             .forEach(e.getBelongingMuscles()::add);
                     return e;
                 })
-                .forEach(data.getExercises()::add);
+                .forEach(exercises::add);
     }
 
     public void goMain(){

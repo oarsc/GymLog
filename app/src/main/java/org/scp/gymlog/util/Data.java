@@ -1,5 +1,6 @@
 package org.scp.gymlog.util;
 
+import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Bar;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
@@ -28,13 +29,13 @@ public class Data {
 		return getInstance().bars.stream()
 				.filter(bar -> bar.getId() == barId)
 				.findFirst()
-				.orElse(null);
+				.orElseThrow(() -> new LoadException("NO BAR FOUND id:"+barId));
 	}
 
 	public static Exercise getExercise(int exerciseId) {
 		return getInstance().exercises.stream()
 				.filter(exercise -> exercise.getId() == exerciseId)
 				.findFirst()
-				.orElse(null);
+				.orElseThrow(() -> new LoadException("NO EXERCISE FOUND id:"+exerciseId));
 	}
 }

@@ -1,4 +1,4 @@
-package org.scp.gymlog.ui.tools;
+package org.scp.gymlog.ui.common;
 
 import android.app.Activity;
 import android.content.Intent;

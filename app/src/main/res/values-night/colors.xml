@@ -3,4 +3,6 @@
     <color name="dark">#F222</color>
     <color name="gray">#F888</color>
     <color name="light">#FDDD</color>
+
+    <color name="themedIcon">@color/light</color>
 </resources>

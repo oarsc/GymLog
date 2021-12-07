@@ -1,8 +1,11 @@
 package org.scp.gymlog.model;
 
+import androidx.annotation.NonNull;
+
 import org.scp.gymlog.room.EntityMapped;
 import org.scp.gymlog.room.entities.ExerciseEntity;
 import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
+import org.scp.gymlog.util.Data;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,8 +21,10 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 	private String name;
 	private String image;
 	private Date lastTrained = new Date(0L);
-	public int step;
-	public boolean requiresBar;
+	private int step;
+	private boolean requiresBar;
+	private Bar bar;
+	private WeightSpecification weightSpec = WeightSpecification.TOTAL_WEIGHT;
 
 	@Override
 	public ExerciseEntity toEntity() {
@@ -28,19 +33,28 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 		entity.name = name;
 		entity.image = image;
 		entity.lastTrained = lastTrained;
-		entity.step = step;
+		entity.lastStep = step;
 		entity.requiresBar = requiresBar;
+		entity.lastWeightSpec = weightSpec;
+		if (bar != null) {
+			entity.lastBarId = bar.getId();
+		}
 		return entity;
 	}
 
 	@Override
-	public Exercise fromEntity(ExerciseEntity entity) {
+	@SuppressWarnings("unchecked")
+	public Exercise fromEntity(@NonNull ExerciseEntity entity) {
 		id = entity.exerciseId;
 		name = entity.name;
 		image = entity.image;
 		lastTrained = entity.lastTrained;
-		step = entity.step;
+		step = entity.lastStep;
 		requiresBar = entity.requiresBar;
+		weightSpec = entity.lastWeightSpec;
+		if (entity.lastBarId != null) {
+			bar = Data.getBar(entity.lastBarId);
+		}
 		return this;
 	}
 

@@ -25,6 +25,14 @@
     <string name="text_add">Add</string>
     <string name="text_title">Title</string>
     <string name="text_subtitle">Subtitle</string>
+    <string name="text_weight">Weight</string>
+    <string name="text_reps">Reps</string>
+    <string name="text_none">-</string>
+    <string name="text_open_parentheses">(</string>
+    <string name="text_close_parentheses">)</string>
+
+    <string name="text_kg">kg</string>
+    <string name="text_lb">lbs</string>
 
     <string name="button_confirm">Ok</string>
     <string name="button_cancel">Cancel</string>
@@ -37,12 +45,17 @@
     <string name="validation_name">Please, introduce a valid name</string>
     <string name="validation_muscles">Please, select at least one muscular group</string>
 
+    <!-- Weight Specifications -->
+    <string name="weight_spec_total">Total weight</string>
+    <string name="weight_spec_no_bar">No bar weight</string>
+    <string name="weight_spec_one_side">Weight from one side</string>
+
     <!-- Preference Titles -->
     <string name="units_header">Units</string>
     <string name="customization_header">Customization</string>
 
     <!-- Units Preferences -->
-    <string name="international_system_title">Sync email periodically</string>
+    <string name="international_system_title">Use international system units</string>
     <string name="international_system_on">Currently using kgs by default</string>
     <string name="international_system_off">Currently using lbs by default</string>
 

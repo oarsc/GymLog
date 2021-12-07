@@ -1,6 +1,8 @@
 package org.scp.gymlog.service;
 
 import org.scp.gymlog.model.Bar;
+import org.scp.gymlog.model.Weight;
+import org.scp.gymlog.model.WeightSpecification;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.EntityMapped;
 import org.scp.gymlog.room.entities.BarEntity;
@@ -9,6 +11,7 @@ import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
 import org.scp.gymlog.room.entities.MuscleEntity;
 import org.scp.gymlog.util.Data;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -35,9 +38,10 @@ public class InitialDataService {
         bars.clear();
         int barId = 0;
         Arrays.asList(
-                new Bar(++barId, 750, true),
-                new Bar(++barId, 1000, true),
-                new Bar(++barId, 2000, true)
+                new Bar(++barId, new Weight(new BigDecimal("7.5"), true)),
+                new Bar(++barId, new Weight(new BigDecimal("10"), true)),
+                new Bar(++barId, new Weight(new BigDecimal("20"), true)),
+                new Bar(++barId, new Weight(new BigDecimal("25"), true))
         ).forEach(bars::add);
 
         db.barDao().insertAll(
@@ -52,6 +56,7 @@ public class InitialDataService {
         ex.image = "abs_bar_knee_raise_rest_on_arms_1";
         ex.name = "Test";
         ex.lastTrained = new Date(0);
+        ex.lastWeightSpec = WeightSpecification.TOTAL_WEIGHT;
         int id = (int) db.exerciseDao().insert(ex);
 
         ExerciseMuscleCrossRef exx = new ExerciseMuscleCrossRef();

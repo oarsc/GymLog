@@ -1,6 +1,6 @@
 package org.scp.gymlog.ui.createexercise;
 
-import static org.scp.gymlog.ui.tools.ImageSelectorActivity.CREATE_EXERCISE;
+import static org.scp.gymlog.ui.common.ImageSelectorActivity.CREATE_EXERCISE;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,6 +19,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,12 +27,14 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.LoadException;
+import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
+import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.room.DBThread;
-import org.scp.gymlog.ui.tools.BackAppCompatActivity;
-import org.scp.gymlog.ui.tools.ImageSelectorActivity;
+import org.scp.gymlog.ui.common.BackAppCompatActivity;
+import org.scp.gymlog.ui.common.ImageSelectorActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -167,26 +170,13 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 	}
 
 	private void showExerciseNameDialog(FormElement option) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(CreateExerciseActivity.this);
-		builder.setTitle(R.string.form_name);
-
-		final EditText input = new EditText(this);
-		input.setText(exercise.getName());
-		input.setInputType(InputType.TYPE_CLASS_TEXT);
-		builder.setView(input);
-
-		builder.setNegativeButton(R.string.button_cancel, (dialog, which) -> {});
-		builder.setPositiveButton(R.string.button_confirm, (dialog, which) -> {
-			String name = input.getText().toString();
-			exercise.setName(name);
-			option.setValueStr(name);
-			option.update();
-		});
-
-		AlertDialog dialog = builder.create();
-		dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-		dialog.show();
-		input.requestFocus();
+		DialogFragment dialog = new EditTextDialogFragment(R.string.form_name,
+				result -> {
+					option.setValueStr(result);
+					option.update();
+				},
+				() -> {});
+		dialog.show(getSupportFragmentManager(), null);
 	}
 
 	private void showMuscleSelector(FormElement option) {

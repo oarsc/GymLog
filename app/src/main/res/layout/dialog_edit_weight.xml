@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dialog_bar"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:layout_marginTop="12.0dip"
+    android:layout_marginBottom="9.0dip"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/dialog_margin">
+
+
+    <LinearLayout
+        android:id="@+id/weight_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center"
+        android:gravity="start|center"
+        android:minWidth="96.0dip"
+        android:orientation="horizontal">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/weightValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_weight="1"
+                android:ems="5"
+                android:maxLength="6"
+                android:inputType="numberDecimal" />
+
+            <TextView
+                android:id="@+id/unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="@id/weightValue"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginEnd="6dp"
+                android:gravity="start|center"
+                android:maxLines="1"
+                android:text="lbs"
+                android:scrollHorizontally="false" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="start|center"
+            android:maxLines="1"
+            android:text="@string/text_open_parentheses"
+            android:scrollHorizontally="false" />
+
+        <TextView
+            android:id="@+id/converted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="3dp"
+            android:gravity="start|center"
+            android:maxLines="1"
+            android:text="100"
+            android:scrollHorizontally="false" />
+
+        <TextView
+            android:id="@+id/convert_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="start|center"
+            android:maxLines="1"
+            android:scrollHorizontally="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="start|center"
+            android:maxLines="1"
+            android:text="@string/text_close_parentheses"
+            android:scrollHorizontally="false" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bars_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bar: "
+            android:paddingVertical="@dimen/activity_vertical_margin"/>
+
+        <TextView
+            android:id="@+id/bar_used"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:text="@string/text_none"
+            android:paddingVertical="@dimen/activity_vertical_margin"/>
+
+        <ImageView
+            android:id="@+id/incompatible_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_warning_24dp"
+            android:paddingVertical="@dimen/activity_vertical_margin"
+            app:tint="@color/orange_light" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/weights_config_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Input type: "
+            android:paddingVertical="@dimen/activity_vertical_margin"/>
+
+        <TextView
+            android:id="@+id/weight_spec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/activity_vertical_margin"/>
+
+    </LinearLayout>
+
+</LinearLayout>

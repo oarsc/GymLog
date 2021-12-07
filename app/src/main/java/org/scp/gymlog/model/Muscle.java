@@ -1,5 +1,7 @@
 package org.scp.gymlog.model;
 
+import androidx.annotation.NonNull;
+
 import org.scp.gymlog.room.EntityMapped;
 import org.scp.gymlog.room.entities.MuscleEntity;
 
@@ -22,7 +24,8 @@ public class Muscle implements EntityMapped<MuscleEntity> {
 	}
 
 	@Override
-	public Muscle fromEntity(MuscleEntity entity) {
+	@SuppressWarnings("unchecked")
+	public Muscle fromEntity(@NonNull MuscleEntity entity) {
 		id = entity.muscleId;
 		return this;
 	}

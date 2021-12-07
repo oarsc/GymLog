@@ -44,17 +44,28 @@
         app:layout_constraintBottom_toBottomOf="@+id/addWeight"
         app:layout_constraintTop_toTopOf="@+id/addWeight"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:text="Weight" />
+        android:text="@string/text_weight" />
 
     <EditText
         android:id="@+id/editWeight"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:ems="6"
-        app:layout_constraintBottom_toBottomOf="@+id/addWeight"
-        app:layout_constraintRight_toLeftOf="@+id/subWeight"
-        app:layout_constraintLeft_toRightOf="@+id/labelReps"
-        android:inputType="number" />
+        android:ems="5"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toBottomOf="@id/addWeight"
+        app:layout_constraintRight_toLeftOf="@id/subWeight"
+        app:layout_constraintLeft_toRightOf="@id/labelReps"
+        android:focusable="false" />
+
+    <TextView
+        android:id="@+id/unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        app:layout_constraintBottom_toBottomOf="@id/addWeight"
+        app:layout_constraintTop_toTopOf="@id/addWeight"
+        app:layout_constraintRight_toRightOf="@id/editWeight"
+        android:text="@string/text_kg" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/subWeight"
@@ -106,17 +117,17 @@
         app:layout_constraintBottom_toBottomOf="@+id/addReps"
         app:layout_constraintTop_toTopOf="@+id/addReps"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:text="Reps" />
+        android:text="@string/text_reps" />
 
     <EditText
         android:id="@+id/editReps"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:ems="6"
+        android:ems="5"
         app:layout_constraintBottom_toBottomOf="@+id/addReps"
         app:layout_constraintRight_toLeftOf="@+id/subReps"
         app:layout_constraintLeft_toRightOf="@+id/labelReps"
-        android:inputType="number" />
+        android:focusable="false" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/subReps"

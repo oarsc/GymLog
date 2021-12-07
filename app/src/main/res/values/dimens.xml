@@ -7,4 +7,6 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="bold_text">22sp</dimen>
+
+    <dimen name="dialog_margin">30dp</dimen>
 </resources>

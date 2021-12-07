@@ -1,10 +1,8 @@
-package org.scp.gymlog.ui.tools;
+package org.scp.gymlog.ui.common;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import org.scp.gymlog.R;
 
 public abstract class BackAppCompatActivity extends AppCompatActivity {
 
