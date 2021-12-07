@@ -12,19 +12,19 @@ import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
-import org.scp.gymlog.room.EntityMapped;
-import org.scp.gymlog.room.entities.ExerciseEntity;
-import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
 import org.scp.gymlog.room.entities.MuscleEntity;
 import org.scp.gymlog.ui.main.MainActivity;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.model.Muscle;
+import org.scp.gymlog.service.InitialDataService;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class SplashActivity extends AppCompatActivity {
+
+    private InitialDataService initialDataService = new InitialDataService();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,58 +35,37 @@ public class SplashActivity extends AppCompatActivity {
             recreate();
         }
 
-        initialConfigLoading();
+        defaultInitialConfigLoading();
         new DBThread(this, db -> {
                 List<MuscleEntity> muscles = db.muscleDao().getOnlyMuscles();
                 if (muscles.isEmpty()) {
-                    saveInitialData(db);
-                } else {
-                    loadData(db);
+                    initialDataService.persist(db);
                 }
+                loadData(db);
                 goMain();
         });
     }
 
-    private void initialConfigLoading() {
+    private void defaultInitialConfigLoading() {
         List<Muscle> muscles = Data.getInstance().getMuscles();
-
         muscles.clear();
-        int id = 0;
+        int muscleId = 0;
         Arrays.asList(
-                new Muscle(++id, R.string.group_pectoral, R.drawable.muscle_pectoral),
-                new Muscle(++id, R.string.group_upper_back, R.drawable.muscle_upper_back),
-                new Muscle(++id, R.string.group_lower_back, R.drawable.muscle_lower_back),
-                new Muscle(++id, R.string.group_deltoid, R.drawable.muscle_deltoid),
-                new Muscle(++id, R.string.group_trapezius, R.drawable.muscle_trapezius),
-                new Muscle(++id, R.string.group_biceps, R.drawable.muscle_biceps),
-                new Muscle(++id, R.string.group_triceps, R.drawable.muscle_triceps),
-                new Muscle(++id, R.string.group_forearm, R.drawable.muscle_forearm),
-                new Muscle(++id, R.string.group_quadriceps, R.drawable.muscle_quadriceps),
-                new Muscle(++id, R.string.group_hamstrings, R.drawable.muscle_hamstring),
-                new Muscle(++id, R.string.group_calves, R.drawable.muscle_calves),
-                new Muscle(++id, R.string.group_glutes, R.drawable.muscle_glutes),
-                new Muscle(++id, R.string.group_abdominals, R.drawable.muscle_abdominals),
-                new Muscle(++id, R.string.group_cardio, R.drawable.muscle_cardio)
+                new Muscle(++muscleId, R.string.group_pectoral, R.drawable.muscle_pectoral),
+                new Muscle(++muscleId, R.string.group_upper_back, R.drawable.muscle_upper_back),
+                new Muscle(++muscleId, R.string.group_lower_back, R.drawable.muscle_lower_back),
+                new Muscle(++muscleId, R.string.group_deltoid, R.drawable.muscle_deltoid),
+                new Muscle(++muscleId, R.string.group_trapezius, R.drawable.muscle_trapezius),
+                new Muscle(++muscleId, R.string.group_biceps, R.drawable.muscle_biceps),
+                new Muscle(++muscleId, R.string.group_triceps, R.drawable.muscle_triceps),
+                new Muscle(++muscleId, R.string.group_forearm, R.drawable.muscle_forearm),
+                new Muscle(++muscleId, R.string.group_quadriceps, R.drawable.muscle_quadriceps),
+                new Muscle(++muscleId, R.string.group_hamstrings, R.drawable.muscle_hamstring),
+                new Muscle(++muscleId, R.string.group_calves, R.drawable.muscle_calves),
+                new Muscle(++muscleId, R.string.group_glutes, R.drawable.muscle_glutes),
+                new Muscle(++muscleId, R.string.group_abdominals, R.drawable.muscle_abdominals),
+                new Muscle(++muscleId, R.string.group_cardio, R.drawable.muscle_cardio)
         ).forEach(muscles::add);
-    }
-
-    private void saveInitialData(AppDatabase db) {
-        MuscleEntity[] muscles = Data.getInstance().getMuscles().stream()
-                .map(EntityMapped::toEntity)
-                .toArray(MuscleEntity[]::new);
-
-        db.muscleDao().insertAll(muscles);
-
-        ExerciseEntity ex = new ExerciseEntity();
-        ex.image = "abs_bar_knee_raise_rest_on_arms_1";
-        ex.name = "Test";
-        ex.lastTrained = new Date(0);
-        int id = (int) db.exerciseDao().insert(ex);
-
-        ExerciseMuscleCrossRef exx = new ExerciseMuscleCrossRef();
-        exx.exerciseId = id;
-        exx.muscleId = 1;
-        db.exerciseMuscleCrossRefDao().insert(exx);
     }
 
     private void loadData(AppDatabase db) {

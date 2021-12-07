@@ -1,5 +1,6 @@
 package org.scp.gymlog.room.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -17,11 +18,14 @@ import java.util.List;
 public class ExerciseEntity {
     @PrimaryKey(autoGenerate = true)
     public int exerciseId;
+    @NonNull
     public String name;
+    @NonNull
     public String image;
+    @NonNull
     public Date lastTrained;
     public int step;
-    public boolean kilos;
+    public boolean requiresBar;
 
     public static class WithMuscles {
         @Embedded

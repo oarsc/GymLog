@@ -1,5 +1,6 @@
 package org.scp.gymlog.util;
 
+import org.scp.gymlog.model.Bar;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
 
@@ -14,11 +15,26 @@ public class Data {
 
 	private final List<Exercise> exercises = new ArrayList<>();
 	private final List<Muscle> muscles = new ArrayList<>();
+	private final List<Bar> bars = new ArrayList<>();
 	private final static Data instance = new Data();
 
 	private Data(){}
 
 	public static Data getInstance() {
 		return instance;
+	}
+
+	public static Bar getBar(int barId) {
+		return getInstance().bars.stream()
+				.filter(bar -> bar.getId() == barId)
+				.findFirst()
+				.orElse(null);
+	}
+
+	public static Exercise getExercise(int exerciseId) {
+		return getInstance().exercises.stream()
+				.filter(exercise -> exercise.getId() == exerciseId)
+				.findFirst()
+				.orElse(null);
 	}
 }

@@ -1,8 +1,9 @@
 package org.scp.gymlog.room.entities;
 
 import static androidx.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.SET_NULL;
 
-import androidx.room.ColumnInfo;
+import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -23,10 +24,19 @@ import java.util.List;
                         childColumns = "exerciseId",
                         onDelete = CASCADE,
                         onUpdate = CASCADE),
+                @ForeignKey(
+                        entity = BarEntity.class,
+                        parentColumns = "barId",
+                        childColumns = "barId",
+                        onDelete = SET_NULL,
+                        onUpdate = CASCADE),
         },
         indices = {
                 @Index("exerciseId"),
-                @Index({ "exerciseId", "timestamp" })
+                @Index("barId"),
+                @Index({ "exerciseId", "timestamp" }),
+                @Index({ "exerciseId", "barId" }),
+                @Index({ "exerciseId", "barId", "timestamp" }),
         }
 )
 public class BitEntity {
@@ -34,8 +44,21 @@ public class BitEntity {
     public int bitId;
     public int exerciseId;
     public int reps;
-    public int weight;
+    public int totalWeight;
     public boolean kilos;
+    public Integer barId;
+    @NonNull
     public String note;
+    @NonNull
     public Date timestamp;
+
+    public static class WithBar {
+        @Embedded
+        public BitEntity bit;
+        @Relation(
+                parentColumn = "barId",
+                entityColumn = "barId"
+        )
+        public BarEntity bar;
+    }
 }

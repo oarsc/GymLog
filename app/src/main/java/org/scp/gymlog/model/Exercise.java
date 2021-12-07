@@ -19,7 +19,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 	private String image;
 	private Date lastTrained = new Date(0L);
 	public int step;
-	public boolean kilos;
+	public boolean requiresBar;
 
 	@Override
 	public ExerciseEntity toEntity() {
@@ -29,7 +29,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 		entity.image = image;
 		entity.lastTrained = lastTrained;
 		entity.step = step;
-		entity.kilos = kilos;
+		entity.requiresBar = requiresBar;
 		return entity;
 	}
 
@@ -40,7 +40,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 		image = entity.image;
 		lastTrained = entity.lastTrained;
 		step = entity.step;
-		kilos = entity.kilos;
+		requiresBar = entity.requiresBar;
 		return this;
 	}
 
