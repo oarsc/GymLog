@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -44,6 +45,7 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
     private TextView barUsed;
     private View incompatibleBar;
     private TextView weightSpec;
+    private ImageView weightSpecIcon;
 
     private Exercise exercise;
 
@@ -82,6 +84,7 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         unit = view.findViewById(R.id.unit);
         barUsed = view.findViewById(R.id.bar_used);
         weightSpec = view.findViewById(R.id.weight_spec);
+        weightSpecIcon = view.findViewById(R.id.weight_spec_icon);
         incompatibleBar = view.findViewById(R.id.incompatible_bar);
 
         Weight weight = initialValue.getWeight();
@@ -186,9 +189,18 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
 
     private void updateWeightSpec() {
         switch (exercise.getWeightSpec()) {
-            case TOTAL_WEIGHT:    weightSpec.setText(R.string.weight_spec_total);    break;
-            case NO_BAR_WEIGHT:   weightSpec.setText(R.string.weight_spec_no_bar);   break;
-            case ONE_SIDE_WEIGHT: weightSpec.setText(R.string.weight_spec_one_side); break;
+            case TOTAL_WEIGHT:
+                weightSpec.setText(R.string.weight_spec_total);
+                weightSpecIcon.setImageResource(R.drawable.ic_warning_24dp);
+                break;
+            case NO_BAR_WEIGHT:
+                weightSpec.setText(R.string.weight_spec_no_bar);
+                weightSpecIcon.setImageResource(R.drawable.ic_plates_24dp);
+                break;
+            case ONE_SIDE_WEIGHT:
+                weightSpec.setText(R.string.weight_spec_one_side);
+                weightSpecIcon.setImageResource(R.drawable.ic_plate_24dp);
+                break;
         }
     }
 

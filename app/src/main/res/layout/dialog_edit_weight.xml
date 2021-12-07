@@ -101,28 +101,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left|center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/list_text_margin">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bar: "
-            android:paddingVertical="@dimen/activity_vertical_margin"/>
+            android:text="Bar: " />
 
         <TextView
             android:id="@+id/bar_used"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
-            android:text="@string/text_none"
-            android:paddingVertical="@dimen/activity_vertical_margin"/>
+            android:text="@string/text_none" />
 
         <ImageView
             android:id="@+id/incompatible_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_warning_24dp"
-            android:paddingVertical="@dimen/activity_vertical_margin"
             app:tint="@color/orange_light" />
 
     </LinearLayout>
@@ -132,19 +131,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left|center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingTop="@dimen/list_text_margin">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Input type: "
-            android:paddingVertical="@dimen/activity_vertical_margin"/>
+            android:text="Input type: "/>
+
+        <ImageView
+            android:id="@+id/weight_spec_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_plate_24dp"
+            app:tint="@color/themedIcon" />
 
         <TextView
             android:id="@+id/weight_spec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingVertical="@dimen/activity_vertical_margin"/>
+            android:layout_marginLeft="3dp" />
 
     </LinearLayout>
 
