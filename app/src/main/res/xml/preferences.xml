@@ -1,8 +1,18 @@
 <PreferenceScreen
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <SwitchPreferenceCompat
-        app:key="nightTheme"
-        app:title="Use night theme"/>
+    <PreferenceCategory app:title="@string/units_header">
+        <SwitchPreferenceCompat
+            app:key="internationalSystem"
+            app:summaryOff="@string/international_system_off"
+            app:summaryOn="@string/international_system_on"
+            app:title="@string/international_system_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/customization_header">
+        <SwitchPreferenceCompat
+            app:key="nightTheme"
+            app:title="@string/night_theme_title"/>
+    </PreferenceCategory>
 
 </PreferenceScreen>

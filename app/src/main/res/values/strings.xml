@@ -37,4 +37,16 @@
     <string name="validation_name">Please, introduce a valid name</string>
     <string name="validation_muscles">Please, select at least one muscular group</string>
 
+    <!-- Preference Titles -->
+    <string name="units_header">Units</string>
+    <string name="customization_header">Customization</string>
+
+    <!-- Units Preferences -->
+    <string name="international_system_title">Sync email periodically</string>
+    <string name="international_system_on">Currently using kgs by default</string>
+    <string name="international_system_off">Currently using lbs by default</string>
+
+    <!-- Customization Preferences -->
+    <string name="night_theme_title">Use night theme</string>
+
 </resources>
