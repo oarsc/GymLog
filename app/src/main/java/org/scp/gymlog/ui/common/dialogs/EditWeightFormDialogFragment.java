@@ -22,6 +22,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.StringRes;
+import androidx.cardview.widget.CardView;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.model.Bar;
@@ -34,26 +35,28 @@ import org.scp.gymlog.util.FormatUtils;
 import org.scp.gymlog.util.Function;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFormData> {
 
     private EditText input;
     private TextView convertValue;
-    private TextView convertUnit;
-    private TextView unit;
+    private TextView totalValue;
     private TextView barUsed;
     private View incompatibleBar;
     private TextView weightSpec;
     private ImageView weightSpecIcon;
 
     private Exercise exercise;
+    private Weight weight;
 
     public EditWeightFormDialogFragment(@StringRes int title, Consumer<WeightFormData> confirm,
                                         Function cancel, WeightFormData initialValue) {
         super(title, confirm, cancel);
         this.initialValue = initialValue;
         exercise = initialValue.getExercise();
+        weight = initialValue.getWeight();
     }
 
     @Override
@@ -80,14 +83,17 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
     private void setInitialData(View view) {
         input = view.findViewById(R.id.weightValue);
         convertValue = view.findViewById(R.id.converted);
-        convertUnit = view.findViewById(R.id.convert_unit);
-        unit = view.findViewById(R.id.unit);
+        totalValue = view.findViewById(R.id.total_weight);
         barUsed = view.findViewById(R.id.bar_used);
         weightSpec = view.findViewById(R.id.weight_spec);
         weightSpecIcon = view.findViewById(R.id.weight_spec_icon);
         incompatibleBar = view.findViewById(R.id.incompatible_bar);
+        TextView convertUnit = view.findViewById(R.id.convert_unit);
+        TextView[] unit = new TextView[] {
+                view.findViewById(R.id.unit),
+                view.findViewById(R.id.total_unit),
+        };
 
-        Weight weight = initialValue.getWeight();
         if (weight.getValue().compareTo(BigDecimal.ZERO) != 0) {
             input.setText(FormatUtils.toString(weight.getValue()));
         }
@@ -95,10 +101,10 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
 
         if (weight.isInternationalSystem()) {
             convertUnit.setText(R.string.text_lb);
-            unit.setText(R.string.text_kg);
+            Arrays.stream(unit).forEach(x -> x.setText(R.string.text_kg));
         } else {
             convertUnit.setText(R.string.text_kg);
-            unit.setText(R.string.text_lb);
+            Arrays.stream(unit).forEach(x -> x.setText(R.string.text_lb));
         }
         input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         input.setFilters(new InputFilter[] {(source, start, end, dest, dstart, dend) -> {
@@ -109,9 +115,13 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
             public void afterTextChanged(Editable s) {}
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateConvertedUnit(s.toString());
+                BigDecimal newWeight = toBigDecimal(s.toString());
+                updateConvertedUnit(newWeight);
+                updateTotalWeight(newWeight);
             }
         });
+        modifyEditText(input, view.findViewById(R.id.add), true);
+        modifyEditText(input, view.findViewById(R.id.sub), false);
 
         View layoutBars = view.findViewById(R.id.bars_box);
         layoutBars.setOnClickListener(barUsedView -> {
@@ -176,6 +186,19 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         updateWeightSpec();
     }
 
+    private void modifyEditText(EditText editText, CardView cardView, boolean addition) {
+        cardView.setOnClickListener(v -> {
+            BigDecimal value = toBigDecimal(editText.getText().toString());
+            BigDecimal step = addition? BigDecimal.ONE : BigDecimal.ONE.negate();
+
+            value = value.add(step);
+            if (value.compareTo(BigDecimal.ZERO) <= 0)
+                value = BigDecimal.ZERO;
+
+            editText.setText(FormatUtils.toString(value));
+        });
+    }
+
     private void updateSelectedBar() {
         Bar bar = exercise.getBar();
         if (bar == null) {
@@ -185,27 +208,31 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
             barUsed.setText(getWeightLabel(bar.getWeight()));
             incompatibleBar.setVisibility(exercise.isRequiresBar()? View.INVISIBLE : View.VISIBLE);
         }
+        updateTotalWeight(null);
     }
 
     private void updateWeightSpec() {
         switch (exercise.getWeightSpec()) {
             case TOTAL_WEIGHT:
                 weightSpec.setText(R.string.weight_spec_total);
-                weightSpecIcon.setImageResource(R.drawable.ic_warning_24dp);
+                weightSpecIcon.setImageResource(R.drawable.ic_bar_with_plates_24dp);
+                updateTotalWeight(null);
                 break;
             case NO_BAR_WEIGHT:
                 weightSpec.setText(R.string.weight_spec_no_bar);
                 weightSpecIcon.setImageResource(R.drawable.ic_plates_24dp);
+                updateTotalWeight(null);
                 break;
             case ONE_SIDE_WEIGHT:
                 weightSpec.setText(R.string.weight_spec_one_side);
                 weightSpecIcon.setImageResource(R.drawable.ic_plate_24dp);
+                updateTotalWeight(null);
                 break;
         }
     }
 
     private StringBuilder getWeightLabel(Weight weight) {
-        if (initialValue.getWeight().isInternationalSystem())  {
+        if (weight.isInternationalSystem())  {
             return new StringBuilder(FormatUtils.toString(weight.toKg()))
                     .append(" kg");
         } else {
@@ -214,13 +241,9 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         }
     }
 
-    private void updateConvertedUnit(String value) {
-        updateConvertedUnit(toBigDecimal(value));
-    }
-
     private void updateConvertedUnit(BigDecimal value) {
         BigDecimal convertedValue;
-        if (initialValue.getWeight().isInternationalSystem()) {
+        if (weight.isInternationalSystem()) {
             convertedValue = toPounds(value);
         } else {
             convertedValue = toKilograms(value);
@@ -228,10 +251,34 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         convertValue.setText(FormatUtils.toString(convertedValue));
     }
 
+    private void updateTotalWeight(BigDecimal value) {
+        if (value == null)
+            value = toBigDecimal(input.getText().toString());
+
+        Bar bar = exercise.getBar();
+        boolean internationalSystem = weight.isInternationalSystem();
+
+        switch (exercise.getWeightSpec()) {
+            case TOTAL_WEIGHT:
+                totalValue.setText(FormatUtils.toString(value));
+                break;
+            case NO_BAR_WEIGHT:
+                BigDecimal totalNoBarVal = bar == null? value :
+                        value.add(bar.getWeight().getValue(internationalSystem));
+                totalValue.setText(FormatUtils.toString(totalNoBarVal));
+                break;
+            case ONE_SIDE_WEIGHT:
+                BigDecimal totalOneSideVal = bar == null? value.add(value) :
+                        value.add(value).add(bar.getWeight().getValue(internationalSystem));
+                totalValue.setText(FormatUtils.toString(totalOneSideVal));
+                break;
+        }
+    }
+
     private WeightFormData confirmData() {
-        Weight weight = new Weight(
+        weight = new Weight(
                 FormatUtils.toBigDecimal(input.getText().toString()),
-                initialValue.getWeight().isInternationalSystem());
+                weight.isInternationalSystem());
         initialValue.setWeight(weight);
         return initialValue;
     }

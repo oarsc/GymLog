@@ -47,8 +47,8 @@
 
     <!-- Weight Specifications -->
     <string name="weight_spec_total">Total weight</string>
-    <string name="weight_spec_no_bar">No bar weight</string>
-    <string name="weight_spec_one_side">Weight from one side</string>
+    <string name="weight_spec_no_bar">Only weight from plates</string>
+    <string name="weight_spec_one_side">Weight from plates on one side</string>
 
     <!-- Preference Titles -->
     <string name="units_header">Units</string>

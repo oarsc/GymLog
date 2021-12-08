@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialog_bar"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -14,7 +15,7 @@
 
     <LinearLayout
         android:id="@+id/weight_box"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center"
         android:gravity="start|center"
@@ -22,7 +23,7 @@
         android:orientation="horizontal">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <EditText
@@ -34,8 +35,10 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_weight="1"
                 android:ems="5"
-                android:maxLength="6"
-                android:inputType="numberDecimal" />
+                android:textAlignment="viewEnd"
+                android:paddingEnd="30dp"
+                android:inputType="numberDecimal"
+                tools:ignore="RtlSymmetry" />
 
             <TextView
                 android:id="@+id/unit"
@@ -48,13 +51,11 @@
                 android:layout_marginEnd="6dp"
                 android:gravity="start|center"
                 android:maxLines="1"
-                android:text="lbs"
+                android:text="@string/text_lb"
                 android:scrollHorizontally="false" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
         <TextView
             android:layout_width="wrap_content"
@@ -73,7 +74,6 @@
             android:layout_marginEnd="3dp"
             android:gravity="start|center"
             android:maxLines="1"
-            android:text="100"
             android:scrollHorizontally="false" />
 
         <TextView
@@ -94,6 +94,51 @@
             android:text="@string/text_close_parentheses"
             android:scrollHorizontally="false" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:layout_height="wrap_content"
+            tools:ignore="RtlHardcoded">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/sub"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="3dp"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/dark">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_substract_24dp"
+                    app:tint="@color/white"/>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/add"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/dark">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_add_24dp"
+                    app:tint="@color/white"/>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -103,7 +148,8 @@
         android:gravity="left|center"
         android:orientation="horizontal"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/list_text_margin">
+        android:paddingBottom="@dimen/list_text_margin"
+        tools:ignore="RtlHardcoded">
 
         <TextView
             android:layout_width="wrap_content"
@@ -133,7 +179,8 @@
         android:gravity="left|center"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingTop="@dimen/list_text_margin">
+        android:paddingTop="@dimen/list_text_margin"
+        tools:ignore="RtlHardcoded">
 
         <TextView
             android:layout_width="wrap_content"
@@ -142,8 +189,8 @@
 
         <ImageView
             android:id="@+id/weight_spec_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:src="@drawable/ic_plate_24dp"
             app:tint="@color/themedIcon" />
 
@@ -151,7 +198,37 @@
             android:id="@+id/weight_spec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp" />
+            android:layout_marginStart="3dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/total_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingTop="@dimen/list_text_margin"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/bold_text"
+            android:text="Total weight: "/>
+
+        <TextView
+            android:id="@+id/total_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/bold_text"/>
+
+        <TextView
+            android:id="@+id/total_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/bold_text"/>
 
     </LinearLayout>
 

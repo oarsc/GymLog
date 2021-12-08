@@ -14,6 +14,10 @@ public class Weight implements Comparable<Weight>{
     protected final BigDecimal value;
     protected final boolean internationalSystem;
 
+    public BigDecimal getValue(boolean internationalSystem) {
+        return internationalSystem? toKg() : toLbs();
+    }
+
     public BigDecimal toKg() {
         return internationalSystem? value : toKilograms(value);
     }
