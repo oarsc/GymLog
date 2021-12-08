@@ -22,13 +22,13 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.StringRes;
-import androidx.cardview.widget.CardView;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.model.Bar;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.model.WeightSpecification;
+import org.scp.gymlog.ui.common.NumberModifierView;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.FormatUtils;
@@ -120,8 +120,8 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
                 updateTotalWeight(newWeight);
             }
         });
-        modifyEditText(input, view.findViewById(R.id.add), true);
-        modifyEditText(input, view.findViewById(R.id.sub), false);
+        NumberModifierView modifier = view.findViewById(R.id.modifier);
+        modifier.setStep(BigDecimal.ONE);
 
         View layoutBars = view.findViewById(R.id.bars_box);
         layoutBars.setOnClickListener(barUsedView -> {
@@ -184,19 +184,6 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
             popup.show();
         });
         updateWeightSpec();
-    }
-
-    private void modifyEditText(EditText editText, CardView cardView, boolean addition) {
-        cardView.setOnClickListener(v -> {
-            BigDecimal value = toBigDecimal(editText.getText().toString());
-            BigDecimal step = addition? BigDecimal.ONE : BigDecimal.ONE.negate();
-
-            value = value.add(step);
-            if (value.compareTo(BigDecimal.ZERO) <= 0)
-                value = BigDecimal.ZERO;
-
-            editText.setText(FormatUtils.toString(value));
-        });
     }
 
     private void updateSelectedBar() {

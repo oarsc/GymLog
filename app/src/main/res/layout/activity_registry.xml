@@ -10,13 +10,11 @@
         android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/exerciseName"
+        app:layout_constraintBottom_toTopOf="@id/exerciseName"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:background="#1000" />
-
-
 
     <TextView
         android:id="@+id/exerciseName"
@@ -24,25 +22,18 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/text_margin"
         android:textSize="@dimen/bold_text"
-        android:textColor="@color/dark"
-        app:layout_constraintBottom_toTopOf="@+id/addWeight"
+        app:layout_constraintBottom_toTopOf="@id/weightModifier"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:text="@string/text_title" />
-
-
-
-
-
-
 
     <TextView
         android:id="@+id/labelWeight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        app:layout_constraintBottom_toBottomOf="@+id/addWeight"
-        app:layout_constraintTop_toTopOf="@+id/addWeight"
+        app:layout_constraintBottom_toBottomOf="@id/weightModifier"
+        app:layout_constraintTop_toTopOf="@id/weightModifier"
         app:layout_constraintLeft_toLeftOf="parent"
         android:text="@string/text_weight" />
 
@@ -54,8 +45,8 @@
         android:textAlignment="viewEnd"
         android:paddingEnd="30dp"
         android:inputType="numberDecimal"
-        app:layout_constraintBottom_toBottomOf="@id/addWeight"
-        app:layout_constraintRight_toLeftOf="@id/subWeight"
+        app:layout_constraintBottom_toBottomOf="@id/weightModifier"
+        app:layout_constraintRight_toLeftOf="@id/weightModifier"
         app:layout_constraintLeft_toRightOf="@id/labelReps"
         android:focusable="false"
         tools:ignore="RtlSymmetry" />
@@ -65,60 +56,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        app:layout_constraintBottom_toBottomOf="@id/addWeight"
-        app:layout_constraintTop_toTopOf="@id/addWeight"
+        app:layout_constraintBottom_toBottomOf="@id/weightModifier"
+        app:layout_constraintTop_toTopOf="@id/weightModifier"
         app:layout_constraintRight_toRightOf="@id/editWeight"
         android:text="@string/text_kg" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/subWeight"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="3dp"
-        app:layout_constraintBottom_toBottomOf="@+id/addWeight"
-        app:layout_constraintRight_toLeftOf="@+id/addWeight"
-        app:cardCornerRadius="3dp"
-        app:cardElevation="0dp"
-        app:cardBackgroundColor="@color/dark">
-
-        <ImageView
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_substract_24dp"
-            app:tint="@color/white"/>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/addWeight"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+    <org.scp.gymlog.ui.common.NumberModifierView
+        android:id="@+id/weightModifier"
+        android:targetId="@id/editWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/text_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        app:layout_constraintBottom_toTopOf="@+id/addReps"
-        app:layout_constraintRight_toRightOf="parent"
-        app:cardCornerRadius="3dp"
-        app:cardElevation="0dp"
-        app:cardBackgroundColor="@color/dark">
-
-        <ImageView
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_add_24dp"
-            app:tint="@color/white"/>
-
-    </androidx.cardview.widget.CardView>
-
+        app:layout_constraintBottom_toTopOf="@id/repsModifier"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <TextView
         android:id="@+id/labelReps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        app:layout_constraintBottom_toBottomOf="@+id/addReps"
-        app:layout_constraintTop_toTopOf="@+id/addReps"
+        app:layout_constraintBottom_toBottomOf="@id/repsModifier"
+        app:layout_constraintTop_toTopOf="@id/repsModifier"
         app:layout_constraintLeft_toLeftOf="parent"
         android:text="@string/text_reps" />
 
@@ -129,51 +88,20 @@
         android:ems="5"
         android:textAlignment="viewEnd"
         android:paddingEnd="30dp"
-        app:layout_constraintBottom_toBottomOf="@+id/addReps"
-        app:layout_constraintRight_toLeftOf="@+id/subReps"
-        app:layout_constraintLeft_toRightOf="@+id/labelReps"
+        app:layout_constraintBottom_toBottomOf="@id/repsModifier"
+        app:layout_constraintRight_toLeftOf="@id/repsModifier"
+        app:layout_constraintLeft_toRightOf="@id/labelReps"
         android:focusable="false" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/subReps"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="3dp"
-        app:layout_constraintBottom_toBottomOf="@+id/addReps"
-        app:layout_constraintRight_toLeftOf="@+id/addReps"
-        app:cardCornerRadius="3dp"
-        app:cardElevation="0dp"
-        app:cardBackgroundColor="@color/dark">
-
-        <ImageView
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_substract_24dp"
-            app:tint="@color/white"/>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/addReps"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+    <org.scp.gymlog.ui.common.NumberModifierView
+        android:id="@+id/repsModifier"
+        android:targetId="@id/editReps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/text_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        app:layout_constraintBottom_toTopOf="@+id/confirm"
-        app:layout_constraintRight_toRightOf="parent"
-        app:cardCornerRadius="3dp"
-        app:cardElevation="0dp"
-        app:cardBackgroundColor="@color/dark">
-
-        <ImageView
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_add_24dp"
-            app:tint="@color/white"/>
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintBottom_toTopOf="@id/confirm"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <ImageView
         android:id="@+id/confirm"

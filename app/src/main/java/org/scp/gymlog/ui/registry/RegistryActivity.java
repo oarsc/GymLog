@@ -9,21 +9,20 @@ import android.text.InputFilter;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.cardview.widget.CardView;
 import androidx.preference.PreferenceManager;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.InternalException;
 import org.scp.gymlog.model.Bar;
+import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.room.DBThread;
+import org.scp.gymlog.ui.common.BackAppCompatActivity;
+import org.scp.gymlog.ui.common.NumberModifierView;
 import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditWeightFormDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
 import org.scp.gymlog.util.Data;
-import org.scp.gymlog.model.Exercise;
-import org.scp.gymlog.ui.common.BackAppCompatActivity;
 import org.scp.gymlog.util.FormatUtils;
 
 import java.math.BigDecimal;
@@ -63,10 +62,8 @@ public class RegistryActivity extends BackAppCompatActivity {
             return input.compareTo(ONE_THOUSAND) < 0 && input.scale() < 3? null : "";
         }});
 
-        modifyEditText(weight, findViewById(R.id.addWeight), true, false);
-        modifyEditText(weight, findViewById(R.id.subWeight), false, false);
-        modifyEditText(reps, findViewById(R.id.addReps), true, true);
-        modifyEditText(reps, findViewById(R.id.subReps), false, true);
+        NumberModifierView weightModifier = findViewById(R.id.weightModifier);
+        weightModifier.setStep(BigDecimal.ONE);
 
         weight.setOnClickListener(v -> showWeightDialog(weight));
         reps.setOnClickListener(view -> {
@@ -80,19 +77,6 @@ public class RegistryActivity extends BackAppCompatActivity {
         unitTextView.setText(usingInternationalSystem?
                 R.string.text_kg :
                 R.string.text_lb);
-    }
-
-    private void modifyEditText(EditText editText, CardView cardView, boolean addition, boolean single) {
-        cardView.setOnClickListener(v -> {
-            BigDecimal value = toBigDecimal(editText.getText().toString());
-
-            BigDecimal step = single? BigDecimal.ONE : BigDecimal.ONE;
-            if (!addition) step = step.negate();
-
-            value = value.add(step);
-            if (value.compareTo(BigDecimal.ZERO) <= 0)value = BigDecimal.ZERO;
-            editText.setText(FormatUtils.toString(value));
-        });
     }
 
     private void showWeightDialog(EditText weightEditText) {

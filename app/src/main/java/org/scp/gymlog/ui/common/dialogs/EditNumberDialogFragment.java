@@ -13,15 +13,14 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import org.scp.gymlog.R;
+import org.scp.gymlog.ui.common.NumberModifierView;
 import org.scp.gymlog.util.FormatUtils;
 import org.scp.gymlog.util.Function;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -54,21 +53,17 @@ public class EditNumberDialogFragment extends CustomDialogFragment<BigDecimal> {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_edit_number, null);
         EditText input = view.findViewById(R.id.dialog_text);
-        CardView add = view.findViewById(R.id.add);
-        CardView sub = view.findViewById(R.id.sub);
+        NumberModifierView modifier = view.findViewById(R.id.modifier);
         input.setText(FormatUtils.toString(initialValue));
 
         if (allowNegatives) {
+            modifier.allowNegatives();
             input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL |
                     InputType.TYPE_NUMBER_FLAG_SIGNED);
         }
 
-        if (showButtons) {
-            modifyEditText(input, add, true);
-            modifyEditText(input, sub, false);
-        } else {
-            add.setVisibility(View.INVISIBLE);
-            sub.setVisibility(View.INVISIBLE);
+        if (!showButtons) {
+            modifier.setVisibility(View.INVISIBLE);
 
             ConstraintLayout constraintLayout = view.findViewById(R.id.parent_layout);
             ConstraintSet constraintSet = new ConstraintSet();
@@ -91,18 +86,5 @@ public class EditNumberDialogFragment extends CustomDialogFragment<BigDecimal> {
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         input.requestFocus();
         return dialog;
-    }
-
-    private void modifyEditText(EditText editText, CardView cardView, boolean addition) {
-        cardView.setOnClickListener(v -> {
-            BigDecimal value = toBigDecimal(editText.getText().toString());
-            BigDecimal step = addition? BigDecimal.ONE : BigDecimal.ONE.negate();
-
-            value = value.add(step);
-            if (!allowNegatives && value.compareTo(BigDecimal.ZERO) <= 0)
-                value = BigDecimal.ZERO;
-
-            editText.setText(FormatUtils.toString(value));
-        });
     }
 }
