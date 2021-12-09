@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.util.Locale;
 
 public class FormatUtils {
+    public static final BigDecimal FIVE = new BigDecimal("5");
     public static final BigDecimal ONE_THOUSAND = new BigDecimal("1000");
     public static final BigDecimal ONE_HUNDRED = new BigDecimal("100");
     private static final BigDecimal LBS_RATIO = new BigDecimal("2.2046226218488");

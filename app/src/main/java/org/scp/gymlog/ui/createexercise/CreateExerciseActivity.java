@@ -2,22 +2,21 @@ package org.scp.gymlog.ui.createexercise;
 
 import static org.scp.gymlog.ui.common.ImageSelectorActivity.CREATE_EXERCISE;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.WindowManager;
-import android.widget.EditText;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,14 +26,13 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.LoadException;
-import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
-import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment;
-import org.scp.gymlog.util.Data;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.ui.common.BackAppCompatActivity;
 import org.scp.gymlog.ui.common.ImageSelectorActivity;
+import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment;
+import org.scp.gymlog.util.Data;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,11 +57,11 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 		setContentView(R.layout.activity_create_exercise);
 		setTitle(R.string.title_create_exercise);
 
+		exercise = new Exercise();
+
 		RecyclerView recyclerView = findViewById(R.id.create_exercise_form_list);
 		recyclerView.setLayoutManager(new LinearLayoutManager(this));
 		recyclerView.setAdapter(new CreateExerciseFormRecyclerViewAdapter(createForm()));
-
-		exercise = new Exercise();
 	}
 
 	@Override
@@ -133,6 +131,18 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 		muscleOption.setTitle(R.string.form_muscles);
 		muscleOption.setOnClickListener(v -> showMuscleSelector(muscleOption));
 
+		FormElement requiresBarOption = new FormElement();
+		boolean barIsRequired = exercise.isRequiresBar();
+		form.add(requiresBarOption);
+		requiresBarOption.setDrawable(
+				ResourcesCompat.getDrawable(resources, barIsRequired?
+						R.drawable.ic_bar_enable_24dp : R.drawable.ic_bar_disable_24dp, null)
+		);
+		requiresBarOption.setTitle(R.string.form_requires_bar);
+		requiresBarOption.setValue(barIsRequired? R.string.form_bar_value :
+				R.string.form_no_bar_value);
+		requiresBarOption.setOnClickListener(v -> switchEnableBar(requiresBarOption));
+
 		return form;
 	}
 
@@ -174,6 +184,7 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 				result -> {
 					option.setValueStr(result);
 					option.update();
+					exercise.setName(result);
 				},
 				() -> {});
 		dialog.show(getSupportFragmentManager(), null);
@@ -218,5 +229,20 @@ public class CreateExerciseActivity extends BackAppCompatActivity {
 			option.update();
 		});
 		builder.show();
+	}
+
+	private void switchEnableBar(FormElement option) {
+		boolean value = !exercise.isRequiresBar();
+		exercise.setRequiresBar(value);
+
+		Drawable drawable = ContextCompat.getDrawable(this, value?
+				R.drawable.ic_bar_enable_24dp :
+				R.drawable.ic_bar_disable_24dp);
+
+		option.setDrawable(drawable);
+		option.setValue(value? R.string.form_bar_value :
+				R.string.form_no_bar_value);
+
+		option.update();
 	}
 }

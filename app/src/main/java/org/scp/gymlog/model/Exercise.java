@@ -1,5 +1,6 @@
 package org.scp.gymlog.model;
 
+import static org.scp.gymlog.util.FormatUtils.FIVE;
 import static org.scp.gymlog.util.FormatUtils.ONE_HUNDRED;
 
 import androidx.annotation.NonNull;
@@ -24,7 +25,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 	private String name;
 	private String image;
 	private Date lastTrained = new Date(0L);
-	private BigDecimal step;
+	private BigDecimal step = FIVE;
 	private boolean requiresBar;
 	private Bar bar;
 	private WeightSpecification weightSpec = WeightSpecification.TOTAL_WEIGHT;
