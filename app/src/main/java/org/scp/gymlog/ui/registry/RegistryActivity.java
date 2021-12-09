@@ -6,14 +6,15 @@ import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.preference.PreferenceManager;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.InternalException;
-import org.scp.gymlog.model.Bar;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.room.DBThread;
@@ -32,8 +33,10 @@ public class RegistryActivity extends BackAppCompatActivity {
     private Exercise exercise;
     private EditText weight;
     private EditText reps;
+    private NumberModifierView weightModifier;
+    private ImageView weightSpecIcon;
+    private ImageView warningIcon;
 
-    private Bar barSelected;
     private boolean usingInternationalSystem;
 
     @Override
@@ -55,17 +58,13 @@ public class RegistryActivity extends BackAppCompatActivity {
         title.setText(exercise.getName());
 
         weight = findViewById(R.id.editWeight);
-        reps = findViewById(R.id.editReps);
-
         weight.setFilters(new InputFilter[] {(source, start, end, dest, dstart, dend) -> {
             BigDecimal input = FormatUtils.toBigDecimal(dest.toString() + source.toString());
             return input.compareTo(ONE_THOUSAND) < 0 && input.scale() < 3? null : "";
         }});
-
-        NumberModifierView weightModifier = findViewById(R.id.weightModifier);
-        weightModifier.setStep(BigDecimal.ONE);
-
         weight.setOnClickListener(v -> showWeightDialog(weight));
+
+        reps = findViewById(R.id.editReps);
         reps.setOnClickListener(view -> {
             EditNumberDialogFragment dialog = new EditNumberDialogFragment(R.string.text_reps,
                     result -> reps.setText(result.toString()));
@@ -77,6 +76,19 @@ public class RegistryActivity extends BackAppCompatActivity {
         unitTextView.setText(usingInternationalSystem?
                 R.string.text_kg :
                 R.string.text_lb);
+
+        weightModifier = findViewById(R.id.weightModifier);
+        weightModifier.setStep(exercise.getStep());
+
+        weightSpecIcon = findViewById(R.id.weight_spec_icon);
+        weightSpecIcon.setImageResource(exercise.getWeightSpec().icon);
+
+        warningIcon = findViewById(R.id.warning);
+        if (exercise.isRequiresBar() == (exercise.getBar() == null)) {
+            warningIcon.setVisibility(View.VISIBLE);
+        } else {
+            warningIcon.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void showWeightDialog(EditText weightEditText) {
@@ -93,6 +105,14 @@ public class RegistryActivity extends BackAppCompatActivity {
                 result -> {
                     weightEditText.setText(FormatUtils.toString(result.getWeight().getValue()));
                     if (result.isExerciseUpdated()) {
+                        weightModifier.setStep(exercise.getStep());
+                        weightSpecIcon.setImageResource(exercise.getWeightSpec().icon);
+                        if (exercise.isRequiresBar() == (exercise.getBar() == null)) {
+                            warningIcon.setVisibility(View.VISIBLE);
+                        } else {
+                            warningIcon.setVisibility(View.INVISIBLE);
+                        }
+
                         new DBThread(this, db ->
                             db.exerciseDao().update(exercise.toEntity())
                         );

@@ -35,9 +35,19 @@ public class NumberModifierView extends LinearLayout {
         super(context, attrs);
         if (attrs != null) {
             targetId = attrs.getAttributeResourceValue(
-                    "http://schemas.android.com/apk/res/android",
-                    "targetId",
+                    "http://schemas.android.com/apk/res-auto",
+                    "target",
                     -1);
+
+            allowNegatives = attrs.getAttributeBooleanValue(
+                    "http://schemas.android.com/apk/res-auto",
+                    "negatives",
+                    false);
+
+            step = BigDecimal.valueOf(attrs.getAttributeFloatValue(
+                    "http://schemas.android.com/apk/res-auto",
+                    "step",
+                    1f));
         }
 
         autoAdd = () -> {

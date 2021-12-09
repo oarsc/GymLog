@@ -1,5 +1,7 @@
 package org.scp.gymlog.model;
 
+import static org.scp.gymlog.util.FormatUtils.ONE_HUNDRED;
+
 import androidx.annotation.NonNull;
 
 import org.scp.gymlog.room.EntityMapped;
@@ -7,6 +9,7 @@ import org.scp.gymlog.room.entities.ExerciseEntity;
 import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
 import org.scp.gymlog.util.Data;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,7 +24,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 	private String name;
 	private String image;
 	private Date lastTrained = new Date(0L);
-	private int step;
+	private BigDecimal step;
 	private boolean requiresBar;
 	private Bar bar;
 	private WeightSpecification weightSpec = WeightSpecification.TOTAL_WEIGHT;
@@ -33,7 +36,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 		entity.name = name;
 		entity.image = image;
 		entity.lastTrained = lastTrained;
-		entity.lastStep = step;
+		entity.lastStep = step.multiply(ONE_HUNDRED).intValue();
 		entity.requiresBar = requiresBar;
 		entity.lastWeightSpec = weightSpec;
 		if (bar != null) {
@@ -49,7 +52,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 		name = entity.name;
 		image = entity.image;
 		lastTrained = entity.lastTrained;
-		step = entity.lastStep;
+		step = BigDecimal.valueOf(entity.lastStep).divide(ONE_HUNDRED);
 		requiresBar = entity.requiresBar;
 		weightSpec = entity.lastWeightSpec;
 		if (entity.lastBarId != null) {

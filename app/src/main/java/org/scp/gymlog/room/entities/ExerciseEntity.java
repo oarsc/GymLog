@@ -46,7 +46,7 @@ public class ExerciseEntity {
     public Date lastTrained;
     @NonNull
     public WeightSpecification lastWeightSpec;
-    public int lastStep;
+    public int lastStep = 500;
     public Integer lastBarId;
 
     public static class WithMuscles {

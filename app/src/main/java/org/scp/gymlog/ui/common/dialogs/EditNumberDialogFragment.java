@@ -47,6 +47,10 @@ public class EditNumberDialogFragment extends CustomDialogFragment<BigDecimal> {
         setInitialValue(toBigDecimal(initialValue));
     }
 
+    public void hideButtons() {
+        showButtons = false;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -68,7 +72,7 @@ public class EditNumberDialogFragment extends CustomDialogFragment<BigDecimal> {
             ConstraintLayout constraintLayout = view.findViewById(R.id.parent_layout);
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(constraintLayout);
-            Arrays.stream(new int[]{ConstraintSet.RIGHT, ConstraintSet.RIGHT, ConstraintSet.RIGHT, ConstraintSet.RIGHT})
+            Arrays.asList(ConstraintSet.RIGHT, ConstraintSet.RIGHT, ConstraintSet.RIGHT, ConstraintSet.RIGHT)
                     .forEach(pos -> constraintSet.connect(R.id.dialog_text, pos, R.id.parent_layout, pos,0));
             constraintSet.applyTo(constraintLayout);
         }

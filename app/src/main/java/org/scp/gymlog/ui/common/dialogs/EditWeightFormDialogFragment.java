@@ -1,5 +1,6 @@
 package org.scp.gymlog.ui.common.dialogs;
 
+import static org.scp.gymlog.util.FormatUtils.ONE_HUNDRED;
 import static org.scp.gymlog.util.FormatUtils.ONE_THOUSAND;
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
 import static org.scp.gymlog.util.FormatUtils.toKilograms;
@@ -20,8 +21,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.StringRes;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.model.Bar;
@@ -47,6 +51,8 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
     private View incompatibleBar;
     private TextView weightSpec;
     private ImageView weightSpecIcon;
+    private NumberModifierView modifier;
+    private TextView step;
 
     private Exercise exercise;
     private Weight weight;
@@ -75,8 +81,8 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
                 .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.call());
 
         Dialog dialog = builder.create();
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        input.requestFocus();
+        //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        //input.requestFocus();
         return dialog;
     }
 
@@ -88,6 +94,9 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         weightSpec = view.findViewById(R.id.weight_spec);
         weightSpecIcon = view.findViewById(R.id.weight_spec_icon);
         incompatibleBar = view.findViewById(R.id.incompatible_bar);
+        step = view.findViewById(R.id.step);
+        modifier = view.findViewById(R.id.modifier);
+
         TextView convertUnit = view.findViewById(R.id.convert_unit);
         TextView[] unit = new TextView[] {
                 view.findViewById(R.id.unit),
@@ -120,8 +129,29 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
                 updateTotalWeight(newWeight);
             }
         });
-        NumberModifierView modifier = view.findViewById(R.id.modifier);
-        modifier.setStep(BigDecimal.ONE);
+
+        View layoutStep = view.findViewById(R.id.step_box);
+        layoutStep.setOnClickListener(barUsedView -> {
+            PopupMenu popup = new PopupMenu(getActivity(), layoutStep);
+            Menu menu = popup.getMenu();
+
+            Arrays.asList(50, 100, 125, 250, 500, 1000, 1500, 2000).forEach(size->
+                menu.add(0, size, size , FormatUtils.toString(BigDecimal.valueOf(size).divide(ONE_HUNDRED)))
+            );
+
+            popup.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+                BigDecimal newStep = BigDecimal.valueOf(id).divide(ONE_HUNDRED);
+                if (newStep.compareTo(exercise.getStep()) != 0) {
+                    exercise.setStep(newStep);
+                    initialValue.setExerciseUpdated(true);
+                    updateStep();
+                }
+                return true;
+            });
+            popup.show();
+        });
+        updateStep();
 
         View layoutBars = view.findViewById(R.id.bars_box);
         layoutBars.setOnClickListener(barUsedView -> {
@@ -129,7 +159,7 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
             Menu menu = popup.getMenu();
 
             int order = 0;
-            menu.add(0, -1, order++ , "No bar");
+            menu.add(0, -1, order++ , R.string.text_no_bar);
             for (Bar bar : Data.getInstance().getBars()) {
                 Weight barWeight = bar.getWeight();
                 menu.add(0, bar.getId(), order++ , getWeightLabel(barWeight));
@@ -138,11 +168,17 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
             popup.setOnMenuItemClickListener(item -> {
                 int id = item.getItemId();
                 if (id < 0) {
+
                     if (exercise.getBar() != null) {
                         exercise.setBar(null);
                         initialValue.setExerciseUpdated(true);
-                        view.findViewById(R.id.incompatible_bar).setVisibility(exercise.isRequiresBar()?
-                                View.VISIBLE : View.INVISIBLE);
+                        if (exercise.isRequiresBar()) {
+                            view.findViewById(R.id.incompatible_bar).setVisibility(View.VISIBLE);
+                            Toast.makeText(getContext(), R.string.validation_should_have_bar,
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            view.findViewById(R.id.incompatible_bar).setVisibility(View.INVISIBLE);
+                        }
                         updateSelectedBar();
                     }
 
@@ -151,8 +187,13 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
                     if (exercise.getBar() != bar) {
                         exercise.setBar(bar);
                         initialValue.setExerciseUpdated(true);
-                        view.findViewById(R.id.incompatible_bar).setVisibility(exercise.isRequiresBar()?
-                                View.INVISIBLE : View.VISIBLE);
+                        if (exercise.isRequiresBar()) {
+                            view.findViewById(R.id.incompatible_bar).setVisibility(View.INVISIBLE);
+                        } else {
+                            view.findViewById(R.id.incompatible_bar).setVisibility(View.VISIBLE);
+                            Toast.makeText(getContext(), R.string.validation_shouldnt_have_bar,
+                                    Toast.LENGTH_LONG).show();
+                        }
                         updateSelectedBar();
                     }
                 }
@@ -186,6 +227,11 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         updateWeightSpec();
     }
 
+    private void updateStep() {
+        modifier.setStep(exercise.getStep());
+        step.setText(FormatUtils.toString(exercise.getStep()));
+    }
+
     private void updateSelectedBar() {
         Bar bar = exercise.getBar();
         if (bar == null) {
@@ -199,27 +245,14 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
     }
 
     private void updateWeightSpec() {
-        switch (exercise.getWeightSpec()) {
-            case TOTAL_WEIGHT:
-                weightSpec.setText(R.string.weight_spec_total);
-                weightSpecIcon.setImageResource(R.drawable.ic_bar_with_plates_24dp);
-                updateTotalWeight(null);
-                break;
-            case NO_BAR_WEIGHT:
-                weightSpec.setText(R.string.weight_spec_no_bar);
-                weightSpecIcon.setImageResource(R.drawable.ic_plates_24dp);
-                updateTotalWeight(null);
-                break;
-            case ONE_SIDE_WEIGHT:
-                weightSpec.setText(R.string.weight_spec_one_side);
-                weightSpecIcon.setImageResource(R.drawable.ic_plate_24dp);
-                updateTotalWeight(null);
-                break;
-        }
+        WeightSpecification weightSpecification = exercise.getWeightSpec();
+        weightSpec.setText(weightSpecification.literal);
+        weightSpecIcon.setImageResource(weightSpecification.icon);
+        updateTotalWeight(null);
     }
 
     private StringBuilder getWeightLabel(Weight weight) {
-        if (weight.isInternationalSystem())  {
+        if (this.weight.isInternationalSystem())  {
             return new StringBuilder(FormatUtils.toString(weight.toKg()))
                     .append(" kg");
         } else {

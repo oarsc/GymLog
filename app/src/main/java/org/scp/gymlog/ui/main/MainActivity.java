@@ -1,5 +1,6 @@
 package org.scp.gymlog.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +12,9 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.scp.gymlog.R;
+import org.scp.gymlog.SplashActivity;
 import org.scp.gymlog.databinding.ActivityMainBinding;
+import org.scp.gymlog.util.Data;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +23,13 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		if (Data.getInstance().getMuscles().isEmpty()) {
+			Intent intent = new Intent(this, SplashActivity.class);
+			startActivity(intent);
+			finish();
+			return;
+		}
 
 		binding = ActivityMainBinding.inflate(getLayoutInflater());
 		setContentView(binding.getRoot());

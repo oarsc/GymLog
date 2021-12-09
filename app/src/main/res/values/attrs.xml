@@ -1,0 +1,7 @@
+<resources>
+    <declare-styleable name="NumberModifierView">
+        <attr name="target" format="reference" />
+        <attr name="step" format="float" />
+        <attr name="negatives" format="boolean" />
+    </declare-styleable>
+</resources>

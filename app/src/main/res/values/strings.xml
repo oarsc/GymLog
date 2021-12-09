@@ -1,40 +1,48 @@
 <resources>
     <string name="app_name">GymLog</string>
-    <string name="title_workout">Workout</string>
-    <string name="title_history">History</string>
-    <string name="title_exercises">Exercises</string>
-    <string name="title_settings">Settings</string>
-    <string name="title_create_exercise">Create exercise</string>
-    <string name="title_registry">Registry</string>
 
-    <string name="group_pectoral">Chest (Pectoral)</string>
-    <string name="group_upper_back">Upper Back</string>
-    <string name="group_lower_back">Lower Back</string>
-    <string name="group_deltoid">Shoulders (Deltoid)</string>
-    <string name="group_trapezius">Trapezius</string>
-    <string name="group_biceps">Biceps</string>
-    <string name="group_triceps">Triceps</string>
-    <string name="group_forearm">Forearm</string>
-    <string name="group_quadriceps">Quadriceps</string>
-    <string name="group_hamstrings">Hamstrings</string>
-    <string name="group_glutes">Glutes</string>
-    <string name="group_calves">Calves</string>
+    <string name="title_create_exercise">Create exercise</string>
+    <string name="title_exercises">Exercises</string>
+    <string name="title_history">History</string>
+    <string name="title_registry">Registry</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_workout">Workout</string>
+
     <string name="group_abdominals">Abdominals</string>
+    <string name="group_biceps">Biceps</string>
+    <string name="group_calves">Calves</string>
     <string name="group_cardio">Cardio</string>
+    <string name="group_deltoid">Shoulders (Deltoid)</string>
+    <string name="group_forearm">Forearm</string>
+    <string name="group_glutes">Glutes</string>
+    <string name="group_hamstrings">Hamstrings</string>
+    <string name="group_lower_back">Lower Back</string>
+    <string name="group_pectoral">Chest (Pectoral)</string>
+    <string name="group_quadriceps">Quadriceps</string>
+    <string name="group_trapezius">Trapezius</string>
+    <string name="group_triceps">Triceps</string>
+    <string name="group_upper_back">Upper Back</string>
 
     <string name="text_add">Add</string>
-    <string name="text_title">Title</string>
-    <string name="text_subtitle">Subtitle</string>
-    <string name="text_weight">Weight</string>
-    <string name="text_reps">Reps</string>
-    <string name="text_none">-</string>
-    <string name="text_open_parentheses">(</string>
-    <string name="text_close_parentheses">)</string>
-
     <string name="text_kg">kg</string>
     <string name="text_lb">lbs</string>
+    <string name="text_no_bar">No bar</string>
+    <string name="text_none">-</string>
+    <string name="text_reps">Reps</string>
+    <string name="text_space">&#160;</string>
+    <string name="text_subtitle">Subtitle</string>
+    <string name="text_title">Title</string>
+    <string name="text_vertical_bar">/</string>
+    <string name="text_weight">Weight</string>
 
-    <string name="button_confirm">Ok</string>
+    <string name="support_open_parentheses">(</string>
+    <string name="support_close_parentheses">)</string>
+    <string name="support_step_2">Step:&#160;</string>
+    <string name="support_bar_2">Bar:&#160;</string>
+    <string name="support_input_type_2">Input type:&#160;</string>
+    <string name="support_total_weight_2">Total weight:&#160;</string>
+
+    <string name="button_confirm">OK</string>
     <string name="button_cancel">Cancel</string>
 
     <string name="form_image">Image</string>
@@ -44,11 +52,13 @@
     <string name="validation_image">Please, select an image</string>
     <string name="validation_name">Please, introduce a valid name</string>
     <string name="validation_muscles">Please, select at least one muscular group</string>
+    <string name="validation_should_have_bar">This exercise is set to have a bar</string>
+    <string name="validation_shouldnt_have_bar">This exercise is not set to have a bar</string>
 
     <!-- Weight Specifications -->
     <string name="weight_spec_total">Total weight</string>
     <string name="weight_spec_no_bar">Only weight from plates</string>
-    <string name="weight_spec_one_side">Weight from plates on one side</string>
+    <string name="weight_spec_one_side">Weight from one extreme</string>
 
     <!-- Preference Titles -->
     <string name="units_header">Units</string>

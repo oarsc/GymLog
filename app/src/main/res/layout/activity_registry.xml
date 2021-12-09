@@ -37,6 +37,17 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:text="@string/text_weight" />
 
+    <ImageView
+        android:id="@+id/weight_spec_icon"
+        android:layout_width="36dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_bar_with_plates_36x24dp"
+        app:layout_constraintBottom_toBottomOf="@id/weightModifier"
+        app:layout_constraintTop_toTopOf="@id/weightModifier"
+        app:layout_constraintRight_toLeftOf="@id/editWeight"
+        app:layout_constraintLeft_toRightOf="@id/labelWeight"
+        app:tint="@color/themedIcon" />
+
     <EditText
         android:id="@+id/editWeight"
         android:layout_width="wrap_content"
@@ -61,13 +72,25 @@
         app:layout_constraintRight_toRightOf="@id/editWeight"
         android:text="@string/text_kg" />
 
+
+    <ImageView
+        android:id="@+id/warning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/list_text_margin"
+        android:src="@drawable/ic_warning_24dp"
+        app:layout_constraintBottom_toBottomOf="@id/weightModifier"
+        app:layout_constraintTop_toTopOf="@id/weightModifier"
+        app:layout_constraintLeft_toRightOf="@id/editWeight"
+        app:tint="@color/orange_light" />
+
     <org.scp.gymlog.ui.common.NumberModifierView
         android:id="@+id/weightModifier"
-        android:targetId="@id/editWeight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/text_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        app:target="@id/editWeight"
         app:layout_constraintBottom_toTopOf="@id/repsModifier"
         app:layout_constraintRight_toRightOf="parent"/>
 
@@ -95,11 +118,11 @@
 
     <org.scp.gymlog.ui.common.NumberModifierView
         android:id="@+id/repsModifier"
-        android:targetId="@id/editReps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/text_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        app:target="@id/editReps"
         app:layout_constraintBottom_toTopOf="@id/confirm"
         app:layout_constraintRight_toRightOf="parent"/>
 

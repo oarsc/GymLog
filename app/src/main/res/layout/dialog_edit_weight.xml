@@ -2,16 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/dialog_bar"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentTop="true"
-    android:layout_marginTop="12.0dip"
-    android:layout_marginBottom="9.0dip"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/dialog_margin">
-
 
     <LinearLayout
         android:id="@+id/weight_box"
@@ -19,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start|center"
         android:gravity="start|center"
-        android:minWidth="96.0dip"
         android:orientation="horizontal">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,12 +26,12 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_weight="1"
                 android:ems="5"
                 android:textAlignment="viewEnd"
                 android:paddingEnd="30dp"
                 android:inputType="numberDecimal"
-                tools:ignore="RtlSymmetry" />
+                tools:ignore="LabelFor,RtlSymmetry"
+                android:autofillHints="false" />
 
             <TextView
                 android:id="@+id/unit"
@@ -63,7 +56,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="start|center"
             android:maxLines="1"
-            android:text="@string/text_open_parentheses"
+            android:text="@string/text_vertical_bar"
             android:scrollHorizontally="false" />
 
         <TextView
@@ -85,23 +78,39 @@
             android:maxLines="1"
             android:scrollHorizontally="false" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="start|center"
-            android:maxLines="1"
-            android:text="@string/text_close_parentheses"
-            android:scrollHorizontally="false" />
-
-
         <org.scp.gymlog.ui.common.NumberModifierView
             android:id="@+id/modifier"
-            android:targetId="@id/weightValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
+            app:target="@id/weightValue"
             tools:ignore="RtlHardcoded"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/step_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp"
+        android:layout_marginTop="@dimen/list_text_margin"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackground"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/support_step_2" />
+
+        <TextView
+            android:id="@+id/step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:text="@string/text_none" />
 
     </LinearLayout>
 
@@ -111,14 +120,15 @@
         android:layout_height="wrap_content"
         android:gravity="left|center"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/list_text_margin"
+        android:paddingVertical="10dp"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackground"
         tools:ignore="RtlHardcoded">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bar: " />
+            android:text="@string/support_bar_2" />
 
         <TextView
             android:id="@+id/bar_used"
@@ -132,7 +142,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_warning_24dp"
-            app:tint="@color/orange_light" />
+            app:tint="@color/orange_light"
+            android:contentDescription="@string/text_space"/>
 
     </LinearLayout>
 
@@ -142,21 +153,23 @@
         android:layout_height="wrap_content"
         android:gravity="left|center"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingTop="@dimen/list_text_margin"
+        android:paddingVertical="10dp"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackground"
         tools:ignore="RtlHardcoded">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Input type: "/>
+            android:text="@string/support_input_type_2"/>
 
         <ImageView
             android:id="@+id/weight_spec_icon"
             android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@drawable/ic_plate_24dp"
-            app:tint="@color/themedIcon" />
+            android:layout_height="24dp"
+            android:src="@drawable/ic_bar_with_plates_36x24dp"
+            app:tint="@color/themedIcon"
+            android:contentDescription="@string/text_space" />
 
         <TextView
             android:id="@+id/weight_spec"
@@ -166,33 +179,43 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/light"/>
+
     <LinearLayout
         android:id="@+id/total_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left|center"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingTop="@dimen/list_text_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
         tools:ignore="RtlHardcoded">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/bold_text"
-            android:text="Total weight: "/>
+            android:textStyle="bold"
+            android:text="@string/support_total_weight_2"/>
 
         <TextView
             android:id="@+id/total_weight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/bold_text"/>
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="@string/text_space"/>
 
         <TextView
             android:id="@+id/total_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/bold_text"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 
