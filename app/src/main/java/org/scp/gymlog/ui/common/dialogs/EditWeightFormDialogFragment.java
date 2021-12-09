@@ -1,7 +1,7 @@
 package org.scp.gymlog.ui.common.dialogs;
 
-import static org.scp.gymlog.util.FormatUtils.ONE_HUNDRED;
-import static org.scp.gymlog.util.FormatUtils.ONE_THOUSAND;
+import static org.scp.gymlog.util.Constants.ONE_HUNDRED;
+import static org.scp.gymlog.util.Constants.ONE_THOUSAND;
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
 import static org.scp.gymlog.util.FormatUtils.toKilograms;
 import static org.scp.gymlog.util.FormatUtils.toPounds;
@@ -16,7 +16,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -24,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.model.Bar;

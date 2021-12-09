@@ -6,15 +6,18 @@ import org.scp.gymlog.model.WeightSpecification;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.EntityMapped;
 import org.scp.gymlog.room.entities.BarEntity;
+import org.scp.gymlog.room.entities.BitEntity;
 import org.scp.gymlog.room.entities.ExerciseEntity;
 import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
 import org.scp.gymlog.room.entities.MuscleEntity;
+import org.scp.gymlog.room.entities.TrainingEntity;
 import org.scp.gymlog.util.Data;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class InitialDataService {
     public void persist(AppDatabase db) {
@@ -54,15 +57,43 @@ public class InitialDataService {
 
     private static void addTestData(AppDatabase db) {
         ExerciseEntity ex = new ExerciseEntity();
-        ex.image = "abs_bar_knee_raise_rest_on_arms_1";
-        ex.name = "Test";
-        ex.lastTrained = new Date(0);
-        ex.lastWeightSpec = WeightSpecification.TOTAL_WEIGHT;
-        int id = (int) db.exerciseDao().insert(ex);
+        ex.image = "chest_bench_barbell_press_lying";
+        ex.name = "Bench press";
+        ex.requiresBar = true;
+        ex.lastBarId = 4; // 20kg
+        ex.lastTrained = new Date(1639086000000L);
+        ex.lastWeightSpec = WeightSpecification.ONE_SIDE_WEIGHT;
+        ex.exerciseId = (int) db.exerciseDao().insert(ex);
 
-        ExerciseMuscleCrossRef exx = new ExerciseMuscleCrossRef();
-        exx.exerciseId = id;
-        exx.muscleId = 1;
-        db.exerciseMuscleCrossRefDao().insert(exx);
+        ExerciseMuscleCrossRef exXmuscle = new ExerciseMuscleCrossRef();
+        exXmuscle.exerciseId = ex.exerciseId;
+        exXmuscle.muscleId = 1;
+        db.exerciseMuscleCrossRefDao().insert(exXmuscle);
+
+        TrainingEntity training = new TrainingEntity();
+        training.start = new Date(1639080000000L);
+        training.end = new Date(1639090000000L);
+        training.trainingId = (int) db.trainingDao().insert(training);
+
+        Consumer<Long> createBit = (date) -> {
+            BitEntity bit = new BitEntity();
+            bit.barId = 4; // 20kg
+            bit.exerciseId = ex.exerciseId;
+            bit.timestamp = new Date(date);
+            bit.kilos = true;
+            bit.totalWeight = 9000;
+            bit.reps = 10;
+            bit.note = "";
+            bit.trainingId = training.trainingId;
+            db.bitDao().insert(bit);
+        };
+
+        createBit.accept(1639081000000L);
+        createBit.accept(1639082000000L);
+        createBit.accept(1639083000000L);
+        createBit.accept(1639084000000L);
+        createBit.accept(1639085000000L);
+        createBit.accept(1639086000000L);
+
     }
 }

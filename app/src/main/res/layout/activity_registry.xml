@@ -6,15 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.registry.RegistryActivity">
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/exerciseName"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:background="#1000" />
+    <include layout="@layout/activity_registry_log_fragment"/>
 
     <TextView
         android:id="@+id/exerciseName"
@@ -54,7 +46,7 @@
         android:layout_height="48dp"
         android:ems="5"
         android:textAlignment="viewEnd"
-        android:paddingEnd="30dp"
+        android:paddingEnd="26dp"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toBottomOf="@id/weightModifier"
         app:layout_constraintRight_toLeftOf="@id/weightModifier"
@@ -110,11 +102,12 @@
         android:layout_height="48dp"
         android:ems="5"
         android:textAlignment="viewEnd"
-        android:paddingEnd="30dp"
+        android:paddingEnd="26dp"
         app:layout_constraintBottom_toBottomOf="@id/repsModifier"
         app:layout_constraintRight_toLeftOf="@id/repsModifier"
         app:layout_constraintLeft_toRightOf="@id/labelReps"
-        android:focusable="false" />
+        android:focusable="false"
+        tools:ignore="RtlSymmetry" />
 
     <org.scp.gymlog.ui.common.NumberModifierView
         android:id="@+id/repsModifier"

@@ -1,6 +1,8 @@
 package org.scp.gymlog.ui.registry;
 
-import static org.scp.gymlog.util.FormatUtils.ONE_THOUSAND;
+import static org.scp.gymlog.util.Constants.DATE_ZERO;
+import static org.scp.gymlog.util.Constants.ONE_THOUSAND;
+import static org.scp.gymlog.util.Constants.TWO;
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
 
 import android.content.SharedPreferences;
@@ -15,10 +17,13 @@ import androidx.preference.PreferenceManager;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.InternalException;
+import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Weight;
+import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
-import org.scp.gymlog.ui.common.BackAppCompatActivity;
+import org.scp.gymlog.room.entities.BitEntity;
+import org.scp.gymlog.ui.common.BackDBAppCompatActivity;
 import org.scp.gymlog.ui.common.NumberModifierView;
 import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditWeightFormDialogFragment;
@@ -27,8 +32,12 @@ import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.FormatUtils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
-public class RegistryActivity extends BackAppCompatActivity {
+public class RegistryActivity extends BackDBAppCompatActivity {
+    private static final int LOG_PAGES_SIZE = 10;
 
     private Exercise exercise;
     private EditText weight;
@@ -38,25 +47,38 @@ public class RegistryActivity extends BackAppCompatActivity {
     private ImageView warningIcon;
 
     private boolean usingInternationalSystem;
+    private final List<Bit> log = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registry);
-        setTitle(R.string.title_registry);
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        usingInternationalSystem = preferences.getBoolean("internationalSystem", false);
-
+    protected void onLoad(Bundle savedInstanceState, AppDatabase db) {
         int exerciseId = getIntent().getExtras().getInt("exerciseId");
         exercise = Data.getInstance().getExercises().stream()
                 .filter(ex -> ex.getId() == exerciseId)
                 .findFirst()
                 .orElseThrow(() -> new InternalException("Exercise id not found"));
 
+        List<BitEntity> log = db.bitDao().getHistory(exerciseId, DATE_ZERO, LOG_PAGES_SIZE);
+        if (log.size() == LOG_PAGES_SIZE && log.get(0).trainingId == log.get(LOG_PAGES_SIZE-1).trainingId) {
+            log = db.bitDao().getHistory(exerciseId, log.get(0).trainingId);
+        }
+        log.stream()
+                .map(bit -> new Bit().fromEntity(bit))
+                .forEach(this.log::add);
+    }
+
+    @Override
+    protected void onDelayedCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_registry);
+        setTitle(R.string.title_registry);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        usingInternationalSystem = preferences.getBoolean("internationalSystem", false);
+
+
         TextView title = findViewById(R.id.exerciseName);
         title.setText(exercise.getName());
 
+        // Weight and Reps Input fields:
         weight = findViewById(R.id.editWeight);
         weight.setFilters(new InputFilter[] {(source, start, end, dest, dstart, dend) -> {
             BigDecimal input = FormatUtils.toBigDecimal(dest.toString() + source.toString());
@@ -89,6 +111,8 @@ public class RegistryActivity extends BackAppCompatActivity {
         } else {
             warningIcon.setVisibility(View.INVISIBLE);
         }
+
+        loadHistory();
     }
 
     private void showWeightDialog(EditText weightEditText) {
@@ -120,5 +144,34 @@ public class RegistryActivity extends BackAppCompatActivity {
                 },
                 () -> {}, weightFormData);
         dialog.show(getSupportFragmentManager(), null);
+    }
+
+    private void loadHistory() {
+        if (!log.isEmpty()) {
+            Bit bit = log.get(0);
+            reps.setText(String.valueOf(bit.getReps()));
+            weight.setText(FormatUtils.toString(
+                    getWeightFromTotal(bit.getWeight().getValue(usingInternationalSystem)))
+                );
+        }
+    }
+
+    private BigDecimal getWeightFromTotal(BigDecimal total) {
+        switch (exercise.getWeightSpec()) {
+            case ONE_SIDE_WEIGHT:
+                if (exercise.getBar() != null) {
+                    return total.subtract(
+                            exercise.getBar().getWeight().getValue(usingInternationalSystem)
+                        ).divide(TWO, 2, RoundingMode.HALF_UP);
+                }
+                return total.divide(TWO, 2, RoundingMode.HALF_UP);
+            case NO_BAR_WEIGHT:
+                if (exercise.getBar() != null) {
+                    return total.subtract(
+                            exercise.getBar().getWeight().getValue(usingInternationalSystem)
+                        );
+                }
+        }
+        return total;
     }
 }

@@ -1,5 +1,7 @@
 package org.scp.gymlog.util;
 
+import static org.scp.gymlog.util.Constants.LBS_RATIO;
+
 import org.scp.gymlog.model.Weight;
 
 import java.math.BigDecimal;
@@ -10,11 +12,6 @@ import java.text.ParseException;
 import java.util.Locale;
 
 public class FormatUtils {
-    public static final BigDecimal FIVE = new BigDecimal("5");
-    public static final BigDecimal ONE_THOUSAND = new BigDecimal("1000");
-    public static final BigDecimal ONE_HUNDRED = new BigDecimal("100");
-    private static final BigDecimal LBS_RATIO = new BigDecimal("2.2046226218488");
-
     private static final Format FORMAT;
     static {
         DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());

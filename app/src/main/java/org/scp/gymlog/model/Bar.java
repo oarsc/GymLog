@@ -1,6 +1,6 @@
 package org.scp.gymlog.model;
 
-import static org.scp.gymlog.util.FormatUtils.ONE_HUNDRED;
+import static org.scp.gymlog.util.Constants.ONE_HUNDRED;
 
 import androidx.annotation.NonNull;
 
