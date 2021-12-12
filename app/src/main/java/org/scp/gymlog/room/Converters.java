@@ -4,17 +4,23 @@ import androidx.room.TypeConverter;
 
 import org.scp.gymlog.model.WeightSpecification;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Converters {
     @TypeConverter
-    public static Date toDate(Long dateLong){
-        return dateLong == null ? null: new Date(dateLong);
+    public static Calendar toDate(Long dateLong){
+        if (dateLong == null) {
+            return null;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(dateLong);
+        return cal;
     }
 
     @TypeConverter
-    public static Long fromDate(Date date){
-        return date == null ? null : date.getTime();
+    public static Long fromDate(Calendar cal){
+        return cal == null ? null : cal.getTimeInMillis();
     }
 
     @TypeConverter

@@ -1,19 +1,16 @@
 package org.scp.gymlog.room.entities;
 
 import static androidx.room.ForeignKey.CASCADE;
-import static androidx.room.ForeignKey.SET_NULL;
 
 import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
-import androidx.room.Junction;
 import androidx.room.PrimaryKey;
 import androidx.room.Relation;
 
-import java.util.Date;
-import java.util.List;
+import java.util.Calendar;
 
 @Entity(
         tableName = "bit",
@@ -49,7 +46,7 @@ public class BitEntity {
     @NonNull
     public String note;
     @NonNull
-    public Date timestamp;
+    public Calendar timestamp;
 
     public static class WithBar {
         @Embedded

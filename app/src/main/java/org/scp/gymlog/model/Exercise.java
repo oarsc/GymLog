@@ -1,5 +1,6 @@
 package org.scp.gymlog.model;
 
+import static org.scp.gymlog.util.Constants.DATE_ZERO;
 import static org.scp.gymlog.util.Constants.FIVE;
 import static org.scp.gymlog.util.Constants.ONE_HUNDRED;
 
@@ -12,7 +13,7 @@ import org.scp.gymlog.util.Data;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 	private int id;
 	private String name;
 	private String image;
-	private Date lastTrained = new Date(0L);
+	private Calendar lastTrained = DATE_ZERO;
 	private BigDecimal step = FIVE;
 	private boolean requiresBar;
 	private Bar bar;

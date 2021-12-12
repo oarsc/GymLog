@@ -14,7 +14,7 @@ import androidx.room.Relation;
 
 import org.scp.gymlog.model.WeightSpecification;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 @Entity(
@@ -43,7 +43,7 @@ public class ExerciseEntity {
 
     // Last configs
     @NonNull
-    public Date lastTrained;
+    public Calendar lastTrained;
     @NonNull
     public WeightSpecification lastWeightSpec;
     public int lastStep = 500;

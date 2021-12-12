@@ -15,7 +15,7 @@ import org.scp.gymlog.util.Data;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -61,7 +61,8 @@ public class InitialDataService {
         ex.name = "Bench press";
         ex.requiresBar = true;
         ex.lastBarId = 4; // 20kg
-        ex.lastTrained = new Date(1639086000000L);
+        ex.lastTrained = Calendar.getInstance();
+        ex.lastTrained.setTimeInMillis(1639086000000L);
         ex.lastWeightSpec = WeightSpecification.ONE_SIDE_WEIGHT;
         ex.exerciseId = (int) db.exerciseDao().insert(ex);
 
@@ -71,14 +72,17 @@ public class InitialDataService {
         db.exerciseMuscleCrossRefDao().insert(exXmuscle);
 
         TrainingEntity training = new TrainingEntity();
-        training.start = new Date(1639080000000L);
-        training.end = new Date(1639090000000L);
+        training.start = Calendar.getInstance();
+        training.start.setTimeInMillis(1639080000000L);
+        training.end = Calendar.getInstance();
+        training.end.setTimeInMillis(1639090000000L);
         training.trainingId = (int) db.trainingDao().insert(training);
 
         Consumer<Long> createBit = (date) -> {
             BitEntity bit = new BitEntity();
             bit.exerciseId = ex.exerciseId;
-            bit.timestamp = new Date(date);
+            bit.timestamp = Calendar.getInstance();
+            bit.timestamp.setTimeInMillis(date);
             bit.kilos = true;
             bit.totalWeight = 9000;
             bit.reps = 10;
@@ -95,7 +99,8 @@ public class InitialDataService {
         createBit.accept(1639086000000L);
 
         TrainingEntity training2 = new TrainingEntity();
-        training2.start = new Date(1639166400000L);
+        training2.start = Calendar.getInstance();
+        training2.start.setTimeInMillis(1639166400000L);
         db.trainingDao().insert(training2);
 
     }

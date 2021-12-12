@@ -8,7 +8,7 @@ import org.scp.gymlog.room.EntityMapped;
 import org.scp.gymlog.room.entities.BitEntity;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.Calendar;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class Bit implements EntityMapped<BitEntity> {
 	private int reps;
 	private Weight weight;
 	private String note;
-	private Date timestamp;
+	private Calendar timestamp;
 
 	@Override
 	public BitEntity toEntity() {

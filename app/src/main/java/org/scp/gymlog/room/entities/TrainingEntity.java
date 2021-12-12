@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-import java.util.Date;
+import java.util.Calendar;
 
 @Entity(
         tableName = "training",
@@ -17,6 +17,6 @@ public class TrainingEntity {
     @PrimaryKey(autoGenerate = true)
     public int trainingId;
     @NonNull
-    public Date start;
-    public Date end;
+    public Calendar start;
+    public Calendar end;
 }

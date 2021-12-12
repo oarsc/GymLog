@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.InternalException;
@@ -39,7 +41,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class RegistryActivity extends BackDBAppCompatActivity {
-    private static final int LOG_PAGES_SIZE = 10;
+    private static final int LOG_PAGES_SIZE = 16;
 
     private Exercise exercise;
     private EditText weight;
@@ -88,6 +90,11 @@ public class RegistryActivity extends BackDBAppCompatActivity {
 
         TextView title = findViewById(R.id.exerciseName);
         title.setText(exercise.getName());
+
+        // Logs:
+        RecyclerView recyclerView = findViewById(R.id.log_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new LogRecyclerViewAdapter(log));
 
         // Weight and Reps Input fields:
         weight = findViewById(R.id.editWeight);

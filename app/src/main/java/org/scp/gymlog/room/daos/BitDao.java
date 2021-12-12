@@ -8,7 +8,7 @@ import androidx.room.Update;
 
 import org.scp.gymlog.room.entities.BitEntity;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 @Dao
@@ -18,7 +18,7 @@ public interface BitDao {
 
     @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND timestamp > :date " +
             "ORDER BY timestamp DESC LIMIT :limit")
-    List<BitEntity> getHistory(int exerciseId, Date date, int limit);
+    List<BitEntity> getHistory(int exerciseId, Calendar date, int limit);
 
     @Insert
     long insert(BitEntity bit);
