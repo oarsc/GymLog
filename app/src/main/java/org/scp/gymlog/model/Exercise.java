@@ -28,7 +28,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 	private BigDecimal step = FIVE;
 	private boolean requiresBar;
 	private Bar bar;
-	private WeightSpecification weightSpec = WeightSpecification.TOTAL_WEIGHT;
+	private WeightSpecification weightSpec = WeightSpecification.NO_BAR_WEIGHT;
 
 	@Override
 	public ExerciseEntity toEntity() {

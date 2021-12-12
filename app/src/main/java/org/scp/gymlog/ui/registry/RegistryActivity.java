@@ -23,6 +23,7 @@ import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.entities.BitEntity;
+import org.scp.gymlog.room.entities.TrainingEntity;
 import org.scp.gymlog.ui.common.BackDBAppCompatActivity;
 import org.scp.gymlog.ui.common.NumberModifierView;
 import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
@@ -35,6 +36,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RegistryActivity extends BackDBAppCompatActivity {
     private static final int LOG_PAGES_SIZE = 10;
@@ -48,9 +50,16 @@ public class RegistryActivity extends BackDBAppCompatActivity {
 
     private boolean usingInternationalSystem;
     private final List<Bit> log = new ArrayList<>();
+    private int trainingId;
 
     @Override
-    protected void onLoad(Bundle savedInstanceState, AppDatabase db) {
+    protected int onLoad(Bundle savedInstanceState, AppDatabase db) {
+        Optional<TrainingEntity> training = db.trainingDao().getCurrentTraining();
+        if (!training.isPresent()) {
+            return R.string.validation_training_not_started;
+        }
+        trainingId = training.get().trainingId;
+
         int exerciseId = getIntent().getExtras().getInt("exerciseId");
         exercise = Data.getInstance().getExercises().stream()
                 .filter(ex -> ex.getId() == exerciseId)
@@ -64,6 +73,8 @@ public class RegistryActivity extends BackDBAppCompatActivity {
         log.stream()
                 .map(bit -> new Bit().fromEntity(bit))
                 .forEach(this.log::add);
+
+        return CONTINUE;
     }
 
     @Override
@@ -123,12 +134,19 @@ public class RegistryActivity extends BackDBAppCompatActivity {
                 usingInternationalSystem
         );
         weightFormData.setWeight(weight);
-        weightFormData.setExercise(exercise);
+        weightFormData.setStep(exercise.getStep());
+        weightFormData.setBar(exercise.getBar());
+        weightFormData.setRequiresBar(exercise.isRequiresBar());
+        weightFormData.setWeightSpec(exercise.getWeightSpec());
 
         EditWeightFormDialogFragment dialog = new EditWeightFormDialogFragment(R.string.text_weight,
                 result -> {
                     weightEditText.setText(FormatUtils.toString(result.getWeight().getValue()));
                     if (result.isExerciseUpdated()) {
+                        exercise.setBar(result.getBar());
+                        exercise.setStep(result.getStep());
+                        exercise.setWeightSpec(result.getWeightSpec());
+
                         weightModifier.setStep(exercise.getStep());
                         weightSpecIcon.setImageResource(exercise.getWeightSpec().icon);
                         if (exercise.isRequiresBar() == (exercise.getBar() == null)) {

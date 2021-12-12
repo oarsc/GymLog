@@ -25,12 +25,6 @@ import java.util.List;
                         onDelete = CASCADE,
                         onUpdate = CASCADE),
                 @ForeignKey(
-                        entity = BarEntity.class,
-                        parentColumns = "barId",
-                        childColumns = "barId",
-                        onDelete = SET_NULL,
-                        onUpdate = CASCADE),
-                @ForeignKey(
                         entity = TrainingEntity.class,
                         parentColumns = "trainingId",
                         childColumns = "trainingId",
@@ -39,7 +33,6 @@ import java.util.List;
         },
         indices = {
                 @Index("exerciseId"),
-                @Index("barId"),
                 @Index("trainingId"),
                 @Index({ "exerciseId", "timestamp" }),
                 @Index({ "exerciseId", "trainingId", "timestamp" }),
@@ -53,7 +46,6 @@ public class BitEntity {
     public int reps;
     public int totalWeight;
     public boolean kilos;
-    public Integer barId;
     @NonNull
     public String note;
     @NonNull

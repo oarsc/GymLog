@@ -77,7 +77,6 @@ public class InitialDataService {
 
         Consumer<Long> createBit = (date) -> {
             BitEntity bit = new BitEntity();
-            bit.barId = 4; // 20kg
             bit.exerciseId = ex.exerciseId;
             bit.timestamp = new Date(date);
             bit.kilos = true;
@@ -94,6 +93,10 @@ public class InitialDataService {
         createBit.accept(1639084000000L);
         createBit.accept(1639085000000L);
         createBit.accept(1639086000000L);
+
+        TrainingEntity training2 = new TrainingEntity();
+        training2.start = new Date(1639166400000L);
+        db.trainingDao().insert(training2);
 
     }
 }

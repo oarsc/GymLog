@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 
 import org.scp.gymlog.room.EntityMapped;
 import org.scp.gymlog.room.entities.BitEntity;
-import org.scp.gymlog.util.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +24,6 @@ public class Bit implements EntityMapped<BitEntity> {
 	private int trainingId;
 	private int reps;
 	private Weight weight;
-	private Bar bar;
 	private String note;
 	private Date timestamp;
 
@@ -40,16 +38,13 @@ public class Bit implements EntityMapped<BitEntity> {
 		entity.reps = reps;
 		entity.totalWeight = weight.getValue().multiply(ONE_HUNDRED).intValue();
 		entity.kilos = weight.isInternationalSystem();
-		if (bar != null) {
-			entity.barId = bar.getId();
-		}
 		return entity;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public Bit fromEntity(@NonNull BitEntity entity) {
-		id = entity.barId;
+		id = entity.bitId;
 		exerciseId = entity.exerciseId;
 		trainingId = entity.trainingId;
 		note = entity.note;
@@ -59,9 +54,6 @@ public class Bit implements EntityMapped<BitEntity> {
 				BigDecimal.valueOf(entity.totalWeight).divide(ONE_HUNDRED),
 				entity.kilos
 		);
-		if (entity.barId != null) {
-			bar = Data.getBar(entity.barId);
-		}
 		return this;
 	}
 }

@@ -57,6 +57,7 @@
     <string name="validation_muscles">Please, select at least one muscular group</string>
     <string name="validation_should_have_bar">This exercise is set to have a bar</string>
     <string name="validation_shouldnt_have_bar">This exercise is not set to have a bar</string>
+    <string name="validation_training_not_started">A training session must be started first</string>
 
     <!-- Weight Specifications -->
     <string name="weight_spec_total">Total weight</string>

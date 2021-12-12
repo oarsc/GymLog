@@ -26,7 +26,6 @@ import androidx.annotation.StringRes;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.model.Bar;
-import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.model.WeightSpecification;
 import org.scp.gymlog.ui.common.NumberModifierView;
@@ -51,14 +50,12 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
     private NumberModifierView modifier;
     private TextView step;
 
-    private Exercise exercise;
     private Weight weight;
 
     public EditWeightFormDialogFragment(@StringRes int title, Consumer<WeightFormData> confirm,
                                         Function cancel, WeightFormData initialValue) {
         super(title, confirm, cancel);
         this.initialValue = initialValue;
-        exercise = initialValue.getExercise();
         weight = initialValue.getWeight();
     }
 
@@ -139,8 +136,8 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
             popup.setOnMenuItemClickListener(item -> {
                 int id = item.getItemId();
                 BigDecimal newStep = BigDecimal.valueOf(id).divide(ONE_HUNDRED);
-                if (newStep.compareTo(exercise.getStep()) != 0) {
-                    exercise.setStep(newStep);
+                if (newStep.compareTo(initialValue.getStep()) != 0) {
+                    initialValue.setStep(newStep);
                     initialValue.setExerciseUpdated(true);
                     updateStep();
                 }
@@ -166,25 +163,31 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
                 int id = item.getItemId();
                 if (id < 0) {
 
-                    if (exercise.getBar() != null) {
-                        exercise.setBar(null);
+                    if (initialValue.getBar() != null) {
+                        initialValue.setBar(null);
                         initialValue.setExerciseUpdated(true);
-                        if (exercise.isRequiresBar()) {
+                        if (initialValue.isRequiresBar()) {
                             view.findViewById(R.id.incompatible_bar).setVisibility(View.VISIBLE);
                             Toast.makeText(getContext(), R.string.validation_should_have_bar,
                                     Toast.LENGTH_LONG).show();
                         } else {
                             view.findViewById(R.id.incompatible_bar).setVisibility(View.INVISIBLE);
                         }
+
+                        if (initialValue.getWeightSpec() == WeightSpecification.TOTAL_WEIGHT) {
+                            initialValue.setWeightSpec(WeightSpecification.NO_BAR_WEIGHT);
+                            updateWeightSpec();
+                        }
+
                         updateSelectedBar();
                     }
 
                 } else {
                     Bar bar = Data.getBar(id);
-                    if (exercise.getBar() != bar) {
-                        exercise.setBar(bar);
+                    if (initialValue.getBar() != bar) {
+                        initialValue.setBar(bar);
                         initialValue.setExerciseUpdated(true);
-                        if (exercise.isRequiresBar()) {
+                        if (initialValue.isRequiresBar()) {
                             view.findViewById(R.id.incompatible_bar).setVisibility(View.INVISIBLE);
                         } else {
                             view.findViewById(R.id.incompatible_bar).setVisibility(View.VISIBLE);
@@ -211,38 +214,43 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
                 else if (id == R.id.one_side) newWeightSpec = WeightSpecification.ONE_SIDE_WEIGHT;
                 else return false;
 
-                if (newWeightSpec != exercise.getWeightSpec()) {
-                    exercise.setWeightSpec(newWeightSpec);
+                if (newWeightSpec != initialValue.getWeightSpec()) {
+                    initialValue.setWeightSpec(newWeightSpec);
                     initialValue.setExerciseUpdated(true);
                     updateWeightSpec();
                 }
                 return true;
             });
             popup.inflate(R.menu.weight_specification_menu);
+
+            if (initialValue.getBar() == null) {
+                popup.getMenu().findItem(R.id.total).setVisible(false);
+            }
+
             popup.show();
         });
         updateWeightSpec();
     }
 
     private void updateStep() {
-        modifier.setStep(exercise.getStep());
-        step.setText(FormatUtils.toString(exercise.getStep()));
+        modifier.setStep(initialValue.getStep());
+        step.setText(FormatUtils.toString(initialValue.getStep()));
     }
 
     private void updateSelectedBar() {
-        Bar bar = exercise.getBar();
+        Bar bar = initialValue.getBar();
         if (bar == null) {
             barUsed.setText(R.string.text_none);
-            incompatibleBar.setVisibility(exercise.isRequiresBar()? View.VISIBLE : View.INVISIBLE);
+            incompatibleBar.setVisibility(initialValue.isRequiresBar()? View.VISIBLE : View.INVISIBLE);
         } else {
             barUsed.setText(getWeightLabel(bar.getWeight()));
-            incompatibleBar.setVisibility(exercise.isRequiresBar()? View.INVISIBLE : View.VISIBLE);
+            incompatibleBar.setVisibility(initialValue.isRequiresBar()? View.INVISIBLE : View.VISIBLE);
         }
         updateTotalWeight(null);
     }
 
     private void updateWeightSpec() {
-        WeightSpecification weightSpecification = exercise.getWeightSpec();
+        WeightSpecification weightSpecification = initialValue.getWeightSpec();
         weightSpec.setText(weightSpecification.literal);
         weightSpecIcon.setImageResource(weightSpecification.icon);
         updateTotalWeight(null);
@@ -272,10 +280,10 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         if (value == null)
             value = toBigDecimal(input.getText().toString());
 
-        Bar bar = exercise.getBar();
+        Bar bar = initialValue.getBar();
         boolean internationalSystem = weight.isInternationalSystem();
 
-        switch (exercise.getWeightSpec()) {
+        switch (initialValue.getWeightSpec()) {
             case TOTAL_WEIGHT:
                 totalValue.setText(FormatUtils.toString(value));
                 break;
