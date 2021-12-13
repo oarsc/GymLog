@@ -33,6 +33,15 @@ public class FormatUtils {
         }
     }
 
+    public static int toInt(String string) {
+        try {
+            return Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     public static String toString(BigDecimal bigDecimal) {
         return FORMAT.format(bigDecimal);
     }

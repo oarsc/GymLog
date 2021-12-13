@@ -27,6 +27,8 @@ public class Bit implements EntityMapped<BitEntity> {
 	private String note;
 	private Calendar timestamp;
 
+	private int set; // used in logRecyclerViewAdapter
+
 	@Override
 	public BitEntity toEntity() {
 		BitEntity entity = new BitEntity();

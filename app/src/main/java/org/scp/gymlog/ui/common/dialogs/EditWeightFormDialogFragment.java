@@ -5,6 +5,7 @@ import static org.scp.gymlog.util.Constants.ONE_THOUSAND;
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
 import static org.scp.gymlog.util.FormatUtils.toKilograms;
 import static org.scp.gymlog.util.FormatUtils.toPounds;
+import static org.scp.gymlog.util.WeightUtils.getTotalWeight;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -43,6 +44,7 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
     private EditText input;
     private TextView convertValue;
     private TextView totalValue;
+    private TextView totalConvertValue;
     private TextView barUsed;
     private View incompatibleBar;
     private TextView weightSpec;
@@ -84,6 +86,7 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         input = view.findViewById(R.id.weightValue);
         convertValue = view.findViewById(R.id.converted);
         totalValue = view.findViewById(R.id.total_weight);
+        totalConvertValue = view.findViewById(R.id.converted_total);
         barUsed = view.findViewById(R.id.bar_used);
         weightSpec = view.findViewById(R.id.weight_spec);
         weightSpecIcon = view.findViewById(R.id.weight_spec_icon);
@@ -91,7 +94,10 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         step = view.findViewById(R.id.step);
         modifier = view.findViewById(R.id.modifier);
 
-        TextView convertUnit = view.findViewById(R.id.convert_unit);
+        TextView[] convertUnit = new TextView[] {
+                view.findViewById(R.id.convert_unit),
+                view.findViewById(R.id.convert_total_unit),
+        };
         TextView[] unit = new TextView[] {
                 view.findViewById(R.id.unit),
                 view.findViewById(R.id.total_unit),
@@ -103,10 +109,10 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         updateConvertedUnit(weight.getValue());
 
         if (weight.isInternationalSystem()) {
-            convertUnit.setText(R.string.text_lb);
+            Arrays.stream(convertUnit).forEach(x -> x.setText(R.string.text_lb));
             Arrays.stream(unit).forEach(x -> x.setText(R.string.text_kg));
         } else {
-            convertUnit.setText(R.string.text_kg);
+            Arrays.stream(convertUnit).forEach(x -> x.setText(R.string.text_kg));
             Arrays.stream(unit).forEach(x -> x.setText(R.string.text_lb));
         }
         input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -280,23 +286,17 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         if (value == null)
             value = toBigDecimal(input.getText().toString());
 
-        Bar bar = initialValue.getBar();
-        boolean internationalSystem = weight.isInternationalSystem();
+        BigDecimal totalWeight = getTotalWeight(value,
+                initialValue.getWeightSpec(),
+                initialValue.getBar(),
+                weight.isInternationalSystem());
 
-        switch (initialValue.getWeightSpec()) {
-            case TOTAL_WEIGHT:
-                totalValue.setText(FormatUtils.toString(value));
-                break;
-            case NO_BAR_WEIGHT:
-                BigDecimal totalNoBarVal = bar == null? value :
-                        value.add(bar.getWeight().getValue(internationalSystem));
-                totalValue.setText(FormatUtils.toString(totalNoBarVal));
-                break;
-            case ONE_SIDE_WEIGHT:
-                BigDecimal totalOneSideVal = bar == null? value.add(value) :
-                        value.add(value).add(bar.getWeight().getValue(internationalSystem));
-                totalValue.setText(FormatUtils.toString(totalOneSideVal));
-                break;
+        totalValue.setText(FormatUtils.toString(totalWeight));
+
+        if (weight.isInternationalSystem()) {
+            totalConvertValue.setText(FormatUtils.toString(toPounds(totalWeight)));
+        } else {
+            totalConvertValue.setText(FormatUtils.toString(toKilograms(totalWeight)));
         }
     }
 

@@ -24,6 +24,7 @@
     <string name="group_upper_back">Upper Back</string>
 
     <string name="text_add">Add</string>
+    <string name="text_empty"/>
     <string name="text_kg">kg</string>
     <string name="text_lb">lbs</string>
     <string name="text_no_bar">No bar</string>

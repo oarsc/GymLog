@@ -4,6 +4,9 @@ import static org.scp.gymlog.util.Constants.DATE_ZERO;
 import static org.scp.gymlog.util.Constants.ONE_THOUSAND;
 import static org.scp.gymlog.util.Constants.TWO;
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
+import static org.scp.gymlog.util.FormatUtils.toInt;
+import static org.scp.gymlog.util.WeightUtils.getTotalWeight;
+import static org.scp.gymlog.util.WeightUtils.getWeightFromTotal;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.InternalException;
+import org.scp.gymlog.model.Bar;
 import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Weight;
@@ -37,6 +41,7 @@ import org.scp.gymlog.util.FormatUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +54,7 @@ public class RegistryActivity extends BackDBAppCompatActivity {
     private NumberModifierView weightModifier;
     private ImageView weightSpecIcon;
     private ImageView warningIcon;
+    private LogRecyclerViewAdapter recyclerViewAdapter;
 
     private boolean usingInternationalSystem;
     private final List<Bit> log = new ArrayList<>();
@@ -94,7 +100,10 @@ public class RegistryActivity extends BackDBAppCompatActivity {
         // Logs:
         RecyclerView recyclerView = findViewById(R.id.log_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new LogRecyclerViewAdapter(log));
+        recyclerView.setAdapter(recyclerViewAdapter = new LogRecyclerViewAdapter(log, trainingId));
+
+        // Save bit log
+        findViewById(R.id.confirm).setOnClickListener(this::saveBitLog);
 
         // Weight and Reps Input fields:
         weight = findViewById(R.id.editWeight);
@@ -175,28 +184,49 @@ public class RegistryActivity extends BackDBAppCompatActivity {
         if (!log.isEmpty()) {
             Bit bit = log.get(0);
             reps.setText(String.valueOf(bit.getReps()));
-            weight.setText(FormatUtils.toString(
-                    getWeightFromTotal(bit.getWeight().getValue(usingInternationalSystem)))
-                );
+
+            BigDecimal partialWeight = getWeightFromTotal(
+                    bit.getWeight().getValue(usingInternationalSystem),
+                    exercise.getWeightSpec(),
+                    exercise.getBar(),
+                    usingInternationalSystem);
+
+            weight.setText(FormatUtils.toString(partialWeight));
         }
     }
 
-    private BigDecimal getWeightFromTotal(BigDecimal total) {
-        switch (exercise.getWeightSpec()) {
-            case ONE_SIDE_WEIGHT:
-                if (exercise.getBar() != null) {
-                    return total.subtract(
-                            exercise.getBar().getWeight().getValue(usingInternationalSystem)
-                        ).divide(TWO, 2, RoundingMode.HALF_UP);
-                }
-                return total.divide(TWO, 2, RoundingMode.HALF_UP);
-            case NO_BAR_WEIGHT:
-                if (exercise.getBar() != null) {
-                    return total.subtract(
-                            exercise.getBar().getWeight().getValue(usingInternationalSystem)
-                        );
-                }
+    private void saveBitLog(View view) {
+        Bit bit = new Bit();
+        bit.setExerciseId(exercise.getId());
+
+        BigDecimal totalWeight = getTotalWeight(
+                toBigDecimal(weight.getText().toString()),
+                exercise.getWeightSpec(),
+                exercise.getBar(),
+                usingInternationalSystem);
+
+        bit.setWeight(new Weight(totalWeight, usingInternationalSystem));
+        bit.setNote("");
+        bit.setReps(toInt(reps.getText().toString()));
+        bit.setTimestamp(Calendar.getInstance());
+        bit.setTrainingId(trainingId);
+
+        boolean added = false;
+        int idx = 0;
+        for (Bit logBit : log) {
+            if (logBit.getTrainingId() == trainingId) {
+                idx++;
+            } else {
+                log.add(idx, bit);
+                recyclerViewAdapter.notifyItemInserted(idx);
+                added = true;
+                break;
+            }
         }
-        return total;
+
+        if (!added) {
+            log.add(bit);
+            recyclerViewAdapter.notifyItemInserted(log.size()-1);
+        }
     }
 }
