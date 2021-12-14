@@ -1,8 +1,7 @@
 package org.scp.gymlog.ui.registry;
 
-import static org.scp.gymlog.util.Constants.DATE_ZERO;
+import static org.scp.gymlog.util.Constants.DATE_FUTURE;
 import static org.scp.gymlog.util.Constants.ONE_THOUSAND;
-import static org.scp.gymlog.util.Constants.TWO;
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
 import static org.scp.gymlog.util.FormatUtils.toInt;
 import static org.scp.gymlog.util.WeightUtils.getTotalWeight;
@@ -22,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.InternalException;
-import org.scp.gymlog.model.Bar;
 import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Weight;
@@ -39,7 +37,6 @@ import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.FormatUtils;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -74,10 +71,7 @@ public class RegistryActivity extends BackDBAppCompatActivity {
                 .findFirst()
                 .orElseThrow(() -> new InternalException("Exercise id not found"));
 
-        List<BitEntity> log = db.bitDao().getHistory(exerciseId, DATE_ZERO, LOG_PAGES_SIZE);
-        if (log.size() == LOG_PAGES_SIZE && log.get(0).trainingId == log.get(LOG_PAGES_SIZE-1).trainingId) {
-            log = db.bitDao().getHistory(exerciseId, log.get(0).trainingId);
-        }
+        List<BitEntity> log = db.bitDao().getHistory(exerciseId, DATE_FUTURE, LOG_PAGES_SIZE);
         log.stream()
                 .map(bit -> new Bit().fromEntity(bit))
                 .forEach(this.log::add);
@@ -100,7 +94,7 @@ public class RegistryActivity extends BackDBAppCompatActivity {
         // Logs:
         RecyclerView recyclerView = findViewById(R.id.log_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(recyclerViewAdapter = new LogRecyclerViewAdapter(log, trainingId));
+        recyclerView.setAdapter(recyclerViewAdapter = new LogRecyclerViewAdapter(log, trainingId, this::loadMoreHistory));
 
         // Save bit log
         findViewById(R.id.confirm).setOnClickListener(this::saveBitLog);
@@ -193,6 +187,18 @@ public class RegistryActivity extends BackDBAppCompatActivity {
 
             weight.setText(FormatUtils.toString(partialWeight));
         }
+    }
+
+    private void loadMoreHistory() {
+        new DBThread(this, db -> {
+            final int size = log.size();
+            final Calendar date = log.get(size-1).getTimestamp();
+            final List<BitEntity> log = db.bitDao().getHistory(exercise.getId(), date, LOG_PAGES_SIZE);
+            log.stream().map(bit -> new Bit().fromEntity(bit))
+                    .forEach(this.log::add);
+
+            runOnUiThread(() -> recyclerViewAdapter.notifyItemRangeInserted(size, log.size()));
+        });
     }
 
     private void saveBitLog(View view) {

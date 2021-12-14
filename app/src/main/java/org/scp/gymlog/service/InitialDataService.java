@@ -1,6 +1,7 @@
 package org.scp.gymlog.service;
 
 import org.scp.gymlog.model.Bar;
+import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.model.WeightSpecification;
 import org.scp.gymlog.room.AppDatabase;
@@ -71,11 +72,24 @@ public class InitialDataService {
         exXmuscle.muscleId = 1;
         db.exerciseMuscleCrossRefDao().insert(exXmuscle);
 
+        createTraining(db, ex, 1639080000000L, 1639090000000L);
+        createTraining(db, ex, 1639166400000L, 1639176400000L);
+        createTraining(db, ex, 1639252800000L, 1639262800000L);
+        createTraining(db, ex, 1639339200000L, 1639349200000L);
+        createTraining(db, ex, 1639425600000L, 1639435600000L);
+
         TrainingEntity training = new TrainingEntity();
         training.start = Calendar.getInstance();
-        training.start.setTimeInMillis(1639080000000L);
+        db.trainingDao().insert(training);
+
+    }
+
+    private static void createTraining(AppDatabase db, ExerciseEntity ex, long i, long e) {
+        TrainingEntity training = new TrainingEntity();
+        training.start = Calendar.getInstance();
+        training.start.setTimeInMillis(i);
         training.end = Calendar.getInstance();
-        training.end.setTimeInMillis(1639090000000L);
+        training.end.setTimeInMillis(e);
         training.trainingId = (int) db.trainingDao().insert(training);
 
         Consumer<Long> createBit = (date) -> {
@@ -91,17 +105,11 @@ public class InitialDataService {
             db.bitDao().insert(bit);
         };
 
-        createBit.accept(1639081000000L);
-        createBit.accept(1639082000000L);
-        createBit.accept(1639083000000L);
-        createBit.accept(1639084000000L);
-        createBit.accept(1639085000000L);
-        createBit.accept(1639086000000L);
-
-        TrainingEntity training2 = new TrainingEntity();
-        training2.start = Calendar.getInstance();
-        training2.start.setTimeInMillis(1639166400000L);
-        db.trainingDao().insert(training2);
-
+        createBit.accept(i + 1000000L);
+        createBit.accept(i + 2000000L);
+        createBit.accept(i + 3000000L);
+        createBit.accept(i + 4000000L);
+        createBit.accept(i + 5000000L);
+        createBit.accept(i + 6000000L);
     }
 }

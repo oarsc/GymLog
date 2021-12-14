@@ -75,11 +75,7 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
                         confirm.accept(confirmData())
                 )
                 .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.call());
-
-        Dialog dialog = builder.create();
-        //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        //input.requestFocus();
-        return dialog;
+        return builder.create();
     }
 
     private void setInitialData(View view) {
@@ -246,7 +242,7 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
     private void updateSelectedBar() {
         Bar bar = initialValue.getBar();
         if (bar == null) {
-            barUsed.setText(R.string.text_none);
+            barUsed.setText(R.string.symbol_hyphen);
             incompatibleBar.setVisibility(initialValue.isRequiresBar()? View.VISIBLE : View.INVISIBLE);
         } else {
             barUsed.setText(getWeightLabel(bar.getWeight()));

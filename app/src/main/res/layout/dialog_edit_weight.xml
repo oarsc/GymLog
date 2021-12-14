@@ -56,7 +56,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="start|center"
             android:maxLines="1"
-            android:text="@string/text_vertical_bar"
+            android:text="@string/symbol_bar"
             android:scrollHorizontally="false" />
 
         <TextView
@@ -65,7 +65,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="start|center"
             android:maxLines="1"
-            android:text="@string/text_space"
+            android:text="@string/symbol_space"
             android:scrollHorizontally="false" />
 
         <TextView
@@ -119,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
-            android:text="@string/text_none" />
+            android:text="@string/symbol_hyphen" />
 
     </LinearLayout>
 
@@ -144,7 +144,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
-            android:text="@string/text_none" />
+            android:text="@string/symbol_hyphen" />
 
         <ImageView
             android:id="@+id/incompatible_bar"
@@ -152,7 +152,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_warning_24dp"
             app:tint="@color/orange_light"
-            android:contentDescription="@string/text_space"/>
+            android:contentDescription="@string/symbol_empty"/>
 
     </LinearLayout>
 
@@ -178,7 +178,7 @@
             android:layout_height="24dp"
             android:src="@drawable/ic_bar_with_plates_36x24dp"
             app:tint="@color/themedIcon"
-            android:contentDescription="@string/text_space" />
+            android:contentDescription="@string/symbol_empty" />
 
         <TextView
             android:id="@+id/weight_spec"
@@ -218,7 +218,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:text="@string/text_space"/>
+            android:text="@string/symbol_empty" />
 
         <TextView
             android:id="@+id/total_unit"
@@ -230,7 +230,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:text="@string/text_space"/>
+            android:text="@string/symbol_space" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -238,7 +238,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="start|center"
             android:maxLines="1"
-            android:text="@string/text_vertical_bar"
+            android:text="@string/symbol_bar" />
             android:scrollHorizontally="false" />
 
         <TextView
@@ -247,7 +247,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="start|center"
             android:maxLines="1"
-            android:text="@string/text_space"
+            android:text="@string/symbol_space" />
             android:scrollHorizontally="false" />
 
         <TextView

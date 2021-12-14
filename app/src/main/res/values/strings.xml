@@ -24,17 +24,21 @@
     <string name="group_upper_back">Upper Back</string>
 
     <string name="text_add">Add</string>
-    <string name="text_empty"/>
     <string name="text_kg">kg</string>
     <string name="text_lb">lbs</string>
     <string name="text_no_bar">No bar</string>
-    <string name="text_none">-</string>
+    <string name="text_notes">Notes</string>
     <string name="text_reps">Reps</string>
-    <string name="text_space">&#160;</string>
+    <string name="text_set">Set</string>
     <string name="text_subtitle">Subtitle</string>
     <string name="text_title">Title</string>
-    <string name="text_vertical_bar">/</string>
     <string name="text_weight">Weight</string>
+
+    <string name="symbol_3_middle_points">···</string>
+    <string name="symbol_bar">/</string>
+    <string name="symbol_empty"/>
+    <string name="symbol_hyphen">-</string>
+    <string name="symbol_space">&#160;</string>
 
     <string name="support_open_parentheses">(</string>
     <string name="support_close_parentheses">)</string>
