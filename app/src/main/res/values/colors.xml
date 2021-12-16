@@ -10,4 +10,8 @@
     <color name="white">#FFFF</color>
 
     <color name="themedIcon">@color/dark</color>
+
+    <color name="actionBarBackground">@color/dark</color>
+    <color name="actionBarText">@color/white</color>
+    <color name="actionBarIcon">@color/white</color>
 </resources>

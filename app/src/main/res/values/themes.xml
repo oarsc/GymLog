@@ -10,11 +10,32 @@
         <item name="colorSecondaryVariant">@color/orange_dark</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/actionBarBackground</item>
         <!-- Customize your theme here. -->
+        <item name="preferenceTheme">@style/PrefsTheme</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
+
+    <style name="Theme.GymLog.NoActionBar" parent="Theme.GymLog">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+    <style name="Theme.GymLog.ActionBar" parent="Theme.GymLog">
+        <item name="android:textColorPrimary">@color/actionBarText</item>
+        <item name="android:textColorSecondary">@color/actionBarIcon</item>
+        <item name="actionMenuTextColor">@color/actionBarIcon</item>
+        <item name="colorControlHighlight">@color/gray</item>
+        <item name="android:background">@color/actionBarBackground</item>
+        <item name="android:colorBackground">@color/actionBarBackground</item>
+    </style>
+
+    <style name="PrefsTheme" parent="PreferenceThemeOverlay.v14.Material">
+        <item name="android:layout">@layout/fragment_preferences</item>
+        <item name="android:listPreferredItemPaddingStart">@dimen/activity_horizontal_margin</item>
+        <item name="android:listPreferredItemPaddingEnd">@dimen/activity_horizontal_margin</item>
     </style>
 </resources>

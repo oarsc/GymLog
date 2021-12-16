@@ -5,4 +5,7 @@
     <color name="light">#FDDD</color>
 
     <color name="themedIcon">@color/light</color>
+
+    <color name="actionBarText">#E2E2E2</color>
+    <color name="actionBarIcon">#A7A7A7</color>
 </resources>

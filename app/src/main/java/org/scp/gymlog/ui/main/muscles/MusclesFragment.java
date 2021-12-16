@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.ui.createexercise.CreateExerciseActivity;
+import org.scp.gymlog.ui.main.MainActivity;
 
 /**
  * A fragment representing a list of Items.
@@ -48,6 +53,17 @@ public class MusclesFragment extends Fragment {
 				Intent intent = new Intent(context, CreateExerciseActivity.class);
 				startActivity(intent);
 			});
+
+		Toolbar toolbar = view.findViewById(R.id.toolbar);
+		toolbar.setOnMenuItemClickListener(item -> {
+			if (item.getItemId() == R.id.create_button) {
+				Intent intent = new Intent(context, CreateExerciseActivity.class);
+				startActivity(intent);
+				return true;
+			}
+			return false;
+		});
+
 		return view;
 	}
 }
