@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:flexWrap="wrap"
         app:justifyContent="space_evenly"
-        tools:context=".ui.common.ImageSelectorActivity">
+        tools:context=".ui.common.activity.ImageSelectorActivity">
     </com.google.android.flexbox.FlexboxLayout>
 
 </ScrollView>

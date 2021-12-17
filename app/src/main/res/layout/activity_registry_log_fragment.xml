@@ -65,5 +65,5 @@
         android:id="@+id/log_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/fragment_list_element_log" />
+        tools:listitem="@layout/list_element_fragment_log" />
 </LinearLayout>

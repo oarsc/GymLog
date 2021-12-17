@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class InitialDataService {
@@ -77,11 +78,6 @@ public class InitialDataService {
         createTraining(db, ex, 1639252800000L, 1639262800000L);
         createTraining(db, ex, 1639339200000L, 1639349200000L);
         createTraining(db, ex, 1639425600000L, 1639435600000L);
-
-        TrainingEntity training = new TrainingEntity();
-        training.start = Calendar.getInstance();
-        db.trainingDao().insert(training);
-
     }
 
     private static void createTraining(AppDatabase db, ExerciseEntity ex, long i, long e) {
@@ -92,24 +88,24 @@ public class InitialDataService {
         training.end.setTimeInMillis(e);
         training.trainingId = (int) db.trainingDao().insert(training);
 
-        Consumer<Long> createBit = (date) -> {
+        BiConsumer<Long, Integer> createBit = (date, more) -> {
             BitEntity bit = new BitEntity();
             bit.exerciseId = ex.exerciseId;
             bit.timestamp = Calendar.getInstance();
             bit.timestamp.setTimeInMillis(date);
             bit.kilos = true;
-            bit.totalWeight = 9000;
+            bit.totalWeight = 9000+more;
             bit.reps = 10;
             bit.note = "";
             bit.trainingId = training.trainingId;
             db.bitDao().insert(bit);
         };
 
-        createBit.accept(i + 1000000L);
-        createBit.accept(i + 2000000L);
-        createBit.accept(i + 3000000L);
-        createBit.accept(i + 4000000L);
-        createBit.accept(i + 5000000L);
-        createBit.accept(i + 6000000L);
+        createBit.accept(i + 1000000L,100);
+        createBit.accept(i + 2000000L,200);
+        createBit.accept(i + 3000000L,300);
+        createBit.accept(i + 4000000L,400);
+        createBit.accept(i + 5000000L,500);
+        createBit.accept(i + 6000000L,600);
     }
 }

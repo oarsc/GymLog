@@ -29,7 +29,7 @@ import org.scp.gymlog.R;
 import org.scp.gymlog.model.Bar;
 import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.model.WeightSpecification;
-import org.scp.gymlog.ui.common.NumberModifierView;
+import org.scp.gymlog.ui.common.components.NumberModifierView;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.FormatUtils;

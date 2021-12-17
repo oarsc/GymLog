@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.scp.gymlog.databinding.FragmentListElementBinding;
+import org.scp.gymlog.databinding.ListElementFragmentBinding;
 import org.scp.gymlog.ui.main.routines.placeholder.PlaceholderContent;
 import org.scp.gymlog.ui.main.routines.placeholder.PlaceholderContent.PlaceholderItem;
 
@@ -27,7 +27,7 @@ public class RoutineRecyclerViewAdapter extends RecyclerView.Adapter<RoutineRecy
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		return new ViewHolder(
-				FragmentListElementBinding.inflate(
+				ListElementFragmentBinding.inflate(
 						LayoutInflater.from(parent.getContext()), parent, false
 				)
 		);
@@ -48,7 +48,7 @@ public class RoutineRecyclerViewAdapter extends RecyclerView.Adapter<RoutineRecy
 		public final TextView mContentView;
 		public PlaceholderItem mItem;
 
-		public ViewHolder(FragmentListElementBinding binding) {
+		public ViewHolder(ListElementFragmentBinding binding) {
 			super(binding.getRoot());
 			mContentView = binding.content;
 		}

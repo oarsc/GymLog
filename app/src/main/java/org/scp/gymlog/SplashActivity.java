@@ -94,6 +94,9 @@ public class SplashActivity extends AppCompatActivity {
                     return e;
                 })
                 .forEach(exercises::add);
+
+        db.trainingDao().getCurrentTraining()
+                .ifPresent(training -> data.setTrainingId(training.trainingId));
     }
 
     public void goMain(){

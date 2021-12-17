@@ -18,9 +18,10 @@
         app:layout_constraintRight_toLeftOf="@id/modifier"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="4dp"/>
+        android:layout_marginBottom="4dp"
+        android:imeOptions="actionDone"/>
 
-    <org.scp.gymlog.ui.common.NumberModifierView
+    <org.scp.gymlog.ui.common.components.NumberModifierView
         android:id="@+id/modifier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

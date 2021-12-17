@@ -18,6 +18,7 @@ public class Data {
 	private final List<Muscle> muscles = new ArrayList<>();
 	private final List<Bar> bars = new ArrayList<>();
 	private final static Data instance = new Data();
+	private int trainingId = -1;
 
 	private Data(){}
 
@@ -37,5 +38,9 @@ public class Data {
 				.filter(exercise -> exercise.getId() == exerciseId)
 				.findFirst()
 				.orElseThrow(() -> new LoadException("NO EXERCISE FOUND id:"+exerciseId));
+	}
+
+	public void setTrainingId(int trainingId) {
+		this.trainingId = trainingId;
 	}
 }

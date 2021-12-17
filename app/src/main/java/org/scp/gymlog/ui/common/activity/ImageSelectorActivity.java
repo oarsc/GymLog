@@ -1,4 +1,4 @@
-package org.scp.gymlog.ui.common;
+package org.scp.gymlog.ui.common.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,12 +13,13 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.LoadException;
+import org.scp.gymlog.ui.common.CustomAppCompatActivity;
 import org.scp.gymlog.util.TaskRunner;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ImageSelectorActivity extends BackAppCompatActivity {
+public class ImageSelectorActivity extends CustomAppCompatActivity {
     public static final int CREATE_EXERCISE = 0;
 
     private AssetManager assets;
@@ -61,7 +62,7 @@ public class ImageSelectorActivity extends BackAppCompatActivity {
         InputStream ims = assets.open(fileName);
         Drawable d = Drawable.createFromStream(ims, null);
 
-        ImageView imageView = (ImageView) getLayoutInflater().inflate(R.layout.fragment_list_element_image_selector, null);
+        ImageView imageView = (ImageView) getLayoutInflater().inflate(R.layout.list_element_fragment_image_selector, null);
         imageView.setImageDrawable(d);
 
         imageView.setOnClickListener(view -> {

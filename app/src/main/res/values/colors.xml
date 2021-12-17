@@ -2,7 +2,8 @@
 <resources>
     <color name="orange_light">#DAA403</color>
     <color name="orange_dark">#875A01</color>
-    <color name="green">#FF8CCF0F</color>
+    <color name="green">#7CBA08</color>
+    <color name="red">#E5410F</color>
     <color name="black">#F000</color>
     <color name="dark">#F333</color>
     <color name="gray">#F777</color>

@@ -13,12 +13,20 @@ import java.util.List;
 
 @Dao
 public interface BitDao {
-    @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND trainingId = :trainingId ORDER BY timestamp")
-    List<BitEntity> getHistory(int exerciseId, int trainingId);
+    @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId ORDER BY trainingId DESC, timestamp LIMIT :limit")
+    List<BitEntity> getHistory(int exerciseId, int limit);
 
-    @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND timestamp < :date " +
-            "ORDER BY timestamp DESC LIMIT :limit")
-    List<BitEntity> getHistory(int exerciseId, Calendar date, int limit);
+    @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND " +
+            "(trainingId = :trainingId AND timestamp > :date OR trainingId < :trainingId) " +
+            "ORDER BY trainingId DESC, timestamp LIMIT :limit")
+    List<BitEntity> getHistory(int exerciseId, int trainingId, Calendar date, int limit);
+
+    @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND trainingId = :trainingId ORDER BY timestamp")
+    List<BitEntity> getHistoryByTrainingId(int exerciseId, int trainingId);
+
+    @Query("SELECT DISTINCT note FROM bit WHERE exerciseId = :exerciseId ORDER BY timestamp DESC "+
+            "LIMIT :limit")
+    List<String> getNotesHistory(int exerciseId, int limit);
 
     @Insert
     long insert(BitEntity bit);

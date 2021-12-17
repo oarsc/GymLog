@@ -34,6 +34,9 @@
     <string name="text_title">Title</string>
     <string name="text_weight">Weight</string>
 
+    <string name="dialog_confirm_training_title">Confirm ending training</string>
+    <string name="dialog_confirm_training_text">Are you sure you finished your current training?</string>
+
     <string name="symbol_3_middle_points">···</string>
     <string name="symbol_bar">/</string>
     <string name="symbol_empty"/>

@@ -31,6 +31,7 @@
                 android:paddingEnd="26dp"
                 android:inputType="numberDecimal"
                 tools:ignore="LabelFor,RtlSymmetry"
+                android:imeOptions="actionDone"
                 android:autofillHints="false" />
 
             <TextView
@@ -87,7 +88,7 @@
             android:maxLines="1"
             android:scrollHorizontally="false" />
 
-        <org.scp.gymlog.ui.common.NumberModifierView
+        <org.scp.gymlog.ui.common.components.NumberModifierView
             android:id="@+id/modifier"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.scp.gymlog.databinding.FragmentListElementBinding;
+import org.scp.gymlog.databinding.ListElementFragmentBinding;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.ui.exercises.ExercisesActivity;
@@ -29,7 +29,7 @@ public class MusclesRecyclerViewAdapter extends RecyclerView.Adapter<MusclesRecy
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		this.context = parent.getContext();
 		return new ViewHolder(
-				FragmentListElementBinding.inflate(
+				ListElementFragmentBinding.inflate(
 						LayoutInflater.from(this.context), parent, false
 				)
 		);
@@ -52,7 +52,7 @@ public class MusclesRecyclerViewAdapter extends RecyclerView.Adapter<MusclesRecy
 		public final TextView mContentView;
 		public final ImageView mImageView;
 
-		public ViewHolder(FragmentListElementBinding binding) {
+		public ViewHolder(ListElementFragmentBinding binding) {
 			super(binding.getRoot());
 			mContentView = binding.content;
 			mImageView = binding.image;

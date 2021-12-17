@@ -2,6 +2,8 @@ package org.scp.gymlog.ui.registry;
 
 import static org.scp.gymlog.util.Constants.DATE_ZERO;
 
+import static java.lang.Math.max;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,33 +13,42 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
-import org.scp.gymlog.databinding.FragmentListElementLogBinding;
+import org.scp.gymlog.databinding.ListElementFragmentLogBinding;
 import org.scp.gymlog.model.Bit;
+import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.util.DateUtils;
 import org.scp.gymlog.util.FormatUtils;
 import org.scp.gymlog.util.Function;
+import org.scp.gymlog.util.WeightUtils;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerViewAdapter.ViewHolder> {
 
     private final List<Bit> log;
     private final Calendar today;
     private final int currentTrainingId;
-    private final Function loadMoreCallback;
+    private final Exercise exercise;
+    private Consumer<Bit> onClickElementListener;
 
-    public LogRecyclerViewAdapter(List<Bit> log, int currentTrainingId, Function loadMoreCallback) {
+    public LogRecyclerViewAdapter(List<Bit> log, Exercise exercise, int currentTrainingId) {
         this.log = log;
         this.today = Calendar.getInstance();
         this.currentTrainingId = currentTrainingId;
-        this.loadMoreCallback = loadMoreCallback;
+        this.exercise = exercise;
+    }
+
+    public void setOnClickElementListener(Consumer<Bit> onClickElementListener) {
+        this.onClickElementListener = onClickElementListener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(
-                FragmentListElementLogBinding.inflate(
+                ListElementFragmentLogBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false
                 )
         );
@@ -104,12 +115,44 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
             }
         }
 
+        BigDecimal weight = WeightUtils.getWeightFromTotal(
+                bit.getWeight().getValue(),
+                exercise.getWeightSpec(),
+                exercise.getBar(),
+                bit.getWeight().isInternationalSystem()
+        );
+
+        holder.mWeight.setText(FormatUtils.toString(weight));
         holder.mSet.setText(String.valueOf(bit.getSet()));
-        holder.mWeight.setText(FormatUtils.toString(bit.getWeight().getValue()));
         holder.mReps.setText(String.valueOf(bit.getReps()));
-        holder.mNotes.setText(R.string.symbol_empty);
+        holder.mNotes.setText(bit.getNote());
         holder.mLoadMore.setVisibility(View.INVISIBLE);
         holder.element.setPadding(0, 0, 0, 0);
+    }
+
+    public void notifyTrainingIdChanged(int trainingId, int preIndex) {
+        int startIndex = 0;
+        int numberOfElements = 0;
+
+        boolean found = false;
+        int i = 0;
+        for (Bit bitLog : log) {
+            if (bitLog.getTrainingId() == trainingId) {
+                if (!found) {
+                    startIndex = i;
+                    found = true;
+                }
+                numberOfElements++;
+            } else if (found) break;
+            i++;
+        }
+
+        if (numberOfElements > 0) {
+            if (preIndex > startIndex && preIndex < (startIndex+numberOfElements))
+                notifyItemRangeChanged(preIndex, numberOfElements+startIndex-preIndex);
+            else
+                notifyItemRangeChanged(startIndex, numberOfElements);
+        }
     }
 
     @Override
@@ -123,7 +166,7 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         public final ConstraintLayout element;
         public int set;
 
-        public ViewHolder(FragmentListElementLogBinding binding) {
+        public ViewHolder(ListElementFragmentLogBinding binding) {
             super(binding.getRoot());
             mDay = binding.day;
             mSet = binding.set;
@@ -134,8 +177,8 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
             element = binding.element;
 
             binding.getRoot().setOnClickListener(a-> {
-                if (bit == null) {
-                    loadMoreCallback.call();
+                if (onClickElementListener != null) {
+                    onClickElementListener.accept(bit);
                 }
             });
         }

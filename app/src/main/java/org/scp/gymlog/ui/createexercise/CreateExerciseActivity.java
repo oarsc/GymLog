@@ -1,8 +1,7 @@
 package org.scp.gymlog.ui.createexercise;
 
-import static org.scp.gymlog.ui.common.ImageSelectorActivity.CREATE_EXERCISE;
+import static org.scp.gymlog.ui.common.activity.ImageSelectorActivity.CREATE_EXERCISE;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -29,8 +28,8 @@ import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.room.DBThread;
-import org.scp.gymlog.ui.common.BackAppCompatActivity;
-import org.scp.gymlog.ui.common.ImageSelectorActivity;
+import org.scp.gymlog.ui.common.CustomAppCompatActivity;
+import org.scp.gymlog.ui.common.activity.ImageSelectorActivity;
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment;
 import org.scp.gymlog.util.Data;
 
@@ -42,7 +41,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class CreateExerciseActivity extends BackAppCompatActivity {
+public class CreateExerciseActivity extends CustomAppCompatActivity {
 
 	private Exercise exercise;
 	private FormElement iconOption;

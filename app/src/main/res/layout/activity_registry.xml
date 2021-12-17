@@ -14,10 +14,32 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/text_margin"
         android:textSize="@dimen/bold_text"
-        app:layout_constraintBottom_toTopOf="@id/weightModifier"
+        app:layout_constraintBottom_toTopOf="@id/editNotes"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:text="@string/text_title" />
+
+    <TextView
+        android:id="@+id/labelNotes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        app:layout_constraintBottom_toBottomOf="@id/editNotes"
+        app:layout_constraintTop_toTopOf="@id/editNotes"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/text_notes" />
+
+    <EditText
+        android:id="@+id/editNotes"
+        android:inputType="text"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:focusable="false"
+        app:layout_constraintBottom_toTopOf="@id/editWeight"
+        app:layout_constraintLeft_toLeftOf="@id/editWeight"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <TextView
         android:id="@+id/labelWeight"
@@ -76,7 +98,7 @@
         app:layout_constraintLeft_toRightOf="@id/editWeight"
         app:tint="@color/orange_light" />
 
-    <org.scp.gymlog.ui.common.NumberModifierView
+    <org.scp.gymlog.ui.common.components.NumberModifierView
         android:id="@+id/weightModifier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -109,7 +131,7 @@
         android:focusable="false"
         tools:ignore="RtlSymmetry" />
 
-    <org.scp.gymlog.ui.common.NumberModifierView
+    <org.scp.gymlog.ui.common.components.NumberModifierView
         android:id="@+id/repsModifier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

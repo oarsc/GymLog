@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import org.scp.gymlog.room.entities.TrainingEntity;
 
@@ -18,8 +19,11 @@ public interface TrainingDao {
     @Query("SELECT * FROM training WHERE `end` IS NULL")
     Optional<TrainingEntity> getCurrentTraining();
 
-    @Insert
-    long[] insertAll(TrainingEntity... training);
+    @Query("SELECT * FROM training WHERE trainingId = :trainingId")
+    Optional<TrainingEntity> getTraining(int trainingId);
+
+    @Update
+    void update(TrainingEntity training);
 
     @Insert
     long insert(TrainingEntity training);

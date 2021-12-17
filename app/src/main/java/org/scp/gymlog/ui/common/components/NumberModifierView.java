@@ -1,4 +1,4 @@
-package org.scp.gymlog.ui.common;
+package org.scp.gymlog.ui.common.components;
 
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
 

@@ -17,7 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import org.scp.gymlog.R;
-import org.scp.gymlog.ui.common.NumberModifierView;
+import org.scp.gymlog.ui.common.components.NumberModifierView;
 import org.scp.gymlog.util.FormatUtils;
 import org.scp.gymlog.util.Function;
 

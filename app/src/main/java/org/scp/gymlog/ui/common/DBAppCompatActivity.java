@@ -6,7 +6,7 @@ import android.widget.Toast;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
 
-public abstract class BackDBAppCompatActivity extends BackAppCompatActivity {
+public abstract class DBAppCompatActivity extends CustomAppCompatActivity {
     protected static final int CONTINUE = 0;
     protected static final int ERROR_WITHOUT_MESSAGE = -1;
 

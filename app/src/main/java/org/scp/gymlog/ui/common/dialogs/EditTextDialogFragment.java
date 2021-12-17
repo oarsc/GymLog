@@ -9,12 +9,10 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import androidx.annotation.StringRes;
-import androidx.fragment.app.DialogFragment;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.util.Function;
 
-import java.math.BigDecimal;
 import java.util.function.Consumer;
 
 public class EditTextDialogFragment extends CustomDialogFragment<String> {

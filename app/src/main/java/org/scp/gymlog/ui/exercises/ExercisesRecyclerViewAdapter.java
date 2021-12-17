@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.scp.gymlog.databinding.FragmentListElementBinding;
+import org.scp.gymlog.databinding.ListElementFragmentBinding;
 import org.scp.gymlog.exceptions.LoadException;
-import org.scp.gymlog.util.Data;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.ui.registry.RegistryActivity;
+import org.scp.gymlog.util.Data;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +37,7 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(
-                FragmentListElementBinding.inflate(
+                ListElementFragmentBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false
                 )
         );
@@ -69,7 +69,7 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
         public final TextView mContentView;
         public final ImageView mImageView;
 
-        public ViewHolder(FragmentListElementBinding binding) {
+        public ViewHolder(ListElementFragmentBinding binding) {
             super(binding.getRoot());
             mContentView = binding.content;
             mImageView = binding.image;

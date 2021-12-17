@@ -7,11 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.InternalException;
+import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.model.Muscle;
-import org.scp.gymlog.ui.common.BackAppCompatActivity;
+import org.scp.gymlog.ui.common.CustomAppCompatActivity;
 
-public class ExercisesActivity extends BackAppCompatActivity {
+public class ExercisesActivity extends CustomAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,5 +28,8 @@ public class ExercisesActivity extends BackAppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.exercises_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new ExercisesRecyclerViewAdapter(muscle, this));
+
+        TrainingFloatingActionButton fab = findViewById(R.id.fab_training);
+        fab.updateFloatingActionButton();
     }
 }

@@ -1,6 +1,5 @@
 package org.scp.gymlog.ui.registry;
 
-import static org.scp.gymlog.util.Constants.DATE_FUTURE;
 import static org.scp.gymlog.util.Constants.ONE_THOUSAND;
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
 import static org.scp.gymlog.util.FormatUtils.toInt;
@@ -28,9 +27,11 @@ import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.entities.BitEntity;
 import org.scp.gymlog.room.entities.TrainingEntity;
-import org.scp.gymlog.ui.common.BackDBAppCompatActivity;
-import org.scp.gymlog.ui.common.NumberModifierView;
+import org.scp.gymlog.ui.common.DBAppCompatActivity;
+import org.scp.gymlog.ui.common.components.NumberModifierView;
+import org.scp.gymlog.ui.common.dialogs.EditNotesDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
+import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditWeightFormDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
 import org.scp.gymlog.util.Data;
@@ -42,12 +43,13 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
-public class RegistryActivity extends BackDBAppCompatActivity {
+public class RegistryActivity extends DBAppCompatActivity {
     private static final int LOG_PAGES_SIZE = 16;
 
     private Exercise exercise;
     private EditText weight;
     private EditText reps;
+    private EditText notes;
     private NumberModifierView weightModifier;
     private ImageView weightSpecIcon;
     private ImageView warningIcon;
@@ -71,7 +73,7 @@ public class RegistryActivity extends BackDBAppCompatActivity {
                 .findFirst()
                 .orElseThrow(() -> new InternalException("Exercise id not found"));
 
-        List<BitEntity> log = db.bitDao().getHistory(exerciseId, DATE_FUTURE, LOG_PAGES_SIZE);
+        List<BitEntity> log = db.bitDao().getHistory(exerciseId, LOG_PAGES_SIZE);
         log.stream()
                 .map(bit -> new Bit().fromEntity(bit))
                 .forEach(this.log::add);
@@ -94,12 +96,23 @@ public class RegistryActivity extends BackDBAppCompatActivity {
         // Logs:
         RecyclerView recyclerView = findViewById(R.id.log_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(recyclerViewAdapter = new LogRecyclerViewAdapter(log, trainingId, this::loadMoreHistory));
+        recyclerView.setAdapter(recyclerViewAdapter = new LogRecyclerViewAdapter(log, exercise,
+                trainingId));
+        recyclerViewAdapter.setOnClickElementListener(this::onClickBit);
 
         // Save bit log
         findViewById(R.id.confirm).setOnClickListener(this::saveBitLog);
 
         // Weight and Reps Input fields:
+        notes = findViewById(R.id.editNotes);
+        notes.setOnClickListener(view -> {
+            EditNotesDialogFragment dialog = new EditNotesDialogFragment(R.string.text_notes,
+                    exercise.getId(),
+                    result -> notes.setText(result.toString()));
+            dialog.setInitialValue(notes.getText().toString());
+            dialog.show(getSupportFragmentManager(), null);
+        });
+
         weight = findViewById(R.id.editWeight);
         weight.setFilters(new InputFilter[] {(source, start, end, dest, dstart, dend) -> {
             BigDecimal input = FormatUtils.toBigDecimal(dest.toString() + source.toString());
@@ -156,6 +169,7 @@ public class RegistryActivity extends BackDBAppCompatActivity {
                         exercise.setBar(result.getBar());
                         exercise.setStep(result.getStep());
                         exercise.setWeightSpec(result.getWeightSpec());
+                        recyclerViewAdapter.notifyItemRangeChanged(0, log.size());
 
                         weightModifier.setStep(exercise.getStep());
                         weightSpecIcon.setImageResource(exercise.getWeightSpec().icon);
@@ -192,9 +206,11 @@ public class RegistryActivity extends BackDBAppCompatActivity {
     private void loadMoreHistory() {
         new DBThread(this, db -> {
             final int size = log.size();
-            final Calendar date = log.get(size-1).getTimestamp();
-            final List<BitEntity> log = db.bitDao().getHistory(exercise.getId(), date, LOG_PAGES_SIZE);
-            log.stream().map(bit -> new Bit().fromEntity(bit))
+            final Bit bit = log.get(size-1);
+            final Calendar date = bit.getTimestamp();
+            final List<BitEntity> log = db.bitDao().getHistory(exercise.getId(), bit.getTrainingId(),
+                    date, LOG_PAGES_SIZE);
+            log.stream().map(b -> new Bit().fromEntity(b))
                     .forEach(this.log::add);
 
             runOnUiThread(() -> recyclerViewAdapter.notifyItemRangeInserted(size, log.size()));
@@ -202,37 +218,75 @@ public class RegistryActivity extends BackDBAppCompatActivity {
     }
 
     private void saveBitLog(View view) {
-        Bit bit = new Bit();
-        bit.setExerciseId(exercise.getId());
+        new DBThread(this, db -> {
+            final Bit bit = new Bit();
+            bit.setExerciseId(exercise.getId());
 
-        BigDecimal totalWeight = getTotalWeight(
-                toBigDecimal(weight.getText().toString()),
-                exercise.getWeightSpec(),
-                exercise.getBar(),
-                usingInternationalSystem);
+            BigDecimal totalWeight = getTotalWeight(
+                    toBigDecimal(weight.getText().toString()),
+                    exercise.getWeightSpec(),
+                    exercise.getBar(),
+                    usingInternationalSystem);
 
-        bit.setWeight(new Weight(totalWeight, usingInternationalSystem));
-        bit.setNote("");
-        bit.setReps(toInt(reps.getText().toString()));
-        bit.setTimestamp(Calendar.getInstance());
-        bit.setTrainingId(trainingId);
+            bit.setWeight(new Weight(totalWeight, usingInternationalSystem));
+            bit.setNote(notes.getText().toString());
+            bit.setReps(toInt(reps.getText().toString()));
+            bit.setTimestamp(Calendar.getInstance());
+            bit.setTrainingId(trainingId);
 
-        boolean added = false;
-        int idx = 0;
-        for (Bit logBit : log) {
-            if (logBit.getTrainingId() == trainingId) {
-                idx++;
-            } else {
-                log.add(idx, bit);
-                recyclerViewAdapter.notifyItemInserted(idx);
-                added = true;
-                break;
-            }
-        }
+            // SAVE TO DB:
+            bit.setId((int) db.bitDao().insert(bit.toEntity()));
 
-        if (!added) {
-            log.add(bit);
-            recyclerViewAdapter.notifyItemInserted(log.size()-1);
+            runOnUiThread(() -> {
+                boolean added = false;
+                int idx = 0;
+                for (Bit logBit : log) {
+                    if (logBit.getTrainingId() == trainingId) {
+                        idx++;
+                    } else {
+                        log.add(idx, bit);
+                        recyclerViewAdapter.notifyItemInserted(idx);
+                        added = true;
+                        break;
+                    }
+                }
+
+                if (!added) {
+                    log.add(bit);
+                    recyclerViewAdapter.notifyItemInserted(log.size()-1);
+                }
+            });
+        });
+    }
+
+    public void removeBitLog(Bit bit) {
+        new DBThread(this, db -> {
+            db.bitDao().delete(bit.toEntity());
+
+            int index = log.indexOf(bit);
+            int trainingId = bit.getTrainingId();
+            log.remove(index);
+
+            runOnUiThread(()-> {
+                recyclerViewAdapter.notifyItemRemoved(index);
+                if (index == 0) {
+                    if (log.get(0).getTrainingId() != trainingId) {
+                        recyclerViewAdapter.notifyItemChanged(0);
+                    } else {
+                        recyclerViewAdapter.notifyTrainingIdChanged(trainingId, 0);
+                    }
+                } else {
+                    recyclerViewAdapter.notifyTrainingIdChanged(trainingId, index);
+                }
+            });
+        });
+    }
+
+    private void onClickBit(Bit bit) {
+        if (bit == null) {
+            loadMoreHistory();
+        } else {
+            removeBitLog(bit);
         }
     }
 }
