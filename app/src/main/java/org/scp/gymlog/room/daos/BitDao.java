@@ -10,6 +10,7 @@ import org.scp.gymlog.room.entities.BitEntity;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 @Dao
 public interface BitDao {
@@ -23,6 +24,9 @@ public interface BitDao {
 
     @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND trainingId = :trainingId ORDER BY timestamp")
     List<BitEntity> getHistoryByTrainingId(int exerciseId, int trainingId);
+
+    @Query("SELECT * FROM bit WHERE trainingId = :trainingId ORDER BY timestamp DESC LIMIT 1")
+    Optional<BitEntity> getMostRecentBitTrainingId(int trainingId);
 
     @Query("SELECT DISTINCT note FROM bit WHERE exerciseId = :exerciseId ORDER BY timestamp DESC "+
             "LIMIT :limit")

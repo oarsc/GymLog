@@ -15,11 +15,14 @@ import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.daos.TrainingDao;
+import org.scp.gymlog.room.entities.BitEntity;
 import org.scp.gymlog.room.entities.TrainingEntity;
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment;
 import org.scp.gymlog.util.Data;
 
 import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
 
 public class TrainingFloatingActionButton extends FloatingActionButton {
 
@@ -54,8 +57,14 @@ public class TrainingFloatingActionButton extends FloatingActionButton {
                                     if (training.end != null) {
                                         throw new LoadException("TrainingId " + trainingId + " already ended");
                                     }
-                                    training.end = Calendar.getInstance();
-                                    dao.update(training);
+
+                                    Optional<BitEntity> count = db.bitDao().getMostRecentBitTrainingId(trainingId);
+                                    if (count.isPresent()) {
+                                        training.end = count.get().timestamp;
+                                        dao.update(training);
+                                    } else {
+                                        dao.delete(training);
+                                    }
                                     Data.getInstance().setTrainingId(-1);
                                     updateFloatingActionButton();
                                 });
@@ -70,6 +79,7 @@ public class TrainingFloatingActionButton extends FloatingActionButton {
                     TrainingEntity training = new TrainingEntity();
                     training.start = Calendar.getInstance();
                     training.trainingId = (int) db.trainingDao().insert(training);
+                    System.out.println("NEW TRAINING ID: "+training.trainingId);
                     Data.getInstance().setTrainingId(training.trainingId);
                     updateFloatingActionButton();
                 });
