@@ -1,33 +1,40 @@
 package org.scp.gymlog.service;
 
+import static org.scp.gymlog.util.Constants.DATE_ZERO;
+
+import android.content.res.AssetManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Bar;
-import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.model.WeightSpecification;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.EntityMapped;
+import org.scp.gymlog.room.daos.ExerciseDao;
+import org.scp.gymlog.room.daos.ExerciseMuscleCrossRefDao;
 import org.scp.gymlog.room.entities.BarEntity;
-import org.scp.gymlog.room.entities.BitEntity;
 import org.scp.gymlog.room.entities.ExerciseEntity;
 import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
 import org.scp.gymlog.room.entities.MuscleEntity;
-import org.scp.gymlog.room.entities.TrainingEntity;
 import org.scp.gymlog.util.Data;
+import org.scp.gymlog.util.JsonUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class InitialDataService {
-    public void persist(AppDatabase db) {
+
+    public void persist(AssetManager assets, AppDatabase db) {
         Data data = Data.getInstance();
 
         persistMuscles(data, db);
         createAndPersistBars(data, db);
-        addTestData(db);
+        loadExercises(assets, db);
     }
 
     private static void persistMuscles(Data data, AppDatabase db) {
@@ -57,55 +64,52 @@ public class InitialDataService {
         );
     }
 
-    private static void addTestData(AppDatabase db) {
-        ExerciseEntity ex = new ExerciseEntity();
-        ex.image = "chest_bench_barbell_press_lying";
-        ex.name = "Bench press";
-        ex.requiresBar = true;
-        ex.lastBarId = 4; // 20kg
-        ex.lastTrained = Calendar.getInstance();
-        ex.lastTrained.setTimeInMillis(1639086000000L);
-        ex.lastWeightSpec = WeightSpecification.ONE_SIDE_WEIGHT;
-        ex.exerciseId = (int) db.exerciseDao().insert(ex);
+    private void loadExercises(AssetManager assets, AppDatabase db) {
+        JSONArray exercisesArray = assetJsonArrayFile(assets, "initialData.json");
 
-        ExerciseMuscleCrossRef exXmuscle = new ExerciseMuscleCrossRef();
-        exXmuscle.exerciseId = ex.exerciseId;
-        exXmuscle.muscleId = 1;
-        db.exerciseMuscleCrossRefDao().insert(exXmuscle);
+        ExerciseDao exerciseDao = db.exerciseDao();
+        ExerciseMuscleCrossRefDao exXmuscleDao = db.exerciseMuscleCrossRefDao();
 
-        createTraining(db, ex, 1639080000000L, 1639090000000L);
-        createTraining(db, ex, 1639166400000L, 1639176400000L);
-        createTraining(db, ex, 1639252800000L, 1639262800000L);
-        createTraining(db, ex, 1639339200000L, 1639349200000L);
-        createTraining(db, ex, 1639425600000L, 1639435600000L);
+        try {
+            JsonUtils.forEachObject(exercisesArray, exerciseObj -> {
+                ExerciseEntity ex = new ExerciseEntity();
+                ex.image = exerciseObj.getString("tag");
+                ex.name = exerciseObj.getString("name");
+                ex.requiresBar = exerciseObj.getBoolean("bar");
+                if (ex.requiresBar) {
+                    ex.lastBarId = 4; // 20kg
+                }
+                ex.lastTrained = DATE_ZERO;
+                ex.lastWeightSpec = WeightSpecification.NO_BAR_WEIGHT;
+                ex.exerciseId = (int) exerciseDao.insert(ex);
+
+
+                ExerciseMuscleCrossRef[] muscleLinks =
+                    JsonUtils.mapInt(exerciseObj.getJSONArray("primary"), muscleId -> {
+                        ExerciseMuscleCrossRef exXmuscle = new ExerciseMuscleCrossRef();
+                        exXmuscle.exerciseId = ex.exerciseId;
+                        exXmuscle.muscleId = muscleId;
+                        return exXmuscle;
+                    }).toArray(ExerciseMuscleCrossRef[]::new);
+
+                exXmuscleDao.insertAll(muscleLinks);
+            });
+        } catch (JSONException e) {
+            throw new LoadException("Unable to load initial exercises");
+        }
     }
 
-    private static void createTraining(AppDatabase db, ExerciseEntity ex, long i, long e) {
-        TrainingEntity training = new TrainingEntity();
-        training.start = Calendar.getInstance();
-        training.start.setTimeInMillis(i);
-        training.end = Calendar.getInstance();
-        training.end.setTimeInMillis(e);
-        training.trainingId = (int) db.trainingDao().insert(training);
+    public static JSONArray assetJsonArrayFile(AssetManager assets, String filename) {
+        try {
+            InputStream file = assets.open(filename);
+            byte[] formArray = new byte[file.available()];
+            file.read(formArray);
+            file.close();
+            return new JSONArray(new String(formArray));
 
-        BiConsumer<Long, Integer> createBit = (date, more) -> {
-            BitEntity bit = new BitEntity();
-            bit.exerciseId = ex.exerciseId;
-            bit.timestamp = Calendar.getInstance();
-            bit.timestamp.setTimeInMillis(date);
-            bit.kilos = true;
-            bit.totalWeight = 9000+more;
-            bit.reps = 10;
-            bit.note = "";
-            bit.trainingId = training.trainingId;
-            db.bitDao().insert(bit);
-        };
-
-        createBit.accept(i + 1000000L,100);
-        createBit.accept(i + 2000000L,200);
-        createBit.accept(i + 3000000L,300);
-        createBit.accept(i + 4000000L,400);
-        createBit.accept(i + 5000000L,500);
-        createBit.accept(i + 6000000L,600);
+        } catch (JSONException | IOException e) {
+            throw new LoadException("Unable to load file "+filename);
+        }
     }
+
 }

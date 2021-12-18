@@ -20,6 +20,11 @@ public interface ExerciseDao {
     @Query("SELECT * FROM exercise")
     List<ExerciseEntity.WithMuscles> getAll();
 
+    @Query("SELECT exerciseId FROM exercise WHERE exerciseId IN "+
+            "(SELECT exerciseId FROM exercise_x_muscle_group WHERE muscleId = :muscleId) "+
+            "ORDER BY lastTrained DESC, name")
+    List<Integer> getOrderedExercises(int muscleId);
+
     @Transaction
     @Query("SELECT * FROM exercise WHERE exerciseId IN (:exerciseIds)")
     List<ExerciseEntity.WithMuscles> getByIds(int... exerciseIds);

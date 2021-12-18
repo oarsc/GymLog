@@ -90,7 +90,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         setTitle(R.string.title_registry);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        usingInternationalSystem = preferences.getBoolean("internationalSystem", false);
+        usingInternationalSystem = preferences.getBoolean("internationalSystem", true);
 
 
         TextView title = findViewById(R.id.exerciseName);
@@ -203,6 +203,8 @@ public class RegistryActivity extends DBAppCompatActivity {
                     usingInternationalSystem);
 
             weight.setText(FormatUtils.toString(partialWeight));
+        } else {
+            reps.setText("10");
         }
     }
 
@@ -237,8 +239,12 @@ public class RegistryActivity extends DBAppCompatActivity {
             bit.setTimestamp(Calendar.getInstance());
             bit.setTrainingId(trainingId);
 
+            exercise.setLastTrained(Calendar.getInstance());
+
             // SAVE TO DB:
             bit.setId((int) db.bitDao().insert(bit.toEntity()));
+            db.exerciseDao().update(exercise.toEntity());
+
 
             runOnUiThread(() -> {
                 boolean added = false;
@@ -273,10 +279,12 @@ public class RegistryActivity extends DBAppCompatActivity {
             runOnUiThread(()-> {
                 recyclerViewAdapter.notifyItemRemoved(index);
                 if (index == 0) {
-                    if (log.get(0).getTrainingId() != trainingId) {
-                        recyclerViewAdapter.notifyItemChanged(0);
-                    } else {
-                        recyclerViewAdapter.notifyTrainingIdChanged(trainingId, 0);
+                    if (!log.isEmpty()) {
+                        if (log.get(0).getTrainingId() != trainingId) {
+                            recyclerViewAdapter.notifyItemChanged(0);
+                        } else {
+                            recyclerViewAdapter.notifyTrainingIdChanged(trainingId, 0);
+                        }
                     }
                 } else {
                     recyclerViewAdapter.notifyTrainingIdChanged(trainingId, index);

@@ -40,7 +40,7 @@ public class SplashActivity extends AppCompatActivity {
         new DBThread(this, db -> {
                 List<MuscleEntity> muscles = db.muscleDao().getOnlyMuscles();
                 if (muscles.isEmpty()) {
-                    initialDataService.persist(db);
+                    initialDataService.persist(getAssets(), db);
                 }
                 loadData(db);
                 goMain();

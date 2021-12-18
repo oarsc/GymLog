@@ -7,18 +7,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.InternalException;
+import org.scp.gymlog.model.Muscle;
+import org.scp.gymlog.room.AppDatabase;
+import org.scp.gymlog.ui.common.DBAppCompatActivity;
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton;
 import org.scp.gymlog.util.Data;
-import org.scp.gymlog.model.Muscle;
-import org.scp.gymlog.ui.common.CustomAppCompatActivity;
 
-public class ExercisesActivity extends CustomAppCompatActivity {
+import java.util.List;
+
+public class ExercisesActivity extends DBAppCompatActivity {
+
+    private int muscleId;
+    private List<Integer> order;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int onLoad(Bundle savedInstanceState, AppDatabase db) {
+        muscleId = getIntent().getExtras().getInt("muscleId");
+        order = db.exerciseDao().getOrderedExercises(muscleId);
+        return CONTINUE;
+    }
+
+    @Override
+    protected void onDelayedCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_exercises);
 
-        int muscleId = getIntent().getExtras().getInt("muscleId");
         Muscle muscle = Data.getInstance().getMuscles().stream()
                 .filter(gr -> gr.getId() == muscleId)
                 .findFirst()
@@ -27,7 +39,7 @@ public class ExercisesActivity extends CustomAppCompatActivity {
         setTitle(muscle.getText());
         RecyclerView recyclerView = findViewById(R.id.exercises_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new ExercisesRecyclerViewAdapter(muscle, this));
+        recyclerView.setAdapter(new ExercisesRecyclerViewAdapter(order, this));
 
         TrainingFloatingActionButton fab = findViewById(R.id.fab_training);
         fab.updateFloatingActionButton();

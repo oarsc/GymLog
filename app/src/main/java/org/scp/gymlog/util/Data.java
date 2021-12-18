@@ -26,18 +26,26 @@ public class Data {
 		return instance;
 	}
 
-	public static Bar getBar(int barId) {
+	public static Bar getBar(Data data, int barId) {
 		return getInstance().bars.stream()
 				.filter(bar -> bar.getId() == barId)
 				.findFirst()
 				.orElseThrow(() -> new LoadException("NO BAR FOUND id:"+barId));
 	}
 
-	public static Exercise getExercise(int exerciseId) {
-		return getInstance().exercises.stream()
+	public static Bar getBar(int exerciseId) {
+		return getBar(getInstance(), exerciseId);
+	}
+
+	public static Exercise getExercise(Data data, int exerciseId) {
+		return data.exercises.stream()
 				.filter(exercise -> exercise.getId() == exerciseId)
 				.findFirst()
 				.orElseThrow(() -> new LoadException("NO EXERCISE FOUND id:"+exerciseId));
+	}
+
+	public static Exercise getExercise(int exerciseId) {
+		return getExercise(getInstance(), exerciseId);
 	}
 
 	public void setTrainingId(int trainingId) {

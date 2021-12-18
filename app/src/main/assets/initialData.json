@@ -1,0 +1,2163 @@
+[{
+	"tag": "abs_mat_planks_rest_on_arms",
+	"name": "Planks",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_alternate_heel_touchers_lying",
+	"name": "Sit-ups, Bent Legs",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_crunch_lying_raised_legs",
+	"name": "Twisting Sit-ups, Bent Legs",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_crunch_lying_raised_legs",
+	"name": "Sit-ups, Raised Legs",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_twist_situp_lying_raise_bent_2",
+	"name": "Twisting Sit-ups, Raised Legs",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_bench_situp_decline_bent_legs",
+	"name": "Sit-ups (decline)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_jackknife_situp_lying",
+	"name": "Jackknife Sit-Up (lying)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_side_crunch_lying",
+	"name": "Crunches, Bent Legs",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_bench_crunch_decline_bent_legs",
+	"name": "Crunches (decline)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_side_crunch_lying",
+	"name": "Side Crunches (lying)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_supported_crunch_lying",
+	"name": "Supported Crunches (lying)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_supported_crunch_lying",
+	"name": "Supported Side Crunches (lying)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_crunch_lying_raised_legs",
+	"name": "Crunches, Raised Legs",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_reverse_crunch_lying_raised_legs",
+	"name": "Reverse Crunches, Raised Legs",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_machine_crunch_seated",
+	"name": "Machine Crunch (seated)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_machine_crunch_seated",
+	"name": "Machine Side Crunch (seated)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_alternate_heel_touchers_lying",
+	"name": "Leg Pull-In (lying)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_cycle_crunch_lying",
+	"name": "Leg Raise (lying)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_cycle_crunch_lying",
+	"name": "Pelvic Lift, Raised Legs (lying)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_pelvic_lift_lying_bent_legs",
+	"name": "Pelvic Lift, Bent Legs (lying)",
+	"primary": [13, 12],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_bar_leg_raise_hanging",
+	"name": "Leg Raise (hanging)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_bar_leg_raise_hanging",
+	"name": "Knee Raise (hanging)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_bar_leg_raise_rest_on_arms",
+	"name": "Leg Raise, Rest On Arms",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_bar_leg_raise_rest_on_arms",
+	"name": "Knee Raise, Rest On Arms",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_flatter_kick_lying",
+	"name": "Flutter Kicks (lying)",
+	"primary": [13, 12],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_side_hip_raise_lying",
+	"name": "Side Hip Raise (lying)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_barbell_roller_kneeling",
+	"name": "Barbell Roller (kneeling)",
+	"primary": [13],
+	"secondary": [6, 3],
+	"bar": false
+},
+{
+	"tag": "abs_mat_cycle_crunch_lying",
+	"name": "Air Bike Crunches",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_cycle_crunch_lying",
+	"name": "Twisting Air Bike Crunches",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_high_cable_crunch_seated",
+	"name": "Pulley Machine Crunches (seated)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_high_cable_crunch_standing",
+	"name": "Pulley Machine Crunches (standing)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_barbell_twist_torso_standing",
+	"name": "Twisting Barbell Torso (standing)",
+	"primary": [13],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "abs_dumbbell_side_bend_standing",
+	"name": "Dumbbell Side Bend (standing)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_barbell_side_bend_standing",
+	"name": "Barbell Side Bend (standing)",
+	"primary": [13],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "abs_low_cable_side_bend_standing",
+	"name": "Pulley Machine Side Bend (standing)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_bench_side_crunch_incline",
+	"name": "Hyperextension Bench Side Crunch",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_alternate_heel_touchers_lying",
+	"name": "Alternating Heel Touchers (lying)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_cycle_crunch_lying",
+	"name": "Toe Touchers (lying)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_dumbbell_curl_standing",
+	"name": "Dumbbell Biceps Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_dumbbell_hammer_curl_standing",
+	"name": "Dumbbell Biceps Hammer Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_dumbbell_alternate_curl_standing",
+	"name": "Dumbbell Alternating Biceps Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_dumbbell_alternate_hammer_curl_standing",
+	"name": "Dumbbell Alternating Biceps Hammer Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_bench_dumbbell_curl_seated_incline",
+	"name": "Dumbbell Biceps Curl (seated)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_bench_dumbbell_hammer_curl_seated_incline",
+	"name": "Dumbbell Biceps Hammer Curl (seated)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_bench_dumbbell_alternate_curl_seated_incline",
+	"name": "Dumbbell Alternating Biceps Curl (seated)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_bench_dumbbell_alternate_hammer_curl_seated_incline",
+	"name": "Dumbbell Alternating Biceps Hammer Curl (seated)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_bench_dumbbell_concentration_curl_seated",
+	"name": "Dumbbell Biceps Concentration Curl (seated)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_barbell_curl_standing_close_grip",
+	"name": "Barbell Biceps Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "biceps_ezbar_curl_standing_medium_grip",
+	"name": "EZ-Bar Biceps Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "biceps_machine_curl_seated",
+	"name": "Machine Biceps Curl (seated)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_scott_machine_curl_seated",
+	"name": "Scott Machine Biceps Curl (seated)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_scott_machine_ezbar_curl_seated",
+	"name": "Scott Machine EZ-Bar Biceps Curl (seated)",
+	"primary": [6],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "biceps_scott_machine_dumbbell_curl_seated",
+	"name": "Scott Machine Dumbbell Curl",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_low_cable_curl_standing",
+	"name": "Pulley Machine Biceps Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_bar_pullups_close_overhand_grip",
+	"name": "Pull-ups, Underhand Close Grip",
+	"primary": [6],
+	"secondary": [2],
+	"bar": false
+},
+{
+	"tag": "biceps_bar_pullups_close_overhand_grip",
+	"name": "Pull-ups, Overhand Close Grip",
+	"primary": [6, 8],
+	"secondary": [2],
+	"bar": false
+},
+{
+	"tag": "biceps_dumbbell_crossbody_curl_standing",
+	"name": "Dumbbell Biceps Crossbody Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_dumbbell_crossbody_curl_standing",
+	"name": "Dumbbell Biceps Crossbody Hammer Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_low_cable_bench_concentration_curl_seated",
+	"name": "Pulley Machine Biceps Concentration Curl (seated)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_barbell_curl_standing_close_grip",
+	"name": "Barbell Biceps Curl, Close Grip (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "biceps_ezbar_curl_standing_close_grip",
+	"name": "EZ-Bar Biceps Curl, Close Grip (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "biceps_barbell_curl_standing_close_grip",
+	"name": "Barbell Biceps Curl, Wide Grip (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "biceps_ezbar_curl_standing_wide_grip",
+	"name": "EZ-Bar Biceps Curl, Wide Grip (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "biceps_bench_dumbbell_single_arm_curl_standing",
+	"name": "Dumbbell Single Arm Biceps Curl",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_scott_machine_dumbbell_curl_seated",
+	"name": "Scott Machine Dumbbell Biceps Hammer Curl",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_scott_machine_cable_curl_seated",
+	"name": "Scott Machine Low Cable Biceps Curl",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_high_cable_overhead_curl_standing",
+	"name": "Overhead Pulley Machine Biceps Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_low_cable_bench_curl_seated_incline",
+	"name": "Pulley Machine Bench Biceps Curl (incline)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_low_cable_mat_curl_lying",
+	"name": "Pulley Machine Biceps Curl (lying)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_high_cable_bench_curl_lying",
+	"name": "Pulley Machine Bench Biceps Curl (lying)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_low_cable_robe_curl_standing",
+	"name": "Pulley Machine Rope Biceps Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_bench_barbell_curl_lying_incline",
+	"name": "Barbell Biceps Curl (incline)",
+	"primary": [6],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "biceps_bench_dumbbell_curl_lying_incline",
+	"name": "Dumbbell Biceps Curl (incline)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_high_bench_barbell_curl_lying",
+	"name": "Barbell High Bench Biceps Curl (prone)",
+	"primary": [6],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "biceps_high_bench_dumbbell_curl_lying",
+	"name": "Dumbbell High Bench Biceps Curl (prone)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_dumbbell_curl_standing",
+	"name": "Dumbbell Biceps Zottman Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "calves_barbell_rocking_standing",
+	"name": "Barbell Calf Raise (standing)",
+	"primary": [11],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "calves_smith_machine_rocking_standing",
+	"name": "Smith Machine Calf Raise (standing)",
+	"primary": [11],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "calves_machine_rocking_standing",
+	"name": "Machine Calf Raise (standing)",
+	"primary": [11],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "calves_machine_rocking_seated",
+	"name": "Machine Calf Raise (seated)",
+	"primary": [11],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "calves_barbell_rocking_seated",
+	"name": "Barbell Calf Raise (seated)",
+	"primary": [11],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "calves_dumbbell_rocking_standing",
+	"name": "Dumbbell Calf Rocking (standing)",
+	"primary": [11],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "calves_machine_leg_press_rocking_incline_close_feet",
+	"name": "Machine Leg Press Calf Rocking, Close Feet",
+	"primary": [11],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "calves_machine_leg_press_rocking_incline_close_feet",
+	"name": "Machine Leg Press Calf Rocking, Wide Feet",
+	"primary": [11],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "calves_donkey_rocking_bent_over",
+	"name": "Donkey Rocking, Bent Over",
+	"primary": [11],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "calves_smith_machine_stepper_reverse_rocking_standing",
+	"name": "Machine Reverse Smith Calf Rocking with Stepper (standing)",
+	"primary": [11],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_bench_barbell_press_lying",
+	"name": "Barbell Bench Press",
+	"primary": [1],
+	"secondary": [4, 7],
+	"bar": true
+},
+{
+	"tag": "chest_bench_barbell_press_decline_medium_grip",
+	"name": "Barbell Bench Press (decline)",
+	"primary": [1],
+	"secondary": [4, 7],
+	"bar": true
+},
+{
+	"tag": "chest_bench_barbell_press_incline",
+	"name": "Barbell Bench Press (incline)",
+	"primary": [1],
+	"secondary": [4, 7],
+	"bar": true
+},
+{
+	"tag": "chest_bench_barbell_press_lying",
+	"name": "Barbell Bench Press, Wide Grip",
+	"primary": [1],
+	"secondary": [4, 7],
+	"bar": true
+},
+{
+	"tag": "chest_bench_barbell_press_decline_medium_grip",
+	"name": "Barbell Bench Press, Wide Grip (decline)",
+	"primary": [1],
+	"secondary": [4, 7],
+	"bar": true
+},
+{
+	"tag": "chest_bench_barbell_press_incline",
+	"name": "Barbell Bench Press, Wide Grip (incline)",
+	"primary": [1],
+	"secondary": [4, 7],
+	"bar": true
+},
+{
+	"tag": "chest_bench_dumbbell_press_lying",
+	"name": "Dumbbell Bench Press",
+	"primary": [1, 7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "chest_bench_dumbbell_press_decline",
+	"name": "Dumbbell Bench Press (decline)",
+	"primary": [1, 7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "chest_bench_dumbbell_press_incline",
+	"name": "Dumbbell Bench Press (incline)",
+	"primary": [1, 7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "chest_smith_machine_barbell_press_lying",
+	"name": "Smith Machine Bench Press",
+	"primary": [1, 7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "chest_smith_machine_barbell_press_decline_medium_grip",
+	"name": "Smith Machine Bench Press (decline)",
+	"primary": [1, 7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "chest_smith_machine_barbell_press_incline_medium_grip",
+	"name": "Smith Machine Bench Press (incline)",
+	"primary": [1, 7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "chest_smith_machine_barbell_press_lying",
+	"name": "Smith Machine Bench Press, Wide Grip",
+	"primary": [1],
+	"secondary": [4, 7],
+	"bar": false
+},
+{
+	"tag": "chest_smith_machine_barbell_press_decline_wide_grip",
+	"name": "Smith Machine Bench Press, Wide Grip (decline)",
+	"primary": [1],
+	"secondary": [4, 7],
+	"bar": false
+},
+{
+	"tag": "chest_smith_machine_barbell_press_incline_wide_grip",
+	"name": "Smith Machine Bench Press, Wide Grip (incline)",
+	"primary": [1],
+	"secondary": [4, 7],
+	"bar": false
+},
+{
+	"tag": "chest_machine_press_lying",
+	"name": "Machine Bench Press",
+	"primary": [1],
+	"secondary": [7, 4],
+	"bar": false
+},
+{
+	"tag": "chest_machine_press_incline",
+	"name": "Machine Front Press (seated)",
+	"primary": [1, 7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "chest_high_cable_crossover_standing",
+	"name": "Pulley Machine Crossover (standing)",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_bench_dumbbell_flys_lying",
+	"name": "Dumbbell Bench Flys",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_bench_dumbbell_flys_decline",
+	"name": "Dumbbell Bench Flys (decline)",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_bench_dumbbell_flys_incline",
+	"name": "Dumbbell Bench Flys (incline)",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_machine_flys_seated",
+	"name": "Machine Fly (seated)",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_machine_butterflys_seated",
+	"name": "Machine Butterfly (seated)",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_bench_ezbar_pullover_lying",
+	"name": "EZ-Bar Bench Pullover",
+	"primary": [1],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "chest_bar_machine_dips_medium_grip",
+	"name": "Bar Dips, Bent Over",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_machine_dips",
+	"name": "Supported Machine Dips",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_push_ups_flat",
+	"name": "Push-ups, Wide Grip",
+	"primary": [1],
+	"secondary": [7],
+	"bar": false
+},
+{
+	"tag": "chest_push_ups_decline_wide_grip",
+	"name": "Push-ups, Wide Grip (decline)",
+	"primary": [1],
+	"secondary": [7],
+	"bar": false
+},
+{
+	"tag": "chest_bench_dumbbell_press_lying_hammer_grip",
+	"name": "Hammer Grip Dumbbell Bench Press",
+	"primary": [1],
+	"secondary": [7, 4],
+	"bar": false
+},
+{
+	"tag": "chest_bench_dumbbell_press_decline_hammer_grip",
+	"name": "Hammer Grip Dumbbell Bench Press (decline)",
+	"primary": [1],
+	"secondary": [7, 4],
+	"bar": false
+},
+{
+	"tag": "chest_bench_dumbbell_press_incline_hammer_grip",
+	"name": "Hammer Grip Dumbbell Bench Press (incline)",
+	"primary": [1],
+	"secondary": [7, 4],
+	"bar": false
+},
+{
+	"tag": "chest_machine_press_decline",
+	"name": "Machine Bench Press (decline)",
+	"primary": [1],
+	"secondary": [7, 4],
+	"bar": false
+},
+{
+	"tag": "chest_machine_press_incline",
+	"name": "Machine Bench Press (incline)",
+	"primary": [1],
+	"secondary": [7, 4],
+	"bar": false
+},
+{
+	"tag": "chest_low_cable_bench_flys_lying",
+	"name": "Pulley Machine Bench Flys",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_low_cable_bench_flys_incline",
+	"name": "Pulley Machine Bench Flys (incline)",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_low_cable_bench_flys_decline",
+	"name": "Pulley Machine Bench Flys (decline)",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_high_cable_front_pushdown_standing_straight_arm",
+	"name": "Straight Arm Pulley Machine Push Down (standing)",
+	"primary": [1, 13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_bench_dumbbell_twist_in_flys_lying",
+	"name": "Twisting Dumbbell Bench Flys",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_bench_dumbbell_twist_in_flys_decline",
+	"name": "Twisting Dumbbell Bench Flys (decline)",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_bench_dumbbell_twist_in_flys_incline",
+	"name": "Twisting Dumbbell Bench Flys (incline)",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_bench_barbell_pullover_lying",
+	"name": "Barbell Bench Pullover",
+	"primary": [1],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "chest_bench_dumbbell_pullover_lying_both_arms",
+	"name": "Dumbbell Bench Pullover",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_high_cable_bench_pullover_lying_incline",
+	"name": "Pulley Machine Bench Pullover",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_bar_machine_dips_wide_grip",
+	"name": "Bar Dips, Bent Over, Wide Grip",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "forearm_dumbbell_wrist_curl_seated",
+	"name": "Dumbbell Forearm Wrist Curl (seated)",
+	"primary": [8],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "forearm_barbell_wrist_curl_seated",
+	"name": "Barbell Forearm Wrist Curl (seated)",
+	"primary": [8],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "forearm_barbell_wrist_curl_seated",
+	"name": "EZ-Bar Forearm Wrist Curl (seated)",
+	"primary": [8],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "forearm_barbell_wrist_curls_standing",
+	"name": "Barbell Forearm Wrist Curl (standing)",
+	"primary": [8],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "forearm_low_cable_reverse_curls_standing",
+	"name": "Reverse Pulley Machine Forearm Curl (standing)",
+	"primary": [8],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "forearm_barbell_reverse_curls_standing",
+	"name": "Reverse Barbell Forearm Curl (standing)",
+	"primary": [8],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "forearm_cable_side_curl_seated_single_arm",
+	"name": "Pulley Machine Forearm Lateral Curl (seated)",
+	"primary": [8],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "forearm_low_cable_wrist_curl_standing",
+	"name": "Pulley Machine Forearm Wrist Curl (standing)",
+	"primary": [8],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "forearm_barbell_wrist_curls_standing_behind_back",
+	"name": "Barbell Forearm Wrist Curl Behind Back (standing)",
+	"primary": [8],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "forearm_plate_reverse_curls_standing",
+	"name": "Reverse Plate Forearm Curl (standing)",
+	"primary": [8],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "forearm_low_cable_bench_reverse_curl_seated_incline",
+	"name": "Reverse Pulley Machine Forearm Curl (incline)",
+	"primary": [8],
+	"secondary": [6],
+	"bar": false
+},
+{
+	"tag": "forearm_plate_hand_squeeze_standing",
+	"name": "Plate Forearm Hand Squeeze (standing)",
+	"primary": [8],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_scott_machine_ezbar_curl_seated",
+	"name": "Scott Machine EZ-Bar Forearm Curl, Close Grip",
+	"primary": [8],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "gluteus_mat_hip_extension_kneeling_bent_leg",
+	"name": "Hip Extension (kneeling)",
+	"primary": [12],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "gluteus_machine_hip_extension_standing",
+	"name": "Machine Hip Extension",
+	"primary": [12],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "gluteus_mat_leg_kickbacks_kneeling_bent_leg",
+	"name": "Leg Kickback (kneeling)",
+	"primary": [12],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "gluteus_low_cable_hip_extension_standing",
+	"name": "Pulley Machine Hip Extension (standing)",
+	"primary": [12],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "gluteus_mat_barbell_squat_kneeling",
+	"name": "Barbell Squats (kneeling)",
+	"primary": [12, 3],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "gluteus_low_cable_robe_pullthrough_standing",
+	"name": "Pulley Machine Rope Pull Through (standing)",
+	"primary": [12, 3],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "hamstrings_machine_curl_lying",
+	"name": "Machine Leg Curl (prone)",
+	"primary": [10],
+	"secondary": [11],
+	"bar": false
+},
+{
+	"tag": "hamstrings_machine_curl_standing",
+	"name": "Machine Leg Curl (standing)",
+	"primary": [10],
+	"secondary": [11],
+	"bar": false
+},
+{
+	"tag": "hamstrings_machine_curl_seated",
+	"name": "Machine Leg Curl (seated)",
+	"primary": [10],
+	"secondary": [11],
+	"bar": false
+},
+{
+	"tag": "hamstrings_low_cable_curl_standing",
+	"name": "Pulley Machine Leg Curl (standing)",
+	"primary": [10],
+	"secondary": [11],
+	"bar": false
+},
+{
+	"tag": "lat_bar_pullups_overhand",
+	"name": "Pull-ups, Overhand Wide Grip",
+	"primary": [2],
+	"secondary": [6, 8],
+	"bar": false
+},
+{
+	"tag": "lat_bar_pullups_overhand",
+	"name": "Pull-ups, Overhand Medium Grip",
+	"primary": [2, 6],
+	"secondary": [8],
+	"bar": false
+},
+{
+	"tag": "lat_bar_pullups_underhand",
+	"name": "Pull-ups, Underhand Medium Grip",
+	"primary": [2, 6],
+	"secondary": [8],
+	"bar": false
+},
+{
+	"tag": "biceps_low_cable_robe_curl_standing",
+	"name": "Face Pull",
+	"primary": [2, 5],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "lat_machine_supported_pullups_overhand_medium_grip",
+	"name": "Supported Machine Pull-ups, Overhand Medium Grip",
+	"primary": [2, 6],
+	"secondary": [8],
+	"bar": false
+},
+{
+	"tag": "lat_machine_supported_pullups_overhand_medium_grip",
+	"name": "Supported Machine Pull-ups, Overhand Wide Grip",
+	"primary": [2],
+	"secondary": [6, 8],
+	"bar": false
+},
+{
+	"tag": "lat_machine_supported_pullups_underhand",
+	"name": "Supported Machine Pull-ups, Underhand Medium Grip",
+	"primary": [2, 6],
+	"secondary": [8],
+	"bar": false
+},
+{
+	"tag": "lat_barbell_row_bent_over_underhand",
+	"name": "Barbell Row, Bent Over (standing)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": true
+},
+{
+	"tag": "lat_dumbbell_row_standing_bent_over",
+	"name": "Dumbbell Row, Bent Over (standing)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": false
+},
+{
+	"tag": "chest_machine_press_incline",
+	"name": "Leverage Machine Row (seated)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": false
+},
+{
+	"tag": "chest_machine_press_incline",
+	"name": "Leverage Machine Row, vertical grip (seated)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": false
+},
+{
+	"tag": "lat_low_cable_row_seated",
+	"name": "Pulley Machine Row (seated)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": false
+},
+{
+	"tag": "lat_machine_chest_pulldown_overhand",
+	"name": "Pulley Machine Pulldown Behind The Neck, Wide Grip (seated)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": false
+},
+{
+	"tag": "lat_machine_chest_pulldown_overhand",
+	"name": "Pulley Machine Pulldown To Chest, Wide Grip (seated)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": false
+},
+{
+	"tag": "lat_leverage_machine_pulldown_seated",
+	"name": "Leverage Machine Pulldown (seated)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": false
+},
+{
+	"tag": "lat_machine_reverse_flys_lying",
+	"name": "Reverse Machine Flys (lying)",
+	"primary": [4],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "lat_machine_reverse_flys_seated",
+	"name": "Reverse Machine Flys (seated)",
+	"primary": [4],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "lat_bar_pullups_underhand",
+	"name": "Pull-ups, Underhand Wide Grip",
+	"primary": [2],
+	"secondary": [6, 8],
+	"bar": false
+},
+{
+	"tag": "lat_machine_supported_pullups_underhand",
+	"name": "Supported Machine Pull-ups, Underhand Wide Grip",
+	"primary": [2],
+	"secondary": [6, 8],
+	"bar": false
+},
+{
+	"tag": "lat_barbell_row_bent_over_underhand",
+	"name": "Barbell Row, Bent Over, Underhand Grip (standing)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": true
+},
+{
+	"tag": "lat_barbell_tipup_bent_over",
+	"name": "Barbell Tipup, Bent Over (standing)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": true
+},
+{
+	"tag": "lat_barbell_tipup_bent_over",
+	"name": "Barbell Tipup, Bent Over, Vertical Grip (standing)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": true
+},
+{
+	"tag": "lat_smith_machine_row_bent_over",
+	"name": "Smith Machine Row, Bent Over (standing)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": false
+},
+{
+	"tag": "lat_low_cable_row_standing_bent_over",
+	"name": "Pulley Machine Row, Bent Over (standing)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": false
+},
+{
+	"tag": "lat_machine_chest_pulldown_underhand_close_grip",
+	"name": "Pulley Machine Pulldown To Chest, Underhand Close Grip (seated)",
+	"primary": [2, 6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "lat_machine_chest_pulldown_overhand_close_grip",
+	"name": "Pulley Machine Pulldown To Chest, Hammer Close Grip (seated)",
+	"primary": [2, 6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "lat_high_bench_barbell_row_lying",
+	"name": "Barbell Flat High Bench Row (prone)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": true
+},
+{
+	"tag": "lat_high_bench_dumbbell_row_lying",
+	"name": "Dumbbell Flat High Bench Row (prone)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": false
+},
+{
+	"tag": "lat_bench_dumbbell_reverse_flys_lying",
+	"name": "Reverse Dumbbell Flat Bench Flys (prone)",
+	"primary": [4],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "lower_back_machine_hyperextensions_incline",
+	"name": "Machine Hyperextensions",
+	"primary": [3],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "lower_back_machine_hyperextensions_seated",
+	"name": "Machine Hyperextensions (seated)",
+	"primary": [3],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "lower_back_smith_machine_pulls_standing",
+	"name": "Smith Machine Back Curl (standing)",
+	"primary": [3, 12],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "lower_back_barbell_good_mornings_standing",
+	"name": "Barbell Back Curl (standing)",
+	"primary": [3, 12],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "lower_back_mat_back_curls_lying",
+	"name": "Mat Back Curl (prone)",
+	"primary": [3],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "lower_back_mat_cat_stretch_kneeling",
+	"name": "Mat Cat Stretch (kneeling)",
+	"primary": [3],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "lower_back_bench_hyperextensions_lying",
+	"name": "Flat Bench Hyperextensions (prone)",
+	"primary": [3],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "lower_back_barbell_good_mornings_seated",
+	"name": "Barbell Back Curl (seated)",
+	"primary": [3],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "lower_back_barbell_deadlift_standing",
+	"name": "Barbell Deadlift Sumo, Wide Feet",
+	"primary": [3, 12],
+	"secondary": [9, 10],
+	"bar": true
+},
+{
+	"tag": "quads_machine_abduction_press_seated",
+	"name": "Machine Abduction Press (seated)",
+	"primary": [9, 12],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "quads_machine_adduction_press_seated",
+	"name": "Machine Adduction Press (seated)",
+	"primary": [9, 12],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "quads_mat_leg_side_raise_lying",
+	"name": "Leg Side Raise (lying)",
+	"primary": [9],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "calves_machine_rocking_standing",
+	"name": "Machine Leverage Squats (standing)",
+	"primary": [9, 3, 12],
+	"secondary": [10],
+	"bar": false
+},
+{
+	"tag": "quads_barbell_squats_standing",
+	"name": "Barbell Squats (standing)",
+	"primary": [9, 3, 12],
+	"secondary": [10],
+	"bar": true
+},
+{
+	"tag": "quads_barbell_front_squats_standing",
+	"name": "Barbell Front Squats (standing)",
+	"primary": [9, 3, 12],
+	"secondary": [10],
+	"bar": true
+},
+{
+	"tag": "quads_machine_squats_incline",
+	"name": "Machine Squats (incline)",
+	"primary": [9, 12],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "quads_machine_leg_press_incline",
+	"name": "Machine Leg Press (incline)",
+	"primary": [9, 12],
+	"secondary": [10],
+	"bar": false
+},
+{
+	"tag": "quads_barbell_step_ups_standing",
+	"name": "Barbell Step-ups (standing)",
+	"primary": [9],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "quads_dumbbell_step_ups_standing",
+	"name": "Dumbbell Step-ups (standing)",
+	"primary": [9],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "quads_machine_leg_extension_seated",
+	"name": "Machine Leg Extension (seated)",
+	"primary": [9],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_skip_rope",
+	"name": "Fast Skipping (standing)",
+	"primary": [9, 12],
+	"secondary": [10],
+	"bar": false
+},
+{
+	"tag": "lower_back_barbell_deadlift_standing",
+	"name": "Barbell Deadlift",
+	"primary": [2, 10],
+	"secondary": [3, 9, 12],
+	"bar": true
+},
+{
+	"tag": "quads_low_cable_abduction_press_standing",
+	"name": "Pulley Machine Abduction Press (standing)",
+	"primary": [9],
+	"secondary": [12],
+	"bar": false
+},
+{
+	"tag": "quads_low_cable_adduction_press_standing",
+	"name": "Pulley Machine Adduction Press (standing)",
+	"primary": [9],
+	"secondary": [12],
+	"bar": false
+},
+{
+	"tag": "quads_dumbbell_lunges",
+	"name": "Dumbbell Lunges",
+	"primary": [9, 12],
+	"secondary": [3, 10],
+	"bar": false
+},
+{
+	"tag": "quads_barbell_lunges",
+	"name": "Barbell Lunges",
+	"primary": [9, 12],
+	"secondary": [3, 10],
+	"bar": true
+},
+{
+	"tag": "quads_machine_leg_press_incline",
+	"name": "Leg Press Machine, Wide Feet (incline)",
+	"primary": [9, 12],
+	"secondary": [10],
+	"bar": false
+},
+{
+	"tag": "quads_barbell_hack_squats_standing",
+	"name": "Barbell Hack Squats (standing)",
+	"primary": [9, 12],
+	"secondary": [10],
+	"bar": true
+},
+{
+	"tag": "quads_smith_machine_hack_squats_standing",
+	"name": "Smith Machine Hack Squats (standing)",
+	"primary": [9, 12],
+	"secondary": [3, 10],
+	"bar": false
+},
+{
+	"tag": "quads_smith_machine_front_squats_standing",
+	"name": "Smith Machine Front Squats (standing)",
+	"primary": [9, 12],
+	"secondary": [3, 10],
+	"bar": false
+},
+{
+	"tag": "quads_dumbbell_deadlift_standing",
+	"name": "Dumbbell Deadlift",
+	"primary": [9, 12, 3],
+	"secondary": [10],
+	"bar": false
+},
+{
+	"tag": "quads_lower_cable_deadlift_standing",
+	"name": "Pulley Machine Deadlift",
+	"primary": [9, 12, 3],
+	"secondary": [10],
+	"bar": false
+},
+{
+	"tag": "shoulders_barbell_upright_row_standing",
+	"name": "Barbell Upright Row (standing)",
+	"primary": [4, 5, 6],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "shoulders_low_cable_upright_row_standing",
+	"name": "Pulley Machine Upright Row (standing)",
+	"primary": [4, 5, 6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "shoulders_dumbbell_front_raise_standing",
+	"name": "Dumbbell Front Raise (standing)",
+	"primary": [4],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "shoulders_plate_front_raise_standing",
+	"name": "Plate Front Raise (standing)",
+	"primary": [4],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "shoulders_barbell_neck_press_standing",
+	"name": "Barbell Neck Press (standing)",
+	"primary": [4],
+	"secondary": [5],
+	"bar": true
+},
+{
+	"tag": "shoulders_barbell_press_standing",
+	"name": "Barbell Shoulder Press (standing)",
+	"primary": [4],
+	"secondary": [5],
+	"bar": true
+},
+{
+	"tag": "shoulders_dumbbell_press_standing",
+	"name": "Dumbbell Shoulder Press (seated)",
+	"primary": [4],
+	"secondary": [5],
+	"bar": false
+},
+{
+	"tag": "shoulders_smith_machine_press_seated",
+	"name": "Smith Machine Shoulder Press (seated)",
+	"primary": [4],
+	"secondary": [5],
+	"bar": false
+},
+{
+	"tag": "shoulders_machine_press_seated",
+	"name": "Machine Shoulder Press (seated)",
+	"primary": [4],
+	"secondary": [5],
+	"bar": false
+},
+{
+	"tag": "shoulders_machine_lateral_raise_seated",
+	"name": "Machine Lateral Raise (seated)",
+	"primary": [4],
+	"secondary": [5],
+	"bar": false
+},
+{
+	"tag": "shoulders_dumbbell_lateral_raise_standing",
+	"name": "Dumbbell Lateral Raise (standing)",
+	"primary": [4],
+	"secondary": [5],
+	"bar": false
+},
+{
+	"tag": "shoulders_low_cable_lateral_raise_standing_single_arm",
+	"name": "Single Arm Pulley Machine Lateral Raise (bent over)",
+	"primary": [4],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "shoulders_dumbbell_lateral_raise_standing_bent_over",
+	"name": "Dumbbell Lateral Raise (bent over)",
+	"primary": [4],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "shoulders_dumbbell_upright_row_standing",
+	"name": "Dumbbell Upright Row (standing)",
+	"primary": [4, 5, 6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "shoulders_smith_machine_upright_row_standing",
+	"name": "Smith Machine Upright Row (standing)",
+	"primary": [4, 5, 6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "shoulders_barbell_front_raise_standing",
+	"name": "Barbell Front Raise (standing)",
+	"primary": [4],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "shoulders_low_cable_front_raise_standing_single_arm",
+	"name": "Single Arm Pulley Machine Front Raise (standing)",
+	"primary": [4],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "shoulders_low_cable_robe_front_raise_standing",
+	"name": "Pulley Machine Rope Front Raise (standing)",
+	"primary": [4],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "shoulders_push_ups_handstand",
+	"name": "Handstand Push-ups",
+	"primary": [4],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "traps_barbell_shrugs_standing",
+	"name": "Barbell Shrugs (standing)",
+	"primary": [5],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "traps_barbell_shrugs_behind_back_standing",
+	"name": "Barbell Shrugs Behind The Back (standing)",
+	"primary": [5],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "traps_dumbbell_shrugs_standing",
+	"name": "Dumbbell Shrugs (standing)",
+	"primary": [5],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "traps_machine_shrugs_seated",
+	"name": "Machine Shrugs (seated)",
+	"primary": [5],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "traps_smith_machine_shrugs_standing",
+	"name": "Smith Machine Shrugs (standing)",
+	"primary": [5],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "traps_smith_machine_behind_back_shrugs_standing",
+	"name": "Smith Machine Shrugs Behind The Back (standing)",
+	"primary": [5],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "triceps_bench_barbell_press_lying_close_grip",
+	"name": "Barbell Flat Bench Press, Close Grip",
+	"primary": [7],
+	"secondary": [4],
+	"bar": true
+},
+{
+	"tag": "triceps_smith_machine_press_lying",
+	"name": "Smith Machine Barbell Press, Close Grip",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "triceps_high_cable_vgrip_pushdown_standing_overhand_grip",
+	"name": "Pulley Machine Triceps Press (standing)",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "triceps_high_cable_robe_pushdown_standing",
+	"name": "Pulley Machine Rope Triceps Press (standing)",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "triceps_low_cable_robe_overhead_french_press_standing",
+	"name": "Overhead Pulley Machine Triceps Rope Press (standing)",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "triceps_bench_ezbar_french",
+	"name": "EZ-Bar Triceps French Press (lying)",
+	"primary": [7],
+	"secondary": [4],
+	"bar": true
+},
+{
+	"tag": "triceps_bench_ezbar_overhead_french_press_seated",
+	"name": "Overhead EZ-Bar Triceps Press (seated)",
+	"primary": [7],
+	"secondary": [4],
+	"bar": true
+},
+{
+	"tag": "triceps_bench_dumbbell_overhead_french_press_seated_both_arms",
+	"name": "Overhead Both Arm Dumbbell Triceps Press (seated)",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "triceps_bench_dumbbell_overhead_french_press_seated_single_arm",
+	"name": "Overhead Single Arm Dumbbell Triceps Press (seated)",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "triceps_bench_dumbbell_kickbacks_bent_over",
+	"name": "Dumbbell Triceps Kickbacks (bent over)",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "triceps_bench_dips_raised_legs",
+	"name": "Dips, Raised Legs",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "chest_push_ups_flat",
+	"name": "Push-ups, Close Grip",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "triceps_bar_dips",
+	"name": "Bar Dips",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "chest_machine_dips",
+	"name": "Supported Machine Dips",
+	"primary": [7],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "triceps_machine_pushdown_seated",
+	"name": "Machine Triceps Press (seated)",
+	"primary": [7],
+	"secondary": [4, 13],
+	"bar": false
+},
+{
+	"tag": "triceps_bench_barbell_press_lying_decline_close_grip",
+	"name": "Barbell Bench Press, Close Grip (decline)",
+	"primary": [7],
+	"secondary": [4],
+	"bar": true
+},
+{
+	"tag": "triceps_bench_barbell_press_lying_incline_close_grip",
+	"name": "Barbell Bench Press, Close Grip (incline)",
+	"primary": [7],
+	"secondary": [4],
+	"bar": true
+},
+{
+	"tag": "triceps_smith_machine_press_lying",
+	"name": "Smith Machine Barbell Press, Close Grip (decline)",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "triceps_smith_machine_press_lying_incline_close_grip",
+	"name": "Smith Machine Barbell Press, Close Grip (incline)",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "triceps_high_cable_vgrip_dragdown_standing_underhand_grip",
+	"name": "Pulley Machine Triceps Drag, Underhand Grip (standing)",
+	"primary": [7],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "triceps_high_cable_robe_overhead_french_press_standing_bent_over",
+	"name": "Overhead Pulley Machine Rope Triceps Press (bent over)",
+	"primary": [7],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "triceps_high_cable_bench_vgrip_overhead_press_kneeling",
+	"name": "Overhead Pulley Machine Triceps Press (kneeling)",
+	"primary": [7],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "triceps_low_cable_kickbacks_bent_over",
+	"name": "Pulley Machine Triceps Kickback (bent over)",
+	"primary": [7],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "triceps_high_cable_concentration_drag_kneeling",
+	"name": "Pulley Machine Triceps Concentration Drag (kneeling)",
+	"primary": [7],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "triceps_bench_ezbar_french",
+	"name": "EZ-Bar Triceps French Press, Underhand Grip (lying)",
+	"primary": [7],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "triceps_bench_ezbar_french",
+	"name": "EZ-Bar Triceps French Press (decline)",
+	"primary": [7],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "chest_bench_barbell_press_incline",
+	"name": "EZ-Bar Triceps French Press (incline)",
+	"primary": [7],
+	"secondary": [],
+	"bar": true
+},
+{
+	"tag": "triceps_bench_dumbbell_overhead_french_press_seated_incline",
+	"name": "Overhead Dumbbell Triceps Press (incline)",
+	"primary": [7],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "triceps_bench_dumbbell_tate_press_lying",
+	"name": "Dumbbell Triceps Tate Press (lying)",
+	"primary": [7],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "triceps_bar_dips",
+	"name": "Bar Dips, Wide Grip",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "triceps_low_cable_bench_french_press_lying",
+	"name": "Pulley Machine Triceps Press (lying)",
+	"primary": [7],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "triceps_high_cable_bench_french_press_lying_incline",
+	"name": "Pulley Machine Triceps Press (incline)",
+	"primary": [7],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_push_ups_flat",
+	"name": "Toe Touch Push-ups",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_push_ups_flat",
+	"name": "Shoulder Tap Push-ups",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "quads_lunges",
+	"name": "Switching Lunges",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_push_ups_flat",
+	"name": "Plank Push-ups",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_climbing",
+	"name": "Mountain Climbers",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_gym_ergometer",
+	"name": "Ergometer",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_gym_ergometer_lying",
+	"name": "Ergometer (lying)",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_gym_crosstrainer",
+	"name": "Crosstrainer (Elliptical)",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_gym_stepper",
+	"name": "Stepper",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_gym_treadmill",
+	"name": "Treadmill",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_gym_rower",
+	"name": "Rower",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_gym_stationary_cycling",
+	"name": "Stationary Cycling",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_boxing",
+	"name": "Boxing",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_bb",
+	"name": "Weight Training",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_fighting",
+	"name": "Fighting",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_tennis",
+	"name": "Tennis",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_volleyball",
+	"name": "Volleyball",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_soccer",
+	"name": "Soccer",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_football",
+	"name": "Football",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_baseball",
+	"name": "Baseball",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_basketball",
+	"name": "Basketball",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_badminton",
+	"name": "Badminton",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_squash",
+	"name": "Squash",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_table_tennis",
+	"name": "Table Tennis",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_sport_stretching",
+	"name": "Stretching",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_sport_jogging",
+	"name": "Running",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_sport_biking",
+	"name": "Biking",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_inline_skaten",
+	"name": "Inline-Skaten",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_sport_swimming",
+	"name": "Swimming",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_gym_rower",
+	"name": "Paddling",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_gym_rower",
+	"name": "Rowing",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_motocross",
+	"name": "Motocross",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_climbing",
+	"name": "Climbing",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_sport_jogging",
+	"name": "Hiking",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_sport_cross",
+	"name": "Nordic Walking",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_climbing",
+	"name": "Snowboarding",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_icon_sport_climbing",
+	"name": "Skiing",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "cardio_sport_jogging",
+	"name": "Cross-Country Skiing",
+	"primary": [14],
+	"secondary": [],
+	"bar": false
+}]

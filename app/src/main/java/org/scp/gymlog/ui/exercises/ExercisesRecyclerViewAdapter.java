@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.scp.gymlog.databinding.ListElementFragmentBinding;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Exercise;
-import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.ui.registry.RegistryActivity;
 import org.scp.gymlog.util.Data;
 
@@ -25,12 +24,13 @@ import java.util.stream.Collectors;
 public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<ExercisesRecyclerViewAdapter.ViewHolder> {
 
     private final List<Exercise> exercises;
-    private Context context;
+    private final Context context;
 
-    public ExercisesRecyclerViewAdapter(Muscle muscle, Context context) {
+    public ExercisesRecyclerViewAdapter(List<Integer> exercisesList, Context context) {
+        Data data = Data.getInstance();
         this.context = context;
-        this.exercises = Data.getInstance().getExercises().stream()
-                .filter(ex -> ex.getBelongingMuscles().contains(muscle))
+        this.exercises = exercisesList.stream()
+                .map(id -> Data.getExercise(data, id))
                 .collect(Collectors.toList());
     }
 
