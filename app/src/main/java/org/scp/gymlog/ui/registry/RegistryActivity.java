@@ -33,6 +33,7 @@ import org.scp.gymlog.ui.common.dialogs.EditNotesDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditWeightFormDialogFragment;
+import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.FormatUtils;
@@ -286,7 +287,15 @@ public class RegistryActivity extends DBAppCompatActivity {
         if (bit == null) {
             loadMoreHistory();
         } else {
-            removeBitLog(bit);
+            MenuDialogFragment dialog = new MenuDialogFragment(R.menu.bit_menu,
+                    result -> {
+                        if (result == R.id.edit_bit) {
+
+                        } else if (result == R.id.remove_bit) {
+                            removeBitLog(bit);
+                        }
+                    });
+            dialog.show(getSupportFragmentManager(), null);
         }
     }
 }
