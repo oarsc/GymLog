@@ -1,5 +1,6 @@
 package org.scp.gymlog.ui.registry;
 
+import static org.scp.gymlog.ui.common.dialogs.MenuDialogFragment.DIALOG_CLOSED;
 import static org.scp.gymlog.util.Constants.ONE_THOUSAND;
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
 import static org.scp.gymlog.util.FormatUtils.toInt;
@@ -29,6 +30,7 @@ import org.scp.gymlog.room.entities.BitEntity;
 import org.scp.gymlog.room.entities.TrainingEntity;
 import org.scp.gymlog.ui.common.DBAppCompatActivity;
 import org.scp.gymlog.ui.common.components.NumberModifierView;
+import org.scp.gymlog.ui.common.dialogs.EditBitLogDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditNotesDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment;
@@ -283,16 +285,36 @@ public class RegistryActivity extends DBAppCompatActivity {
         });
     }
 
-    private void onClickBit(Bit bit) {
+    public void updateBitLog(Bit bit) {
+        new DBThread(this, db -> {
+            db.bitDao().update(bit.toEntity());
+            int index = log.indexOf(bit);
+            runOnUiThread(()-> recyclerViewAdapter.notifyItemChanged(index));
+        });
+    }
+
+    private void onClickBit(View view,  Bit bit) {
         if (bit == null) {
             loadMoreHistory();
         } else {
+
+            view.setBackgroundColor(getResources().getColor(R.color.backgroundAccent, getTheme()));
             MenuDialogFragment dialog = new MenuDialogFragment(R.menu.bit_menu,
                     result -> {
                         if (result == R.id.edit_bit) {
+                            EditBitLogDialogFragment didi = new EditBitLogDialogFragment(
+                                    R.string.title_registry,
+                                    exercise,
+                                    usingInternationalSystem,
+                                    this::updateBitLog
+                            );
+                            didi.setInitialValue(bit);
+                            didi.show(getSupportFragmentManager(), null);
 
                         } else if (result == R.id.remove_bit) {
                             removeBitLog(bit);
+                        } else if (result == DIALOG_CLOSED) {
+                            view.setBackgroundColor(0x00000000);
                         }
                     });
             dialog.show(getSupportFragmentManager(), null);

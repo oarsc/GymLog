@@ -5,7 +5,7 @@
     <color name="light">#FDDD</color>
 
     <color name="themedIcon">@color/light</color>
-    <color name="backgroundAccent">#F555</color>
+    <color name="backgroundAccent">#F444</color>
 
     <color name="actionBarText">#E2E2E2</color>
     <color name="actionBarIcon">#A7A7A7</color>

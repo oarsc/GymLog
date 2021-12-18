@@ -2,6 +2,7 @@ package org.scp.gymlog.ui.common.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class MenuDialogFragment extends DialogFragment {
+    public static final int DIALOG_CLOSED = -1;
 
     private final int menuId;
     private final Consumer<Integer> callback;
@@ -48,5 +50,11 @@ public class MenuDialogFragment extends DialogFragment {
     private void onMenuElementClicked(int menuItemId) {
         callback.accept(menuItemId);
         dismiss();
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        callback.accept(DIALOG_CLOSED);
+        super.onDismiss(dialog);
     }
 }

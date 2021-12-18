@@ -24,6 +24,7 @@ import org.scp.gymlog.util.WeightUtils;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerViewAdapter.ViewHolder> {
@@ -32,7 +33,7 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
     private final Calendar today;
     private final int currentTrainingId;
     private final Exercise exercise;
-    private Consumer<Bit> onClickElementListener;
+    private BiConsumer<View, Bit> onClickElementListener;
 
     public LogRecyclerViewAdapter(List<Bit> log, Exercise exercise, int currentTrainingId) {
         this.log = log;
@@ -41,7 +42,7 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         this.exercise = exercise;
     }
 
-    public void setOnClickElementListener(Consumer<Bit> onClickElementListener) {
+    public void setOnClickElementListener(BiConsumer<View, Bit> onClickElementListener) {
         this.onClickElementListener = onClickElementListener;
     }
 
@@ -176,9 +177,10 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
             mLoadMore = binding.loadMore;
             element = binding.element;
 
-            binding.getRoot().setOnClickListener(a-> {
+            View view = binding.getRoot();
+            view.setOnClickListener(a-> {
                 if (onClickElementListener != null) {
-                    onClickElementListener.accept(bit);
+                    onClickElementListener.accept(view, bit);
                 }
             });
         }
