@@ -4,9 +4,9 @@
     <PreferenceCategory app:title="@string/units_header">
         <SwitchPreferenceCompat
             app:key="internationalSystem"
+            app:title="@string/international_system_title"
             app:summaryOff="@string/international_system_off"
             app:summaryOn="@string/international_system_on"
-            app:title="@string/international_system_title"
             android:defaultValue="true" />
     </PreferenceCategory>
 
@@ -14,6 +14,15 @@
         <SwitchPreferenceCompat
             app:key="nightTheme"
             app:title="@string/night_theme_title"/>
+
+        <ListPreference
+            app:key="exercisesSortLastUsed"
+            app:title="@string/exercise_sorting_title"
+            app:entries="@array/exercise_sort_entries"
+            app:entryValues="@array/exercise_sort_values"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="alphabetically" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

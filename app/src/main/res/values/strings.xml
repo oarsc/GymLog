@@ -34,6 +34,9 @@
     <string name="text_title">Title</string>
     <string name="text_weight">Weight</string>
 
+    <string name="sort_alphabetically">Sort alphabetically</string>
+    <string name="sort_last_used">Sort by last used</string>
+
     <string name="dialog_confirm_training_title">Confirm ending training</string>
     <string name="dialog_confirm_training_text">Are you sure you finished your current training?</string>
     <string name="dialog_edit_log">Edit log</string>
@@ -86,5 +89,9 @@
 
     <!-- Customization Preferences -->
     <string name="night_theme_title">Use night theme</string>
+
+    <string name="exercise_sorting_title">Default exercises sorting</string>
+    <string name="exercise_sorting_last_used">Sorting by last used</string>
+    <string name="exercise_sorting_alphabetically">Sorting alphabetically</string>
 
 </resources>

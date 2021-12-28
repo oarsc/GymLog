@@ -13,25 +13,35 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.scp.gymlog.databinding.ListElementFragmentBinding;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Exercise;
+import org.scp.gymlog.model.Order;
 import org.scp.gymlog.ui.registry.RegistryActivity;
 import org.scp.gymlog.util.Data;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<ExercisesRecyclerViewAdapter.ViewHolder> {
 
     private final List<Exercise> exercises;
     private final Context context;
+    private final List<Integer> orderedIndexes;
+    private Order order;
 
-    public ExercisesRecyclerViewAdapter(List<Integer> exercisesList, Context context) {
+    public ExercisesRecyclerViewAdapter(List<Integer> exercisesList, Context context, Order order) {
         Data data = Data.getInstance();
         this.context = context;
         this.exercises = exercisesList.stream()
                 .map(id -> Data.getExercise(data, id))
                 .collect(Collectors.toList());
+
+        this.order = order;
+        this.orderedIndexes = IntStream.range(0, exercises.size()).boxed()
+                .collect(Collectors.toList());
+        updateOrder();
     }
 
     @Override
@@ -43,9 +53,33 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
         );
     }
 
+    public void switchOrder(Order order) {
+        this.order = order;
+        updateOrder();
+        notifyItemRangeChanged(0, exercises.size());
+    }
+
+    private void updateOrder() {
+        Comparator<Integer> alphabeticalComparator =
+                Comparator.comparing(i -> exercises.get(i).getName());
+
+        switch(order) {
+            case ALPHABETICALLY:
+                orderedIndexes.sort(alphabeticalComparator);
+                break;
+
+            case LAST_USED:
+                Comparator<Integer> comparator =
+                        Comparator.comparing(i -> exercises.get(i).getLastTrained());
+                orderedIndexes.sort(
+                        comparator.reversed().thenComparing(alphabeticalComparator));
+                break;
+        }
+    }
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.exercise = exercises.get(position);
+        holder.exercise = exercises.get(orderedIndexes.get(position));
         holder.mContentView.setText(holder.exercise.getName());
 
         String fileName = "previews/" + holder.exercise.getImage() + ".png";
