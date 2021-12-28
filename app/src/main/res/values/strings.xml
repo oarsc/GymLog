@@ -38,6 +38,7 @@
     <string name="dialog_confirm_training_text">Are you sure you finished your current training?</string>
     <string name="dialog_edit_log">Edit log</string>
     <string name="dialog_remove_log">Remove log</string>
+    <string name="dialog_show_bit_training">Show complete training</string>
 
     <string name="symbol_3_middle_points">···</string>
     <string name="symbol_bar">/</string>

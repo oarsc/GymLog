@@ -9,15 +9,12 @@ import android.view.View;
 
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class MenuDialogFragment extends DialogFragment {
@@ -25,6 +22,7 @@ public class MenuDialogFragment extends DialogFragment {
 
     private final int menuId;
     private final Consumer<Integer> callback;
+    private boolean callbackCalled = false;
 
     public MenuDialogFragment(@MenuRes int menuId, Consumer<Integer> callback) {
         this.menuId = menuId;
@@ -49,12 +47,15 @@ public class MenuDialogFragment extends DialogFragment {
 
     private void onMenuElementClicked(int menuItemId) {
         callback.accept(menuItemId);
+        callbackCalled = true;
         dismiss();
     }
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
-        callback.accept(DIALOG_CLOSED);
+        if (!callbackCalled) {
+            callback.accept(DIALOG_CLOSED);
+        }
         super.onDismiss(dialog);
     }
 }

@@ -1,11 +1,13 @@
 package org.scp.gymlog.util;
 
+import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Bar;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lombok.Getter;
@@ -20,7 +22,25 @@ public class Data {
 	private final static Data instance = new Data();
 	private int trainingId = -1;
 
-	private Data(){}
+	private Data(){
+		int muscleId = 0;
+		muscles.addAll(Arrays.asList(
+				new Muscle(++muscleId, R.string.group_pectoral, R.drawable.muscle_pectoral),
+				new Muscle(++muscleId, R.string.group_upper_back, R.drawable.muscle_upper_back),
+				new Muscle(++muscleId, R.string.group_lower_back, R.drawable.muscle_lower_back),
+				new Muscle(++muscleId, R.string.group_deltoid, R.drawable.muscle_deltoid),
+				new Muscle(++muscleId, R.string.group_trapezius, R.drawable.muscle_trapezius),
+				new Muscle(++muscleId, R.string.group_biceps, R.drawable.muscle_biceps),
+				new Muscle(++muscleId, R.string.group_triceps, R.drawable.muscle_triceps),
+				new Muscle(++muscleId, R.string.group_forearm, R.drawable.muscle_forearm),
+				new Muscle(++muscleId, R.string.group_quadriceps, R.drawable.muscle_quadriceps),
+				new Muscle(++muscleId, R.string.group_hamstrings, R.drawable.muscle_hamstring),
+				new Muscle(++muscleId, R.string.group_calves, R.drawable.muscle_calves),
+				new Muscle(++muscleId, R.string.group_glutes, R.drawable.muscle_glutes),
+				new Muscle(++muscleId, R.string.group_abdominals, R.drawable.muscle_abdominals),
+				new Muscle(++muscleId, R.string.group_cardio, R.drawable.muscle_cardio)
+		));
+	}
 
 	public static Data getInstance() {
 		return instance;

@@ -1,6 +1,5 @@
 package org.scp.gymlog.ui.registry;
 
-import static org.scp.gymlog.ui.common.dialogs.MenuDialogFragment.DIALOG_CLOSED;
 import static org.scp.gymlog.util.Constants.ONE_THOUSAND;
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
 import static org.scp.gymlog.util.FormatUtils.toInt;
@@ -19,6 +18,8 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.InternalException;
 import org.scp.gymlog.model.Bit;
@@ -33,7 +34,6 @@ import org.scp.gymlog.ui.common.components.NumberModifierView;
 import org.scp.gymlog.ui.common.dialogs.EditBitLogDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditNotesDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
-import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditWeightFormDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
@@ -64,11 +64,8 @@ public class RegistryActivity extends DBAppCompatActivity {
 
     @Override
     protected int onLoad(Bundle savedInstanceState, AppDatabase db) {
-        Optional<TrainingEntity> training = db.trainingDao().getCurrentTraining();
-        if (!training.isPresent()) {
-            return R.string.validation_training_not_started;
-        }
-        trainingId = training.get().trainingId;
+        db.trainingDao().getCurrentTraining()
+                .ifPresent(training -> trainingId = training.trainingId);
 
         int exerciseId = getIntent().getExtras().getInt("exerciseId");
         exercise = Data.getInstance().getExercises().stream()
@@ -209,20 +206,27 @@ public class RegistryActivity extends DBAppCompatActivity {
     }
 
     private void loadMoreHistory() {
-        new DBThread(this, db -> {
-            final int size = log.size();
-            final Bit bit = log.get(size-1);
-            final Calendar date = bit.getTimestamp();
-            final List<BitEntity> log = db.bitDao().getHistory(exercise.getId(), bit.getTrainingId(),
-                    date, LOG_PAGES_SIZE);
-            log.stream().map(b -> new Bit().fromEntity(b))
-                    .forEach(this.log::add);
+        final int size = log.size();
+        if (size > 0) {
+            new DBThread(this, db -> {
+                final Bit bit = log.get(size-1);
+                final Calendar date = bit.getTimestamp();
+                final List<BitEntity> log = db.bitDao().getHistory(exercise.getId(), bit.getTrainingId(),
+                        date, LOG_PAGES_SIZE);
+                log.stream().map(b -> new Bit().fromEntity(b))
+                        .forEach(this.log::add);
 
-            runOnUiThread(() -> recyclerViewAdapter.notifyItemRangeInserted(size, log.size()));
-        });
+                runOnUiThread(() -> recyclerViewAdapter.notifyItemRangeInserted(size, log.size()));
+            });
+        }
     }
 
     private void saveBitLog(View view) {
+        if (trainingId <= 0) {
+            Snackbar.make(findViewById(android.R.id.content),
+                    R.string.validation_training_not_started, Snackbar.LENGTH_LONG).show();
+            return;
+        }
         new DBThread(this, db -> {
             final Bit bit = new Bit();
             bit.setExerciseId(exercise.getId());
@@ -301,7 +305,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         });
     }
 
-    private void onClickBit(View view,  Bit bit) {
+    private void onClickBit(View view, Bit bit) {
         if (bit == null) {
             loadMoreHistory();
         } else {
@@ -309,7 +313,10 @@ public class RegistryActivity extends DBAppCompatActivity {
             view.setBackgroundColor(getResources().getColor(R.color.backgroundAccent, getTheme()));
             MenuDialogFragment dialog = new MenuDialogFragment(R.menu.bit_menu,
                     result -> {
-                        if (result == R.id.edit_bit) {
+                        if (result == R.id.show_training) {
+
+
+                        } else if (result == R.id.edit_bit) {
                             EditBitLogDialogFragment didi = new EditBitLogDialogFragment(
                                     R.string.title_registry,
                                     exercise,
@@ -321,9 +328,8 @@ public class RegistryActivity extends DBAppCompatActivity {
 
                         } else if (result == R.id.remove_bit) {
                             removeBitLog(bit);
-                        } else if (result == DIALOG_CLOSED) {
-                            view.setBackgroundColor(0x00000000);
                         }
+                        view.setBackgroundColor(0x00000000);
                     });
             dialog.show(getSupportFragmentManager(), null);
         }

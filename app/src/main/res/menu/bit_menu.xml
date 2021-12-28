@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/show_training"
+        android:icon="@drawable/ic_history_24dp"
+        android:title="@string/dialog_show_bit_training" />
+
     <item
         android:id="@+id/edit_bit"
         android:icon="@drawable/ic_edit_24dp"
