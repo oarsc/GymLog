@@ -61,6 +61,7 @@ public class RegistryActivity extends DBAppCompatActivity {
     private boolean usingInternationalSystem;
     private final List<Bit> log = new ArrayList<>();
     private int trainingId;
+    private boolean notesLocked = false;
 
     @Override
     protected int onLoad(Bundle savedInstanceState, AppDatabase db) {
@@ -103,7 +104,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         // Save bit log
         findViewById(R.id.confirm).setOnClickListener(this::saveBitLog);
 
-        // Weight and Reps Input fields:
+        // Notes
         notes = findViewById(R.id.editNotes);
         notes.setOnClickListener(view -> {
             EditNotesDialogFragment dialog = new EditNotesDialogFragment(R.string.text_notes,
@@ -113,6 +114,30 @@ public class RegistryActivity extends DBAppCompatActivity {
             dialog.show(getSupportFragmentManager(), null);
         });
 
+        ImageView clearNote = findViewById(R.id.clear_note);
+        ImageView lockNote = findViewById(R.id.lock_note);
+
+        clearNote.setOnClickListener(view -> {
+            notes.setText(R.string.symbol_empty);
+            if (notesLocked) {
+                notesLocked = false;
+                lockNote.setImageResource(R.drawable.ic_unlock_24dp);
+            }
+        });
+
+        lockNote.setOnClickListener(view -> {
+            if (!notes.getText().toString().isEmpty()) {
+                notesLocked = !notesLocked;
+                if (notesLocked) {
+                    lockNote.setImageResource(R.drawable.ic_lock_24dp);
+                } else {
+                    lockNote.setImageResource(R.drawable.ic_unlock_24dp);
+                }
+            }
+        });
+
+
+        // Weight and Reps Input fields:
         weight = findViewById(R.id.editWeight);
         weight.setFilters(new InputFilter[] {(source, start, end, dest, dstart, dend) -> {
             BigDecimal input = FormatUtils.toBigDecimal(dest.toString() + source.toString());
@@ -249,7 +274,6 @@ public class RegistryActivity extends DBAppCompatActivity {
             bit.setId((int) db.bitDao().insert(bit.toEntity()));
             db.exerciseDao().update(exercise.toEntity());
 
-
             runOnUiThread(() -> {
                 boolean added = false;
                 int idx = 0;
@@ -268,6 +292,9 @@ public class RegistryActivity extends DBAppCompatActivity {
                     log.add(bit);
                     recyclerViewAdapter.notifyItemInserted(log.size()-1);
                 }
+
+                if (!notesLocked)
+                    notes.setText(R.string.symbol_empty);
             });
         });
     }
