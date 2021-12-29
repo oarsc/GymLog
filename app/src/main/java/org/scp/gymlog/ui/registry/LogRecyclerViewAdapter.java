@@ -83,7 +83,7 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         if (bit.getTrainingId() == currentTrainingId) {
             if (lastTrainingId == currentTrainingId) {
                 holder.mDay.setText(R.string.symbol_empty);
-                bit.setSet(lastSet+1);
+                bit.setSet(bit.isInstant()? lastSet : (lastSet+1));
             } else {
                 holder.mDay.setText("T");
                 bit.setSet(1);
@@ -96,11 +96,8 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
                 int[] todayDiff = DateUtils.yearsAndDaysDiff(bit.getTimestamp(), today);
                 String dayLabel;
                 if (todayDiff[0] == 0) {
-                    if (todayDiff[1] == 0) {
-                        dayLabel = "T";
-                    } else {
-                        dayLabel = todayDiff[1]+"D";
-                    }
+                    if (todayDiff[1] == 0) dayLabel = "T";
+                    else                   dayLabel = todayDiff[1]+"D";
                 } else {
                     dayLabel = todayDiff[0]+ "Y" + todayDiff[1]+"D";
                 }
@@ -110,7 +107,7 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
             } else {
                 holder.mDay.setText(R.string.symbol_empty);
                 if (lastTrainingId == bit.getTrainingId())
-                    bit.setSet(lastSet+1);
+                    bit.setSet(bit.isInstant()? lastSet : (lastSet+1));
                 else
                     bit.setSet(1);
             }
@@ -124,7 +121,10 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         );
 
         holder.mWeight.setText(FormatUtils.toString(weight));
-        holder.mSet.setText(String.valueOf(bit.getSet()));
+        if (bit.isInstant())
+            holder.mSet.setText(R.string.symbol_empty);
+        else
+            holder.mSet.setText(String.valueOf(bit.getSet()));
         holder.mReps.setText(String.valueOf(bit.getReps()));
         holder.mNotes.setText(bit.getNote());
         holder.mLoadMore.setVisibility(View.INVISIBLE);

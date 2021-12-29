@@ -3,6 +3,7 @@ package org.scp.gymlog.ui.registry;
 import static org.scp.gymlog.util.Constants.ONE_THOUSAND;
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
 import static org.scp.gymlog.util.FormatUtils.toInt;
+import static org.scp.gymlog.util.LambdaUtils.valueEquals;
 import static org.scp.gymlog.util.WeightUtils.getTotalWeight;
 import static org.scp.gymlog.util.WeightUtils.getWeightFromTotal;
 
@@ -10,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,8 +30,8 @@ import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.entities.BitEntity;
-import org.scp.gymlog.room.entities.TrainingEntity;
 import org.scp.gymlog.ui.common.DBAppCompatActivity;
+import org.scp.gymlog.ui.common.animations.ResizeWidthAnimation;
 import org.scp.gymlog.ui.common.components.NumberModifierView;
 import org.scp.gymlog.ui.common.dialogs.EditBitLogDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditNotesDialogFragment;
@@ -44,7 +46,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 public class RegistryActivity extends DBAppCompatActivity {
     private static final int LOG_PAGES_SIZE = 16;
@@ -56,12 +57,14 @@ public class RegistryActivity extends DBAppCompatActivity {
     private NumberModifierView weightModifier;
     private ImageView weightSpecIcon;
     private ImageView warningIcon;
+    private ImageView confirmInstantButton;
     private LogRecyclerViewAdapter recyclerViewAdapter;
 
     private boolean usingInternationalSystem;
     private final List<Bit> log = new ArrayList<>();
     private int trainingId;
     private boolean notesLocked = false;
+    private boolean hiddenInstantSetButton;
 
     @Override
     protected int onLoad(Bundle savedInstanceState, AppDatabase db) {
@@ -102,7 +105,17 @@ public class RegistryActivity extends DBAppCompatActivity {
         recyclerViewAdapter.setOnClickElementListener(this::onClickBit);
 
         // Save bit log
-        findViewById(R.id.confirm).setOnClickListener(this::saveBitLog);
+        findViewById(R.id.confirm_set).setOnClickListener(v -> saveBitLog(false));
+        confirmInstantButton = findViewById(R.id.confirm);
+        confirmInstantButton.setOnClickListener(v -> saveBitLog(true));
+
+        hiddenInstantSetButton =
+                log.stream().map(Bit::getTrainingId).noneMatch(valueEquals(trainingId));
+
+        if (hiddenInstantSetButton) {
+            ViewGroup.LayoutParams layout = confirmInstantButton.getLayoutParams();
+            layout.width = 0;
+        }
 
         // Notes
         notes = findViewById(R.id.editNotes);
@@ -118,7 +131,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         ImageView lockNote = findViewById(R.id.lock_note);
 
         clearNote.setOnClickListener(view -> {
-            notes.setText(R.string.symbol_empty);
+            notes.getText().clear();
             if (notesLocked) {
                 notesLocked = false;
                 lockNote.setImageResource(R.drawable.ic_unlock_24dp);
@@ -246,7 +259,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         }
     }
 
-    private void saveBitLog(View view) {
+    private void saveBitLog(boolean instant) {
         if (trainingId <= 0) {
             Snackbar.make(findViewById(android.R.id.content),
                     R.string.validation_training_not_started, Snackbar.LENGTH_LONG).show();
@@ -267,6 +280,7 @@ public class RegistryActivity extends DBAppCompatActivity {
             bit.setReps(toInt(reps.getText().toString()));
             bit.setTimestamp(Calendar.getInstance());
             bit.setTrainingId(trainingId);
+            bit.setInstant(instant);
 
             exercise.setLastTrained(Calendar.getInstance());
 
@@ -293,8 +307,16 @@ public class RegistryActivity extends DBAppCompatActivity {
                     recyclerViewAdapter.notifyItemInserted(log.size()-1);
                 }
 
-                if (!notesLocked)
+                if (!notesLocked) {
                     notes.setText(R.string.symbol_empty);
+                }
+
+                if (hiddenInstantSetButton) {
+                    hiddenInstantSetButton = false;
+                    ResizeWidthAnimation anim = new ResizeWidthAnimation(confirmInstantButton,
+                            90, 250);
+                    confirmInstantButton.startAnimation(anim);
+                }
             });
         });
     }
@@ -324,11 +346,16 @@ public class RegistryActivity extends DBAppCompatActivity {
         });
     }
 
-    public void updateBitLog(Bit bit) {
+    public void updateBitLog(Bit bit, boolean updateTrainingId) {
         DBThread.run(this, db -> {
             db.bitDao().update(bit.toEntity());
             int index = log.indexOf(bit);
-            runOnUiThread(()-> recyclerViewAdapter.notifyItemChanged(index));
+            runOnUiThread(() -> {
+                if (updateTrainingId)
+                    recyclerViewAdapter.notifyItemChanged(index);
+                else
+                    recyclerViewAdapter.notifyTrainingIdChanged(bit.getTrainingId(), index);
+            });
         });
     }
 
@@ -344,14 +371,21 @@ public class RegistryActivity extends DBAppCompatActivity {
 
 
                         } else if (result == R.id.edit_bit) {
-                            EditBitLogDialogFragment didi = new EditBitLogDialogFragment(
+                            final boolean enableInstantSwitch = log.stream()
+                                    .filter(b -> b.getTrainingId() == bit.getTrainingId())
+                                    .findFirst()
+                                    .orElse(null) != bit;
+                            final boolean initialInstant = enableInstantSwitch && bit.isInstant();
+
+                            EditBitLogDialogFragment editDialog = new EditBitLogDialogFragment(
                                     R.string.title_registry,
                                     exercise,
+                                    enableInstantSwitch,
                                     usingInternationalSystem,
-                                    this::updateBitLog
+                                    b -> updateBitLog(b, initialInstant == b.isInstant())
                             );
-                            didi.setInitialValue(bit);
-                            didi.show(getSupportFragmentManager(), null);
+                            editDialog.setInitialValue(bit);
+                            editDialog.show(getSupportFragmentManager(), null);
 
                         } else if (result == R.id.remove_bit) {
                             removeBitLog(bit);

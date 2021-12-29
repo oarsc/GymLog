@@ -8,6 +8,7 @@ import org.scp.gymlog.room.EntityMapped;
 import org.scp.gymlog.room.entities.BitEntity;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Calendar;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class Bit implements EntityMapped<BitEntity> {
 	private Weight weight;
 	private String note;
 	private Calendar timestamp;
+	private boolean instant;
 
 	private int set; // used in logRecyclerViewAdapter
 
@@ -38,6 +40,7 @@ public class Bit implements EntityMapped<BitEntity> {
 		entity.note = note;
 		entity.timestamp = timestamp;
 		entity.reps = reps;
+		entity.instant = instant;
 		entity.totalWeight = weight.getValue().multiply(ONE_HUNDRED).intValue();
 		entity.kilos = weight.isInternationalSystem();
 		return entity;
@@ -52,8 +55,9 @@ public class Bit implements EntityMapped<BitEntity> {
 		note = entity.note;
 		timestamp = entity.timestamp;
 		reps = entity.reps;
+		instant = entity.instant;
 		weight = new Weight(
-				BigDecimal.valueOf(entity.totalWeight).divide(ONE_HUNDRED),
+				BigDecimal.valueOf(entity.totalWeight).divide(ONE_HUNDRED, RoundingMode.HALF_UP),
 				entity.kilos
 		);
 		return this;

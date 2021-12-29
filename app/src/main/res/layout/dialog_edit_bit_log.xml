@@ -22,10 +22,24 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginEnd="6dp"
         android:focusable="false"
         app:layout_constraintBottom_toTopOf="@id/editWeight"
         app:layout_constraintLeft_toLeftOf="@id/editWeight"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toLeftOf="@id/clearButton"/>
+
+    <ImageView
+        android:id="@+id/clear_button"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_cross_24dp"
+        app:layout_constraintBottom_toBottomOf="@id/editNotes"
+        app:layout_constraintTop_toTopOf="@id/editNotes"
+        app:layout_constraintRight_toRightOf="parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground" />
 
     <TextView
         android:id="@+id/labelWeight"
@@ -95,9 +109,20 @@
         android:id="@+id/repsModifier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/text_margin"
         app:target="@id/editReps"
+        app:layout_constraintBottom_toTopOf="@id/instantSwitch"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/instantSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:paddingVertical="@dimen/text_margin"
+        android:text="@string/text_instantly"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

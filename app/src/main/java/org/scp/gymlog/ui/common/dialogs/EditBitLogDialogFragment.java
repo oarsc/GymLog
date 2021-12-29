@@ -13,12 +13,13 @@ import android.widget.EditText;
 
 import androidx.annotation.StringRes;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
 import org.scp.gymlog.R;
 import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.ui.common.components.NumberModifierView;
-import org.scp.gymlog.ui.registry.RegistryActivity;
 import org.scp.gymlog.util.FormatUtils;
 import org.scp.gymlog.util.Function;
 import org.scp.gymlog.util.WeightUtils;
@@ -30,18 +31,22 @@ public class EditBitLogDialogFragment extends CustomDialogFragment<Bit> {
 
     private final Exercise exercise;
     private final boolean internationalSystem;
+    private final boolean enableInstantSwitch;
 
     public EditBitLogDialogFragment(@StringRes int title, Exercise exercise,
+                                    boolean enableInstantSwitch,
                                     boolean internationalSystem, Consumer<Bit> confirm,
                                     Function cancel) {
         super(title, confirm, cancel);
+        this.enableInstantSwitch = enableInstantSwitch;
         this.exercise = exercise;
         this.internationalSystem = internationalSystem;
     }
 
     public EditBitLogDialogFragment(@StringRes int title, Exercise exercise,
+                                    boolean enableInstantSwitch,
                                     boolean internationalSystem, Consumer<Bit> confirm) {
-        this(title, exercise, internationalSystem, confirm, () -> {});
+        this(title, exercise, enableInstantSwitch, internationalSystem, confirm, () -> {});
     }
 
     public void setInitialValue(Bit bit) {
@@ -64,6 +69,8 @@ public class EditBitLogDialogFragment extends CustomDialogFragment<Bit> {
             dialog.show(getChildFragmentManager(), null);
         });
 
+        view.findViewById(R.id.clear_button).setOnClickListener(btn -> editNotes.getText().clear());
+
         BigDecimal weight = WeightUtils.getWeightFromTotal(
                 initialValue.getWeight().getValue(internationalSystem),
                 exercise.getWeightSpec(),
@@ -79,6 +86,14 @@ public class EditBitLogDialogFragment extends CustomDialogFragment<Bit> {
         EditText editReps = view.findViewById(R.id.editReps);
         editReps.setText(String.valueOf(initialValue.getReps()));
 
+        SwitchMaterial instantSwitch = view.findViewById(R.id.instantSwitch);
+        if (enableInstantSwitch) {
+            instantSwitch.setChecked(initialValue.isInstant());
+        } else {
+            instantSwitch.setEnabled(false);
+            instantSwitch.setChecked(false);
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(title)
                 .setView(view)
@@ -92,6 +107,7 @@ public class EditBitLogDialogFragment extends CustomDialogFragment<Bit> {
                     initialValue.setWeight(new Weight(totalWeight, internationalSystem));
                     initialValue.setReps(toInt(editReps.getText().toString()));
                     initialValue.setNote(editNotes.getText().toString());
+                    initialValue.setInstant(instantSwitch.isChecked());
                     confirm.accept(initialValue);
                 })
                 .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.call());

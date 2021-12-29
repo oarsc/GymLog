@@ -2,6 +2,10 @@ package org.scp.gymlog.util;
 
 import static org.scp.gymlog.util.Constants.LBS_RATIO;
 
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+
 import org.scp.gymlog.model.Weight;
 
 import java.math.BigDecimal;
@@ -60,5 +64,17 @@ public class FormatUtils {
 
     public static BigDecimal toPounds(Weight weight) {
         return weight.toLbs();
+    }
+
+    public static int toDp(DisplayMetrics displayMetrics, int value) {
+        return (int) toDpFloat(displayMetrics, value);
+    }
+
+    public static float toDpFloat(DisplayMetrics displayMetrics, int value) {
+        return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                value,
+                displayMetrics
+        );
     }
 }

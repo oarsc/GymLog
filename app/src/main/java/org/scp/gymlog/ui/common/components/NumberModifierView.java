@@ -1,10 +1,13 @@
 package org.scp.gymlog.ui.common.components;
 
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
+import static org.scp.gymlog.util.FormatUtils.toDp;
+import static org.scp.gymlog.util.FormatUtils.toDpFloat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -78,7 +81,7 @@ public class NumberModifierView extends LinearLayout {
     private void addView() {
         CardView subCv = createCardView();
         LayoutParams params = (LayoutParams) subCv.getLayoutParams();
-        params.setMarginEnd(dp(3));
+        params.setMarginEnd(toDp(getResources().getDisplayMetrics(), 3));
         subCv.addView(createImageView(R.drawable.ic_substract_24dp));
         modifyEditText(subCv, false);
         addView(subCv);
@@ -91,8 +94,9 @@ public class NumberModifierView extends LinearLayout {
 
     private CardView createCardView() {
         CardView cardView = new CardView(getContext());
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
-        int size = dp(50);
+        int size = toDp(displayMetrics, 50);
         LayoutParams layoutParams = new LayoutParams(size, size);
         cardView.setLayoutParams(layoutParams);
 
@@ -101,7 +105,7 @@ public class NumberModifierView extends LinearLayout {
                 getContext().getTheme());
 
         cardView.setCardBackgroundColor(color);
-        cardView.setRadius(dpf(3));
+        cardView.setRadius(toDpFloat(displayMetrics, 3));
         cardView.setCardElevation(0);
 
         return cardView;
@@ -110,7 +114,7 @@ public class NumberModifierView extends LinearLayout {
     private ImageView createImageView(@DrawableRes int drawable) {
         ImageView imageView = new ImageView(getContext());
 
-        int size = dp(22);
+        int size = toDp(getResources().getDisplayMetrics(), 22);
         CardView.LayoutParams layoutParams = new CardView.LayoutParams(size, size);
         layoutParams.gravity = Gravity.CENTER;
         imageView.setLayoutParams(layoutParams);
@@ -168,17 +172,5 @@ public class NumberModifierView extends LinearLayout {
             editText.setText(FormatUtils.toString(value));
             editText.setSelection(editText.getText().length());
         }
-    }
-
-    private int dp(int value) {
-        return (int) dpf(value);
-    }
-
-    private float dpf(int value) {
-        return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                value,
-                getResources().getDisplayMetrics()
-        );
     }
 }

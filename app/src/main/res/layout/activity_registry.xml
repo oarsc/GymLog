@@ -166,27 +166,55 @@
         android:layout_marginBottom="@dimen/text_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         app:target="@id/editReps"
-        app:layout_constraintBottom_toTopOf="@id/confirm"
+        app:layout_constraintBottom_toTopOf="@id/bottom_panel"
         app:layout_constraintRight_toRightOf="parent"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/backgroundAccent"
-        app:layout_constraintBottom_toTopOf="@id/confirm"
+        app:layout_constraintBottom_toTopOf="@id/bottom_panel"
         app:layout_constraintRight_toRightOf="parent"/>
 
-    <ImageView
-        android:id="@+id/confirm"
+    <LinearLayout
+        android:id="@+id/bottom_panel"
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:paddingVertical="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:src="@drawable/ic_done_24dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?android:attr/selectableItemBackground" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/confirm"
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:paddingVertical="30dp"
+            android:src="@drawable/ic_fast_done_24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <!--
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/backgroundAccent"
+            app:layout_constraintBottom_toTopOf="@id/bottom_panel"
+            app:layout_constraintRight_toRightOf="parent"/> -->
+
+        <ImageView
+            android:id="@+id/confirm_set"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="30dp"
+            android:src="@drawable/ic_done_24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

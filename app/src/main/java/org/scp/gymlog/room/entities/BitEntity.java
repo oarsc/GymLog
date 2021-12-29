@@ -43,6 +43,7 @@ public class BitEntity {
     public int reps;
     public int totalWeight;
     public boolean kilos;
+    public boolean instant;
     @NonNull
     public String note;
     @NonNull
