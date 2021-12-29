@@ -1,5 +1,7 @@
 package org.scp.gymlog;
 
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,15 +13,14 @@ import androidx.preference.PreferenceManager;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Bar;
 import org.scp.gymlog.model.Exercise;
+import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.entities.MuscleEntity;
+import org.scp.gymlog.service.InitialDataService;
 import org.scp.gymlog.ui.main.MainActivity;
 import org.scp.gymlog.util.Data;
-import org.scp.gymlog.model.Muscle;
-import org.scp.gymlog.service.InitialDataService;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class SplashActivity extends AppCompatActivity {
@@ -31,19 +32,21 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (preferences.getBoolean("nightTheme", false)) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        if (preferences.getBoolean("nightTheme", false) &&
+                AppCompatDelegate.getDefaultNightMode() != MODE_NIGHT_YES) {
+            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES);
             recreate();
-        }
 
-        new DBThread(this, db -> {
+        } else {
+            new DBThread(this, db -> {
                 List<MuscleEntity> muscles = db.muscleDao().getOnlyMuscles();
                 if (muscles.isEmpty()) {
                     initialDataService.persist(getAssets(), db);
                 }
                 loadData(db);
                 goMain();
-        });
+            });
+        }
     }
 
     private void loadData(AppDatabase db) {
