@@ -43,7 +43,7 @@ public class EditNotesDialogFragment extends CustomDialogFragment<String> {
         EditText input = view.findViewById(R.id.dialog_text);
         input.setText(initialValue);
 
-        new DBThread(context, db -> {
+        DBThread.run(context, db -> {
             List<String> notes = db.bitDao().getNotesHistory(exerciseId,18);
 
             RecyclerView recyclerView = view.findViewById(R.id.historic_notes);

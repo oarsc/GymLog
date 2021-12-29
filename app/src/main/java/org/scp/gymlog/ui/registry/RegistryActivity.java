@@ -204,7 +204,7 @@ public class RegistryActivity extends DBAppCompatActivity {
                             warningIcon.setVisibility(View.INVISIBLE);
                         }
 
-                        new DBThread(this, db ->
+                        DBThread.run(this, db ->
                             db.exerciseDao().update(exercise.toEntity())
                         );
                     }
@@ -233,7 +233,7 @@ public class RegistryActivity extends DBAppCompatActivity {
     private void loadMoreHistory() {
         final int size = log.size();
         if (size > 0) {
-            new DBThread(this, db -> {
+            DBThread.run(this, db -> {
                 final Bit bit = log.get(size-1);
                 final Calendar date = bit.getTimestamp();
                 final List<BitEntity> log = db.bitDao().getHistory(exercise.getId(), bit.getTrainingId(),
@@ -252,7 +252,7 @@ public class RegistryActivity extends DBAppCompatActivity {
                     R.string.validation_training_not_started, Snackbar.LENGTH_LONG).show();
             return;
         }
-        new DBThread(this, db -> {
+        DBThread.run(this, db -> {
             final Bit bit = new Bit();
             bit.setExerciseId(exercise.getId());
 
@@ -300,7 +300,7 @@ public class RegistryActivity extends DBAppCompatActivity {
     }
 
     public void removeBitLog(Bit bit) {
-        new DBThread(this, db -> {
+        DBThread.run(this, db -> {
             db.bitDao().delete(bit.toEntity());
 
             int index = log.indexOf(bit);
@@ -325,7 +325,7 @@ public class RegistryActivity extends DBAppCompatActivity {
     }
 
     public void updateBitLog(Bit bit) {
-        new DBThread(this, db -> {
+        DBThread.run(this, db -> {
             db.bitDao().update(bit.toEntity());
             int index = log.indexOf(bit);
             runOnUiThread(()-> recyclerViewAdapter.notifyItemChanged(index));

@@ -50,7 +50,7 @@ public class TrainingFloatingActionButton extends FloatingActionButton {
                         R.string.dialog_confirm_training_text,
                         confirmed -> {
                             if (confirmed) {
-                                new DBThread(getContext(), db -> {
+                                DBThread.run(getContext(), db -> {
                                     TrainingDao dao = db.trainingDao();
                                     TrainingEntity training = dao.getTraining(trainingId)
                                             .orElseThrow(() -> new LoadException("Can't find trainingId " + trainingId));
@@ -75,7 +75,7 @@ public class TrainingFloatingActionButton extends FloatingActionButton {
                 dialog.show(activity.getSupportFragmentManager(), null);
 
             } else {
-                new DBThread(getContext(), db -> {
+                DBThread.run(getContext(), db -> {
                     TrainingEntity training = new TrainingEntity();
                     training.start = Calendar.getInstance();
                     training.trainingId = (int) db.trainingDao().insert(training);

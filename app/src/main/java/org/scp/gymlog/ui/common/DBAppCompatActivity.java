@@ -14,7 +14,7 @@ public abstract class DBAppCompatActivity extends CustomAppCompatActivity {
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new DBThread(this, db -> {
+        DBThread.run(this, db -> {
             int result = onLoad(savedInstanceState, db);
             if (result == CONTINUE) {
                 runOnUiThread(() -> onDelayedCreate(savedInstanceState));

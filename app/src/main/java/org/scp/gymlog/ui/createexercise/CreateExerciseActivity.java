@@ -89,7 +89,7 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 					R.string.validation_muscles, Snackbar.LENGTH_LONG).show();
 
 		} else {
-			new DBThread(this, db -> {
+			DBThread.run(this, db -> {
 				final int id = (int) db.exerciseDao().insert(exercise.toEntity());
 				exercise.setId(id);
 				db.exerciseMuscleCrossRefDao()
