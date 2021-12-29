@@ -40,18 +40,18 @@ public class EditNotesDialogFragment extends CustomDialogFragment<String> {
         Context context = getContext();
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_edit_notes, null);
-        EditText input = view.findViewById(R.id.dialog_text);
+        EditText input = view.findViewById(R.id.dialogText);
         input.setText(initialValue);
 
         DBThread.run(context, db -> {
             List<String> notes = db.bitDao().getNotesHistory(exerciseId,18);
 
-            RecyclerView recyclerView = view.findViewById(R.id.historic_notes);
+            RecyclerView recyclerView = view.findViewById(R.id.historicNotes);
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setAdapter(new EditNotesRecyclerViewAdapter(notes, input::setText));
         });
 
-        ImageView clearButton = view.findViewById(R.id.clear_button);
+        ImageView clearButton = view.findViewById(R.id.clearButton);
         clearButton.setOnClickListener(v -> input.getText().clear());
 
 

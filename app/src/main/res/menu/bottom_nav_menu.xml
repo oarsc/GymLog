@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navigation_workout"
+        android:id="@+id/navigationWorkout"
         android:icon="@drawable/ic_workout_black_24dp"
         android:title="@string/title_workout" />
 
     <item
-        android:id="@+id/navigation_exercises"
+        android:id="@+id/navigationExercises"
         android:icon="@drawable/ic_exercises_black_24dp"
         android:title="@string/title_exercises" />
 
     <item
-        android:id="@+id/navigation_history"
+        android:id="@+id/navigationHistory"
         android:icon="@drawable/ic_history_24dp"
         android:title="@string/title_history" />
 
     <item
-        android:id="@+id/navigation_preferences"
+        android:id="@+id/navigationPreferences"
         android:icon="@drawable/ic_gear_24dp"
         android:title="@string/title_settings" />
 </menu>

@@ -42,16 +42,16 @@ public class MusclesFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_list_muscles, container, false);
 
 		context = view.getContext();
-		RecyclerView recyclerView = view.findViewById(R.id.muscles_list);
+		RecyclerView recyclerView = view.findViewById(R.id.musclesList);
 		recyclerView.setLayoutManager(new LinearLayoutManager(context));
 		recyclerView.setAdapter(new MusclesRecyclerViewAdapter());
 
-		fab = view.findViewById(R.id.fab_training);
+		fab = view.findViewById(R.id.fabTraining);
 		fab.updateFloatingActionButton();
 
 		Toolbar toolbar = view.findViewById(R.id.toolbar);
 		toolbar.setOnMenuItemClickListener(item -> {
-			if (item.getItemId() == R.id.create_button) {
+			if (item.getItemId() == R.id.createButton) {
 				Intent intent = new Intent(context, CreateExerciseActivity.class);
 				startActivity(intent);
 				return true;

@@ -8,7 +8,7 @@
     android:paddingHorizontal="@dimen/dialog_margin">
 
     <LinearLayout
-        android:id="@+id/weight_box"
+        android:id="@+id/weightBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center"
@@ -80,7 +80,7 @@
             android:scrollHorizontally="false" />
 
         <TextView
-            android:id="@+id/convert_unit"
+            android:id="@+id/convertUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -99,7 +99,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/step_box"
+        android:id="@+id/stepBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left|center"
@@ -125,7 +125,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/bars_box"
+        android:id="@+id/barsBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left|center"
@@ -141,14 +141,14 @@
             android:text="@string/support_bar_2" />
 
         <TextView
-            android:id="@+id/bar_used"
+            android:id="@+id/barUsed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
             android:text="@string/symbol_hyphen" />
 
         <ImageView
-            android:id="@+id/incompatible_bar"
+            android:id="@+id/incompatibleBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_warning_24dp"
@@ -158,7 +158,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/weights_config_box"
+        android:id="@+id/weightsConfigBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left|center"
@@ -174,7 +174,7 @@
             android:text="@string/support_input_type_2"/>
 
         <ImageView
-            android:id="@+id/weight_spec_icon"
+            android:id="@+id/weightSpecIcon"
             android:layout_width="36dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_bar_with_plates_36x24dp"
@@ -182,7 +182,7 @@
             android:contentDescription="@string/symbol_empty" />
 
         <TextView
-            android:id="@+id/weight_spec"
+            android:id="@+id/weightSpec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp" />
@@ -195,7 +195,7 @@
         android:background="@color/backgroundAccent"/>
 
     <LinearLayout
-        android:id="@+id/total_box"
+        android:id="@+id/totalBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left|center"
@@ -210,7 +210,7 @@
             android:text="@string/support_total_weight_2"/>
 
         <TextView
-            android:id="@+id/total_weight"
+            android:id="@+id/totalWeight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold" />
@@ -222,7 +222,7 @@
             android:text="@string/symbol_empty" />
 
         <TextView
-            android:id="@+id/total_unit"
+            android:id="@+id/totalUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold" />
@@ -240,7 +240,6 @@
             android:gravity="start|center"
             android:maxLines="1"
             android:text="@string/symbol_bar" />
-            android:scrollHorizontally="false" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -249,10 +248,9 @@
             android:gravity="start|center"
             android:maxLines="1"
             android:text="@string/symbol_space" />
-            android:scrollHorizontally="false" />
 
         <TextView
-            android:id="@+id/converted_total"
+            android:id="@+id/convertedTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -262,7 +260,7 @@
             android:scrollHorizontally="false" />
 
         <TextView
-            android:id="@+id/convert_total_unit"
+            android:id="@+id/convertTotalUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

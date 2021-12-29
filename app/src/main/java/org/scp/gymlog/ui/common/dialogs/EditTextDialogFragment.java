@@ -34,7 +34,7 @@ public class EditTextDialogFragment extends CustomDialogFragment<String> {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_edit_text, null);
-        EditText input = view.findViewById(R.id.dialog_text);
+        EditText input = view.findViewById(R.id.dialogText);
         input.setText(initialValue);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

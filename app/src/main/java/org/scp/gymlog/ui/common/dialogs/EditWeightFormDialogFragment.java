@@ -81,22 +81,22 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
     private void setInitialData(View view) {
         input = view.findViewById(R.id.weightValue);
         convertValue = view.findViewById(R.id.converted);
-        totalValue = view.findViewById(R.id.total_weight);
-        totalConvertValue = view.findViewById(R.id.converted_total);
-        barUsed = view.findViewById(R.id.bar_used);
-        weightSpec = view.findViewById(R.id.weight_spec);
-        weightSpecIcon = view.findViewById(R.id.weight_spec_icon);
-        incompatibleBar = view.findViewById(R.id.incompatible_bar);
+        totalValue = view.findViewById(R.id.totalWeight);
+        totalConvertValue = view.findViewById(R.id.convertedTotal);
+        barUsed = view.findViewById(R.id.barUsed);
+        weightSpec = view.findViewById(R.id.weightSpec);
+        weightSpecIcon = view.findViewById(R.id.weightSpecIcon);
+        incompatibleBar = view.findViewById(R.id.incompatibleBar);
         step = view.findViewById(R.id.step);
         modifier = view.findViewById(R.id.modifier);
 
         TextView[] convertUnit = new TextView[] {
-                view.findViewById(R.id.convert_unit),
-                view.findViewById(R.id.convert_total_unit),
+                view.findViewById(R.id.convertUnit),
+                view.findViewById(R.id.convertTotalUnit),
         };
         TextView[] unit = new TextView[] {
                 view.findViewById(R.id.unit),
-                view.findViewById(R.id.total_unit),
+                view.findViewById(R.id.totalUnit),
         };
 
         if (weight.getValue().compareTo(BigDecimal.ZERO) != 0) {
@@ -126,7 +126,7 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
             }
         });
 
-        View layoutStep = view.findViewById(R.id.step_box);
+        View layoutStep = view.findViewById(R.id.stepBox);
         layoutStep.setOnClickListener(barUsedView -> {
             PopupMenu popup = new PopupMenu(getActivity(), layoutStep);
             Menu menu = popup.getMenu();
@@ -149,7 +149,7 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         });
         updateStep();
 
-        View layoutBars = view.findViewById(R.id.bars_box);
+        View layoutBars = view.findViewById(R.id.barsBox);
         layoutBars.setOnClickListener(barUsedView -> {
             PopupMenu popup = new PopupMenu(getActivity(), layoutBars);
             Menu menu = popup.getMenu();
@@ -169,11 +169,11 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
                         initialValue.setBar(null);
                         initialValue.setExerciseUpdated(true);
                         if (initialValue.isRequiresBar()) {
-                            view.findViewById(R.id.incompatible_bar).setVisibility(View.VISIBLE);
+                            view.findViewById(R.id.incompatibleBar).setVisibility(View.VISIBLE);
                             Toast.makeText(getContext(), R.string.validation_should_have_bar,
                                     Toast.LENGTH_LONG).show();
                         } else {
-                            view.findViewById(R.id.incompatible_bar).setVisibility(View.INVISIBLE);
+                            view.findViewById(R.id.incompatibleBar).setVisibility(View.INVISIBLE);
                         }
 
                         if (initialValue.getWeightSpec() == WeightSpecification.TOTAL_WEIGHT) {
@@ -190,9 +190,9 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
                         initialValue.setBar(bar);
                         initialValue.setExerciseUpdated(true);
                         if (initialValue.isRequiresBar()) {
-                            view.findViewById(R.id.incompatible_bar).setVisibility(View.INVISIBLE);
+                            view.findViewById(R.id.incompatibleBar).setVisibility(View.INVISIBLE);
                         } else {
-                            view.findViewById(R.id.incompatible_bar).setVisibility(View.VISIBLE);
+                            view.findViewById(R.id.incompatibleBar).setVisibility(View.VISIBLE);
                             Toast.makeText(getContext(), R.string.validation_shouldnt_have_bar,
                                     Toast.LENGTH_LONG).show();
                         }
@@ -205,15 +205,15 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         });
         updateSelectedBar();
 
-        View layoutWeightSpec = view.findViewById(R.id.weights_config_box);
+        View layoutWeightSpec = view.findViewById(R.id.weightsConfigBox);
         layoutWeightSpec.setOnClickListener(weightSpecView -> {
             PopupMenu popup = new PopupMenu(getActivity(), layoutWeightSpec);
             popup.setOnMenuItemClickListener(item -> {
                 int id = item.getItemId();
                 WeightSpecification newWeightSpec;
-                if (id == R.id.total)         newWeightSpec = WeightSpecification.TOTAL_WEIGHT;
-                else if (id == R.id.no_bar)   newWeightSpec = WeightSpecification.NO_BAR_WEIGHT;
-                else if (id == R.id.one_side) newWeightSpec = WeightSpecification.ONE_SIDE_WEIGHT;
+                if (id == R.id.total)        newWeightSpec = WeightSpecification.TOTAL_WEIGHT;
+                else if (id == R.id.noBar)   newWeightSpec = WeightSpecification.NO_BAR_WEIGHT;
+                else if (id == R.id.oneSide) newWeightSpec = WeightSpecification.ONE_SIDE_WEIGHT;
                 else return false;
 
                 if (newWeightSpec != initialValue.getWeightSpec()) {

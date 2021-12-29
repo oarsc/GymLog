@@ -5,7 +5,7 @@
     android:paddingHorizontal="@dimen/dialog_margin">
 
     <EditText
-        android:id="@+id/dialog_text"
+        android:id="@+id/dialogText"
         android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/show_training"
+        android:id="@+id/showTraining"
         android:icon="@drawable/ic_history_24dp"
         android:title="@string/dialog_show_bit_training" />
 
     <item
-        android:id="@+id/edit_bit"
+        android:id="@+id/editBit"
         android:icon="@drawable/ic_edit_24dp"
         android:title="@string/dialog_edit_log" />
 
     <item
-        android:id="@+id/remove_bit"
+        android:id="@+id/removeBit"
         android:icon="@drawable/ic_remove_24dp"
         android:title="@string/dialog_remove_log" />
 </menu>

@@ -34,7 +34,7 @@ public class MenuDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_menu, null);
-        RecyclerView recyclerView = view.findViewById(R.id.parent_layout);
+        RecyclerView recyclerView = view.findViewById(R.id.parentLayout);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new MenuRecyclerViewAdapter(getContext(), menuId,

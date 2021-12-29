@@ -48,12 +48,12 @@ public class ExercisesActivity extends DBAppCompatActivity {
                 .orElseThrow(() -> new InternalException("Muscle id not found"));
 
         setTitle(muscle.getText());
-        RecyclerView recyclerView = findViewById(R.id.exercises_list);
+        RecyclerView recyclerView = findViewById(R.id.exercisesList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerAdapter = new ExercisesRecyclerViewAdapter(exercisesId, this, order);
         recyclerView.setAdapter(recyclerAdapter);
 
-        TrainingFloatingActionButton fab = findViewById(R.id.fab_training);
+        TrainingFloatingActionButton fab = findViewById(R.id.fabTraining);
         fab.updateFloatingActionButton();
     }
 

@@ -105,7 +105,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         recyclerViewAdapter.setOnClickElementListener(this::onClickBit);
 
         // Save bit log
-        findViewById(R.id.confirm_set).setOnClickListener(v -> saveBitLog(false));
+        findViewById(R.id.confirmSet).setOnClickListener(v -> saveBitLog(false));
         confirmInstantButton = findViewById(R.id.confirm);
         confirmInstantButton.setOnClickListener(v -> saveBitLog(true));
 
@@ -127,8 +127,8 @@ public class RegistryActivity extends DBAppCompatActivity {
             dialog.show(getSupportFragmentManager(), null);
         });
 
-        ImageView clearNote = findViewById(R.id.clear_note);
-        ImageView lockNote = findViewById(R.id.lock_note);
+        ImageView clearNote = findViewById(R.id.clearNote);
+        ImageView lockNote = findViewById(R.id.lockNote);
 
         clearNote.setOnClickListener(view -> {
             notes.getText().clear();
@@ -174,7 +174,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         weightModifier = findViewById(R.id.weightModifier);
         weightModifier.setStep(exercise.getStep());
 
-        weightSpecIcon = findViewById(R.id.weight_spec_icon);
+        weightSpecIcon = findViewById(R.id.weightSpecIcon);
         weightSpecIcon.setImageResource(exercise.getWeightSpec().icon);
 
         warningIcon = findViewById(R.id.warning);
@@ -367,10 +367,10 @@ public class RegistryActivity extends DBAppCompatActivity {
             view.setBackgroundColor(getResources().getColor(R.color.backgroundAccent, getTheme()));
             MenuDialogFragment dialog = new MenuDialogFragment(R.menu.bit_menu,
                     result -> {
-                        if (result == R.id.show_training) {
+                        if (result == R.id.showTraining) {
 
 
-                        } else if (result == R.id.edit_bit) {
+                        } else if (result == R.id.editBit) {
                             final boolean enableInstantSwitch = log.stream()
                                     .filter(b -> b.getTrainingId() == bit.getTrainingId())
                                     .findFirst()
@@ -387,7 +387,7 @@ public class RegistryActivity extends DBAppCompatActivity {
                             editDialog.setInitialValue(bit);
                             editDialog.show(getSupportFragmentManager(), null);
 
-                        } else if (result == R.id.remove_bit) {
+                        } else if (result == R.id.removeBit) {
                             removeBitLog(bit);
                         }
                         view.setBackgroundColor(0x00000000);

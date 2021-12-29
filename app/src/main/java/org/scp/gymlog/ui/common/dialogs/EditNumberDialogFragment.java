@@ -56,7 +56,7 @@ public class EditNumberDialogFragment extends CustomDialogFragment<BigDecimal> {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_edit_number, null);
-        EditText input = view.findViewById(R.id.dialog_text);
+        EditText input = view.findViewById(R.id.dialogText);
         NumberModifierView modifier = view.findViewById(R.id.modifier);
         input.setText(FormatUtils.toString(initialValue));
 
@@ -69,11 +69,11 @@ public class EditNumberDialogFragment extends CustomDialogFragment<BigDecimal> {
         if (!showButtons) {
             modifier.setVisibility(View.INVISIBLE);
 
-            ConstraintLayout constraintLayout = view.findViewById(R.id.parent_layout);
+            ConstraintLayout constraintLayout = view.findViewById(R.id.parentLayout);
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(constraintLayout);
             Arrays.asList(ConstraintSet.RIGHT, ConstraintSet.RIGHT, ConstraintSet.RIGHT, ConstraintSet.RIGHT)
-                    .forEach(pos -> constraintSet.connect(R.id.dialog_text, pos, R.id.parent_layout, pos,0));
+                    .forEach(pos -> constraintSet.connect(R.id.dialogText, pos, R.id.parentLayout, pos,0));
             constraintSet.applyTo(constraintLayout);
         }
 

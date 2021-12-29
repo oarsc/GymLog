@@ -58,7 +58,7 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 
 		exercise = new Exercise();
 
-		RecyclerView recyclerView = findViewById(R.id.create_exercise_form_list);
+		RecyclerView recyclerView = findViewById(R.id.createExerciseFormList);
 		recyclerView.setLayoutManager(new LinearLayoutManager(this));
 		recyclerView.setAdapter(new CreateExerciseFormRecyclerViewAdapter(createForm()));
 	}
@@ -72,7 +72,7 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() != R.id.confirm_button) {
+		if (item.getItemId() != R.id.confirmButton) {
 			return false;
 		}
 

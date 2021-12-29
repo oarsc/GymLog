@@ -21,7 +21,7 @@
         android:paddingVertical="@dimen/list_text_margin">
 
         <TextView
-            android:id="@+id/set_title"
+            android:id="@+id/setTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -31,21 +31,21 @@
             android:text="@string/text_set" />
 
         <TextView
-            android:id="@+id/weight_title"
+            android:id="@+id/weightTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/set_title"
+            app:layout_constraintLeft_toRightOf="@id/setTitle"
             android:width="60dp"
             android:gravity="end"
             android:text="@string/text_weight" />
 
         <TextView
-            android:id="@+id/reps_title"
+            android:id="@+id/repsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/weight_title"
+            app:layout_constraintLeft_toRightOf="@id/weightTitle"
             android:width="45dp"
             android:gravity="end"
             android:text="@string/text_reps" />
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/reps_title"
+            app:layout_constraintLeft_toRightOf="@id/repsTitle"
             android:paddingHorizontal="16dp"
             android:text="@string/text_notes" />
     </androidx.constraintlayout.widget.ConstraintLayout>

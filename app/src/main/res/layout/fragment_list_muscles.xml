@@ -16,7 +16,7 @@
         app:menu="@menu/create_exercise_menu" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/muscles_list"
+        android:id="@+id/musclesList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?actionBarSize"
@@ -24,7 +24,7 @@
         tools:listitem="@layout/list_element_fragment" />
 
     <org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
-        android:id="@+id/fab_training"
+        android:id="@+id/fabTraining"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

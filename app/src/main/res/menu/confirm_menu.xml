@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/confirm_button"
+        android:id="@+id/confirmButton"
         android:icon="@drawable/ic_done_24dp"
         android:title="@string/button_confirm"
         app:showAsAction="always"/>

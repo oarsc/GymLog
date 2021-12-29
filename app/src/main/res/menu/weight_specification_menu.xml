@@ -7,12 +7,12 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/no_bar"
+        android:id="@+id/noBar"
         android:title="@string/weight_spec_no_bar"
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/one_side"
+        android:id="@+id/oneSide"
         android:title="@string/weight_spec_one_side"
         app:showAsAction="ifRoom"/>
 </menu>

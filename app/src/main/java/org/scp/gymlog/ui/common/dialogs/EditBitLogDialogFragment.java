@@ -69,7 +69,7 @@ public class EditBitLogDialogFragment extends CustomDialogFragment<Bit> {
             dialog.show(getChildFragmentManager(), null);
         });
 
-        view.findViewById(R.id.clear_button).setOnClickListener(btn -> editNotes.getText().clear());
+        view.findViewById(R.id.clearButton).setOnClickListener(btn -> editNotes.getText().clear());
 
         BigDecimal weight = WeightUtils.getWeightFromTotal(
                 initialValue.getWeight().getValue(internationalSystem),

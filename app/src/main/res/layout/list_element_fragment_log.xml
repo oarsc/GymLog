@@ -53,7 +53,7 @@
         android:paddingHorizontal="16dp" />
 
     <TextView
-        android:id="@+id/load_more"
+        android:id="@+id/loadMore"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:text="@string/symbol_3_middle_points"
