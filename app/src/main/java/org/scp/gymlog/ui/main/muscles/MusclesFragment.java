@@ -53,6 +53,7 @@ public class MusclesFragment extends Fragment {
 		toolbar.setOnMenuItemClickListener(item -> {
 			if (item.getItemId() == R.id.createButton) {
 				Intent intent = new Intent(context, CreateExerciseActivity.class);
+				intent.putExtra("mode", CreateExerciseActivity.CREATE);
 				startActivity(intent);
 				return true;
 			}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/editExercise"
+        android:icon="@drawable/ic_edit_24dp"
+        android:title="@string/dialog_edit_exercise"/>
+
+    <item
+        android:id="@+id/removeExercise"
+        android:icon="@drawable/ic_remove_24dp"
+        android:title="@string/dialog_remove_exercise"/>
+
+</menu>

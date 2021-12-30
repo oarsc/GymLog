@@ -68,6 +68,17 @@ public class Data {
 		return getExercise(getInstance(), exerciseId);
 	}
 
+	public static Muscle getMuscle(Data data, int muscleId) {
+		return data.muscles.stream()
+				.filter(muscle -> muscle.getId() == muscleId)
+				.findFirst()
+				.orElseThrow(() -> new LoadException("NO MUSCLE FOUND id:"+muscleId));
+	}
+
+	public static Muscle getMuscle(int muscleId) {
+		return getMuscle(getInstance(), muscleId);
+	}
+
 	public void setTrainingId(int trainingId) {
 		this.trainingId = trainingId;
 	}

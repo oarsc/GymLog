@@ -3,9 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/sorting"
-        android:icon="@drawable/ic_sort_alphabetically_24dp"
-        android:title="@string/sort_alphabetically"
-        app:showAsAction="always" />
+        android:id="@+id/create_button"
+        android:icon="@drawable/ic_add_24dp"
+        android:title="@string/title_create_exercise"
+        app:showAsAction="ifRoom" />
+
+    <group
+        android:id="@+id/sortGroup"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/sortAlphabetically"
+            android:title="@string/sort_alphabetically" />
+        <item
+            android:id="@+id/sortLastUsed"
+            android:title="@string/sort_last_used" />
+    </group>
 
 </menu>

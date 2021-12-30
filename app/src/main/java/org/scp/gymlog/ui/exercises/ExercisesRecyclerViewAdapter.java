@@ -8,12 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.scp.gymlog.R;
 import org.scp.gymlog.databinding.ListElementFragmentBinding;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Order;
+import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment;
 import org.scp.gymlog.ui.registry.RegistryActivity;
 import org.scp.gymlog.util.Data;
 
@@ -21,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -29,10 +33,13 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
     private final List<Exercise> exercises;
     private final Context context;
     private final List<Integer> orderedIndexes;
+    private final BiConsumer<Exercise, Integer> menuOptionCallback;
     private Order order;
 
-    public ExercisesRecyclerViewAdapter(List<Integer> exercisesList, Context context, Order order) {
+    public ExercisesRecyclerViewAdapter(List<Integer> exercisesList, Context context, Order order,
+                                        BiConsumer<Exercise, Integer> menuOptionCallback) {
         Data data = Data.getInstance();
+        this.menuOptionCallback = menuOptionCallback;
         this.context = context;
         this.exercises = exercisesList.stream()
                 .map(id -> Data.getExercise(data, id))
@@ -53,6 +60,28 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
         );
     }
 
+    public void removeExercise(Exercise ex) {
+        int idx = exercises.indexOf(ex);
+        int orderedIdx = orderedIndexes.indexOf(idx);
+        exercises.remove(idx);
+        orderedIndexes.remove(orderedIdx);
+        notifyItemRemoved(orderedIdx);
+    }
+
+    public void updateNotify(Exercise ex) {
+        int idx = exercises.indexOf(ex);
+        int orderedIdx = orderedIndexes.indexOf(idx);
+        notifyItemChanged(orderedIdx);
+    }
+
+    public void addExercise(Exercise ex) {
+        exercises.add(ex);
+        int index = orderedIndexes.size();
+        orderedIndexes.add(index);
+        notifyItemInserted(index);
+        switchOrder(order);
+    }
+
     public void switchOrder(Order order) {
         this.order = order;
         updateOrder();
@@ -61,7 +90,7 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
 
     private void updateOrder() {
         Comparator<Integer> alphabeticalComparator =
-                Comparator.comparing(i -> exercises.get(i).getName());
+                Comparator.comparing(i -> exercises.get(i).getName().toLowerCase());
 
         switch(order) {
             case ALPHABETICALLY:
@@ -112,6 +141,13 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
                 Intent intent = new Intent(context, RegistryActivity.class);
                 intent.putExtra("exerciseId", exercise.getId());
                 context.startActivity(intent);
+            });
+
+            binding.getRoot().setOnLongClickListener(a-> {
+                MenuDialogFragment dialog = new MenuDialogFragment(
+                        R.menu.exercise_menu, action -> menuOptionCallback.accept(exercise, action));
+                dialog.show(((FragmentActivity) context).getSupportFragmentManager(), null);
+                return true;
             });
         }
 

@@ -30,4 +30,7 @@ public interface TrainingDao {
 
     @Delete
     void delete(TrainingEntity training);
+
+    @Query("DELETE FROM training WHERE trainingId NOT IN (SELECT DISTINCT trainingId FROM bit)")
+    int deleteEmptyTraining();
 }

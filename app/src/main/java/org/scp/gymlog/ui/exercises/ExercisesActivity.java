@@ -1,5 +1,8 @@
 package org.scp.gymlog.ui.exercises;
 
+import static org.scp.gymlog.util.LambdaUtils.valueEquals;
+
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,11 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.InternalException;
+import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.model.Order;
 import org.scp.gymlog.room.AppDatabase;
+import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.ui.common.DBAppCompatActivity;
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton;
+import org.scp.gymlog.ui.common.dialogs.TextDialogFragment;
+import org.scp.gymlog.ui.createexercise.CreateExerciseActivity;
 import org.scp.gymlog.util.Data;
 
 import java.util.List;
@@ -50,7 +57,8 @@ public class ExercisesActivity extends DBAppCompatActivity {
         setTitle(muscle.getText());
         RecyclerView recyclerView = findViewById(R.id.exercisesList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerAdapter = new ExercisesRecyclerViewAdapter(exercisesId, this, order);
+        recyclerAdapter = new ExercisesRecyclerViewAdapter(exercisesId, this, order,
+                this::onExerciseItemMenuSelected);
         recyclerView.setAdapter(recyclerAdapter);
 
         TrainingFloatingActionButton fab = findViewById(R.id.fabTraining);
@@ -62,35 +70,93 @@ public class ExercisesActivity extends DBAppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.exercises_menu, menu);
 
-        if (order.equals(Order.ALPHABETICALLY)) {
-            menu.findItem(R.id.sorting).setIcon(R.drawable.ic_sort_24dp);
+        switch (order) {
+            case ALPHABETICALLY: menu.findItem(R.id.sortAlphabetically).setChecked(true); break;
+            case LAST_USED:      menu.findItem(R.id.sortLastUsed).setChecked(true);       break;
         }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.sorting) {
+        if (item.getItemId() == R.id.create_button) {
+            Intent intent = new Intent(this, CreateExerciseActivity.class);
+            intent.putExtra("mode", CreateExerciseActivity.CREATE_FROM_MUSCLE);
+            intent.putExtra("muscleId", muscleId);
+            activityResultLauncher.launch(intent);
+
+        } else if (item.getItemId() == R.id.sortAlphabetically) {
+            recyclerAdapter.switchOrder(order = Order.ALPHABETICALLY);
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = preferences.edit();
-
-            if (order.equals(Order.ALPHABETICALLY)) {
-                order = Order.LAST_USED;
-                editor.putString("exercisesSortLastUsed", order.name);
-                item.setIcon(R.drawable.ic_sort_alphabetically_24dp);
-                item.setTitle(R.string.sort_alphabetically);
-
-            } else {
-                order = Order.ALPHABETICALLY;
-                editor.putString("exercisesSortLastUsed", order.name);
-                item.setIcon(R.drawable.ic_sort_24dp);
-                item.setTitle(R.string.sort_last_used);
-            }
-            recyclerAdapter.switchOrder(order);
+            editor.putString("exercisesSortLastUsed", order.name);
             editor.apply();
-            return false;
+            item.setChecked(true);
 
+        } else if (item.getItemId() == R.id.sortLastUsed) {
+            recyclerAdapter.switchOrder(order = Order.LAST_USED);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("exercisesSortLastUsed", order.name);
+            editor.apply();
+            item.setChecked(true);
         }
+
         return false;
+    }
+
+    private void onExerciseItemMenuSelected(Exercise exercise, int action) {
+        if (action == R.id.editExercise) {
+            Intent intent = new Intent(this, CreateExerciseActivity.class);
+            intent.putExtra("mode", CreateExerciseActivity.EDIT);
+            intent.putExtra("exerciseId", exercise.getId());
+            activityResultLauncher.launch(intent);
+
+        } else if (action == R.id.removeExercise) {
+            TextDialogFragment dialog = new TextDialogFragment(R.string.dialog_confirm_remove_exercise_title,
+                    R.string.dialog_confirm_remove_exercise_text,
+                    confirmed -> {
+                        if (confirmed) {
+                            DBThread.run(this, db -> {
+                                if (db.exerciseDao().delete(exercise.toEntity()) == 1) {
+                                    runOnUiThread(() -> recyclerAdapter.removeExercise(exercise));
+                                    db.trainingDao().deleteEmptyTraining();
+
+                                    exercisesId.remove((Integer) exercise.getId());
+                                    Data.getInstance().getExercises().removeIf(valueEquals(exercise));
+                                }
+                            });
+
+                        }
+                    });
+            dialog.show(getSupportFragmentManager(), null);
+        }
+    }
+
+    @Override
+    public void onActivityResult(Intent data) {
+        int mode = data.getIntExtra("mode", -1);
+        if (mode == CreateExerciseActivity.EDIT) {
+            int id = data.getIntExtra("exerciseId", -1);
+            Exercise ex = Data.getExercise(id);
+            boolean hasMuscle = ex.getBelongingMuscles().stream().map(Muscle::getId)
+                    .anyMatch(valueEquals(muscleId));
+            if (hasMuscle) {
+                recyclerAdapter.updateNotify(ex);
+            } else {
+                recyclerAdapter.removeExercise(ex);
+                exercisesId.removeIf(valueEquals(ex.getId()));
+            }
+
+        } else if (mode == CreateExerciseActivity.CREATE_FROM_MUSCLE) {
+            int id = data.getIntExtra("exerciseId", -1);
+            Exercise ex = Data.getExercise(id);
+            boolean hasMuscle = ex.getBelongingMuscles().stream().map(Muscle::getId)
+                    .anyMatch(valueEquals(muscleId));
+            if (hasMuscle) {
+                exercisesId.add(ex.getId());
+                recyclerAdapter.addExercise(ex);
+            }
+        }
     }
 }

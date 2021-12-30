@@ -25,8 +25,11 @@ public interface BitDao {
     @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND trainingId = :trainingId ORDER BY timestamp")
     List<BitEntity> getHistoryByTrainingId(int exerciseId, int trainingId);
 
-    @Query("SELECT * FROM bit WHERE trainingId = :trainingId ORDER BY timestamp DESC LIMIT 1")
-    Optional<BitEntity> getMostRecentBitTrainingId(int trainingId);
+    @Query("SELECT timestamp FROM bit WHERE trainingId = :trainingId ORDER BY timestamp DESC LIMIT 1")
+    Optional<Calendar> getMostRecentTimestampByTrainingId(int trainingId);
+
+    @Query("SELECT timestamp FROM bit WHERE trainingId = :trainingId ORDER BY timestamp ASC LIMIT 1")
+    Optional<Calendar> getFirstTimestampByTrainingId(int trainingId);
 
     @Query("SELECT DISTINCT note FROM bit WHERE exerciseId = :exerciseId ORDER BY timestamp DESC "+
             "LIMIT :limit")

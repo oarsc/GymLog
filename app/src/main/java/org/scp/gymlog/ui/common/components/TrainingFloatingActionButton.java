@@ -58,9 +58,11 @@ public class TrainingFloatingActionButton extends FloatingActionButton {
                                         throw new LoadException("TrainingId " + trainingId + " already ended");
                                     }
 
-                                    Optional<BitEntity> count = db.bitDao().getMostRecentBitTrainingId(trainingId);
-                                    if (count.isPresent()) {
-                                        training.end = count.get().timestamp;
+                                    Optional<Calendar> endDate = db.bitDao().getMostRecentTimestampByTrainingId(trainingId);
+                                    if (endDate.isPresent()) {
+                                        Optional<Calendar> startDate = db.bitDao().getMostRecentTimestampByTrainingId(trainingId);
+                                        training.start = startDate.get();
+                                        training.end = endDate.get();
                                         dao.update(training);
                                     } else {
                                         dao.delete(training);

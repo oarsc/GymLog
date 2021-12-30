@@ -12,12 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,13 +38,19 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CreateExerciseActivity extends CustomAppCompatActivity {
+	public static final int CREATE = 0;
+	public static final int CREATE_FROM_MUSCLE = 1;
+	public static final int EDIT = 2;
 
-	private Exercise exercise;
+	private Exercise editingExercise;
+	private String name;
+	private String imageName;
+	private boolean requiresBar;
+	private final List<Muscle> muscles = new ArrayList<>();
+
 	private FormElement iconOption;
-
-	private ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
-			new ActivityResultContracts.StartActivityForResult(),
-			this::captureReturn);
+	private FormElement musclesOption;
+	private int mode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,22 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		setContentView(R.layout.activity_create_exercise);
 		setTitle(R.string.title_create_exercise);
 
-		exercise = new Exercise();
+		mode = getIntent().getExtras().getInt("mode");
+		if (mode == EDIT) {
+			editingExercise = Data.getExercise(getIntent().getExtras().getInt("exerciseId"));
+			name = editingExercise.getName();
+			imageName = editingExercise.getImage();
+			requiresBar = editingExercise.isRequiresBar();
+			muscles.addAll(editingExercise.getBelongingMuscles());
+		} else {
+			name = "";
+			imageName = "";
+			if (mode == CREATE_FROM_MUSCLE) {
+				muscles.add(
+						Data.getMuscle(getIntent().getExtras().getInt("muscleId"))
+				);
+			}
+		}
 
 		RecyclerView recyclerView = findViewById(R.id.createExerciseFormList);
 		recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -76,30 +93,71 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 			return false;
 		}
 
-		if (exercise.getImage() == null || exercise.getImage().trim().isEmpty()) {
+		if (imageName == null || imageName.trim().isEmpty()) {
 			Snackbar.make(findViewById(android.R.id.content),
 					R.string.validation_image, Snackbar.LENGTH_LONG).show();
 
-		} else if (exercise.getName() == null || exercise.getName().trim().isEmpty()) {
+		} else if (name == null || name.trim().isEmpty()) {
 			Snackbar.make(findViewById(android.R.id.content),
 					R.string.validation_name, Snackbar.LENGTH_LONG).show();
 
-		} else if (exercise.getBelongingMuscles().isEmpty()) {
+		} else if (muscles.isEmpty()) {
 			Snackbar.make(findViewById(android.R.id.content),
 					R.string.validation_muscles, Snackbar.LENGTH_LONG).show();
 
 		} else {
-			DBThread.run(this, db -> {
-				final int id = (int) db.exerciseDao().insert(exercise.toEntity());
-				exercise.setId(id);
-				db.exerciseMuscleCrossRefDao()
-						.insertAll(exercise.toMuscleListEntities());
+			Intent data = new Intent();
+			data.putExtra("mode", mode);
 
-				Data.getInstance().getExercises().add(exercise);
-				runOnUiThread(this::onBackPressed);
-			});
+			if (mode == EDIT) {
+				data.putExtra("exerciseId", editingExercise.getId());
+
+				editingExercise.setRequiresBar(requiresBar);
+				editingExercise.setName(name);
+				editingExercise.setImage(imageName);
+				editingExercise.getBelongingMuscles().clear();
+				editingExercise.getBelongingMuscles().addAll(muscles);
+
+				DBThread.run(this, db -> {
+					db.exerciseDao().update(editingExercise.toEntity());
+
+					db.exerciseMuscleCrossRefDao()
+							.clearMusclesFromExercise(editingExercise.getId());
+
+					db.exerciseMuscleCrossRefDao()
+							.insertAll(editingExercise.toMuscleListEntities());
+
+					runOnUiThread(() -> {
+						setResult(Activity.RESULT_OK, data);
+						finish();
+					});
+				});
+
+			} else {
+
+				final Exercise exercise = new Exercise();
+				exercise.setRequiresBar(requiresBar);
+				exercise.setName(name);
+				exercise.setImage(imageName);
+				exercise.getBelongingMuscles().clear();
+				exercise.getBelongingMuscles().addAll(muscles);
+
+				DBThread.run(this, db -> {
+					final int id = (int) db.exerciseDao().insert(exercise.toEntity());
+					exercise.setId(id);
+					data.putExtra("exerciseId", id);
+
+					db.exerciseMuscleCrossRefDao()
+							.insertAll(exercise.toMuscleListEntities());
+
+					Data.getInstance().getExercises().add(exercise);
+					runOnUiThread(() -> {
+						setResult(Activity.RESULT_OK, data);
+						finish();
+					});
+				});
+			}
 		}
-
 		return true;
 	}
 
@@ -112,6 +170,9 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		//iconOption.setDrawable(R.drawable.ic_label_black_24dp);
 		iconOption.setTitle(R.string.form_image);
 		iconOption.setValueStr(" ");
+		if (!imageName.isEmpty()) {
+			iconOption.setDrawable(getIconDrawable(imageName));
+		}
 		iconOption.setOnClickListener(v -> openImageSelectorActivity());
 
 		FormElement nameOption = new FormElement();
@@ -120,25 +181,26 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 				ResourcesCompat.getDrawable(resources, R.drawable.ic_label_black_24dp, null)
 		);
 		nameOption.setTitle(R.string.form_name);
+		nameOption.setValueStr(name);
 		nameOption.setOnClickListener(v -> showExerciseNameDialog(nameOption));
 
-		FormElement muscleOption = new FormElement();
-		form.add(muscleOption);
-		muscleOption.setDrawable(
+		musclesOption = new FormElement();
+		form.add(musclesOption);
+		musclesOption.setDrawable(
 				ResourcesCompat.getDrawable(resources, R.drawable.ic_body_black_24dp, null)
 		);
-		muscleOption.setTitle(R.string.form_muscles);
-		muscleOption.setOnClickListener(v -> showMuscleSelector(muscleOption));
+		musclesOption.setTitle(R.string.form_muscles);
+		musclesOption.setValueStr(getMusclesLabelText());
+		musclesOption.setOnClickListener(v -> showMuscleSelector(musclesOption));
 
 		FormElement requiresBarOption = new FormElement();
-		boolean barIsRequired = exercise.isRequiresBar();
 		form.add(requiresBarOption);
 		requiresBarOption.setDrawable(
-				ResourcesCompat.getDrawable(resources, barIsRequired?
+				ResourcesCompat.getDrawable(resources, requiresBar?
 						R.drawable.ic_bar_enable_24dp : R.drawable.ic_bar_disable_24dp, null)
 		);
 		requiresBarOption.setTitle(R.string.form_requires_bar);
-		requiresBarOption.setValue(barIsRequired? R.string.form_bar_value :
+		requiresBarOption.setValue(requiresBar? R.string.form_bar_value :
 				R.string.form_no_bar_value);
 		requiresBarOption.setOnClickListener(v -> switchEnableBar(requiresBarOption));
 
@@ -148,52 +210,44 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 	private void openImageSelectorActivity() {
 		Intent intent = new Intent(this, ImageSelectorActivity.class);
 		intent.putExtra("mode", CREATE_EXERCISE);
-		someActivityResultLauncher.launch(intent);
+		activityResultLauncher.launch(intent);
 	}
 
-	private void captureReturn(ActivityResult result) {
-		if (result.getResultCode() == Activity.RESULT_OK) {
-			Intent data = result.getData();
-			String fileName = data.getStringExtra("fileName");
-			if (fileName != null) {
+	@Override
+	public void onActivityResult(Intent data) {
+		String fileName = data.getStringExtra("fileName");
+		if (fileName != null) {
 
-				Pattern pattern = Pattern.compile(".*?(\\w*)\\.png");
-				Matcher matcher = pattern.matcher(fileName);
-				if (matcher.matches()) {
-					String name = matcher.group(1);
+			Pattern pattern = Pattern.compile(".*?(\\w*)\\.png");
+			Matcher matcher = pattern.matcher(fileName);
+			if (matcher.matches()) {
+				String name = matcher.group(1);
 
-					if (name != null && !name.trim().isEmpty()) {
-						exercise.setImage(name);
-						try {
-							InputStream ims = getAssets().open(fileName);
-							Drawable d = Drawable.createFromStream(ims, null);
-							iconOption.setDrawable(d);
-							iconOption.update();
-						} catch (IOException e) {
-							throw new LoadException("Could not read \""+fileName+"\"", e);
-						}
-					}
+				if (name != null && !name.trim().isEmpty()) {
+					imageName = name;
+					Drawable d = getIconDrawable(imageName);
+					iconOption.setDrawable(d);
+					iconOption.update();
 				}
 			}
 		}
 	}
 
 	private void showExerciseNameDialog(FormElement option) {
-		DialogFragment dialog = new EditTextDialogFragment(R.string.form_name,
+		EditTextDialogFragment dialog = new EditTextDialogFragment(R.string.form_name,
 				result -> {
-					option.setValueStr(result);
+					option.setValueStr(name = result);
 					option.update();
-					exercise.setName(result);
 				},
 				() -> {});
+		dialog.setInitialValue(name);
 		dialog.show(getSupportFragmentManager(), null);
 	}
 
 	private void showMuscleSelector(FormElement option) {
 		Resources resources = getResources();
-		List<Muscle> muscles = Data.getInstance().getMuscles();
-		final int size = muscles.size();
-		final List<Muscle> selectedMuscles = exercise.getBelongingMuscles();
+		List<Muscle> allMuscles = Data.getInstance().getMuscles();
+		final int size = allMuscles.size();
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(CreateExerciseActivity.this);
 		builder.setTitle(R.string.form_muscles);
@@ -202,9 +256,9 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		boolean[] selectedIndexes = new boolean[size];
 
 		int idx = 0;
-		for (Muscle muscle : muscles) {
+		for (Muscle muscle : allMuscles) {
 			muscleNames[idx] = resources.getString(muscle.getText());
-			selectedIndexes[idx] = selectedMuscles.contains(muscle);
+			selectedIndexes[idx] = muscles.contains(muscle);
 			idx++;
 		}
 
@@ -213,35 +267,48 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 
 		builder.setNegativeButton(R.string.button_cancel, (dialog, which) -> {});
 		builder.setPositiveButton(R.string.button_confirm, (dialog, which) -> {
-			selectedMuscles.clear();
-			List<CharSequence> selectedMuscleNames = new ArrayList<>();
+			muscles.clear();
 			for (int i = 0; i<size; i++) {
 				if (selectedIndexes[i]) {
-					selectedMuscles.add(muscles.get(i));
-					selectedMuscleNames.add(muscleNames[i]);
+					muscles.add(allMuscles.get(i));
 				}
 			}
 
-			option.setValueStr(
-					selectedMuscleNames.stream().collect(Collectors.joining(", "))
-			);
+			option.setValueStr(getMusclesLabelText());
 			option.update();
 		});
 		builder.show();
 	}
 
 	private void switchEnableBar(FormElement option) {
-		boolean value = !exercise.isRequiresBar();
-		exercise.setRequiresBar(value);
+		requiresBar = !requiresBar;
 
-		Drawable drawable = ContextCompat.getDrawable(this, value?
+		Drawable drawable = ContextCompat.getDrawable(this, requiresBar?
 				R.drawable.ic_bar_enable_24dp :
 				R.drawable.ic_bar_disable_24dp);
 
 		option.setDrawable(drawable);
-		option.setValue(value? R.string.form_bar_value :
+		option.setValue(requiresBar? R.string.form_bar_value :
 				R.string.form_no_bar_value);
 
 		option.update();
+	}
+
+	private Drawable getIconDrawable(String imageName) {
+		String fileName = "previews/" + imageName + ".png";
+		try {
+			InputStream ims = getAssets().open(fileName);
+			return Drawable.createFromStream(ims, null);
+		} catch (IOException e) {
+			throw new LoadException("Could not read \""+fileName+"\"", e);
+		}
+	}
+
+	private String getMusclesLabelText() {
+		Resources resources = getResources();
+		return muscles.stream()
+				.map(Muscle::getText)
+				.map(resources::getString)
+				.collect(Collectors.joining(", "));
 	}
 }

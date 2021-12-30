@@ -41,7 +41,12 @@
     <string name="dialog_confirm_training_title">Confirm ending training</string>
     <string name="dialog_confirm_training_text">Are you sure you finished your current training?</string>
     <string name="dialog_edit_log">Edit log</string>
+    <string name="dialog_edit_exercise">Edit exercise</string>
     <string name="dialog_remove_log">Remove log</string>
+    <string name="dialog_remove_exercise">Remove exercise</string>
+    <string name="dialog_confirm_remove_exercise_title">Removing exercise</string>
+    <string name="dialog_confirm_remove_exercise_text">This process wil remove this exercise.
+    All its history will be removed as well. Do you want to proceed?</string>
     <string name="dialog_show_bit_training">Show complete training</string>
 
     <string name="symbol_3_middle_points">···</string>
@@ -92,7 +97,7 @@
     <string name="night_theme_title">Use night theme</string>
 
     <string name="exercise_sorting_title">Default exercises sorting</string>
-    <string name="exercise_sorting_last_used">Sorting by last used</string>
-    <string name="exercise_sorting_alphabetically">Sorting alphabetically</string>
+    <string name="exercise_sorting_last_used">Sort by last used</string>
+    <string name="exercise_sorting_alphabetically">Sort alphabetically</string>
 
 </resources>

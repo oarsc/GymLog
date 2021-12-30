@@ -34,7 +34,7 @@ public interface ExerciseDao {
     long[] insertAll(ExerciseEntity... exercises);
 
     @Delete
-    void delete(ExerciseEntity... exercises);
+    int delete(ExerciseEntity... exercises);
 
     @Update
     void update(ExerciseEntity... exercises);
