@@ -329,6 +329,13 @@ public class RegistryActivity extends DBAppCompatActivity {
             int trainingId = bit.getTrainingId();
             log.remove(index);
 
+            if (log.size() > index && !bit.isInstant() && log.get(index).isInstant() &&
+                    log.get(index).getTrainingId() == trainingId) {
+                Bit updateBit = log.get(index);
+                updateBit.setInstant(false);
+                db.bitDao().update(updateBit.toEntity());
+            }
+
             runOnUiThread(()-> {
                 recyclerViewAdapter.notifyItemRemoved(index);
                 if (index == 0) {
