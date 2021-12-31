@@ -80,6 +80,28 @@
     <string name="validation_shouldnt_have_bar">This exercise is not set to have a bar</string>
     <string name="validation_training_not_started">A training session must be started first</string>
 
+    <!-- Calendar -->
+    <string name="day_monday_short">Mon</string>
+    <string name="day_tuesday_short">Tue</string>
+    <string name="day_wednesday_short">Wed</string>
+    <string name="day_thursday_short">Thu</string>
+    <string name="day_friday_short">Fri</string>
+    <string name="day_saturday_short">Sat</string>
+    <string name="day_sunday_short">Sun</string>
+
+    <string name="month_january">January</string>
+    <string name="month_february">February</string>
+    <string name="month_march">March</string>
+    <string name="month_april">April</string>
+    <string name="month_may">May</string>
+    <string name="month_june">June</string>
+    <string name="month_july">July</string>
+    <string name="month_august">August</string>
+    <string name="month_september">September</string>
+    <string name="month_october">October</string>
+    <string name="month_november">November</string>
+    <string name="month_december">December</string>
+
     <!-- Weight Specifications -->
     <string name="weight_spec_total">Total weight</string>
     <string name="weight_spec_no_bar">Only weight from plates</string>

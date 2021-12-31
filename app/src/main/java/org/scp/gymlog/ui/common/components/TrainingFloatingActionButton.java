@@ -60,7 +60,7 @@ public class TrainingFloatingActionButton extends FloatingActionButton {
 
                                     Optional<Calendar> endDate = db.bitDao().getMostRecentTimestampByTrainingId(trainingId);
                                     if (endDate.isPresent()) {
-                                        Optional<Calendar> startDate = db.bitDao().getMostRecentTimestampByTrainingId(trainingId);
+                                        Optional<Calendar> startDate = db.bitDao().getFirstTimestampByTrainingId(trainingId);
                                         training.start = startDate.get();
                                         training.end = endDate.get();
                                         dao.update(training);
