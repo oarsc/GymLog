@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rela"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    android:layout_weight="1" >
+
+    <org.scp.gymlog.ui.common.components.PerfectSquareCardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="100dp"
+        app:cardElevation="0dp"
+        android:layout_gravity="center"
+        app:cardBackgroundColor="#90ff0000">
+
+        <TextView
+            android:id="@+id/dayNumber"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+    </org.scp.gymlog.ui.common.components.PerfectSquareCardView>
+
+
+
+</RelativeLayout>

@@ -25,7 +25,7 @@ public class DateUtils {
         return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
     }
 
-    private static Calendar getFirstTimeOfDay(Calendar date) {
+    public static Calendar getFirstTimeOfDay(Calendar date) {
         Calendar mDate = (Calendar) date.clone();
         mDate.set(Calendar.HOUR_OF_DAY, 0);
         mDate.set(Calendar.MINUTE, 0);
