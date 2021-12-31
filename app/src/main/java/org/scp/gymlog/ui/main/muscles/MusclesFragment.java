@@ -56,6 +56,8 @@ public class MusclesFragment extends Fragment {
 				intent.putExtra("mode", CreateExerciseActivity.CREATE);
 				startActivity(intent);
 				return true;
+			} else if (item.getItemId() == R.id.searchButton) {
+
 			}
 			return false;
 		});

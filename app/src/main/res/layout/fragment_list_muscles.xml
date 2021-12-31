@@ -13,7 +13,7 @@
         android:layout_height="?actionBarSize"
         android:theme="@style/Theme.GymLog.ActionBar"
         app:title="@string/title_exercises"
-        app:menu="@menu/create_exercise_menu" />
+        app:menu="@menu/muscles_menu" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/musclesList"

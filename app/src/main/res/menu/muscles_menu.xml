@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
         android:id="@+id/createButton"
         android:icon="@drawable/ic_add_24dp"
         android:title="@string/title_create_exercise"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/searchButton"
+        android:icon="@drawable/ic_search_24dp"
+        android:title="@string/title_search"
+        app:showAsAction="ifRoom"/>
 
 </menu>
