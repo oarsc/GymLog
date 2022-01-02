@@ -22,13 +22,13 @@
     <color name="lower_back">#4DD0E2</color>
     <color name="deltoid">#E05E55</color>
     <color name="trapezius">#F05F92</color>
-    <color name="biceps">#73B770</color>
-    <color name="triceps">#17D02E</color>
+    <color name="biceps">#71BA6E</color>
+    <color name="triceps">#8DCA1A</color>
     <color name="forearm">#01BFA5</color>
     <color name="quadriceps">#FFD33F</color>
     <color name="hamstrings">#F9A825</color>
     <color name="calves">#BC9A14</color>
-    <color name="glutes">#F98C25</color>
+    <color name="glutes">#F96825</color>
     <color name="abdominals">#F06292</color>
     <color name="cardio">#AAABAA</color>
 </resources>

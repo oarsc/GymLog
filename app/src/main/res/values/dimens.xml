@@ -9,6 +9,7 @@
 
     <dimen name="bold_text">20sp</dimen>
     <dimen name="slightly_bigger_text">16sp</dimen>
+    <dimen name="slightly_smaller_text">14sp</dimen>
 
     <dimen name="dialog_margin">30dp</dimen>
 </resources>

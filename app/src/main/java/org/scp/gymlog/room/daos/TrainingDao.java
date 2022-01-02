@@ -8,6 +8,7 @@ import androidx.room.Update;
 
 import org.scp.gymlog.room.entities.TrainingEntity;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,9 @@ public interface TrainingDao {
 
     @Query("SELECT * FROM training WHERE trainingId = :trainingId")
     Optional<TrainingEntity> getTraining(int trainingId);
+
+    @Query("SELECT * FROM training WHERE :startDate <= start AND start < :endDate")
+    List<TrainingEntity> getTrainingByStartDate(Calendar startDate, Calendar endDate);
 
     @Update
     void update(TrainingEntity training);

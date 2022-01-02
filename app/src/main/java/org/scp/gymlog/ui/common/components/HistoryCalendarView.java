@@ -114,7 +114,7 @@ public class HistoryCalendarView extends FrameLayout {
                 }
 
                 Calendar actualDay = (Calendar) lastDay.clone();
-                day.setOnClickListener(v -> selectDay(actualDay));
+                day.setOnClickListener(v -> selectDay((Calendar) actualDay.clone()));
 
                 daysMap.put(lastDay.getTimeInMillis(), day);
                 TextView number = day.findViewById(R.id.dayNumber);

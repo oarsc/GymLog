@@ -1,6 +1,9 @@
 package org.scp.gymlog.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class DateUtils {
     public static int[] yearsAndDaysDiff(Calendar d1, Calendar d2) {
@@ -32,5 +35,11 @@ public class DateUtils {
         mDate.set(Calendar.SECOND, 0);
         mDate.set(Calendar.MILLISECOND, 0);
         return mDate;
+    }
+
+    public static String getTime(Calendar cal) {
+        Date date = cal.getTime();
+        SimpleDateFormat format1 = new SimpleDateFormat("HH:MM", Locale.getDefault());
+        return format1.format(date);
     }
 }

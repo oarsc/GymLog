@@ -336,6 +336,10 @@ public class RegistryActivity extends DBAppCompatActivity {
                 db.bitDao().update(updateBit.toEntity());
             }
 
+            if (log.isEmpty()) {
+                db.trainingDao().deleteEmptyTraining();
+            }
+
             runOnUiThread(()-> {
                 recyclerViewAdapter.notifyItemRemoved(index);
                 if (index == 0) {

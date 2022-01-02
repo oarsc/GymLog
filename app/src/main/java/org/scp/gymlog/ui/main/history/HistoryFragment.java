@@ -5,43 +5,142 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.entities.BitEntity;
+import org.scp.gymlog.room.entities.TrainingEntity;
 import org.scp.gymlog.ui.common.components.HistoryCalendarView;
 import org.scp.gymlog.ui.common.components.HistoryCalendarView.PieDataInfo;
+import org.scp.gymlog.ui.main.history.HistoryRecyclerViewAdapter.TrainingData;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.DateUtils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class HistoryFragment extends Fragment {
 
 	private HistoryCalendarView calendarView;
+	private HistoryRecyclerViewAdapter historyAdapter;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_history, container, false);
+		final View view = inflater.inflate(R.layout.fragment_history, container, false);
+
+		final RecyclerView legendRecyclerView = view.findViewById(R.id.legend);
+		legendRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2) {
+			@Override
+			public boolean canScrollVertically() { return false; }
+		});
+		legendRecyclerView.setAdapter(new HistoryLegendRecyclerViewAdapter());
+
+		final ImageView showLegendIcon = view.findViewById(R.id.showLegendIcon);
+		view.findViewById(R.id.showLegend).setOnClickListener(v -> {
+			if (legendRecyclerView.getVisibility() == View.VISIBLE) {
+				legendRecyclerView.setVisibility(View.GONE);
+				showLegendIcon.animate().rotation(0f).start();
+			} else {
+				legendRecyclerView.setVisibility(View.VISIBLE);
+				showLegendIcon.animate().rotation(180f).start();
+			}
+		});
+
+		final RecyclerView trainingRecyclerView = view.findViewById(R.id.trainingList);
+		trainingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
+			@Override
+			public boolean canScrollVertically() { return false; }
+		});
+		trainingRecyclerView.setAdapter(historyAdapter = new HistoryRecyclerViewAdapter());
 
 		calendarView = view.findViewById(R.id.calendarView);
 		calendarView.setOnSelectDayListener(this::selectDay);
 		calendarView.setOnChangeListener(this::updateData);
+
 		return view;
 	}
 
-	private void selectDay(Calendar calendar) {
+	private void selectDay(Calendar startDate) {
+		Calendar endDate = (Calendar) startDate.clone();
+		endDate.add(Calendar.DAY_OF_YEAR, 1);
 
+		DBThread.run(getContext(), db -> {
+			List<TrainingEntity> trainings =
+					db.trainingDao().getTrainingByStartDate(startDate, endDate);
+
+			int initialSize = historyAdapter.size();
+			int endSize = trainings.size();
+			historyAdapter.clear();
+
+			trainings.forEach(training -> {
+				List<BitEntity> bits = db.bitDao().getHistoryByTrainingId(training.trainingId);
+				List<MuscleCount> musclesCount = new ArrayList<>();
+
+				bits.stream().map(bit -> bit.exerciseId)
+						.map(Data::getExercise)
+						.flatMap(exercise -> exercise.getPrimaryMuscles().stream())
+						.forEach(muscle -> {
+							Optional<MuscleCount> m = musclesCount.stream()
+									.filter(mc -> mc.muscle == muscle)
+									.findFirst();
+
+							if (m.isPresent()) {
+								m.get().count++;
+							} else {
+								musclesCount.add(new MuscleCount(muscle));
+							}
+						});
+
+				musclesCount.sort((a,b) -> Integer.compare(b.count, a.count));
+
+				int total = musclesCount.stream()
+						.map(mc -> mc.count)
+						.reduce(0, Integer::sum);
+				int limit = (int)(musclesCount.get(0).count / (float)total - 15f);
+
+				List<Muscle> mostUsedMuscles = musclesCount.stream()
+						.filter(a -> a.count/total > limit)
+						.map(a -> a.muscle)
+						.collect(Collectors.toList());
+
+				TrainingData td = new TrainingData();
+				td.setId(training.trainingId);
+				td.setStartDate(training.start);
+				td.setMostUsedMuscles(mostUsedMuscles);
+				historyAdapter.add(td);
+			});
+
+			getActivity().runOnUiThread(() -> historyAdapter.notifyItemsChanged(initialSize, endSize));
+		});
+	}
+
+	class MuscleCount {
+		private Muscle muscle;
+		private int count = 1;
+
+		public MuscleCount(Muscle muscle) {
+			this.muscle = muscle;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			return muscle == ((MuscleCount) o).muscle;
+		}
 	}
 
 	private void updateData(Calendar first, Calendar end) {

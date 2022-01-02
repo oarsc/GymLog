@@ -8,29 +8,31 @@
     android:focusable="true"
     android:background="?android:attr/selectableItemBackground">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+    <View
+        android:id="@+id/indicator"
+        android:layout_width="4dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="8dp"
+        android:paddingVertical="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorPrimary"
-        android:src="@drawable/ic_dot_black_24dp" />
+        android:background="#f00" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@id/image"
+        app:layout_constraintLeft_toRightOf="@id/indicator"
         app:layout_constraintTop_toTopOf="parent"
         android:text="@string/text_title"
-        android:layout_marginLeft="21dp"
+        android:layout_marginStart="21dp"
         android:paddingTop="@dimen/list_text_margin"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
-        android:id="@+id/content"
+        android:id="@+id/subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="@id/title"
@@ -38,6 +40,7 @@
         android:textColor="@color/gray"
         android:text="@string/text_subtitle"
         android:paddingBottom="@dimen/list_text_margin"
+        android:textSize="@dimen/slightly_smaller_text"
         android:textAppearance="?attr/textAppearanceListItem" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
