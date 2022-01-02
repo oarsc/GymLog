@@ -1,6 +1,9 @@
 package org.scp.gymlog.model;
 
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 import org.scp.gymlog.room.EntityMapped;
 import org.scp.gymlog.room.entities.MuscleEntity;
@@ -13,8 +16,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Muscle implements EntityMapped<MuscleEntity> {
 	private int id;
+	@StringRes
 	private int text;
+	@DrawableRes
 	private int icon;
+	@ColorRes
+	private int color;
 
 	@Override
 	public MuscleEntity toEntity() {

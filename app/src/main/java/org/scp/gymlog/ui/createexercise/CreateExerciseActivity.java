@@ -47,9 +47,11 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 	private String imageName;
 	private boolean requiresBar;
 	private final List<Muscle> muscles = new ArrayList<>();
+	private final List<Muscle> musclesSecondary = new ArrayList<>();
 
 	private FormElement iconOption;
 	private FormElement musclesOption;
+	private FormElement musclesSecondaryOption;
 	private int mode;
 
 	@Override
@@ -64,7 +66,8 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 			name = editingExercise.getName();
 			imageName = editingExercise.getImage();
 			requiresBar = editingExercise.isRequiresBar();
-			muscles.addAll(editingExercise.getBelongingMuscles());
+			muscles.addAll(editingExercise.getPrimaryMuscles());
+			musclesSecondary.addAll(editingExercise.getSecondaryMuscles());
 		} else {
 			name = "";
 			imageName = "";
@@ -115,8 +118,10 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 				editingExercise.setRequiresBar(requiresBar);
 				editingExercise.setName(name);
 				editingExercise.setImage(imageName);
-				editingExercise.getBelongingMuscles().clear();
-				editingExercise.getBelongingMuscles().addAll(muscles);
+				editingExercise.getPrimaryMuscles().clear();
+				editingExercise.getPrimaryMuscles().addAll(muscles);
+				editingExercise.getSecondaryMuscles().clear();
+				editingExercise.getSecondaryMuscles().addAll(musclesSecondary);
 
 				DBThread.run(this, db -> {
 					db.exerciseDao().update(editingExercise.toEntity());
@@ -126,6 +131,12 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 
 					db.exerciseMuscleCrossRefDao()
 							.insertAll(editingExercise.toMuscleListEntities());
+
+					db.exerciseMuscleCrossRefDao()
+							.clearSecondaryMusclesFromExercise(editingExercise.getId());
+
+					db.exerciseMuscleCrossRefDao()
+							.insertAll(editingExercise.toSecondaryMuscleListEntities());
 
 					runOnUiThread(() -> {
 						setResult(Activity.RESULT_OK, data);
@@ -139,8 +150,8 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 				exercise.setRequiresBar(requiresBar);
 				exercise.setName(name);
 				exercise.setImage(imageName);
-				exercise.getBelongingMuscles().clear();
-				exercise.getBelongingMuscles().addAll(muscles);
+				exercise.getPrimaryMuscles().addAll(muscles);
+				exercise.getSecondaryMuscles().addAll(musclesSecondary);
 
 				DBThread.run(this, db -> {
 					final int id = (int) db.exerciseDao().insert(exercise.toEntity());
@@ -149,6 +160,9 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 
 					db.exerciseMuscleCrossRefDao()
 							.insertAll(exercise.toMuscleListEntities());
+
+					db.exerciseMuscleCrossRefDao()
+							.insertAll(exercise.toSecondaryMuscleListEntities());
 
 					Data.getInstance().getExercises().add(exercise);
 					runOnUiThread(() -> {
@@ -189,9 +203,18 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		musclesOption.setDrawable(
 				ResourcesCompat.getDrawable(resources, R.drawable.ic_body_black_24dp, null)
 		);
-		musclesOption.setTitle(R.string.form_muscles);
-		musclesOption.setValueStr(getMusclesLabelText());
-		musclesOption.setOnClickListener(v -> showMuscleSelector(musclesOption));
+		musclesOption.setTitle(R.string.form_primary_muscles);
+		musclesOption.setValueStr(getMusclesLabelText(muscles));
+		musclesOption.setOnClickListener(v -> showMuscleSelector(musclesOption, true));
+
+		musclesSecondaryOption = new FormElement();
+		form.add(musclesSecondaryOption);
+		musclesSecondaryOption.setDrawable(
+				ResourcesCompat.getDrawable(resources, R.drawable.ic_body_black_24dp, null)
+		);
+		musclesSecondaryOption.setTitle(R.string.form_secondary_muscles);
+		musclesSecondaryOption.setValueStr(getMusclesLabelText(musclesSecondary));
+		musclesSecondaryOption.setOnClickListener(v -> showMuscleSelector(musclesSecondaryOption, false));
 
 		FormElement requiresBarOption = new FormElement();
 		form.add(requiresBarOption);
@@ -244,13 +267,14 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		dialog.show(getSupportFragmentManager(), null);
 	}
 
-	private void showMuscleSelector(FormElement option) {
+	private void showMuscleSelector(FormElement option, boolean primary) {
 		Resources resources = getResources();
 		List<Muscle> allMuscles = Data.getInstance().getMuscles();
 		final int size = allMuscles.size();
+		final List<Muscle> musclesList = primary? muscles: musclesSecondary;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(CreateExerciseActivity.this);
-		builder.setTitle(R.string.form_muscles);
+		builder.setTitle(primary? R.string.form_primary_muscles : R.string.form_secondary_muscles);
 
 		CharSequence[] muscleNames = new CharSequence[size];
 		boolean[] selectedIndexes = new boolean[size];
@@ -258,7 +282,7 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		int idx = 0;
 		for (Muscle muscle : allMuscles) {
 			muscleNames[idx] = resources.getString(muscle.getText());
-			selectedIndexes[idx] = muscles.contains(muscle);
+			selectedIndexes[idx] = musclesList.contains(muscle);
 			idx++;
 		}
 
@@ -267,14 +291,14 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 
 		builder.setNegativeButton(R.string.button_cancel, (dialog, which) -> {});
 		builder.setPositiveButton(R.string.button_confirm, (dialog, which) -> {
-			muscles.clear();
+			musclesList.clear();
 			for (int i = 0; i<size; i++) {
 				if (selectedIndexes[i]) {
-					muscles.add(allMuscles.get(i));
+					musclesList.add(allMuscles.get(i));
 				}
 			}
 
-			option.setValueStr(getMusclesLabelText());
+			option.setValueStr(getMusclesLabelText(musclesList));
 			option.update();
 		});
 		builder.show();
@@ -304,7 +328,7 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		}
 	}
 
-	private String getMusclesLabelText() {
+	private String getMusclesLabelText(List<Muscle> muscles) {
 		Resources resources = getResources();
 		return muscles.stream()
 				.map(Muscle::getText)

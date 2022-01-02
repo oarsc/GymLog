@@ -9,19 +9,22 @@ import androidx.annotation.NonNull;
 import org.scp.gymlog.room.EntityMapped;
 import org.scp.gymlog.room.entities.ExerciseEntity;
 import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
+import org.scp.gymlog.room.entities.SecondaryExerciseMuscleCrossRef;
 import org.scp.gymlog.util.Data;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Stream;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter @Getter
 public class Exercise implements EntityMapped<ExerciseEntity> {
-	private final List<Muscle> belongingMuscles = new ArrayList<>();
+	private final List<Muscle> primaryMuscles = new ArrayList<>();
+	private final List<Muscle> secondaryMuscles = new ArrayList<>();
 	private int id;
 	private String name;
 	private String image;
@@ -64,14 +67,24 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 	}
 
 	public ExerciseMuscleCrossRef[] toMuscleListEntities() {
-		return belongingMuscles.stream()
+		return primaryMuscles.stream()
 				.map(Muscle::getId)
 				.map(muscleId -> {
 					ExerciseMuscleCrossRef xRef = new ExerciseMuscleCrossRef();
 					xRef.exerciseId = id;
 					xRef.muscleId = muscleId;
 					return xRef;
-				})
-				.toArray(ExerciseMuscleCrossRef[]::new);
+				}).toArray(ExerciseMuscleCrossRef[]::new);
+	}
+
+	public SecondaryExerciseMuscleCrossRef[] toSecondaryMuscleListEntities() {
+		return secondaryMuscles.stream()
+				.map(Muscle::getId)
+				.map(muscleId -> {
+					SecondaryExerciseMuscleCrossRef xRef = new SecondaryExerciseMuscleCrossRef();
+					xRef.exerciseId = id;
+					xRef.muscleId = muscleId;
+					return xRef;
+				}).toArray(SecondaryExerciseMuscleCrossRef[]::new);
 	}
 }

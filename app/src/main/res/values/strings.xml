@@ -68,14 +68,15 @@
 
     <string name="form_image">Image</string>
     <string name="form_name">Name</string>
-    <string name="form_muscles">Muscular Groups</string>
+    <string name="form_primary_muscles">Primary Muscular Groups</string>
+    <string name="form_secondary_muscles">Secondary Muscular Groups</string>
     <string name="form_requires_bar">Requires Bar</string>
     <string name="form_no_bar_value">Doesn\'t require setting a bar</string>
     <string name="form_bar_value">Requires setting a bar</string>
 
     <string name="validation_image">Please, select an image</string>
     <string name="validation_name">Please, introduce a valid name</string>
-    <string name="validation_muscles">Please, select at least one muscular group</string>
+    <string name="validation_muscles">Please, select at least one primary muscular group</string>
     <string name="validation_should_have_bar">This exercise is set to have a bar</string>
     <string name="validation_shouldnt_have_bar">This exercise is not set to have a bar</string>
     <string name="validation_training_not_started">A training session must be started first</string>

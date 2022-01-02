@@ -139,7 +139,7 @@ public class ExercisesActivity extends DBAppCompatActivity {
         if (mode == CreateExerciseActivity.EDIT) {
             int id = data.getIntExtra("exerciseId", -1);
             Exercise ex = Data.getExercise(id);
-            boolean hasMuscle = ex.getBelongingMuscles().stream().map(Muscle::getId)
+            boolean hasMuscle = ex.getPrimaryMuscles().stream().map(Muscle::getId)
                     .anyMatch(valueEquals(muscleId));
             if (hasMuscle) {
                 recyclerAdapter.updateNotify(ex);
@@ -151,7 +151,7 @@ public class ExercisesActivity extends DBAppCompatActivity {
         } else if (mode == CreateExerciseActivity.CREATE_FROM_MUSCLE) {
             int id = data.getIntExtra("exerciseId", -1);
             Exercise ex = Data.getExercise(id);
-            boolean hasMuscle = ex.getBelongingMuscles().stream().map(Muscle::getId)
+            boolean hasMuscle = ex.getPrimaryMuscles().stream().map(Muscle::getId)
                     .anyMatch(valueEquals(muscleId));
             if (hasMuscle) {
                 exercisesId.add(ex.getId());

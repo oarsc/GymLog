@@ -57,6 +57,12 @@ public class ExerciseEntity {
                 entityColumn = "muscleId",
                 associateBy = @Junction(ExerciseMuscleCrossRef.class)
         )
-        public List<MuscleEntity> muscles;
+        public List<MuscleEntity> primaryMuscles;
+        @Relation(
+                parentColumn = "exerciseId",
+                entityColumn = "muscleId",
+                associateBy = @Junction(SecondaryExerciseMuscleCrossRef.class)
+        )
+        public List<MuscleEntity> secondaryMuscles;
     }
 }

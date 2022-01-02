@@ -15,6 +15,7 @@ import org.scp.gymlog.room.entities.BitEntity;
 import org.scp.gymlog.room.entities.ExerciseEntity;
 import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
 import org.scp.gymlog.room.entities.MuscleEntity;
+import org.scp.gymlog.room.entities.SecondaryExerciseMuscleCrossRef;
 import org.scp.gymlog.room.entities.TrainingEntity;
 
 @TypeConverters({Converters.class})
@@ -22,6 +23,7 @@ import org.scp.gymlog.room.entities.TrainingEntity;
         ExerciseEntity.class,
         MuscleEntity.class,
         ExerciseMuscleCrossRef.class,
+        SecondaryExerciseMuscleCrossRef.class,
         BitEntity.class,
         BarEntity.class,
         TrainingEntity.class,

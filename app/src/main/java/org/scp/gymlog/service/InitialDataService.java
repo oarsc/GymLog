@@ -18,6 +18,7 @@ import org.scp.gymlog.room.entities.BarEntity;
 import org.scp.gymlog.room.entities.ExerciseEntity;
 import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
 import org.scp.gymlog.room.entities.MuscleEntity;
+import org.scp.gymlog.room.entities.SecondaryExerciseMuscleCrossRef;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.JsonUtils;
 
@@ -26,6 +27,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class InitialDataService {
 
@@ -84,15 +86,22 @@ public class InitialDataService {
                 ex.exerciseId = (int) exerciseDao.insert(ex);
 
 
-                ExerciseMuscleCrossRef[] muscleLinks =
-                    JsonUtils.mapInt(exerciseObj.getJSONArray("primary"), muscleId -> {
-                        ExerciseMuscleCrossRef exXmuscle = new ExerciseMuscleCrossRef();
-                        exXmuscle.exerciseId = ex.exerciseId;
-                        exXmuscle.muscleId = muscleId;
-                        return exXmuscle;
-                    }).toArray(ExerciseMuscleCrossRef[]::new);
+                ExerciseMuscleCrossRef[] muscle1Links = JsonUtils.mapInt(exerciseObj.getJSONArray("primary"), muscleId -> {
+                    ExerciseMuscleCrossRef exXmuscle = new ExerciseMuscleCrossRef();
+                    exXmuscle.exerciseId = ex.exerciseId;
+                    exXmuscle.muscleId = muscleId;
+                    return exXmuscle;
+                }).toArray(ExerciseMuscleCrossRef[]::new);
+                exXmuscleDao.insertAll(muscle1Links);
 
-                exXmuscleDao.insertAll(muscleLinks);
+
+                SecondaryExerciseMuscleCrossRef[] muscle2Links = JsonUtils.mapInt(exerciseObj.getJSONArray("secondary"), muscleId -> {
+                    SecondaryExerciseMuscleCrossRef exXmuscle = new SecondaryExerciseMuscleCrossRef();
+                    exXmuscle.exerciseId = ex.exerciseId;
+                    exXmuscle.muscleId = muscleId;
+                    return exXmuscle;
+                }).toArray(SecondaryExerciseMuscleCrossRef[]::new);
+                exXmuscleDao.insertAll(muscle2Links);
             });
         } catch (JSONException e) {
             throw new LoadException("Unable to load initial exercises");

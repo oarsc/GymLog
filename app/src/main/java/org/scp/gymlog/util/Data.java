@@ -25,20 +25,20 @@ public class Data {
 	private Data(){
 		int muscleId = 0;
 		muscles.addAll(Arrays.asList(
-				new Muscle(++muscleId, R.string.group_pectoral, R.drawable.muscle_pectoral),
-				new Muscle(++muscleId, R.string.group_upper_back, R.drawable.muscle_upper_back),
-				new Muscle(++muscleId, R.string.group_lower_back, R.drawable.muscle_lower_back),
-				new Muscle(++muscleId, R.string.group_deltoid, R.drawable.muscle_deltoid),
-				new Muscle(++muscleId, R.string.group_trapezius, R.drawable.muscle_trapezius),
-				new Muscle(++muscleId, R.string.group_biceps, R.drawable.muscle_biceps),
-				new Muscle(++muscleId, R.string.group_triceps, R.drawable.muscle_triceps),
-				new Muscle(++muscleId, R.string.group_forearm, R.drawable.muscle_forearm),
-				new Muscle(++muscleId, R.string.group_quadriceps, R.drawable.muscle_quadriceps),
-				new Muscle(++muscleId, R.string.group_hamstrings, R.drawable.muscle_hamstring),
-				new Muscle(++muscleId, R.string.group_calves, R.drawable.muscle_calves),
-				new Muscle(++muscleId, R.string.group_glutes, R.drawable.muscle_glutes),
-				new Muscle(++muscleId, R.string.group_abdominals, R.drawable.muscle_abdominals),
-				new Muscle(++muscleId, R.string.group_cardio, R.drawable.muscle_cardio)
+				new Muscle(++muscleId, R.string.group_pectoral, R.drawable.muscle_pectoral, R.color.pectoral),
+				new Muscle(++muscleId, R.string.group_upper_back, R.drawable.muscle_upper_back, R.color.upper_back),
+				new Muscle(++muscleId, R.string.group_lower_back, R.drawable.muscle_lower_back, R.color.lower_back),
+				new Muscle(++muscleId, R.string.group_deltoid, R.drawable.muscle_deltoid, R.color.deltoid),
+				new Muscle(++muscleId, R.string.group_trapezius, R.drawable.muscle_trapezius, R.color.trapezius),
+				new Muscle(++muscleId, R.string.group_biceps, R.drawable.muscle_biceps, R.color.biceps),
+				new Muscle(++muscleId, R.string.group_triceps, R.drawable.muscle_triceps, R.color.triceps),
+				new Muscle(++muscleId, R.string.group_forearm, R.drawable.muscle_forearm, R.color.forearm),
+				new Muscle(++muscleId, R.string.group_quadriceps, R.drawable.muscle_quadriceps, R.color.quadriceps),
+				new Muscle(++muscleId, R.string.group_hamstrings, R.drawable.muscle_hamstring, R.color.hamstrings),
+				new Muscle(++muscleId, R.string.group_calves, R.drawable.muscle_calves, R.color.calves),
+				new Muscle(++muscleId, R.string.group_glutes, R.drawable.muscle_glutes, R.color.glutes),
+				new Muscle(++muscleId, R.string.group_abdominals, R.drawable.muscle_abdominals, R.color.abdominals),
+				new Muscle(++muscleId, R.string.group_cardio, R.drawable.muscle_cardio, R.color.cardio)
 		));
 	}
 

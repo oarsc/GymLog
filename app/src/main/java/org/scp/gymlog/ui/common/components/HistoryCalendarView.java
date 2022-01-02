@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -53,20 +55,16 @@ public class HistoryCalendarView extends FrameLayout {
         firstDayOfMonth = (Calendar) selectedDay.clone();
         firstDayOfMonth.set(DAY_OF_MONTH, 1);
 
-        findViewById(R.id.prevButton).setOnClickListener(v -> {
-            firstDayOfMonth.add(MONTH, -1);
+        findViewById(R.id.prevButton).setOnClickListener(v -> moveMonth(false));
+        findViewById(R.id.nextButton).setOnClickListener(v -> moveMonth(true));
 
-            updateHeader();
-            drawWeeks();
-        });
+        updateHeader();
+        drawWeeks();
+    }
 
-        findViewById(R.id.nextButton).setOnClickListener(v -> {
-            firstDayOfMonth.add(MONTH, 1);
-
-            updateHeader();
-            drawWeeks();
-        });
-
+    private void moveMonth(boolean next) {
+        setEnabled(false);
+        firstDayOfMonth.add(MONTH, next? 1 : -1);
         updateHeader();
         drawWeeks();
     }
@@ -156,8 +154,7 @@ public class HistoryCalendarView extends FrameLayout {
         View day = daysMap.get(selectedDay.getTimeInMillis());
         if (day != null) {
             TextView number = day.findViewById(R.id.dayNumber);
-
-            day.setBackgroundColor(Color.rgb(235,235,235));
+            day.setBackgroundResource(R.color.backgroundAccent);
             number.setPaintFlags(number.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         }
     }
@@ -173,10 +170,22 @@ public class HistoryCalendarView extends FrameLayout {
         if (onSelectDayListener != null) {
             onSelectDayListener.accept(selectedDay);
         }
+        int currentMonth = firstDayOfMonth.get(MONTH);
+        int selectedMonth = selectDay.get(MONTH);
+        if (currentMonth != selectedMonth) {
+            if (currentMonth == 11 && selectedMonth == 0) {
+                moveMonth(true);
+            } else if (currentMonth == 0 && selectedMonth == 11) {
+                moveMonth(false);
+            } else {
+                moveMonth(selectedMonth > currentMonth);
+            }
+        }
+
         updateSelectedDay();
     }
 
-    public void setData(Long dayTime, List<PieDataInfo> values) {
+    public void setDayData(Long dayTime, List<PieDataInfo> values) {
         View day = daysMap.get(dayTime);
         if (day == null) {
             throw new RuntimeException("COULD NOT FIND DAY "+dayTime+" IN MONTH: "+
@@ -188,6 +197,9 @@ public class HistoryCalendarView extends FrameLayout {
         PieChart chart = day.findViewById(R.id.chart1);
         if (values == null) {
             chart.setVisibility(INVISIBLE);
+            return;
+        }
+        if (values.isEmpty()) {
             return;
         }
         chart.setVisibility(VISIBLE);
@@ -208,6 +220,11 @@ public class HistoryCalendarView extends FrameLayout {
         dataSet.setDrawValues(false);
         dataSet.setDrawIcons(false);
         dataSet.setSelectionShift(0f);
+
+        TextView text = day.findViewById(R.id.dayNumber);
+        text.setTextColor(
+                ResourcesCompat.getColor(getResources(), R.color.dark, getContext().getTheme())
+        );
 
         pieData.setDataSet(dataSet);
         chart.setData(pieData);
@@ -238,6 +255,11 @@ public class HistoryCalendarView extends FrameLayout {
         if (onSelectDayListener != null) {
             onSelectDayListener.accept(selectedDay);
         }
+    }
+
+    public void setEnabled(boolean enable) {
+        findViewById(R.id.prevButton).setEnabled(enable);
+        findViewById(R.id.nextButton).setEnabled(enable);
     }
 
     @Getter @Setter

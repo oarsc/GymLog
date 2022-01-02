@@ -64,13 +64,22 @@ public class SplashActivity extends AppCompatActivity {
         db.exerciseDao().getAll().stream()
                 .map(x -> {
                     Exercise e = new Exercise().fromEntity(x.exercise);
-                    x.muscles.stream()
+                    x.primaryMuscles.stream()
                             .map(m -> m.muscleId)
                             .map(id -> muscles.stream()
                                     .filter(group -> group.getId() == id)
                                     .findFirst()
                                     .orElseThrow(()->new LoadException("Muscle "+id+" not found in local structure")))
-                            .forEach(e.getBelongingMuscles()::add);
+                            .forEach(e.getPrimaryMuscles()::add);
+
+                    x.secondaryMuscles.stream()
+                            .map(m -> m.muscleId)
+                            .map(id -> muscles.stream()
+                                    .filter(group -> group.getId() == id)
+                                    .findFirst()
+                                    .orElseThrow(()->new LoadException("Muscle "+id+" not found in local structure")))
+                            .forEach(e.getSecondaryMuscles()::add);
+
                     return e;
                 })
                 .forEach(exercises::add);

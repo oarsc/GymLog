@@ -1499,15 +1499,15 @@
 {
 	"tag": "shoulders_barbell_upright_row_standing",
 	"name": "Barbell Upright Row (standing)",
-	"primary": [4, 5, 6],
-	"secondary": [],
+	"primary": [5],
+	"secondary": [4, 6],
 	"bar": true
 },
 {
 	"tag": "shoulders_low_cable_upright_row_standing",
 	"name": "Pulley Machine Upright Row (standing)",
-	"primary": [4, 5, 6],
-	"secondary": [],
+	"primary": [5],
+	"secondary": [4, 6],
 	"bar": false
 },
 {
@@ -1539,7 +1539,21 @@
 	"bar": true
 },
 {
+	"tag": "shoulders_barbell_press_seated",
+	"name": "Barbell Shoulder Press (seated)",
+	"primary": [4],
+	"secondary": [5],
+	"bar": true
+},
+{
 	"tag": "shoulders_dumbbell_press_standing",
+	"name": "Dumbbell Shoulder Press (standing)",
+	"primary": [4],
+	"secondary": [5],
+	"bar": false
+},
+{
+	"tag": "shoulders_dumbbell_press_seated",
 	"name": "Dumbbell Shoulder Press (seated)",
 	"primary": [4],
 	"secondary": [5],
@@ -1590,15 +1604,15 @@
 {
 	"tag": "shoulders_dumbbell_upright_row_standing",
 	"name": "Dumbbell Upright Row (standing)",
-	"primary": [4, 5, 6],
-	"secondary": [],
+	"primary": [5],
+	"secondary": [4, 6],
 	"bar": false
 },
 {
 	"tag": "shoulders_smith_machine_upright_row_standing",
 	"name": "Smith Machine Upright Row (standing)",
-	"primary": [4, 5, 6],
-	"secondary": [],
+	"primary": [5],
+	"secondary": [4, 6],
 	"bar": false
 },
 {
@@ -1806,7 +1820,7 @@
 },
 {
 	"tag": "triceps_high_cable_vgrip_dragdown_standing_underhand_grip",
-	"name": "Pulley Machine Triceps Drag, Underhand Grip (standing)",
+	"name": "Pulley Machine Triceps Drag, Underhand Grip",
 	"primary": [7],
 	"secondary": [],
 	"bar": false
