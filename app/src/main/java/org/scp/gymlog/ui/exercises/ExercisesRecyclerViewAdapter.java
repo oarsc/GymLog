@@ -12,19 +12,22 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
-import org.scp.gymlog.databinding.ListElementFragmentBinding;
+import org.scp.gymlog.databinding.ListElementFragmentExerciseBinding;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Order;
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment;
 import org.scp.gymlog.ui.registry.RegistryActivity;
 import org.scp.gymlog.util.Data;
+import org.scp.gymlog.util.DateUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -35,10 +38,14 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
     private final List<Integer> orderedIndexes;
     private final BiConsumer<Exercise, Integer> menuOptionCallback;
     private Order order;
+    private final Calendar today;
+
+    private Consumer<Exercise> onClickListener;
 
     public ExercisesRecyclerViewAdapter(List<Integer> exercisesList, Context context, Order order,
                                         BiConsumer<Exercise, Integer> menuOptionCallback) {
         Data data = Data.getInstance();
+        this.today = Calendar.getInstance();
         this.menuOptionCallback = menuOptionCallback;
         this.context = context;
         this.exercises = exercisesList.stream()
@@ -51,10 +58,14 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
         updateOrder();
     }
 
+    public void setOnClickListener(Consumer<Exercise> onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(
-                ListElementFragmentBinding.inflate(
+                ListElementFragmentExerciseBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false
                 )
         );
@@ -110,6 +121,8 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.exercise = exercises.get(orderedIndexes.get(position));
         holder.mContentView.setText(holder.exercise.getName());
+        holder.mTime.setText(DateUtils.calculateTimeLetter(
+                holder.exercise.getLastTrained(), today));
 
         String fileName = "previews/" + holder.exercise.getImage() + ".png";
         try {
@@ -129,18 +142,20 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public Exercise exercise;
-        public final TextView mContentView;
         public final ImageView mImageView;
+        public final TextView mContentView;
+        public final TextView mTime;
 
-        public ViewHolder(ListElementFragmentBinding binding) {
+        public ViewHolder(ListElementFragmentExerciseBinding binding) {
             super(binding.getRoot());
             mContentView = binding.content;
             mImageView = binding.image;
+            mTime = binding.time;
 
             binding.getRoot().setOnClickListener(a-> {
-                Intent intent = new Intent(context, RegistryActivity.class);
-                intent.putExtra("exerciseId", exercise.getId());
-                context.startActivity(intent);
+                if (onClickListener != null) {
+                    onClickListener.accept(exercise);
+                }
             });
 
             binding.getRoot().setOnLongClickListener(a-> {

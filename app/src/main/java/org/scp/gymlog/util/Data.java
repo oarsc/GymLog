@@ -14,7 +14,7 @@ import lombok.Getter;
 
 @Getter
 public class Data {
-	public static final int[] STEPS_KG = { 125, 250, 500, 1000, 1500, 2000, 2500 };
+	public static final int[] STEPS_KG = { 50, 100, 125, 200, 250, 500, 1000, 1500, 2000, 2500 };
 
 	private final List<Exercise> exercises = new ArrayList<>();
 	private final List<Muscle> muscles = new ArrayList<>();

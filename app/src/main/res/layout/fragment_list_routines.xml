@@ -21,6 +21,6 @@
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager"
         tools:context=".ui.main.routines.RoutineFragment"
-        tools:listitem="@layout/list_element_fragment" />
+        tools:listitem="@layout/list_element_fragment_muscle" />
 
 </LinearLayout>

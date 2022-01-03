@@ -93,15 +93,7 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
             int[] lastDateDiff = DateUtils.yearsAndDaysDiff(lastDate, bit.getTimestamp());
 
             if (lastDateDiff[0] != 0 || lastDateDiff[1] != 0) {
-                int[] todayDiff = DateUtils.yearsAndDaysDiff(bit.getTimestamp(), today);
-                String dayLabel;
-                if (todayDiff[0] == 0) {
-                    if (todayDiff[1] == 0) dayLabel = "T";
-                    else                   dayLabel = todayDiff[1]+"D";
-                } else {
-                    dayLabel = todayDiff[0]+ "Y" + todayDiff[1]+"D";
-                }
-
+                String dayLabel = DateUtils.calculateTimeLetter(bit.getTimestamp(), today);
                 holder.mDay.setText(dayLabel);
                 bit.setSet(1);
             } else {

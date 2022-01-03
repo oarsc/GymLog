@@ -24,6 +24,7 @@ import org.scp.gymlog.ui.common.DBAppCompatActivity;
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton;
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment;
 import org.scp.gymlog.ui.createexercise.CreateExerciseActivity;
+import org.scp.gymlog.ui.registry.RegistryActivity;
 import org.scp.gymlog.util.Data;
 
 import java.util.List;
@@ -59,6 +60,11 @@ public class ExercisesActivity extends DBAppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerAdapter = new ExercisesRecyclerViewAdapter(exercisesId, this, order,
                 this::onExerciseItemMenuSelected);
+        recyclerAdapter.setOnClickListener(ex -> {
+            Intent intent = new Intent(this, RegistryActivity.class);
+            intent.putExtra("exerciseId", ex.getId());
+            activityResultLauncher.launch(intent);
+        });
         recyclerView.setAdapter(recyclerAdapter);
 
         TrainingFloatingActionButton fab = findViewById(R.id.fabTraining);
@@ -157,6 +163,8 @@ public class ExercisesActivity extends DBAppCompatActivity {
                 exercisesId.add(ex.getId());
                 recyclerAdapter.addExercise(ex);
             }
+        } else if (mode == RegistryActivity.REFRESH_ACTIVITY_LIST) {
+            recyclerAdapter.switchOrder(order);
         }
     }
 }

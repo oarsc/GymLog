@@ -15,13 +15,11 @@ import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.daos.TrainingDao;
-import org.scp.gymlog.room.entities.BitEntity;
 import org.scp.gymlog.room.entities.TrainingEntity;
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment;
 import org.scp.gymlog.util.Data;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.Optional;
 
 public class TrainingFloatingActionButton extends FloatingActionButton {
@@ -81,7 +79,6 @@ public class TrainingFloatingActionButton extends FloatingActionButton {
                     TrainingEntity training = new TrainingEntity();
                     training.start = Calendar.getInstance();
                     training.trainingId = (int) db.trainingDao().insert(training);
-                    System.out.println("NEW TRAINING ID: "+training.trainingId);
                     Data.getInstance().setTrainingId(training.trainingId);
                     updateFloatingActionButton();
                 });

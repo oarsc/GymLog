@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.exercises.ExercisesActivity"
-        tools:listitem="@layout/list_element_fragment" />
+        tools:listitem="@layout/list_element_fragment_exercise" />
 
     <org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
         android:id="@+id/fabTraining"

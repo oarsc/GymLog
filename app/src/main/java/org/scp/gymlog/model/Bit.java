@@ -57,7 +57,7 @@ public class Bit implements EntityMapped<BitEntity> {
 		reps = entity.reps;
 		instant = entity.instant;
 		weight = new Weight(
-				BigDecimal.valueOf(entity.totalWeight).divide(ONE_HUNDRED, RoundingMode.HALF_UP),
+				BigDecimal.valueOf(entity.totalWeight).divide(ONE_HUNDRED),
 				entity.kilos
 		);
 		return this;

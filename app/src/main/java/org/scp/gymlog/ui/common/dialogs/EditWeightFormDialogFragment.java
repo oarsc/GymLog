@@ -131,7 +131,7 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
             PopupMenu popup = new PopupMenu(getActivity(), layoutStep);
             Menu menu = popup.getMenu();
 
-            Arrays.asList(50, 100, 125, 250, 500, 1000, 1500, 2000).forEach(size->
+            Arrays.stream(Data.STEPS_KG).forEach(size->
                 menu.add(0, size, size , FormatUtils.toString(BigDecimal.valueOf(size).divide(ONE_HUNDRED)))
             );
 

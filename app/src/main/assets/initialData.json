@@ -645,22 +645,22 @@
 {
 	"tag": "chest_bench_dumbbell_press_lying",
 	"name": "Dumbbell Bench Press",
-	"primary": [1, 7],
-	"secondary": [4],
+	"primary": [1],
+	"secondary": [4, 7],
 	"bar": false
 },
 {
 	"tag": "chest_bench_dumbbell_press_decline",
 	"name": "Dumbbell Bench Press (decline)",
-	"primary": [1, 7],
-	"secondary": [4],
+	"primary": [1],
+	"secondary": [4, 7],
 	"bar": false
 },
 {
 	"tag": "chest_bench_dumbbell_press_incline",
 	"name": "Dumbbell Bench Press (incline)",
-	"primary": [1, 7],
-	"secondary": [4],
+	"primary": [1],
+	"secondary": [4, 7],
 	"bar": false
 },
 {
@@ -800,35 +800,35 @@
 	"tag": "chest_bench_dumbbell_press_lying_hammer_grip",
 	"name": "Hammer Grip Dumbbell Bench Press",
 	"primary": [1],
-	"secondary": [7, 4],
+	"secondary": [4, 7],
 	"bar": false
 },
 {
 	"tag": "chest_bench_dumbbell_press_decline_hammer_grip",
 	"name": "Hammer Grip Dumbbell Bench Press (decline)",
 	"primary": [1],
-	"secondary": [7, 4],
+	"secondary": [4, 7],
 	"bar": false
 },
 {
 	"tag": "chest_bench_dumbbell_press_incline_hammer_grip",
 	"name": "Hammer Grip Dumbbell Bench Press (incline)",
 	"primary": [1],
-	"secondary": [7, 4],
+	"secondary": [4, 7],
 	"bar": false
 },
 {
 	"tag": "chest_machine_press_decline",
 	"name": "Machine Bench Press (decline)",
 	"primary": [1],
-	"secondary": [7, 4],
+	"secondary": [4, 7],
 	"bar": false
 },
 {
 	"tag": "chest_machine_press_incline",
 	"name": "Machine Bench Press (incline)",
 	"primary": [1],
-	"secondary": [7, 4],
+	"secondary": [4, 7],
 	"bar": false
 },
 {

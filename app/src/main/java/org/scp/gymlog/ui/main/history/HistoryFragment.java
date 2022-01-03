@@ -111,7 +111,7 @@ public class HistoryFragment extends Fragment {
 				int total = musclesCount.stream()
 						.map(mc -> mc.count)
 						.reduce(0, Integer::sum);
-				int limit = (int)(musclesCount.get(0).count / (float)total - 15f);
+				int limit = (int)(musclesCount.get(0).count / (float)total - 7.5f);
 
 				List<Muscle> mostUsedMuscles = musclesCount.stream()
 						.filter(a -> a.count/total > limit)

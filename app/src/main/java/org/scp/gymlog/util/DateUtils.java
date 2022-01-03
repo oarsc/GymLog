@@ -42,4 +42,16 @@ public class DateUtils {
         SimpleDateFormat format1 = new SimpleDateFormat("HH:MM", Locale.getDefault());
         return format1.format(date);
     }
+
+    public static String calculateTimeLetter(Calendar date, Calendar today) {
+        if (date == null || date.compareTo(Constants.DATE_ZERO) == 0) {
+            return "";
+        }
+        int[] todayDiff = yearsAndDaysDiff(date, today);
+        if (todayDiff[0] == 0) {
+            if (todayDiff[1] == 0) return "T";
+            else                   return todayDiff[1]+"D";
+        }
+        return todayDiff[0]+ "Y" + todayDiff[1]+"D";
+    }
 }

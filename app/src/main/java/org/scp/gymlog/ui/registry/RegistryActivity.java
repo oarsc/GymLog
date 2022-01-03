@@ -7,6 +7,8 @@ import static org.scp.gymlog.util.LambdaUtils.valueEquals;
 import static org.scp.gymlog.util.WeightUtils.getTotalWeight;
 import static org.scp.gymlog.util.WeightUtils.getWeightFromTotal;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -48,6 +50,8 @@ import java.util.Calendar;
 import java.util.List;
 
 public class RegistryActivity extends DBAppCompatActivity {
+    public static final int REFRESH_ACTIVITY_LIST = 10;
+
     private static final int LOG_PAGES_SIZE = 16;
 
     private Exercise exercise;
@@ -66,6 +70,8 @@ public class RegistryActivity extends DBAppCompatActivity {
     private boolean notesLocked = false;
     private boolean hiddenInstantSetButton;
 
+    private boolean sendRefreshList = false;
+
     @Override
     protected int onLoad(Bundle savedInstanceState, AppDatabase db) {
         db.trainingDao().getCurrentTraining()
@@ -81,7 +87,6 @@ public class RegistryActivity extends DBAppCompatActivity {
         log.stream()
                 .map(bit -> new Bit().fromEntity(bit))
                 .forEach(this.log::add);
-
         return CONTINUE;
     }
 
@@ -287,6 +292,7 @@ public class RegistryActivity extends DBAppCompatActivity {
             // SAVE TO DB:
             bit.setId((int) db.bitDao().insert(bit.toEntity()));
             db.exerciseDao().update(exercise.toEntity());
+            prepareExerciseListToRefreshWhenFinish();
 
             runOnUiThread(() -> {
                 boolean added = false;
@@ -336,7 +342,7 @@ public class RegistryActivity extends DBAppCompatActivity {
                 db.bitDao().update(updateBit.toEntity());
             }
 
-            if (log.isEmpty()) {
+            if (log.stream().map(Bit::getTrainingId).noneMatch(valueEquals(trainingId))) {
                 db.trainingDao().deleteEmptyTraining();
             }
 
@@ -406,4 +412,14 @@ public class RegistryActivity extends DBAppCompatActivity {
             dialog.show(getSupportFragmentManager(), null);
         }
     }
+
+    private void prepareExerciseListToRefreshWhenFinish() {
+        if (!sendRefreshList) {
+            sendRefreshList = true;
+            Intent data = new Intent();
+            data.putExtra("mode", REFRESH_ACTIVITY_LIST);
+            setResult(Activity.RESULT_OK, data);
+        }
+    }
+
 }
