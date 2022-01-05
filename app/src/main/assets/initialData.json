@@ -1,4 +1,11 @@
 [{
+	"tag": "abs_mat_crunch_lying_raised_legs",
+	"name": "Russian Twists",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
 	"tag": "abs_mat_planks_rest_on_arms",
 	"name": "Planks",
 	"primary": [13],
@@ -853,7 +860,7 @@
 	"bar": false
 },
 {
-	"tag": "chest_high_cable_front_pushdown_standing_straight_arm",
+	"tag": "abs_high_cable_crunch_standing",
 	"name": "Straight Arm Pulley Machine Push Down (standing)",
 	"primary": [1, 13],
 	"secondary": [],
@@ -1130,6 +1137,20 @@
 	"name": "Dumbbell Row, Bent Over (standing)",
 	"primary": [2],
 	"secondary": [6],
+	"bar": false
+},
+{
+	"tag": "abs_high_cable_crunch_standing",
+	"name": "Pulley Machine Lat Pushdown (standing)",
+	"primary": [2, 3],
+	"secondary": [4, 7],
+	"bar": false
+},
+{
+	"tag": "triceps_high_cable_robe_pushdown_standing",
+	"name": "Pulley Machine Rope Lat Pushdown (standing)",
+	"primary": [2, 3],
+	"secondary": [4, 7],
 	"bar": false
 },
 {
@@ -1588,8 +1609,15 @@
 	"bar": false
 },
 {
+	"tag": "shoulders_dumbbell_lateral_raise_standing",
+	"name": "Dumbbell Lateral Raise, Single Arm (standing)",
+	"primary": [4],
+	"secondary": [5],
+	"bar": false
+},
+{
 	"tag": "shoulders_low_cable_lateral_raise_standing_single_arm",
-	"name": "Single Arm Pulley Machine Lateral Raise (bent over)",
+	"name": "Pulley Machine Lateral Raise, Single Arm (bent over)",
 	"primary": [4],
 	"secondary": [],
 	"bar": false
