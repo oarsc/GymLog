@@ -13,6 +13,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Locale;
 
 public class FormatUtils {
@@ -76,5 +77,10 @@ public class FormatUtils {
                 value,
                 displayMetrics
         );
+    }
+
+    @SafeVarargs
+    public static <T> boolean isAnyOf(T needle, T... haystack) {
+        return Arrays.asList(haystack).contains(needle);
     }
 }

@@ -14,6 +14,9 @@ import java.util.Optional;
 
 @Dao
 public interface BitDao {
+    @Query("SELECT * FROM bit")
+    List<BitEntity> getAll();
+
     @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId ORDER BY trainingId DESC, timestamp LIMIT :limit")
     List<BitEntity> getHistory(int exerciseId, int limit);
 
@@ -44,9 +47,15 @@ public interface BitDao {
     @Insert
     long insert(BitEntity bit);
 
+    @Insert
+    long[] insertAll(BitEntity... bit);
+
     @Delete
     void delete(BitEntity bit);
 
     @Update
     void update(BitEntity bit);
+
+    @Query("DELETE FROM bit")
+    void clear();
 }

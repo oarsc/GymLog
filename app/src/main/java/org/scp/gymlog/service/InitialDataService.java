@@ -66,7 +66,7 @@ public class InitialDataService {
         );
     }
 
-    private void loadExercises(AssetManager assets, AppDatabase db) {
+    private static void loadExercises(AssetManager assets, AppDatabase db) {
         JSONArray exercisesArray = assetJsonArrayFile(assets, "initialData.json");
 
         ExerciseDao exerciseDao = db.exerciseDao();
@@ -108,7 +108,7 @@ public class InitialDataService {
         }
     }
 
-    public static JSONArray assetJsonArrayFile(AssetManager assets, String filename) {
+    private static JSONArray assetJsonArrayFile(AssetManager assets, String filename) {
         try {
             InputStream file = assets.open(filename);
             byte[] formArray = new byte[file.available()];

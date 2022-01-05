@@ -28,10 +28,12 @@
     <string name="text_instantly">Instantly</string>
     <string name="text_kg">kg</string>
     <string name="text_lb">lbs</string>
+    <string name="text_load">Load</string>
     <string name="text_no_bar">No bar</string>
     <string name="text_notes">Notes</string>
     <string name="text_reps">Reps</string>
     <string name="text_set">Set</string>
+    <string name="text_save">Save</string>
     <string name="text_started_at">Started at</string>
     <string name="text_subtitle">Subtitle</string>
     <string name="text_title">Title</string>

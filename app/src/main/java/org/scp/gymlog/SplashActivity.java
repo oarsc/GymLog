@@ -61,7 +61,7 @@ public class SplashActivity extends AppCompatActivity {
         List<Muscle> muscles = data.getMuscles();
         List<Exercise> exercises = data.getExercises();
         exercises.clear();
-        db.exerciseDao().getAll().stream()
+        db.exerciseDao().getAllWithMuscles().stream()
                 .map(x -> {
                     Exercise e = new Exercise().fromEntity(x.exercise);
                     x.primaryMuscles.stream()

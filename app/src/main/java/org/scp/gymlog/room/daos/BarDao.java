@@ -26,4 +26,7 @@ public interface BarDao {
 
     @Update
     void update(BarEntity bit);
+
+    @Query("DELETE FROM bar")
+    void clear();
 }

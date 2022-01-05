@@ -32,9 +32,15 @@ public interface TrainingDao {
     @Insert
     long insert(TrainingEntity training);
 
+    @Insert
+    long[] insertAll(TrainingEntity... training);
+
     @Delete
     void delete(TrainingEntity training);
 
     @Query("DELETE FROM training WHERE trainingId NOT IN (SELECT DISTINCT trainingId FROM bit)")
     int deleteEmptyTraining();
+
+    @Query("DELETE FROM training")
+    void clear();
 }

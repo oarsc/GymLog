@@ -14,4 +14,17 @@
         android:title="@string/title_search"
         app:showAsAction="ifRoom"/>
 
+
+    <item
+        android:id="@+id/saveButton"
+        android:icon="@drawable/ic_search_24dp"
+        android:title="@string/text_save"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/loadButton"
+        android:icon="@drawable/ic_search_24dp"
+        android:title="@string/text_load"
+        app:showAsAction="ifRoom"/>
+
 </menu>

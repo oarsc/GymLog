@@ -12,9 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONException;
 import org.scp.gymlog.R;
+import org.scp.gymlog.room.DBThread;
+import org.scp.gymlog.service.DataBaseDumperService;
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton;
 import org.scp.gymlog.ui.createexercise.CreateExerciseActivity;
+
+import java.io.IOException;
 
 /**
  * A fragment representing a list of Items.
@@ -57,6 +62,24 @@ public class MusclesFragment extends Fragment {
 				startActivity(intent);
 				return true;
 			} else if (item.getItemId() == R.id.searchButton) {
+
+			} else if (item.getItemId() == R.id.saveButton) {
+				DBThread.run(context, db -> {
+					try {
+						new DataBaseDumperService().save(context, db);
+					} catch (JSONException | IOException e) {
+						throw new RuntimeException("",e);
+					}
+				});
+
+			} else if (item.getItemId() == R.id.loadButton) {
+				DBThread.run(context, db -> {
+					try {
+						new DataBaseDumperService().load(context, db);
+					} catch (JSONException | IOException e) {
+						throw new RuntimeException("",e);
+					}
+				});
 
 			}
 			return false;

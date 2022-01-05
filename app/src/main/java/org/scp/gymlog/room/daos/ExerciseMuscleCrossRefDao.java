@@ -8,8 +8,13 @@ import androidx.room.Query;
 import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
 import org.scp.gymlog.room.entities.SecondaryExerciseMuscleCrossRef;
 
+import java.util.List;
+
 @Dao
 public interface ExerciseMuscleCrossRefDao {
+    @Query("SELECT * FROM exercise_x_muscle_group")
+    List<ExerciseMuscleCrossRef> getAll();
+
     @Insert
     long insert(ExerciseMuscleCrossRef exercise);
 
@@ -22,6 +27,14 @@ public interface ExerciseMuscleCrossRefDao {
     @Query("DELETE FROM exercise_x_muscle_group WHERE exerciseId = :exerciseId")
     int clearMusclesFromExercise(int exerciseId);
 
+    @Query("DELETE FROM exercise_x_muscle_group")
+    void clear();
+
+
+
+    @Query("SELECT * FROM secondary_exercise_x_muscle_group")
+    List<SecondaryExerciseMuscleCrossRef> getAllSecondaryMuscles();
+
     @Insert
     long insert(SecondaryExerciseMuscleCrossRef exercise);
 
@@ -33,4 +46,7 @@ public interface ExerciseMuscleCrossRefDao {
 
     @Query("DELETE FROM secondary_exercise_x_muscle_group WHERE exerciseId = :exerciseId")
     int clearSecondaryMusclesFromExercise(int exerciseId);
+
+    @Query("DELETE FROM secondary_exercise_x_muscle_group")
+    void clearSecondary();
 }

@@ -14,11 +14,11 @@ import java.util.List;
 @Dao
 public interface ExerciseDao {
     @Query("SELECT * FROM exercise")
-    List<ExerciseEntity> getOnlyExercises();
+    List<ExerciseEntity> getAll();
 
     @Transaction
     @Query("SELECT * FROM exercise")
-    List<ExerciseEntity.WithMuscles> getAll();
+    List<ExerciseEntity.WithMuscles> getAllWithMuscles();
 
     @Query("SELECT exerciseId FROM exercise_x_muscle_group WHERE muscleId = :muscleId")
     List<Integer> getExercisesIdByMuscleId(int muscleId);
@@ -38,4 +38,7 @@ public interface ExerciseDao {
 
     @Update
     void update(ExerciseEntity... exercises);
+
+    @Query("DELETE FROM exercise")
+    void clear();
 }
