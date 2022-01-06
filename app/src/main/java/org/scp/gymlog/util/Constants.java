@@ -20,4 +20,13 @@ public class Constants {
         DATE_FUTURE = Calendar.getInstance();
         DATE_FUTURE.setTimeInMillis(32503590000000L);
     }
+
+    public interface INTENT {
+        int NONE = 0;
+        int REGISTRY = 1;
+        int CREATE_EXERCISE = 2;
+        int CREATE_EXERCISE_FROM_MUSCLE = 3;
+        int EDIT_EXERCISE = 4;
+        int IMAGE_SELECTOR = 5;
+    }
 }

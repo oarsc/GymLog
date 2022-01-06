@@ -14,14 +14,13 @@ import com.google.android.flexbox.FlexboxLayout;
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.ui.common.CustomAppCompatActivity;
+import org.scp.gymlog.util.Constants.INTENT;
 import org.scp.gymlog.util.TaskRunner;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class ImageSelectorActivity extends CustomAppCompatActivity {
-    public static final int CREATE_EXERCISE = 0;
-
     private AssetManager assets;
     private FlexboxLayout layout;
     private RelativeLayout.LayoutParams defaultLayoutParams;
@@ -31,13 +30,13 @@ public class ImageSelectorActivity extends CustomAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_selector);
 
-        int mode = getIntent().getExtras().getInt("mode");
+        int title = getIntent().getExtras().getInt("title");
         assets = getAssets();
         layout = findViewById(R.id.imageSelectorLayout);
         defaultLayoutParams = new RelativeLayout.LayoutParams(175, 175);
 
-        switch (mode) {
-            case CREATE_EXERCISE:
+        switch (title) {
+            case INTENT.CREATE_EXERCISE:
                 setTitle(R.string.title_create_exercise);
                 try {
                     loadExercises();

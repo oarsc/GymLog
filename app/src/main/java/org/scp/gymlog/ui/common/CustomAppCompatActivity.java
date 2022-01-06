@@ -8,14 +8,20 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-public abstract class CustomAppCompatActivity extends AppCompatActivity {
+import org.scp.gymlog.util.Constants.INTENT;
 
-    protected final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+public abstract class CustomAppCompatActivity extends AppCompatActivity {
+    public static final String INTENT_CALLER_ID = "_intentCallerId";
+
+    private int intentResultId = INTENT.NONE;
+
+    private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    onActivityResult(result.getData());
+                    onActivityResult(intentResultId, result.getData());
                 }
+                intentResultId = INTENT.NONE;
             });
 
     @Override
@@ -32,5 +38,42 @@ public abstract class CustomAppCompatActivity extends AppCompatActivity {
         return true;
     }
 
-    public void onActivityResult(Intent data) {}
+
+    public void onActivityResult(int intentResultId, Intent data) {}
+
+    protected void startActivityForResult(int intentResultId, Intent intent) {
+        if (this.intentResultId != INTENT.NONE) {
+            throw new RuntimeException("Intent "+intentResultId+" not captured");
+        }
+        if (intentResultId != INTENT.NONE) {
+            this.intentResultId = intentResultId;
+            intent.putExtra(INTENT_CALLER_ID, intentResultId);
+        }
+        activityResultLauncher.launch(intent);
+    }
+
+    protected void startActivityForResult(Intent intent) {
+        if (this.intentResultId != INTENT.NONE) {
+            throw new RuntimeException("Intent "+intentResultId+" not captured");
+        }
+        activityResultLauncher.launch(intent);
+    }
+
+    protected void startActivity(int intentResultId, Intent intent) {
+        if (this.intentResultId != INTENT.NONE) {
+            throw new RuntimeException("Intent "+intentResultId+" not captured");
+        }
+        if (intentResultId != 0) {
+            intent.putExtra(INTENT_CALLER_ID, intentResultId);
+        }
+        super.startActivity(intent);
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        if (this.intentResultId != INTENT.NONE) {
+            throw new RuntimeException("Intent "+intentResultId+" not captured");
+        }
+        super.startActivity(intent);
+    }
 }

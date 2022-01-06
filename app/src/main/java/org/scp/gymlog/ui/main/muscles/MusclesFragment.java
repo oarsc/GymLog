@@ -1,5 +1,7 @@
 package org.scp.gymlog.ui.main.muscles;
 
+import static org.scp.gymlog.ui.common.CustomAppCompatActivity.INTENT_CALLER_ID;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.service.DataBaseDumperService;
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton;
 import org.scp.gymlog.ui.createexercise.CreateExerciseActivity;
+import org.scp.gymlog.util.Constants.INTENT;
 
 import java.io.IOException;
 
@@ -58,7 +61,7 @@ public class MusclesFragment extends Fragment {
 		toolbar.setOnMenuItemClickListener(item -> {
 			if (item.getItemId() == R.id.createButton) {
 				Intent intent = new Intent(context, CreateExerciseActivity.class);
-				intent.putExtra("mode", CreateExerciseActivity.CREATE);
+				intent.putExtra(INTENT_CALLER_ID, INTENT.CREATE_EXERCISE);
 				startActivity(intent);
 				return true;
 			} else if (item.getItemId() == R.id.searchButton) {

@@ -1,6 +1,5 @@
 package org.scp.gymlog.ui.createexercise;
 
-import static org.scp.gymlog.ui.common.activity.ImageSelectorActivity.CREATE_EXERCISE;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,6 +26,7 @@ import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.ui.common.CustomAppCompatActivity;
 import org.scp.gymlog.ui.common.activity.ImageSelectorActivity;
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment;
+import org.scp.gymlog.util.Constants.INTENT;
 import org.scp.gymlog.util.Data;
 
 import java.io.IOException;
@@ -38,10 +38,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CreateExerciseActivity extends CustomAppCompatActivity {
-	public static final int CREATE = 0;
-	public static final int CREATE_FROM_MUSCLE = 1;
-	public static final int EDIT = 2;
-
 	private Exercise editingExercise;
 	private String name;
 	private String imageName;
@@ -60,8 +56,8 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		setContentView(R.layout.activity_create_exercise);
 		setTitle(R.string.title_create_exercise);
 
-		mode = getIntent().getExtras().getInt("mode");
-		if (mode == EDIT) {
+		mode = getIntent().getExtras().getInt(INTENT_CALLER_ID);
+		if (mode == INTENT.EDIT_EXERCISE) {
 			editingExercise = Data.getExercise(getIntent().getExtras().getInt("exerciseId"));
 			name = editingExercise.getName();
 			imageName = editingExercise.getImage();
@@ -71,7 +67,7 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		} else {
 			name = "";
 			imageName = "";
-			if (mode == CREATE_FROM_MUSCLE) {
+			if (mode == INTENT.CREATE_EXERCISE_FROM_MUSCLE) {
 				muscles.add(
 						Data.getMuscle(getIntent().getExtras().getInt("muscleId"))
 				);
@@ -110,9 +106,8 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 
 		} else {
 			Intent data = new Intent();
-			data.putExtra("mode", mode);
 
-			if (mode == EDIT) {
+			if (mode == INTENT.EDIT_EXERCISE) {
 				data.putExtra("exerciseId", editingExercise.getId());
 
 				editingExercise.setRequiresBar(requiresBar);
@@ -232,25 +227,27 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 
 	private void openImageSelectorActivity() {
 		Intent intent = new Intent(this, ImageSelectorActivity.class);
-		intent.putExtra("mode", CREATE_EXERCISE);
-		activityResultLauncher.launch(intent);
+		intent.putExtra("title", INTENT.CREATE_EXERCISE);
+		startActivityForResult(INTENT.IMAGE_SELECTOR, intent);
 	}
 
 	@Override
-	public void onActivityResult(Intent data) {
-		String fileName = data.getStringExtra("fileName");
-		if (fileName != null) {
+	public void onActivityResult(int intentResultId, Intent data) {
+		if (intentResultId == INTENT.IMAGE_SELECTOR) {
+			String fileName = data.getStringExtra("fileName");
+			if (fileName != null) {
 
-			Pattern pattern = Pattern.compile(".*?(\\w*)\\.png");
-			Matcher matcher = pattern.matcher(fileName);
-			if (matcher.matches()) {
-				String name = matcher.group(1);
+				Pattern pattern = Pattern.compile(".*?(\\w*)\\.png");
+				Matcher matcher = pattern.matcher(fileName);
+				if (matcher.matches()) {
+					String name = matcher.group(1);
 
-				if (name != null && !name.trim().isEmpty()) {
-					imageName = name;
-					Drawable d = getIconDrawable(imageName);
-					iconOption.setDrawable(d);
-					iconOption.update();
+					if (name != null && !name.trim().isEmpty()) {
+						imageName = name;
+						Drawable d = getIconDrawable(imageName);
+						iconOption.setDrawable(d);
+						iconOption.update();
+					}
 				}
 			}
 		}

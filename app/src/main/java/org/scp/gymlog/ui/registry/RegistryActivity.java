@@ -50,8 +50,6 @@ import java.util.Calendar;
 import java.util.List;
 
 public class RegistryActivity extends DBAppCompatActivity {
-    public static final int REFRESH_ACTIVITY_LIST = 10;
-
     private static final int LOG_PAGES_SIZE = 16;
 
     private Exercise exercise;
@@ -417,7 +415,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         if (!sendRefreshList) {
             sendRefreshList = true;
             Intent data = new Intent();
-            data.putExtra("mode", REFRESH_ACTIVITY_LIST);
+            data.putExtra("refresh", true);
             setResult(Activity.RESULT_OK, data);
         }
     }

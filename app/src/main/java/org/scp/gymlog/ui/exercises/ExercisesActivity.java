@@ -1,5 +1,6 @@
 package org.scp.gymlog.ui.exercises;
 
+import static org.scp.gymlog.util.Constants.INTENT;
 import static org.scp.gymlog.util.LambdaUtils.valueEquals;
 
 import android.content.Intent;
@@ -63,7 +64,7 @@ public class ExercisesActivity extends DBAppCompatActivity {
         recyclerAdapter.setOnClickListener(ex -> {
             Intent intent = new Intent(this, RegistryActivity.class);
             intent.putExtra("exerciseId", ex.getId());
-            activityResultLauncher.launch(intent);
+            startActivityForResult(INTENT.REGISTRY, intent);
         });
         recyclerView.setAdapter(recyclerAdapter);
 
@@ -87,9 +88,8 @@ public class ExercisesActivity extends DBAppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.create_button) {
             Intent intent = new Intent(this, CreateExerciseActivity.class);
-            intent.putExtra("mode", CreateExerciseActivity.CREATE_FROM_MUSCLE);
             intent.putExtra("muscleId", muscleId);
-            activityResultLauncher.launch(intent);
+            startActivityForResult(INTENT.CREATE_EXERCISE_FROM_MUSCLE, intent);
 
         } else if (item.getItemId() == R.id.sortAlphabetically) {
             recyclerAdapter.switchOrder(order = Order.ALPHABETICALLY);
@@ -114,9 +114,8 @@ public class ExercisesActivity extends DBAppCompatActivity {
     private void onExerciseItemMenuSelected(Exercise exercise, int action) {
         if (action == R.id.editExercise) {
             Intent intent = new Intent(this, CreateExerciseActivity.class);
-            intent.putExtra("mode", CreateExerciseActivity.EDIT);
             intent.putExtra("exerciseId", exercise.getId());
-            activityResultLauncher.launch(intent);
+            startActivityForResult(INTENT.EDIT_EXERCISE, intent);
 
         } else if (action == R.id.removeExercise) {
             TextDialogFragment dialog = new TextDialogFragment(R.string.dialog_confirm_remove_exercise_title,
@@ -140,9 +139,8 @@ public class ExercisesActivity extends DBAppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(Intent data) {
-        int mode = data.getIntExtra("mode", -1);
-        if (mode == CreateExerciseActivity.EDIT) {
+    public void onActivityResult(int intentResultId, Intent data) {
+        if (intentResultId == INTENT.EDIT_EXERCISE) {
             int id = data.getIntExtra("exerciseId", -1);
             Exercise ex = Data.getExercise(id);
             boolean hasMuscle = ex.getPrimaryMuscles().stream().map(Muscle::getId)
@@ -154,7 +152,7 @@ public class ExercisesActivity extends DBAppCompatActivity {
                 exercisesId.removeIf(valueEquals(ex.getId()));
             }
 
-        } else if (mode == CreateExerciseActivity.CREATE_FROM_MUSCLE) {
+        } else if (intentResultId == INTENT.CREATE_EXERCISE_FROM_MUSCLE) {
             int id = data.getIntExtra("exerciseId", -1);
             Exercise ex = Data.getExercise(id);
             boolean hasMuscle = ex.getPrimaryMuscles().stream().map(Muscle::getId)
@@ -163,14 +161,16 @@ public class ExercisesActivity extends DBAppCompatActivity {
                 exercisesId.add(ex.getId());
                 recyclerAdapter.addExercise(ex);
             }
-        } else if (mode == RegistryActivity.REFRESH_ACTIVITY_LIST) {
-            if (order.equals(Order.ALPHABETICALLY)) {
-                int id = data.getIntExtra("exerciseId", -1);
-                Exercise ex = Data.getExercise(id);
-                recyclerAdapter.updateNotify(ex);
+        } else if (intentResultId == INTENT.REGISTRY) {
+            if (data.getBooleanExtra("refresh", false)) {
+                if (order.equals(Order.ALPHABETICALLY)) {
+                    int id = data.getIntExtra("exerciseId", -1);
+                    Exercise ex = Data.getExercise(id);
+                    recyclerAdapter.updateNotify(ex);
 
-            } else {
-                recyclerAdapter.switchOrder(order);
+                } else {
+                    recyclerAdapter.switchOrder(order);
+                }
             }
         }
     }
