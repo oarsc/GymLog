@@ -164,7 +164,14 @@ public class ExercisesActivity extends DBAppCompatActivity {
                 recyclerAdapter.addExercise(ex);
             }
         } else if (mode == RegistryActivity.REFRESH_ACTIVITY_LIST) {
-            recyclerAdapter.switchOrder(order);
+            if (order.equals(Order.ALPHABETICALLY)) {
+                int id = data.getIntExtra("exerciseId", -1);
+                Exercise ex = Data.getExercise(id);
+                recyclerAdapter.updateNotify(ex);
+
+            } else {
+                recyclerAdapter.switchOrder(order);
+            }
         }
     }
 }
