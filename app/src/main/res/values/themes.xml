@@ -24,15 +24,6 @@
         <item name="windowActionBar">false</item>
     </style>
 
-    <style name="Theme.GymLog.ActionBar" parent="Theme.GymLog">
-        <item name="android:textColorPrimary">@color/actionBarText</item>
-        <item name="android:textColorSecondary">@color/actionBarIcon</item>
-        <item name="actionMenuTextColor">@color/actionBarIcon</item>
-        <item name="colorControlHighlight">@color/gray</item>
-        <item name="android:background">@color/actionBarBackground</item>
-        <item name="android:colorBackground">@color/actionBarBackground</item>
-    </style>
-
     <style name="PrefsTheme" parent="PreferenceThemeOverlay.v14.Material">
         <item name="android:layout">@layout/fragment_preferences</item>
         <item name="android:listPreferredItemPaddingStart">@dimen/activity_horizontal_margin</item>
