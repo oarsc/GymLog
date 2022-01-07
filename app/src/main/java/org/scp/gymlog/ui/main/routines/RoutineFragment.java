@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +34,9 @@ public class RoutineFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_list_routines, container, false);
+
+		Toolbar toolbar = view.findViewById(R.id.toolbar);
+		toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 
 		// Set the adapter
 		if (view instanceof RecyclerView) {

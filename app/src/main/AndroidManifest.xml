@@ -39,6 +39,10 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.training.TrainingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.main.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.GymLog.NoActionBar"

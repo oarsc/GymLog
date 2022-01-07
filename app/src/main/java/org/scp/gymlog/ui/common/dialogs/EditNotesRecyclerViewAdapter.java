@@ -48,7 +48,7 @@ public class EditNotesRecyclerViewAdapter extends RecyclerView.Adapter<EditNotes
             super(binding.getRoot());
             mContentView = binding.content;
 
-            binding.getRoot().setOnClickListener(view ->
+            itemView.setOnClickListener(view ->
                 onClick.accept(mContentView.getText().toString())
             );
         }

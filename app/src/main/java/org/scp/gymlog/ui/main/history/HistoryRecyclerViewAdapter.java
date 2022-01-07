@@ -2,6 +2,7 @@ package org.scp.gymlog.ui.main.history;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,11 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
-import org.scp.gymlog.databinding.ListElementFragmentHistoryBinding;
+import org.scp.gymlog.databinding.ListElementFragmentTrainingBinding;
 import org.scp.gymlog.model.Muscle;
+import org.scp.gymlog.ui.registry.RegistryActivity;
+import org.scp.gymlog.ui.training.TrainingActivity;
+import org.scp.gymlog.util.Constants;
 import org.scp.gymlog.util.DateUtils;
 
 import java.util.ArrayList;
@@ -35,7 +39,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		this.context = parent.getContext();
 		return new ViewHolder(
-				ListElementFragmentHistoryBinding.inflate(
+				ListElementFragmentTrainingBinding.inflate(
 						LayoutInflater.from(this.context), parent, false
 				)
 		);
@@ -45,10 +49,10 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, int position) {
 		TrainingData data = trainingDataList.get(position);;
-		holder.id = data.id;
+		holder.id = data.getId();
 		holder.mTitle.setText(context.getResources().getString(R.string.text_training)
-				+" #" + data.id + ": "+ context.getResources().getString(R.string.text_started_at)
-				+" " + DateUtils.getTime(data.startDate));
+				+" #" + data.getId() + ": "+ context.getResources().getString(R.string.text_started_at)
+				+" " + DateUtils.getTime(data.getStartDate()));
 		holder.mSubtitle.setText(
 				data.getMostUsedMuscles().stream()
 						.map(Muscle::getText)
@@ -101,23 +105,22 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 		public final TextView mTitle, mSubtitle;
 		public final View mIndicator;
 
-		public ViewHolder(ListElementFragmentHistoryBinding binding) {
+		public ViewHolder(ListElementFragmentTrainingBinding binding) {
 			super(binding.getRoot());
 			mTitle = binding.title;
 			mSubtitle = binding.subtitle;
 			mIndicator = binding.indicator;
+
+			itemView.setOnClickListener(v -> {
+				Intent intent = new Intent(context, TrainingActivity.class);
+				intent.putExtra("trainingId", id);
+				context.startActivity(intent);
+			});
 		}
 
 		@Override
 		public String toString() {
 			return super.toString() + " '" + mTitle.getText() + "'";
 		}
-	}
-
-	@Getter @Setter
-	public static class TrainingData {
-		private List<Muscle> mostUsedMuscles;
-		private Calendar startDate;
-		private int id;
 	}
 }

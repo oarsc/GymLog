@@ -2,14 +2,30 @@ package org.scp.gymlog.ui.preferences;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceFragmentCompat;
 
 import org.scp.gymlog.R;
 
 public class PreferencesFragment extends PreferenceFragmentCompat
 		implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View view = super.onCreateView(inflater, container, savedInstanceState);
+
+		Toolbar toolbar = view.findViewById(R.id.toolbar);
+		toolbar.setNavigationOnClickListener(a-> getActivity().onBackPressed());
+
+		return view;
+	}
 
 	@Override
 	public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

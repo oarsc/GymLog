@@ -41,6 +41,7 @@ import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditWeightFormDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
+import org.scp.gymlog.ui.training.TrainingActivity;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.FormatUtils;
 
@@ -383,7 +384,9 @@ public class RegistryActivity extends DBAppCompatActivity {
             MenuDialogFragment dialog = new MenuDialogFragment(R.menu.bit_menu,
                     result -> {
                         if (result == R.id.showTraining) {
-
+                            Intent intent = new Intent(this, TrainingActivity.class);
+                            intent.putExtra("trainingId", bit.getTrainingId());
+                            startActivity(intent);
 
                         } else if (result == R.id.editBit) {
                             final boolean enableInstantSwitch = log.stream()

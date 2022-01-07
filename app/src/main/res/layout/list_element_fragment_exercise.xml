@@ -13,7 +13,6 @@
         android:id="@+id/image"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:padding="1dp"
         android:layout_gravity="center" />
 
     <TextView

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -21,7 +22,6 @@ import org.scp.gymlog.room.entities.BitEntity;
 import org.scp.gymlog.room.entities.TrainingEntity;
 import org.scp.gymlog.ui.common.components.HistoryCalendarView;
 import org.scp.gymlog.ui.common.components.HistoryCalendarView.PieDataInfo;
-import org.scp.gymlog.ui.main.history.HistoryRecyclerViewAdapter.TrainingData;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.DateUtils;
 
@@ -72,6 +72,8 @@ public class HistoryFragment extends Fragment {
 		calendarView.setOnSelectDayListener(this::selectDay);
 		calendarView.setOnChangeListener(this::updateData);
 
+		Toolbar toolbar = view.findViewById(R.id.toolbar);
+		toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 		return view;
 	}
 
@@ -88,59 +90,13 @@ public class HistoryFragment extends Fragment {
 			historyAdapter.clear();
 
 			trainings.forEach(training -> {
-				List<BitEntity> bits = db.bitDao().getHistoryByTrainingId(training.trainingId);
-				List<MuscleCount> musclesCount = new ArrayList<>();
-
-				bits.stream().map(bit -> bit.exerciseId)
-						.map(Data::getExercise)
-						.flatMap(exercise -> exercise.getPrimaryMuscles().stream())
-						.forEach(muscle -> {
-							Optional<MuscleCount> m = musclesCount.stream()
-									.filter(mc -> mc.muscle == muscle)
-									.findFirst();
-
-							if (m.isPresent()) {
-								m.get().count++;
-							} else {
-								musclesCount.add(new MuscleCount(muscle));
-							}
-						});
-
-				musclesCount.sort((a,b) -> Integer.compare(b.count, a.count));
-
-				int total = musclesCount.stream()
-						.map(mc -> mc.count)
-						.reduce(0, Integer::sum);
-				int limit = (int)(musclesCount.get(0).count / (float)total - 7.5f);
-
-				List<Muscle> mostUsedMuscles = musclesCount.stream()
-						.filter(a -> a.count/total > limit)
-						.map(a -> a.muscle)
-						.collect(Collectors.toList());
-
-				TrainingData td = new TrainingData();
-				td.setId(training.trainingId);
-				td.setStartDate(training.start);
-				td.setMostUsedMuscles(mostUsedMuscles);
+				List<BitEntity> bits = db.bitDao().getHistoryByTrainingId(training.trainingId);;
+				TrainingData td = getTrainingData(training, bits);
 				historyAdapter.add(td);
 			});
 
 			getActivity().runOnUiThread(() -> historyAdapter.notifyItemsChanged(initialSize, endSize));
 		});
-	}
-
-	class MuscleCount {
-		private Muscle muscle;
-		private int count = 1;
-
-		public MuscleCount(Muscle muscle) {
-			this.muscle = muscle;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			return muscle == ((MuscleCount) o).muscle;
-		}
 	}
 
 	private void updateData(Calendar first, Calendar end) {
@@ -193,5 +149,58 @@ public class HistoryFragment extends Fragment {
 				calendarView.setEnabled(true);
 			});
 		});
+	}
+
+
+	public static TrainingData getTrainingData(TrainingEntity training, List<BitEntity> bits) {
+		List<MuscleCount> musclesCount = new ArrayList<>();
+
+		bits.stream().map(bit -> bit.exerciseId)
+				.map(Data::getExercise)
+				.flatMap(exercise -> exercise.getPrimaryMuscles().stream())
+				.forEach(muscle -> {
+					Optional<MuscleCount> m = musclesCount.stream()
+							.filter(mc -> mc.muscle == muscle)
+							.findFirst();
+
+					if (m.isPresent()) {
+						m.get().count++;
+					} else {
+						musclesCount.add(new MuscleCount(muscle));
+					}
+				});
+
+		musclesCount.sort((a,b) -> Integer.compare(b.count, a.count));
+
+		int total = musclesCount.stream()
+				.map(mc -> mc.count)
+				.reduce(0, Integer::sum);
+		int limit = (int)(musclesCount.get(0).count / (float)total - 7.5f);
+
+		List<Muscle> mostUsedMuscles = musclesCount.stream()
+				.filter(a -> a.count/total > limit)
+				.map(a -> a.muscle)
+				.collect(Collectors.toList());
+
+		TrainingData td = new TrainingData();
+		td.setId(training.trainingId);
+		td.setStartDate(training.start);
+		td.setMostUsedMuscles(mostUsedMuscles);
+
+		return td;
+	}
+
+	static class MuscleCount {
+		private final Muscle muscle;
+		private int count = 1;
+
+		public MuscleCount(Muscle muscle) {
+			this.muscle = muscle;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			return muscle == ((MuscleCount) o).muscle;
+		}
 	}
 }

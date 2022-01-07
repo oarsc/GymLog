@@ -38,7 +38,6 @@ public class HistoryLegendRecyclerViewAdapter extends RecyclerView.Adapter<Histo
 	public void onBindViewHolder(final ViewHolder holder, int position) {
 		Muscle muscle = muscles.get(position);
 		holder.mText.setText(muscle.getText());
-
 		holder.mIndicator.setCardBackgroundColor(
 				ResourcesCompat.getColor(context.getResources(), muscle.getColor(), null));
 	}

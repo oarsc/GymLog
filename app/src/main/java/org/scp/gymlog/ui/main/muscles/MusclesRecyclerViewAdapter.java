@@ -67,7 +67,7 @@ public class MusclesRecyclerViewAdapter extends RecyclerView.Adapter<MusclesRecy
 			mImageView = binding.image;
 			mIndicator = binding.indicator;
 
-			binding.getRoot().setOnClickListener(a-> {
+			itemView.setOnClickListener(a-> {
 				Intent intent = new Intent(context, ExercisesActivity.class);
 				intent.putExtra("muscleId", muscle.getId());
 				context.startActivity(intent);

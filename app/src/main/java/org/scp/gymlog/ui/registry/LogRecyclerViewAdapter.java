@@ -2,8 +2,6 @@ package org.scp.gymlog.ui.registry;
 
 import static org.scp.gymlog.util.Constants.DATE_ZERO;
 
-import static java.lang.Math.max;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +16,12 @@ import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.util.DateUtils;
 import org.scp.gymlog.util.FormatUtils;
-import org.scp.gymlog.util.Function;
 import org.scp.gymlog.util.WeightUtils;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerViewAdapter.ViewHolder> {
 
@@ -169,10 +165,9 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
             mLoadMore = binding.loadMore;
             element = binding.element;
 
-            View view = binding.getRoot();
-            view.setOnClickListener(a-> {
+            itemView.setOnClickListener(a-> {
                 if (onClickElementListener != null) {
-                    onClickElementListener.accept(view, bit);
+                    onClickElementListener.accept(itemView, bit);
                 }
             });
         }

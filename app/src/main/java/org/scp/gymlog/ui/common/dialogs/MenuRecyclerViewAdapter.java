@@ -60,7 +60,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
             super(binding.getRoot());
             mContentView = binding.content;
             mImageView = binding.image;
-            binding.getRoot().setOnClickListener(view -> onClick.accept(id));
+            itemView.setOnClickListener(view -> onClick.accept(id));
         }
 
         @Override

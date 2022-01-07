@@ -11,6 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        app:navigationIcon="@drawable/ic_arrow_back_24dp"
         app:title="@string/title_history" />
 
     <ScrollView
@@ -22,8 +23,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <org.scp.gymlog.ui.common.components.HistoryCalendarView
                 android:id="@+id/calendarView"
@@ -47,23 +48,23 @@
                     android:paddingHorizontal="16dp"
                     android:visibility="gone"
                     tools:context=".ui.main.history.HistoryFragment"
-                    tools:listitem="@layout/list_element_fragment_legend"/>
+                    tools:listitem="@layout/list_element_fragment_legend" />
 
                 <LinearLayout
                     android:id="@+id/showLegend"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingVertical="8dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground">
+                    android:gravity="center"
+                    android:paddingVertical="8dp">
 
                     <ImageView
                         android:id="@+id/showLegendIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_arrow_down_24dp"/>
+                        android:src="@drawable/ic_arrow_down_24dp" />
 
                 </LinearLayout>
 
@@ -74,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".ui.main.history.HistoryFragment"
-                tools:listitem="@layout/list_element_fragment_history"/>
+                tools:listitem="@layout/list_element_fragment_training" />
 
         </LinearLayout>
 

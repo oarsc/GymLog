@@ -152,13 +152,13 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
             mImageView = binding.image;
             mTime = binding.time;
 
-            binding.getRoot().setOnClickListener(a-> {
+            itemView.setOnClickListener(a-> {
                 if (onClickListener != null) {
                     onClickListener.accept(exercise);
                 }
             });
 
-            binding.getRoot().setOnLongClickListener(a-> {
+            itemView.setOnLongClickListener(a-> {
                 MenuDialogFragment dialog = new MenuDialogFragment(
                         R.menu.exercise_menu, action -> menuOptionCallback.accept(exercise, action));
                 dialog.show(((FragmentActivity) context).getSupportFragmentManager(), null);

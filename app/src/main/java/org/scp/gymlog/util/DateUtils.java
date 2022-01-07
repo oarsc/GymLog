@@ -39,7 +39,7 @@ public class DateUtils {
 
     public static String getTime(Calendar cal) {
         Date date = cal.getTime();
-        SimpleDateFormat format1 = new SimpleDateFormat("HH:MM", Locale.getDefault());
+        SimpleDateFormat format1 = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return format1.format(date);
     }
 

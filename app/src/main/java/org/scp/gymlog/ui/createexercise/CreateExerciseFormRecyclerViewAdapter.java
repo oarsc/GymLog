@@ -53,7 +53,7 @@ public class CreateExerciseFormRecyclerViewAdapter extends RecyclerView.Adapter<
 			mContentView = binding.content;
 			mImageView = binding.image;
 
-			binding.getRoot().setOnClickListener(v ->
+			itemView.setOnClickListener(v ->
 				formElement.onClick(v)
 			);
 		}
