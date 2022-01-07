@@ -35,6 +35,7 @@ public class ExercisesActivity extends DBAppCompatActivity {
     private List<Integer> exercisesId;
     private Order order;
     private ExercisesRecyclerViewAdapter recyclerAdapter;
+    private RecyclerView exercisesRecyclerView;
 
     @Override
     protected int onLoad(Bundle savedInstanceState, AppDatabase db) {
@@ -57,8 +58,8 @@ public class ExercisesActivity extends DBAppCompatActivity {
                 .orElseThrow(() -> new InternalException("Muscle id not found"));
 
         setTitle(muscle.getText());
-        RecyclerView recyclerView = findViewById(R.id.exercisesList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        exercisesRecyclerView = findViewById(R.id.exercisesList);
+        exercisesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerAdapter = new ExercisesRecyclerViewAdapter(exercisesId, this, order,
                 this::onExerciseItemMenuSelected);
         recyclerAdapter.setOnClickListener(ex -> {
@@ -66,7 +67,7 @@ public class ExercisesActivity extends DBAppCompatActivity {
             intent.putExtra("exerciseId", ex.getId());
             startActivityForResult(INTENT.REGISTRY, intent);
         });
-        recyclerView.setAdapter(recyclerAdapter);
+        exercisesRecyclerView.setAdapter(recyclerAdapter);
 
         TrainingFloatingActionButton fab = findViewById(R.id.fabTraining);
         fab.updateFloatingActionButton();
@@ -169,6 +170,7 @@ public class ExercisesActivity extends DBAppCompatActivity {
                     recyclerAdapter.updateNotify(ex);
 
                 } else {
+                    exercisesRecyclerView.scrollToPosition(0);
                     recyclerAdapter.switchOrder(order);
                 }
             }

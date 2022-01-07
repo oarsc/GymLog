@@ -416,6 +416,7 @@ public class RegistryActivity extends DBAppCompatActivity {
             sendRefreshList = true;
             Intent data = new Intent();
             data.putExtra("refresh", true);
+            data.putExtra("exerciseId", exercise.getId());
             setResult(Activity.RESULT_OK, data);
         }
     }
