@@ -15,8 +15,8 @@ const STATUS_DONE = 4;
 const MAPPING = {
   'Press de Pecho Plano con Barra de Pesas'                                          : 'Barbell Bench Press',
   'Flexiones de Pecho con Mancuernas (inclinado)'                                    : 'Dumbbell Bench Press (incline)',
-  'Cruzadas con Cable-Polea (de pie)'                                                : 'Pulley Machine Crossover (standing)',
-  'Cruzadas con polea baja (de pie)'                                                 : 4,
+  'Cruzadas con Cable-Polea (de pie)'                                                : 'Pulley Machine Low Crossover (standing)',
+  'Cruzadas con polea baja (de pie)'                                                 : 'Low Pulley Flys (standing)',
   'Flexiones de Pecho con Mancuernas (declinado)'                                    : 'Dumbbell Bench Press (decline)',
   'Abdominales (declinado)'                                                          : 'Crunches (decline)',
   'Abdominales Parciales de Bicicleta'                                               : 'Air Bike Crunches',
@@ -62,18 +62,15 @@ const MAPPING = {
   'Estocadas con Barra de Pesas'                                                     : 'Barbell Lunges',
   'Flexiones de Pierna con Máquina (prono)'                                          : 'Machine Leg Curl (prone)',
   'Flexiones de Bíceps Alternando las Mancuernas (de pie)'                           : 'Dumbbell Alternating Biceps Curl (standing)',
-  'Flexiones de Bíceps con Barra de Martillo (de pie)'                               : 50,
   'Aperturas con Mancuernas en Plano'                                                : 'Dumbbell Bench Flys',
   'Press en Banco con Máquina (inclinado)'                                           : 'Machine Bench Press (incline)',
   'Levantamiento de Piernas, Apoyo en los Brazos'                                    : 'Leg Raise, Rest On Arms',
   'Elevación de la Rodilla, Apoyo en los Brazos'                                     : 'Knee Raise, Rest On Arms',
   'Press de Pecho con Barra de Pesas (declinado)'                                    : 'Barbell Bench Press (decline)',
-  'bi'                                                                               : 55,
-  'tri'                                                                              : 56,
   'Flexiones de Bíceps con Barra EZ en Máquina Scott (sentado)'                      : 'Scott Machine EZ-Bar Biceps Curl (seated)',
   'Flexiones de Bíceps con Cable-Polea por Arriba (de pie)'                          : 'Overhead Pulley Machine Biceps Curl (standing)',
   'Flexiones de Bíceps con Cuerda en Cable-Polea (de pie)'                           : 'Pulley Machine Rope Biceps Curl (standing)',
-  'aaaa cruzado'                                                                     : 60,
+  'aaaa cruzado'                                                                     : 'Pulley Machine Crossover (standing)',
   'pecho superior maquina'                                                           : 'Machine Bench Press (incline)',
   'Aperturas con Mancuernas (declinado)'                                             : 'Dumbbell Bench Flys (decline)',
   'Flexiones de Bíceps Alternando las Mancuernas en Martillo (de pie)'               : 'Dumbbell Alternating Biceps Hammer Curl (standing)',
@@ -92,13 +89,13 @@ const MAPPING = {
   'Press de Tríceps con Cuerda y Cable-Polea por Arriba (inclinado)'                 : 'Overhead Pulley Machine Rope Triceps Press (bent over)',
   'Halar con Cable-Polea y Brazo Recto (de pie)'                                     : 'Pulley Machine Lat Pushdown (standing)',
   'Remo con Máquina de Palanca (sentado)'                                            : 'Leverage Machine Row (seated)',
-  'Abdominales obliquos con polea (Leñador)'                                         : 79,
+  'Abdominales obliquos con polea (Leñador)'                                         : 'Pulley Oblique Twist (Wood Chopper)',
   'maquina abdos'                                                                    : 'Supported Crunches (lying)',
   'Máquina de Hiperextensiones'                                                      : 'Machine Hyperextensions',
   'Flexiones de Pierna con Máquina (sentado)'                                        : 'Machine Leg Curl (seated)',
   'Press de Pecho con Barra de Pesas (inclinado)'                                    : 'Barbell Bench Press (incline)',
   'Flexiones de Pecho en Plano con Mancuernas'                                       : 'Dumbbell Bench Press',
-  'arnold'                                                                           : 85,
+  'arnold'                                                                           : 'Dumbbell Arnold Press (seated)',
   'Pullover en Banco Plano con Mancuernas'                                           : 'Dumbbell Bench Pullover',
   'Flexiones de Bíceps con Mancuernas en Martillo (de pie)'                          : 'Dumbbell Biceps Hammer Curl (standing)',
   'Abdominales de Giro, Piernas Elevadas'                                            : 'Twisting Sit-ups, Bent Legs',
@@ -136,12 +133,13 @@ const MAPPING = {
   'Levantamiento de Pelvis, Piernas Flexionadas (acostado)'                          : 'Pelvic Lift Lying, Bent Legs (machine)',
   'Face Pull'                                                                        : 'Face Pull',
   'espalda'                                                                          : 'Pulley Machine Lat Pushdown (standing)',
-
-  'máquina hombro pajaro'                                                            : 125,
-  'Levantamiento Lateral con Mancuernas (máquina)'                                   : 96,
-
+  'bi'                                                                               : 'Pulley Machine Biceps Curl, Single Arm (standing)',
+  'tri'                                                                              : 'Pulley Machine Underhand Pushdown, Single Arm (standing)',
+  'máquina hombro pajaro'                                                            : 'Shoulder Machine Lateral Raise',
+  'Levantamiento Lateral con Mancuernas (máquina)'                                   : 'Shoulder Machine Lateral Raise',
   'Flexiones de Bíceps con Barra de Pesas (inclinado)'                               : 'Barbell Biceps Curl (incline)',
-  'Flexiones de Bíceps con Barra de Martillo (inclinado)'                            : 127,
+  'Flexiones de Bíceps con Barra de Martillo (inclinado)'                            : 'Scott Machine Hammer Barbell Curl',
+  'Flexiones de Bíceps con Barra de Martillo (de pie)'                               : 'Barbell Hammer Biceps Curl (standing)',
   'Levantamiento Lateral con Mancuernas (inclinado)'                                 : 'Dumbbell Lateral Raise (bent over)',
   'Flexión Lateral del Torso con Cable-Polea (de pie)'                               : 'Pulley Machine Side Bend (standing)',
   'Flexiones de Bíceps con Barra EZ, Agarre Amplio (de pie)'                         : 'EZ-Bar Biceps Curl, Wide Grip (standing)',
@@ -152,8 +150,8 @@ const MAPPING = {
   'Máquina de Hiperextensiones (sentado)'                                            : 'Machine Hyperextensions (seated)',
   'Flexiones de Muñecas y Antebrazo con Mancuernas (sentado)'                        : 'Dumbbell Forearm Wrist Curl (seated)',
   'Flexiones de Muñeca y Antebrazo con Barra de Pesas Detrás de la Espalda (de pie)' : 'Barbell Forearm Wrist Curl Behind Back (standing)',
-  'anillas espalda'                                                                  : 138,
-  'dominadas anillas'                                                                : 139,
+  'anillas espalda'                                                                  : 'Australian Ring Pull-ups',
+  'dominadas anillas'                                                                : 'Ring Pull-ups',
   'Spinning'                                                                         : 'Stationary Cycling',
   'Cinta de correr'                                                                  : 'Treadmill',
   'Elíptica'                                                                         : 'Elliptical (Crosstrainer)',
@@ -173,7 +171,11 @@ let EXCEPTIONS = {
 
 	'Levantamiento de Piernas, Apoyo en los Brazos' : {
 		'colgado': 'Leg Raise (hanging)'
-	}
+	},
+
+  'Cruzadas con polea baja (de pie)' : {
+    'SPECIAL': 'Low Dumbbell Flys (standing)'
+  }
 }
 
 
