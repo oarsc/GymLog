@@ -13,18 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.scp.gymlog.R;
 import org.scp.gymlog.databinding.ListElementFragmentTrainingBinding;
 import org.scp.gymlog.model.Muscle;
-import org.scp.gymlog.ui.registry.RegistryActivity;
 import org.scp.gymlog.ui.training.TrainingActivity;
-import org.scp.gymlog.util.Constants;
 import org.scp.gymlog.util.DateUtils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import lombok.Getter;
-import lombok.Setter;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder> {
 
@@ -73,25 +67,20 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 		trainingDataList.add(trainingData);
 	}
 
+	@SuppressLint("NotifyDataSetChanged")
 	public void notifyItemsChanged(int initialSize, int endSize) {
-		if (initialSize == endSize) {
-			if (initialSize > 0) {
-				notifyItemRangeChanged(0, initialSize);
-			}
-		} else if (initialSize > endSize) {
-			if (endSize == 0) {
-				notifyItemRangeRemoved(0, initialSize);
-			} else {
-				notifyItemRangeRemoved(endSize, initialSize-endSize);
-				notifyItemRangeChanged(0, endSize);
-			}
-		} else { // endSize > initialSize
-			if (initialSize > 0) {
-				notifyItemRangeChanged(0, initialSize);
-				notifyItemRangeInserted(initialSize, endSize-initialSize);
-			} else {
+		if (initialSize == 0) {
+			if (endSize != 0) {
 				notifyItemInserted(endSize);
 			}
+		} else if (endSize == 0) {
+			notifyItemRangeRemoved(0, initialSize);
+
+		} else if (initialSize == endSize) {
+			notifyItemRangeChanged(0, initialSize);
+
+		} else {
+			notifyDataSetChanged();
 		}
 	}
 

@@ -26,6 +26,7 @@ import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton;
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment;
 import org.scp.gymlog.ui.createexercise.CreateExerciseActivity;
 import org.scp.gymlog.ui.registry.RegistryActivity;
+import org.scp.gymlog.ui.top.TopActivity;
 import org.scp.gymlog.util.Data;
 
 import java.util.List;
@@ -113,7 +114,12 @@ public class ExercisesActivity extends DBAppCompatActivity {
     }
 
     private void onExerciseItemMenuSelected(Exercise exercise, int action) {
-        if (action == R.id.editExercise) {
+        if (action == R.id.topRanking) {
+            Intent intent = new Intent(this, TopActivity.class);
+            intent.putExtra("exerciseId", exercise.getId());
+            startActivity(intent);
+
+        } else if (action == R.id.editExercise) {
             Intent intent = new Intent(this, CreateExerciseActivity.class);
             intent.putExtra("exerciseId", exercise.getId());
             startActivityForResult(INTENT.EDIT_EXERCISE, intent);

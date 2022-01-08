@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/topRanking"
+        android:icon="@drawable/ic_ranking_left_24dp"
+        android:title="@string/text_find_top_records"/>
+
+    <item
         android:id="@+id/editExercise"
         android:icon="@drawable/ic_edit_24dp"
         android:title="@string/dialog_edit_exercise"/>

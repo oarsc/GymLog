@@ -104,8 +104,8 @@ public class TrainingActivity extends DBAppCompatActivity {
         fragment.setClickable(false);
 
         title.setText(getResources().getString(R.string.text_training)
-                +" #" + trainingData.getId() + ": "+ getResources().getString(R.string.text_started_at)
-                +" " + DateUtils.getTime(trainingData.getStartDate()));
+                +" #" + trainingData.getId() + " "+ getResources().getString(R.string.text_on_smallcaps)
+                +" " + DateUtils.getDate(trainingData.getStartDate()));
 
         subtitle.setText(
                 trainingData.getMostUsedMuscles().stream()

@@ -44,6 +44,10 @@ public interface BitDao {
             "LIMIT :limit")
     List<String> getNotesHistory(int exerciseId, int limit);
 
+    @Query("SELECT MAX(reps) AS reps, * FROM bit "+
+            "WHERE exerciseId = :exerciseId GROUP BY totalWeight ORDER BY timestamp")
+    List<BitEntity> findTops(int exerciseId);
+
     @Insert
     long insert(BitEntity bit);
 

@@ -43,6 +43,18 @@ public class DateUtils {
         return format1.format(date);
     }
 
+    public static String getDateTime(Calendar cal) {
+        Date date = cal.getTime();
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        return format1.format(date);
+    }
+
+    public static String getDate(Calendar cal) {
+        Date date = cal.getTime();
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return format1.format(date);
+    }
+
     public static String calculateTimeLetter(Calendar date, Calendar today) {
         if (date == null || date.compareTo(Constants.DATE_ZERO) == 0) {
             return "";

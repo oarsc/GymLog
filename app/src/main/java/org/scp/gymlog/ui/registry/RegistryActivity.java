@@ -12,6 +12,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -41,7 +44,10 @@ import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditWeightFormDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
+import org.scp.gymlog.ui.createexercise.CreateExerciseActivity;
+import org.scp.gymlog.ui.top.TopActivity;
 import org.scp.gymlog.ui.training.TrainingActivity;
+import org.scp.gymlog.util.Constants;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.FormatUtils;
 
@@ -189,6 +195,24 @@ public class RegistryActivity extends DBAppCompatActivity {
         }
 
         loadHistory();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.registry_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.topRanking) {
+            Intent intent = new Intent(this, TopActivity.class);
+            intent.putExtra("exerciseId", exercise.getId());
+            startActivity(intent);
+            return true;
+        }
+        return false;
     }
 
     private void showWeightDialog(EditText weightEditText) {
