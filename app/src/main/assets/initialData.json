@@ -6,6 +6,13 @@
 	"bar": false
 },
 {
+	"tag": "abs_woodchopper",
+	"name": "Pulley Oblique Twist (Wood Chopper)",
+	"primary": [13],
+	"secondary": [],
+	"bar": false
+},
+{
 	"tag": "abs_mat_planks_rest_on_arms",
 	"name": "Planks",
 	"primary": [13],
@@ -349,6 +356,13 @@
 	"bar": true
 },
 {
+	"tag": "biceps_barbell_hammer_curl_standing",
+	"name": "Barbell Hammer Biceps Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": true
+},
+{
 	"tag": "biceps_ezbar_curl_standing_medium_grip",
 	"name": "EZ-Bar Biceps Curl (standing)",
 	"primary": [6],
@@ -384,8 +398,22 @@
 	"bar": false
 },
 {
+	"tag": "biceps_scott_machine_barbell_hammer_seated",
+	"name": "Scott Machine Hammer Barbell Curl",
+	"primary": [6],
+	"secondary": [],
+	"bar": true
+},
+{
 	"tag": "biceps_low_cable_curl_standing",
 	"name": "Pulley Machine Biceps Curl (standing)",
+	"primary": [6],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "biceps_low_cable_curl_single_arm_standing",
+	"name": "Pulley Machine Biceps Curl, Single Arm (standing)",
 	"primary": [6],
 	"secondary": [],
 	"bar": false
@@ -517,7 +545,7 @@
 	"bar": true
 },
 {
-	"tag": "biceps_bench_dumbbell_curl_lying_incline",
+	"tag": "lat_high_bench_dumbbell_row_lying",
 	"name": "Dumbbell Biceps Curl (incline)",
 	"primary": [6],
 	"secondary": [],
@@ -741,6 +769,13 @@
 	"bar": false
 },
 {
+	"tag": "chest_high_cable_crossover_standing",
+	"name": "Pulley Machine Low Crossover (standing)",
+	"primary": [1],
+	"secondary": [],
+	"bar": false
+},
+{
 	"tag": "chest_bench_dumbbell_flys_lying",
 	"name": "Dumbbell Bench Flys",
 	"primary": [1],
@@ -759,6 +794,13 @@
 	"name": "Dumbbell Bench Flys (incline)",
 	"primary": [1],
 	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_low_dumbbell_flys_standing",
+	"name": "Low Dumbbell Flys (standing)",
+	"primary": [1],
+	"secondary": [4],
 	"bar": false
 },
 {
@@ -864,6 +906,13 @@
 	"name": "Pulley Machine Bench Flys (decline)",
 	"primary": [1],
 	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "chest_low_pulley_flys_standing",
+	"name": "Low Pulley Flys (standing)",
+	"primary": [1],
+	"secondary": [4],
 	"bar": false
 },
 {
@@ -1037,8 +1086,8 @@
 {
 	"tag": "gluteus_mat_barbell_squat_kneeling",
 	"name": "Barbell Squats (kneeling)",
-	"primary": [12, 3],
-	"secondary": [],
+	"primary": [12],
+	"secondary": [3],
 	"bar": true
 },
 {
@@ -1093,6 +1142,27 @@
 {
 	"tag": "lat_bar_pullups_underhand",
 	"name": "Pull-ups, Underhand Medium Grip",
+	"primary": [2, 6],
+	"secondary": [8],
+	"bar": false
+},
+{
+	"tag": "lat_bar_pullups_overhand",
+	"name": "Ring Pull-ups",
+	"primary": [2],
+	"secondary": [6, 8],
+	"bar": false
+},
+{
+	"tag": "lat_australian_pullups",
+	"name": "Australian Pull-ups",
+	"primary": [2, 6],
+	"secondary": [8],
+	"bar": false
+},
+{
+	"tag": "lat_australian_pullups",
+	"name": "Australian Ring Pull-ups",
 	"primary": [2, 6],
 	"secondary": [8],
 	"bar": false
@@ -1301,6 +1371,13 @@
 	"bar": false
 },
 {
+	"tag": "biceps_bench_barbell_curl_lying_incline",
+	"name": "Barbell Flat High Bench Row (prone)",
+	"primary": [2],
+	"secondary": [6],
+	"bar": false
+},
+{
 	"tag": "lat_bench_dumbbell_reverse_flys_lying",
 	"name": "Reverse Dumbbell Flat Bench Flys (prone)",
 	"primary": [4],
@@ -1394,22 +1471,57 @@
 {
 	"tag": "calves_machine_rocking_standing",
 	"name": "Machine Leverage Squats (standing)",
-	"primary": [9, 3, 12],
-	"secondary": [10],
+	"primary": [9, 12],
+	"secondary": [3, 10],
 	"bar": false
 },
 {
 	"tag": "quads_barbell_squats_standing",
 	"name": "Barbell Squats (standing)",
-	"primary": [9, 3, 12],
-	"secondary": [10],
+	"primary": [9, 12],
+	"secondary": [3, 10],
 	"bar": true
+},
+{
+	"tag": "calves_smith_machine_rocking_standing",
+	"name": "Smith Machine Squats (standing)",
+	"primary": [9, 12],
+	"secondary": [3, 10],
+	"bar": false
+},
+{
+	"tag": "quads_smith_lunges",
+	"name": "Smith Machine Lunges",
+	"primary": [9, 12],
+	"secondary": [3, 10],
+	"bar": true
+},
+{
+	"tag": "quads_bulgarian_split_squats",
+	"name": "Bulgarian Split Squats",
+	"primary": [9, 12],
+	"secondary": [3, 10],
+	"bar": false
+},
+{
+	"tag": "quads_bulgarian_dumbbell_split_squats",
+	"name": "Bulgarian Dumbbell Split Squats",
+	"primary": [9, 12],
+	"secondary": [3, 10],
+	"bar": false
+},
+{
+	"tag": "quads_smith_bulgarian_squats",
+	"name": "Smith Machine Bulgarian Split Squat",
+	"primary": [9, 12],
+	"secondary": [3, 10],
+	"bar": false
 },
 {
 	"tag": "quads_barbell_front_squats_standing",
 	"name": "Barbell Front Squats (standing)",
-	"primary": [9, 3, 12],
-	"secondary": [10],
+	"primary": [9, 12],
+	"secondary": [3, 10],
 	"bar": true
 },
 {
@@ -1422,9 +1534,9 @@
 {
 	"tag": "quads_barbell_squats_standing",
 	"name": "Ankle Support Free Squats",
-	"primary": [9, 3, 12],
-	"secondary": [10],
-	"bar": true
+	"primary": [9, 12],
+	"secondary": [3, 10],
+	"bar": false
 },
 {
 	"tag": "quads_machine_leg_press_incline",
@@ -1471,6 +1583,13 @@
 {
 	"tag": "quads_machine_leg_extension_seated",
 	"name": "Machine Leg Extension (seated)",
+	"primary": [9],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "quads_machine_plates_leg_extension_seated",
+	"name": "Machine Leg Extension, using plates (seated)",
 	"primary": [9],
 	"secondary": [],
 	"bar": false
@@ -1616,6 +1735,13 @@
 	"bar": false
 },
 {
+	"tag": "shoulders_dumbbell_press_seated",
+	"name": "Dumbbell Arnold Press (seated)",
+	"primary": [4],
+	"secondary": [5],
+	"bar": false
+},
+{
 	"tag": "shoulders_smith_machine_press_seated",
 	"name": "Smith Machine Shoulder Press (seated)",
 	"primary": [4],
@@ -1639,6 +1765,13 @@
 {
 	"tag": "shoulders_dumbbell_lateral_raise_standing",
 	"name": "Dumbbell Lateral Raise (standing)",
+	"primary": [4],
+	"secondary": [5],
+	"bar": false
+},
+{
+	"tag": "traps_machine_shrugs_seated",
+	"name": "Shoulder Machine Lateral Raise",
 	"primary": [4],
 	"secondary": [5],
 	"bar": false
@@ -1886,6 +2019,13 @@
 	"name": "Pulley Machine Triceps Drag, Underhand Grip",
 	"primary": [7],
 	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "triceps_single_arm_pulley_underhand_pushdown",
+	"name": "Pulley Machine Underhand Pushdown, Single Arm (standing)",
+	"primary": [7],
+	"secondary": [4],
 	"bar": false
 },
 {
