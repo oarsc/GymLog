@@ -133,15 +133,22 @@
 },
 {
 	"tag": "abs_mat_cycle_crunch_lying",
-	"name": "Pelvic Lift, Raised Legs (lying)",
+	"name": "Pelvic Lift Lying, Raised Legs",
 	"primary": [13],
 	"secondary": [],
 	"bar": false
 },
 {
 	"tag": "abs_mat_pelvic_lift_lying_bent_legs",
-	"name": "Pelvic Lift, Bent Legs (lying)",
-	"primary": [13, 12],
+	"name": "Pelvic Lift Lying, Bent Legs (barbell)",
+	"primary": [12, 13],
+	"secondary": [],
+	"bar": false
+},
+{
+	"tag": "abs_mat_pelvic_lift_lying_bent_legs",
+	"name": "Pelvic Lift Lying, Bent Legs (machine)",
+	"primary": [12, 13],
 	"secondary": [],
 	"bar": false
 },
@@ -386,8 +393,8 @@
 {
 	"tag": "biceps_bar_pullups_close_overhand_grip",
 	"name": "Pull-ups, Underhand Close Grip",
-	"primary": [6],
-	"secondary": [2],
+	"primary": [2, 6],
+	"secondary": [],
 	"bar": false
 },
 {
@@ -860,13 +867,6 @@
 	"bar": false
 },
 {
-	"tag": "abs_high_cable_crunch_standing",
-	"name": "Straight Arm Pulley Machine Push Down (standing)",
-	"primary": [1, 13],
-	"secondary": [],
-	"bar": false
-},
-{
 	"tag": "chest_bench_dumbbell_twist_in_flys_lying",
 	"name": "Twisting Dumbbell Bench Flys",
 	"primary": [1],
@@ -1212,13 +1212,27 @@
 {
 	"tag": "lat_bar_pullups_underhand",
 	"name": "Pull-ups, Underhand Wide Grip",
-	"primary": [2],
+	"primary": [2, 6],
+	"secondary": [6, 8],
+	"bar": false
+},
+{
+	"tag": "lat_bar_pullups_overhand",
+	"name": "Pull-ups, Vertical Grip",
+	"primary": [2, 6],
 	"secondary": [6, 8],
 	"bar": false
 },
 {
 	"tag": "lat_machine_supported_pullups_underhand",
 	"name": "Supported Machine Pull-ups, Underhand Wide Grip",
+	"primary": [2],
+	"secondary": [6, 8],
+	"bar": false
+},
+{
+	"tag": "lat_machine_supported_pullups_overhand_medium_grip",
+	"name": "Supported Machine Pull-ups, Vertical Grip",
 	"primary": [2],
 	"secondary": [6, 8],
 	"bar": false
@@ -1406,8 +1420,36 @@
 	"bar": false
 },
 {
+	"tag": "quads_barbell_squats_standing",
+	"name": "Ankle Support Free Squats",
+	"primary": [9, 3, 12],
+	"secondary": [10],
+	"bar": true
+},
+{
+	"tag": "quads_machine_leg_press_incline",
+	"name": "Machine Leg Press",
+	"primary": [9, 12],
+	"secondary": [10],
+	"bar": false
+},
+{
+	"tag": "quads_machine_leg_press_incline",
+	"name": "Machine Leg Press, Wide Feet",
+	"primary": [9, 12],
+	"secondary": [10],
+	"bar": false
+},
+{
 	"tag": "quads_machine_leg_press_incline",
 	"name": "Machine Leg Press (incline)",
+	"primary": [9, 12],
+	"secondary": [10],
+	"bar": false
+},
+{
+	"tag": "quads_machine_leg_press_incline",
+	"name": "Machine Leg Press, Wide Feet (incline)",
 	"primary": [9, 12],
 	"secondary": [10],
 	"bar": false
@@ -1474,13 +1516,6 @@
 	"primary": [9, 12],
 	"secondary": [3, 10],
 	"bar": true
-},
-{
-	"tag": "quads_machine_leg_press_incline",
-	"name": "Leg Press Machine, Wide Feet (incline)",
-	"primary": [9, 12],
-	"secondary": [10],
-	"bar": false
 },
 {
 	"tag": "quads_barbell_hack_squats_standing",
@@ -1988,7 +2023,7 @@
 },
 {
 	"tag": "cardio_gym_crosstrainer",
-	"name": "Crosstrainer (Elliptical)",
+	"name": "Elliptical (Crosstrainer)",
 	"primary": [14],
 	"secondary": [],
 	"bar": false
