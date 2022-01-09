@@ -1,0 +1,6270 @@
+{
+  "exercises": [
+    {
+      "exerciseId": 1,
+      "image": "abs_mat_crunch_lying_raised_legs",
+      "lastStep": 500,
+      "lastTrained": 1641570720062,
+      "lastWeightSpec": 1,
+      "name": "Russian Twists",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 2,
+      "image": "abs_woodchopper",
+      "lastStep": 500,
+      "lastTrained": 1641571702293,
+      "lastWeightSpec": 1,
+      "name": "Pulley Oblique Twist (Wood Chopper)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 3,
+      "image": "abs_mat_planks_rest_on_arms",
+      "lastStep": 500,
+      "lastTrained": 1641570728277,
+      "lastWeightSpec": 1,
+      "name": "Planks",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 4,
+      "image": "abs_mat_alternate_heel_touchers_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Sit-ups, Bent Legs",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 5,
+      "image": "abs_mat_crunch_lying_raised_legs",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Twisting Sit-ups, Bent Legs",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 6,
+      "image": "abs_mat_crunch_lying_raised_legs",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Sit-ups, Raised Legs",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 7,
+      "image": "abs_mat_twist_situp_lying_raise_bent_2",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Twisting Sit-ups, Raised Legs",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 8,
+      "image": "abs_bench_situp_decline_bent_legs",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Sit-ups (decline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 9,
+      "image": "abs_mat_jackknife_situp_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Jackknife Sit-Up (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 10,
+      "image": "abs_mat_side_crunch_lying",
+      "lastStep": 500,
+      "lastTrained": 1641570717653,
+      "lastWeightSpec": 1,
+      "name": "Crunches, Bent Legs",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 11,
+      "image": "abs_bench_crunch_decline_bent_legs",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Crunches (decline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 12,
+      "image": "abs_mat_side_crunch_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Side Crunches (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 13,
+      "image": "abs_mat_supported_crunch_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Supported Crunches (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 14,
+      "image": "abs_mat_supported_crunch_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Supported Side Crunches (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 15,
+      "image": "abs_mat_crunch_lying_raised_legs",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Crunches, Raised Legs",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 16,
+      "image": "abs_mat_reverse_crunch_lying_raised_legs",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Reverse Crunches, Raised Legs",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 17,
+      "image": "abs_machine_crunch_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Crunch (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 18,
+      "image": "abs_machine_crunch_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Side Crunch (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 19,
+      "image": "abs_mat_alternate_heel_touchers_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Leg Pull-In (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 20,
+      "image": "abs_mat_cycle_crunch_lying",
+      "lastStep": 500,
+      "lastTrained": 1641570725808,
+      "lastWeightSpec": 1,
+      "name": "Leg Raise (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 21,
+      "image": "abs_mat_cycle_crunch_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pelvic Lift Lying, Raised Legs",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 22,
+      "image": "abs_mat_pelvic_lift_lying_bent_legs",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pelvic Lift Lying, Bent Legs (barbell)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 23,
+      "image": "abs_mat_pelvic_lift_lying_bent_legs",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pelvic Lift Lying, Bent Legs (machine)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 24,
+      "image": "abs_bar_leg_raise_hanging",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Leg Raise (hanging)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 25,
+      "image": "abs_bar_leg_raise_hanging",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Knee Raise (hanging)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 26,
+      "image": "abs_bar_leg_raise_rest_on_arms",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Leg Raise, Rest On Arms",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 27,
+      "image": "abs_bar_leg_raise_rest_on_arms",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Knee Raise, Rest On Arms",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 28,
+      "image": "abs_mat_flatter_kick_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Flutter Kicks (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 29,
+      "image": "abs_mat_side_hip_raise_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Side Hip Raise (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 30,
+      "image": "abs_barbell_roller_kneeling",
+      "lastStep": 500,
+      "lastTrained": 1641570723045,
+      "lastWeightSpec": 1,
+      "name": "Barbell Roller (kneeling)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 31,
+      "image": "abs_mat_cycle_crunch_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Air Bike Crunches",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 32,
+      "image": "abs_mat_cycle_crunch_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Twisting Air Bike Crunches",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 33,
+      "image": "abs_high_cable_crunch_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Crunches (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 34,
+      "image": "abs_high_cable_crunch_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Crunches (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 35,
+      "image": "abs_barbell_twist_torso_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Twisting Barbell Torso (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 36,
+      "image": "abs_dumbbell_side_bend_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Side Bend (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 37,
+      "image": "abs_barbell_side_bend_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Side Bend (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 38,
+      "image": "abs_low_cable_side_bend_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Side Bend (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 39,
+      "image": "abs_bench_side_crunch_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Hyperextension Bench Side Crunch",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 40,
+      "image": "abs_mat_alternate_heel_touchers_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Alternating Heel Touchers (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 41,
+      "image": "abs_mat_cycle_crunch_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Toe Touchers (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 42,
+      "image": "biceps_dumbbell_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Biceps Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 43,
+      "image": "biceps_dumbbell_hammer_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Biceps Hammer Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 44,
+      "image": "biceps_dumbbell_alternate_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Alternating Biceps Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 45,
+      "image": "biceps_dumbbell_alternate_hammer_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Alternating Biceps Hammer Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 46,
+      "image": "biceps_bench_dumbbell_curl_seated_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Biceps Curl (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 47,
+      "image": "biceps_bench_dumbbell_hammer_curl_seated_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Biceps Hammer Curl (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 48,
+      "image": "biceps_bench_dumbbell_alternate_curl_seated_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Alternating Biceps Curl (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 49,
+      "image": "biceps_bench_dumbbell_alternate_hammer_curl_seated_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Alternating Biceps Hammer Curl (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 50,
+      "image": "biceps_bench_dumbbell_concentration_curl_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Biceps Concentration Curl (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 51,
+      "image": "biceps_barbell_curl_standing_close_grip",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Biceps Curl (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 52,
+      "image": "biceps_barbell_hammer_curl_standing",
+      "lastBarId": 2,
+      "lastStep": 500,
+      "lastTrained": 1641565684270,
+      "lastWeightSpec": 2,
+      "name": "Barbell Hammer Biceps Curl (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 53,
+      "image": "biceps_ezbar_curl_standing_medium_grip",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "EZ-Bar Biceps Curl (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 54,
+      "image": "biceps_machine_curl_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Biceps Curl (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 55,
+      "image": "biceps_scott_machine_curl_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Scott Machine Biceps Curl (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 56,
+      "image": "biceps_scott_machine_ezbar_curl_seated",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Scott Machine EZ-Bar Biceps Curl (seated)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 57,
+      "image": "biceps_scott_machine_dumbbell_curl_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Scott Machine Dumbbell Curl",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 58,
+      "image": "biceps_scott_machine_barbell_hammer_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Scott Machine Hammer Barbell Curl",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 59,
+      "image": "biceps_low_cable_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Biceps Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 60,
+      "image": "biceps_low_cable_curl_single_arm_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Biceps Curl, Single Arm (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 61,
+      "image": "biceps_bar_pullups_close_overhand_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pull-ups, Underhand Close Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 62,
+      "image": "biceps_bar_pullups_close_overhand_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pull-ups, Overhand Close Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 63,
+      "image": "biceps_dumbbell_crossbody_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Biceps Crossbody Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 64,
+      "image": "biceps_dumbbell_crossbody_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Biceps Crossbody Hammer Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 65,
+      "image": "biceps_low_cable_bench_concentration_curl_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Biceps Concentration Curl (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 66,
+      "image": "biceps_barbell_curl_standing_close_grip",
+      "lastBarId": 1,
+      "lastStep": 500,
+      "lastTrained": 1641564778411,
+      "lastWeightSpec": 2,
+      "name": "Barbell Biceps Curl, Close Grip (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 67,
+      "image": "biceps_ezbar_curl_standing_close_grip",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "EZ-Bar Biceps Curl, Close Grip (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 68,
+      "image": "biceps_barbell_curl_standing_close_grip",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Biceps Curl, Wide Grip (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 69,
+      "image": "biceps_ezbar_curl_standing_wide_grip",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "EZ-Bar Biceps Curl, Wide Grip (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 70,
+      "image": "biceps_bench_dumbbell_single_arm_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 1641567586853,
+      "lastWeightSpec": 2,
+      "name": "Dumbbell Single Arm Biceps Curl",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 71,
+      "image": "biceps_scott_machine_dumbbell_curl_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Scott Machine Dumbbell Biceps Hammer Curl",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 72,
+      "image": "biceps_scott_machine_cable_curl_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Scott Machine Low Cable Biceps Curl",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 73,
+      "image": "biceps_high_cable_overhead_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 1641566427327,
+      "lastWeightSpec": 2,
+      "name": "Overhead Pulley Machine Biceps Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 74,
+      "image": "biceps_low_cable_bench_curl_seated_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Bench Biceps Curl (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 75,
+      "image": "biceps_low_cable_mat_curl_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Biceps Curl (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 76,
+      "image": "biceps_high_cable_bench_curl_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Bench Biceps Curl (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 77,
+      "image": "biceps_low_cable_robe_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Rope Biceps Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 78,
+      "image": "biceps_bench_barbell_curl_lying_incline",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Biceps Curl (incline)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 79,
+      "image": "biceps_bench_dumbbell_curl_lying_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Biceps Curl (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 80,
+      "image": "biceps_high_bench_barbell_curl_lying",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell High Bench Biceps Curl (prone)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 81,
+      "image": "biceps_high_bench_dumbbell_curl_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell High Bench Biceps Curl (prone)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 82,
+      "image": "biceps_dumbbell_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Biceps Zottman Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 83,
+      "image": "calves_barbell_rocking_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Calf Raise (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 84,
+      "image": "calves_smith_machine_rocking_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Calf Raise (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 85,
+      "image": "calves_machine_rocking_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Calf Raise (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 86,
+      "image": "calves_machine_rocking_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Calf Raise (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 87,
+      "image": "calves_barbell_rocking_seated",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Calf Raise (seated)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 88,
+      "image": "calves_dumbbell_rocking_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Calf Rocking (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 89,
+      "image": "calves_machine_leg_press_rocking_incline_close_feet",
+      "lastStep": 500,
+      "lastTrained": 1641725639765,
+      "lastWeightSpec": 2,
+      "name": "Machine Leg Press Calf Rocking, Close Feet",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 90,
+      "image": "calves_machine_leg_press_rocking_incline_close_feet",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Leg Press Calf Rocking, Wide Feet",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 91,
+      "image": "calves_donkey_rocking_bent_over",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Donkey Rocking, Bent Over",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 92,
+      "image": "calves_smith_machine_stepper_reverse_rocking_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Reverse Smith Calf Rocking with Stepper (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 93,
+      "image": "chest_bench_barbell_press_lying",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Bench Press",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 94,
+      "image": "chest_bench_barbell_press_decline_medium_grip",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Bench Press (decline)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 95,
+      "image": "chest_bench_barbell_press_incline",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Bench Press (incline)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 96,
+      "image": "chest_bench_barbell_press_lying",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Bench Press, Wide Grip",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 97,
+      "image": "chest_bench_barbell_press_decline_medium_grip",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Bench Press, Wide Grip (decline)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 98,
+      "image": "chest_bench_barbell_press_incline",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Bench Press, Wide Grip (incline)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 99,
+      "image": "chest_bench_dumbbell_press_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Bench Press",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 100,
+      "image": "chest_bench_dumbbell_press_decline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Bench Press (decline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 101,
+      "image": "chest_bench_dumbbell_press_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Bench Press (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 102,
+      "image": "chest_smith_machine_barbell_press_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Bench Press",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 103,
+      "image": "chest_smith_machine_barbell_press_decline_medium_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Bench Press (decline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 104,
+      "image": "chest_smith_machine_barbell_press_incline_medium_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Bench Press (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 105,
+      "image": "chest_smith_machine_barbell_press_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Bench Press, Wide Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 106,
+      "image": "chest_smith_machine_barbell_press_decline_wide_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Bench Press, Wide Grip (decline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 107,
+      "image": "chest_smith_machine_barbell_press_incline_wide_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Bench Press, Wide Grip (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 108,
+      "image": "chest_machine_press_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Bench Press",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 109,
+      "image": "chest_machine_press_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Front Press (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 110,
+      "image": "chest_high_cable_crossover_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Crossover (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 111,
+      "image": "chest_high_cable_crossover_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Low Crossover (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 112,
+      "image": "chest_bench_dumbbell_flys_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Bench Flys",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 113,
+      "image": "chest_bench_dumbbell_flys_decline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Bench Flys (decline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 114,
+      "image": "chest_bench_dumbbell_flys_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Bench Flys (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 115,
+      "image": "chest_low_dumbbell_flys_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Low Dumbbell Flys (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 116,
+      "image": "chest_machine_flys_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Fly (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 117,
+      "image": "chest_machine_butterflys_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Butterfly (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 118,
+      "image": "chest_bench_ezbar_pullover_lying",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "EZ-Bar Bench Pullover",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 119,
+      "image": "chest_bar_machine_dips_medium_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Bar Dips, Bent Over",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 120,
+      "image": "chest_machine_dips",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Supported Machine Dips",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 121,
+      "image": "chest_push_ups_flat",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Push-ups, Wide Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 122,
+      "image": "chest_push_ups_decline_wide_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Push-ups, Wide Grip (decline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 123,
+      "image": "chest_bench_dumbbell_press_lying_hammer_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Hammer Grip Dumbbell Bench Press",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 124,
+      "image": "chest_bench_dumbbell_press_decline_hammer_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Hammer Grip Dumbbell Bench Press (decline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 125,
+      "image": "chest_bench_dumbbell_press_incline_hammer_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Hammer Grip Dumbbell Bench Press (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 126,
+      "image": "chest_machine_press_decline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Bench Press (decline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 127,
+      "image": "chest_machine_press_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Bench Press (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 128,
+      "image": "chest_low_cable_bench_flys_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Bench Flys",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 129,
+      "image": "chest_low_cable_bench_flys_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Bench Flys (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 130,
+      "image": "chest_low_cable_bench_flys_decline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Bench Flys (decline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 131,
+      "image": "chest_low_pulley_flys_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Low Pulley Flys (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 132,
+      "image": "chest_bench_dumbbell_twist_in_flys_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Twisting Dumbbell Bench Flys",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 133,
+      "image": "chest_bench_dumbbell_twist_in_flys_decline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Twisting Dumbbell Bench Flys (decline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 134,
+      "image": "chest_bench_dumbbell_twist_in_flys_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Twisting Dumbbell Bench Flys (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 135,
+      "image": "chest_bench_barbell_pullover_lying",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Bench Pullover",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 136,
+      "image": "chest_bench_dumbbell_pullover_lying_both_arms",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Bench Pullover",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 137,
+      "image": "chest_high_cable_bench_pullover_lying_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Bench Pullover",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 138,
+      "image": "chest_bar_machine_dips_wide_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Bar Dips, Bent Over, Wide Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 139,
+      "image": "forearm_dumbbell_wrist_curl_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Forearm Wrist Curl (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 140,
+      "image": "forearm_barbell_wrist_curl_seated",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Forearm Wrist Curl (seated)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 141,
+      "image": "forearm_barbell_wrist_curl_seated",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "EZ-Bar Forearm Wrist Curl (seated)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 142,
+      "image": "forearm_barbell_wrist_curls_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Forearm Wrist Curl (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 143,
+      "image": "forearm_low_cable_reverse_curls_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Reverse Pulley Machine Forearm Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 144,
+      "image": "forearm_barbell_reverse_curls_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Reverse Barbell Forearm Curl (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 145,
+      "image": "forearm_cable_side_curl_seated_single_arm",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Forearm Lateral Curl (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 146,
+      "image": "forearm_low_cable_wrist_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Forearm Wrist Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 147,
+      "image": "forearm_barbell_wrist_curls_standing_behind_back",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Forearm Wrist Curl Behind Back (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 148,
+      "image": "forearm_plate_reverse_curls_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Reverse Plate Forearm Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 149,
+      "image": "forearm_low_cable_bench_reverse_curl_seated_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Reverse Pulley Machine Forearm Curl (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 150,
+      "image": "forearm_plate_hand_squeeze_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Plate Forearm Hand Squeeze (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 151,
+      "image": "biceps_scott_machine_ezbar_curl_seated",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Scott Machine EZ-Bar Forearm Curl, Close Grip",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 152,
+      "image": "gluteus_mat_hip_extension_kneeling_bent_leg",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Hip Extension (kneeling)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 153,
+      "image": "gluteus_machine_hip_extension_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Hip Extension",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 154,
+      "image": "gluteus_mat_leg_kickbacks_kneeling_bent_leg",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Leg Kickback (kneeling)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 155,
+      "image": "gluteus_low_cable_hip_extension_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Hip Extension (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 156,
+      "image": "gluteus_mat_barbell_squat_kneeling",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Squats (kneeling)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 157,
+      "image": "gluteus_low_cable_robe_pullthrough_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Rope Pull Through (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 158,
+      "image": "hamstrings_machine_curl_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Leg Curl (prone)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 159,
+      "image": "hamstrings_machine_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 1641724004334,
+      "lastWeightSpec": 1,
+      "name": "Machine Leg Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 160,
+      "image": "hamstrings_machine_curl_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Leg Curl (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 161,
+      "image": "hamstrings_low_cable_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Leg Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 162,
+      "image": "lat_bar_pullups_overhand",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pull-ups, Overhand Wide Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 163,
+      "image": "lat_bar_pullups_overhand",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pull-ups, Overhand Medium Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 164,
+      "image": "lat_bar_pullups_underhand",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pull-ups, Underhand Medium Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 165,
+      "image": "lat_bar_pullups_overhand",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Ring Pull-ups",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 166,
+      "image": "lat_australian_pullups",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Australian Pull-ups",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 167,
+      "image": "lat_australian_pullups",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Australian Ring Pull-ups",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 168,
+      "image": "biceps_low_cable_robe_curl_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Face Pull",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 169,
+      "image": "lat_machine_supported_pullups_overhand_medium_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Supported Machine Pull-ups, Overhand Medium Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 170,
+      "image": "lat_machine_supported_pullups_overhand_medium_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Supported Machine Pull-ups, Overhand Wide Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 171,
+      "image": "lat_machine_supported_pullups_underhand",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Supported Machine Pull-ups, Underhand Medium Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 172,
+      "image": "lat_barbell_row_bent_over_underhand",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Row, Bent Over (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 173,
+      "image": "lat_dumbbell_row_standing_bent_over",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Row, Bent Over (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 174,
+      "image": "abs_high_cable_crunch_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Lat Pushdown (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 175,
+      "image": "triceps_high_cable_robe_pushdown_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Rope Lat Pushdown (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 176,
+      "image": "chest_machine_press_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Leverage Machine Row (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 177,
+      "image": "chest_machine_press_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Leverage Machine Row, vertical grip (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 178,
+      "image": "lat_low_cable_row_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Row (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 179,
+      "image": "lat_machine_chest_pulldown_overhand",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Pulldown Behind The Neck, Wide Grip (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 180,
+      "image": "lat_machine_chest_pulldown_overhand",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Pulldown To Chest, Wide Grip (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 181,
+      "image": "lat_leverage_machine_pulldown_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Leverage Machine Pulldown (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 182,
+      "image": "lat_machine_reverse_flys_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Reverse Machine Flys (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 183,
+      "image": "lat_machine_reverse_flys_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Reverse Machine Flys (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 184,
+      "image": "lat_bar_pullups_underhand",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pull-ups, Underhand Wide Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 185,
+      "image": "lat_bar_pullups_overhand",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pull-ups, Vertical Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 186,
+      "image": "lat_machine_supported_pullups_underhand",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Supported Machine Pull-ups, Underhand Wide Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 187,
+      "image": "lat_machine_supported_pullups_overhand_medium_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Supported Machine Pull-ups, Vertical Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 188,
+      "image": "lat_barbell_row_bent_over_underhand",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Row, Bent Over, Underhand Grip (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 189,
+      "image": "lat_barbell_tipup_bent_over",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Tipup, Bent Over (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 190,
+      "image": "lat_barbell_tipup_bent_over",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Tipup, Bent Over, Vertical Grip (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 191,
+      "image": "lat_smith_machine_row_bent_over",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Row, Bent Over (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 192,
+      "image": "lat_low_cable_row_standing_bent_over",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Row, Bent Over (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 193,
+      "image": "lat_machine_chest_pulldown_underhand_close_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Pulldown To Chest, Underhand Close Grip (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 194,
+      "image": "lat_machine_chest_pulldown_overhand_close_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Pulldown To Chest, Hammer Close Grip (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 195,
+      "image": "lat_high_bench_barbell_row_lying",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Flat High Bench Row (prone)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 196,
+      "image": "lat_high_bench_dumbbell_row_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Flat High Bench Row (prone)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 197,
+      "image": "lat_bench_dumbbell_reverse_flys_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Reverse Dumbbell Flat Bench Flys (prone)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 198,
+      "image": "lower_back_machine_hyperextensions_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Hyperextensions",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 199,
+      "image": "lower_back_machine_hyperextensions_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Hyperextensions (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 200,
+      "image": "lower_back_smith_machine_pulls_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Back Curl (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 201,
+      "image": "lower_back_barbell_good_mornings_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Back Curl (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 202,
+      "image": "lower_back_mat_back_curls_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Mat Back Curl (prone)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 203,
+      "image": "lower_back_mat_cat_stretch_kneeling",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Mat Cat Stretch (kneeling)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 204,
+      "image": "lower_back_bench_hyperextensions_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Flat Bench Hyperextensions (prone)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 205,
+      "image": "lower_back_barbell_good_mornings_seated",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Back Curl (seated)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 206,
+      "image": "lower_back_barbell_deadlift_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Deadlift Sumo, Wide Feet",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 207,
+      "image": "quads_machine_abduction_press_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Abduction Press (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 208,
+      "image": "quads_machine_adduction_press_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Adduction Press (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 209,
+      "image": "quads_mat_leg_side_raise_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Leg Side Raise (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 210,
+      "image": "calves_machine_rocking_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Leverage Squats (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 211,
+      "image": "quads_barbell_squats_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 1641721407570,
+      "lastWeightSpec": 2,
+      "name": "Barbell Squats (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 212,
+      "image": "calves_smith_machine_rocking_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Squats (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 213,
+      "image": "quads_smith_lunges",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Lunges",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 214,
+      "image": "quads_bulgarian_split_squats",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Bulgarian Split Squats",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 215,
+      "image": "quads_bulgarian_dumbbell_split_squats",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Bulgarian Dumbbell Split Squats",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 216,
+      "image": "quads_smith_bulgarian_squats",
+      "lastStep": 250,
+      "lastTrained": 1641722089066,
+      "lastWeightSpec": 2,
+      "name": "Smith Machine Bulgarian Split Squat",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 217,
+      "image": "quads_barbell_front_squats_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Front Squats (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 218,
+      "image": "quads_machine_squats_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Squats (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 219,
+      "image": "quads_barbell_squats_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Ankle Support Free Squats",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 220,
+      "image": "quads_machine_leg_press_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Leg Press",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 221,
+      "image": "quads_machine_leg_press_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Leg Press, Wide Feet",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 222,
+      "image": "quads_machine_leg_press_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Leg Press (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 223,
+      "image": "quads_machine_leg_press_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Leg Press, Wide Feet (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 224,
+      "image": "quads_barbell_step_ups_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Step-ups (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 225,
+      "image": "quads_dumbbell_step_ups_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Step-ups (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 226,
+      "image": "quads_machine_leg_extension_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Leg Extension (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 227,
+      "image": "quads_machine_plates_leg_extension_seated",
+      "lastStep": 500,
+      "lastTrained": 1641723015937,
+      "lastWeightSpec": 1,
+      "name": "Machine Leg Extension, using plates (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 228,
+      "image": "cardio_icon_sport_skip_rope",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Fast Skipping (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 229,
+      "image": "lower_back_barbell_deadlift_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Deadlift",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 230,
+      "image": "quads_low_cable_abduction_press_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Abduction Press (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 231,
+      "image": "quads_low_cable_adduction_press_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Adduction Press (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 232,
+      "image": "quads_dumbbell_lunges",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Lunges",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 233,
+      "image": "quads_barbell_lunges",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Lunges",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 234,
+      "image": "quads_barbell_hack_squats_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Hack Squats (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 235,
+      "image": "quads_smith_machine_hack_squats_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Hack Squats (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 236,
+      "image": "quads_smith_machine_front_squats_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Front Squats (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 237,
+      "image": "quads_dumbbell_deadlift_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Deadlift",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 238,
+      "image": "quads_lower_cable_deadlift_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Deadlift",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 239,
+      "image": "shoulders_barbell_upright_row_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Upright Row (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 240,
+      "image": "shoulders_low_cable_upright_row_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Upright Row (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 241,
+      "image": "shoulders_dumbbell_front_raise_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Front Raise (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 242,
+      "image": "shoulders_plate_front_raise_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Plate Front Raise (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 243,
+      "image": "shoulders_barbell_neck_press_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Neck Press (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 244,
+      "image": "shoulders_barbell_press_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Shoulder Press (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 245,
+      "image": "shoulders_barbell_press_seated",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Shoulder Press (seated)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 246,
+      "image": "shoulders_dumbbell_press_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Shoulder Press (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 247,
+      "image": "shoulders_dumbbell_press_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Shoulder Press (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 248,
+      "image": "shoulders_dumbbell_press_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Arnold Press (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 249,
+      "image": "shoulders_smith_machine_press_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Shoulder Press (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 250,
+      "image": "shoulders_machine_press_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Shoulder Press (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 251,
+      "image": "shoulders_machine_lateral_raise_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Lateral Raise (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 252,
+      "image": "shoulders_dumbbell_lateral_raise_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Lateral Raise (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 253,
+      "image": "traps_machine_shrugs_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Shoulder Machine Lateral Raise",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 254,
+      "image": "shoulders_dumbbell_lateral_raise_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Lateral Raise, Single Arm (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 255,
+      "image": "shoulders_low_cable_lateral_raise_standing_single_arm",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Lateral Raise, Single Arm (bent over)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 256,
+      "image": "shoulders_dumbbell_lateral_raise_standing_bent_over",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Lateral Raise (bent over)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 257,
+      "image": "shoulders_dumbbell_upright_row_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Upright Row (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 258,
+      "image": "shoulders_smith_machine_upright_row_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Upright Row (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 259,
+      "image": "shoulders_barbell_front_raise_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Front Raise (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 260,
+      "image": "shoulders_low_cable_front_raise_standing_single_arm",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Single Arm Pulley Machine Front Raise (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 261,
+      "image": "shoulders_low_cable_robe_front_raise_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Rope Front Raise (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 262,
+      "image": "shoulders_push_ups_handstand",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Handstand Push-ups",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 263,
+      "image": "traps_barbell_shrugs_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Shrugs (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 264,
+      "image": "traps_barbell_shrugs_behind_back_standing",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Shrugs Behind The Back (standing)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 265,
+      "image": "traps_dumbbell_shrugs_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Shrugs (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 266,
+      "image": "traps_machine_shrugs_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Shrugs (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 267,
+      "image": "traps_smith_machine_shrugs_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Shrugs (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 268,
+      "image": "traps_smith_machine_behind_back_shrugs_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Shrugs Behind The Back (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 269,
+      "image": "triceps_bench_barbell_press_lying_close_grip",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Flat Bench Press, Close Grip",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 270,
+      "image": "triceps_smith_machine_press_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Barbell Press, Close Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 271,
+      "image": "triceps_high_cable_vgrip_pushdown_standing_overhand_grip",
+      "lastStep": 500,
+      "lastTrained": 1641568292169,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Triceps Press (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 272,
+      "image": "triceps_high_cable_robe_pushdown_standing",
+      "lastStep": 500,
+      "lastTrained": 1641568858704,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Rope Triceps Press (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 273,
+      "image": "triceps_low_cable_robe_overhead_french_press_standing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Overhead Pulley Machine Triceps Rope Press (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 274,
+      "image": "triceps_bench_ezbar_french",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "EZ-Bar Triceps French Press (lying)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 275,
+      "image": "triceps_bench_ezbar_overhead_french_press_seated",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Overhead EZ-Bar Triceps Press (seated)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 276,
+      "image": "triceps_bench_dumbbell_overhead_french_press_seated_both_arms",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Overhead Both Arm Dumbbell Triceps Press (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 277,
+      "image": "triceps_bench_dumbbell_overhead_french_press_seated_single_arm",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Overhead Single Arm Dumbbell Triceps Press (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 278,
+      "image": "triceps_bench_dumbbell_kickbacks_bent_over",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Triceps Kickbacks (bent over)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 279,
+      "image": "triceps_bench_dips_raised_legs",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dips, Raised Legs",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 280,
+      "image": "chest_push_ups_flat",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Push-ups, Close Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 281,
+      "image": "triceps_bar_dips",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Bar Dips",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 282,
+      "image": "chest_machine_dips",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Supported Machine Dips",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 283,
+      "image": "triceps_machine_pushdown_seated",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Machine Triceps Press (seated)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 284,
+      "image": "triceps_bench_barbell_press_lying_decline_close_grip",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Bench Press, Close Grip (decline)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 285,
+      "image": "triceps_bench_barbell_press_lying_incline_close_grip",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Barbell Bench Press, Close Grip (incline)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 286,
+      "image": "triceps_smith_machine_press_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Barbell Press, Close Grip (decline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 287,
+      "image": "triceps_smith_machine_press_lying_incline_close_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Smith Machine Barbell Press, Close Grip (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 288,
+      "image": "triceps_high_cable_vgrip_dragdown_standing_underhand_grip",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Triceps Drag, Underhand Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 289,
+      "image": "triceps_single_arm_pulley_underhand_pushdown",
+      "lastStep": 500,
+      "lastTrained": 1641569659455,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Underhand Pushdown, Single Arm (standing)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 290,
+      "image": "triceps_high_cable_robe_overhead_french_press_standing_bent_over",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Overhead Pulley Machine Rope Triceps Press (bent over)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 291,
+      "image": "triceps_high_cable_bench_vgrip_overhead_press_kneeling",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Overhead Pulley Machine Triceps Press (kneeling)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 292,
+      "image": "triceps_low_cable_kickbacks_bent_over",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Triceps Kickback (bent over)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 293,
+      "image": "triceps_high_cable_concentration_drag_kneeling",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Triceps Concentration Drag (kneeling)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 294,
+      "image": "triceps_bench_ezbar_french",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "EZ-Bar Triceps French Press, Underhand Grip (lying)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 295,
+      "image": "triceps_bench_ezbar_french",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "EZ-Bar Triceps French Press (decline)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 296,
+      "image": "chest_bench_barbell_press_incline",
+      "lastBarId": 4,
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "EZ-Bar Triceps French Press (incline)",
+      "requiresBar": true
+    },
+    {
+      "exerciseId": 297,
+      "image": "triceps_bench_dumbbell_overhead_french_press_seated_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Overhead Dumbbell Triceps Press (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 298,
+      "image": "triceps_bench_dumbbell_tate_press_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Dumbbell Triceps Tate Press (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 299,
+      "image": "triceps_bar_dips",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Bar Dips, Wide Grip",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 300,
+      "image": "triceps_low_cable_bench_french_press_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Triceps Press (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 301,
+      "image": "triceps_high_cable_bench_french_press_lying_incline",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Pulley Machine Triceps Press (incline)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 302,
+      "image": "chest_push_ups_flat",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Toe Touch Push-ups",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 303,
+      "image": "chest_push_ups_flat",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Shoulder Tap Push-ups",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 304,
+      "image": "quads_lunges",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Switching Lunges",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 305,
+      "image": "chest_push_ups_flat",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Plank Push-ups",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 306,
+      "image": "cardio_icon_sport_climbing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Mountain Climbers",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 307,
+      "image": "cardio_gym_ergometer",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Ergometer",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 308,
+      "image": "cardio_gym_ergometer_lying",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Ergometer (lying)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 309,
+      "image": "cardio_gym_crosstrainer",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Elliptical (Crosstrainer)",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 310,
+      "image": "cardio_gym_stepper",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Stepper",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 311,
+      "image": "cardio_gym_treadmill",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Treadmill",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 312,
+      "image": "cardio_gym_rower",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Rower",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 313,
+      "image": "cardio_icon_gym_stationary_cycling",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Stationary Cycling",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 314,
+      "image": "cardio_icon_sport_boxing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Boxing",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 315,
+      "image": "cardio_icon_sport_bb",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Weight Training",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 316,
+      "image": "cardio_icon_sport_fighting",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Fighting",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 317,
+      "image": "cardio_icon_sport_tennis",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Tennis",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 318,
+      "image": "cardio_icon_sport_volleyball",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Volleyball",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 319,
+      "image": "cardio_icon_sport_soccer",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Soccer",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 320,
+      "image": "cardio_icon_sport_football",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Football",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 321,
+      "image": "cardio_icon_sport_baseball",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Baseball",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 322,
+      "image": "cardio_icon_sport_basketball",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Basketball",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 323,
+      "image": "cardio_icon_sport_badminton",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Badminton",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 324,
+      "image": "cardio_icon_sport_squash",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Squash",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 325,
+      "image": "cardio_icon_sport_table_tennis",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Table Tennis",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 326,
+      "image": "cardio_sport_stretching",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Stretching",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 327,
+      "image": "cardio_sport_jogging",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Running",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 328,
+      "image": "cardio_sport_biking",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Biking",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 329,
+      "image": "cardio_icon_sport_inline_skaten",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Inline-Skaten",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 330,
+      "image": "cardio_sport_swimming",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Swimming",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 331,
+      "image": "cardio_gym_rower",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Paddling",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 332,
+      "image": "cardio_gym_rower",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Rowing",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 333,
+      "image": "cardio_icon_sport_motocross",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Motocross",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 334,
+      "image": "cardio_icon_sport_climbing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Climbing",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 335,
+      "image": "cardio_sport_jogging",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Hiking",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 336,
+      "image": "cardio_sport_cross",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Nordic Walking",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 337,
+      "image": "cardio_icon_sport_climbing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Snowboarding",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 338,
+      "image": "cardio_icon_sport_climbing",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Skiing",
+      "requiresBar": false
+    },
+    {
+      "exerciseId": 339,
+      "image": "cardio_sport_jogging",
+      "lastStep": 500,
+      "lastTrained": 0,
+      "lastWeightSpec": 1,
+      "name": "Cross-Country Skiing",
+      "requiresBar": false
+    }
+  ],
+  "primaries": [
+    {
+      "exerciseId": 1,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 2,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 3,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 4,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 5,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 6,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 7,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 8,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 9,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 10,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 11,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 12,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 13,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 14,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 15,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 16,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 17,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 18,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 19,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 20,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 21,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 22,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 22,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 23,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 23,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 24,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 25,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 26,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 27,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 28,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 28,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 29,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 30,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 31,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 32,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 33,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 34,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 35,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 36,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 37,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 38,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 39,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 40,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 41,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 42,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 43,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 44,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 45,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 46,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 47,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 48,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 49,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 50,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 51,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 52,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 53,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 54,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 55,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 56,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 57,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 58,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 59,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 60,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 61,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 61,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 62,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 62,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 63,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 64,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 65,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 66,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 67,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 68,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 69,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 70,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 71,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 72,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 73,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 74,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 75,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 76,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 77,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 78,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 79,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 80,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 81,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 82,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 83,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 84,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 85,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 86,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 87,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 88,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 89,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 90,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 91,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 92,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 93,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 94,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 95,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 96,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 97,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 98,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 99,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 100,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 101,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 102,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 102,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 103,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 103,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 104,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 104,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 105,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 106,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 107,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 108,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 109,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 109,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 110,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 111,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 112,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 113,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 114,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 115,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 116,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 117,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 118,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 119,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 120,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 121,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 122,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 123,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 124,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 125,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 126,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 127,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 128,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 129,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 130,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 131,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 132,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 133,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 134,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 135,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 136,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 137,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 138,
+      "muscleId": 1
+    },
+    {
+      "exerciseId": 139,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 140,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 141,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 142,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 143,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 144,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 145,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 146,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 147,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 148,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 149,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 150,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 151,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 152,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 153,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 154,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 155,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 156,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 157,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 157,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 158,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 159,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 160,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 161,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 162,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 163,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 163,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 164,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 164,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 165,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 166,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 166,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 167,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 167,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 168,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 168,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 169,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 169,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 170,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 171,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 171,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 172,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 173,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 174,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 174,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 175,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 175,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 176,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 177,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 178,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 179,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 180,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 181,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 182,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 183,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 184,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 184,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 185,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 185,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 186,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 187,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 188,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 189,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 190,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 191,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 192,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 193,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 193,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 194,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 194,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 195,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 196,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 197,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 198,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 199,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 200,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 200,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 201,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 201,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 202,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 203,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 204,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 205,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 206,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 206,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 207,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 207,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 208,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 208,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 209,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 210,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 210,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 211,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 211,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 212,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 212,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 213,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 213,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 214,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 214,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 215,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 215,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 216,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 216,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 217,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 217,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 218,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 218,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 219,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 219,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 220,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 220,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 221,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 221,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 222,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 222,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 223,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 223,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 224,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 225,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 226,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 227,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 228,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 228,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 229,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 229,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 230,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 231,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 232,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 232,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 233,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 233,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 234,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 234,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 235,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 235,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 236,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 236,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 237,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 237,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 237,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 238,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 238,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 238,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 239,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 240,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 241,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 242,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 243,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 244,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 245,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 246,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 247,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 248,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 249,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 250,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 251,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 252,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 253,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 254,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 255,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 256,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 257,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 258,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 259,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 260,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 261,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 262,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 263,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 264,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 265,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 266,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 267,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 268,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 269,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 270,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 271,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 272,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 273,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 274,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 275,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 276,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 277,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 278,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 279,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 280,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 281,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 282,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 283,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 284,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 285,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 286,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 287,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 288,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 289,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 290,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 291,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 292,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 293,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 294,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 295,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 296,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 297,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 298,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 299,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 300,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 301,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 302,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 303,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 304,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 305,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 306,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 307,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 308,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 309,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 310,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 311,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 312,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 313,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 314,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 315,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 316,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 317,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 318,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 319,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 320,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 321,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 322,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 323,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 324,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 325,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 326,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 327,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 328,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 329,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 330,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 331,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 332,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 333,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 334,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 335,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 336,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 337,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 338,
+      "muscleId": 14
+    },
+    {
+      "exerciseId": 339,
+      "muscleId": 14
+    }
+  ],
+  "secondaries": [
+    {
+      "exerciseId": 30,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 30,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 62,
+      "muscleId": 2
+    },
+    {
+      "exerciseId": 93,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 93,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 94,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 94,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 95,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 95,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 96,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 96,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 97,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 97,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 98,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 98,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 99,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 99,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 100,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 100,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 101,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 101,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 102,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 103,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 104,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 105,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 105,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 106,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 106,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 107,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 107,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 108,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 108,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 109,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 115,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 121,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 122,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 123,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 123,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 124,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 124,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 125,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 125,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 126,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 126,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 127,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 127,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 131,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 149,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 156,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 158,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 159,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 160,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 161,
+      "muscleId": 11
+    },
+    {
+      "exerciseId": 162,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 162,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 163,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 164,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 165,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 165,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 166,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 167,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 168,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 169,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 170,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 170,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 171,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 172,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 173,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 174,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 174,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 175,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 175,
+      "muscleId": 7
+    },
+    {
+      "exerciseId": 176,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 177,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 178,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 179,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 180,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 181,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 184,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 184,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 185,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 185,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 186,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 186,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 187,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 187,
+      "muscleId": 8
+    },
+    {
+      "exerciseId": 188,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 189,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 190,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 191,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 192,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 195,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 196,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 206,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 206,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 210,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 210,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 211,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 211,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 212,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 212,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 213,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 213,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 214,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 214,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 215,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 215,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 216,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 216,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 217,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 217,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 219,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 219,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 220,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 221,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 222,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 223,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 228,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 229,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 229,
+      "muscleId": 9
+    },
+    {
+      "exerciseId": 229,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 230,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 231,
+      "muscleId": 12
+    },
+    {
+      "exerciseId": 232,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 232,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 233,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 233,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 234,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 235,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 235,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 236,
+      "muscleId": 3
+    },
+    {
+      "exerciseId": 236,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 237,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 238,
+      "muscleId": 10
+    },
+    {
+      "exerciseId": 239,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 239,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 240,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 240,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 243,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 244,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 245,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 246,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 247,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 248,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 249,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 250,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 251,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 252,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 253,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 254,
+      "muscleId": 5
+    },
+    {
+      "exerciseId": 257,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 257,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 258,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 258,
+      "muscleId": 6
+    },
+    {
+      "exerciseId": 269,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 270,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 271,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 272,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 273,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 274,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 275,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 276,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 277,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 278,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 279,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 280,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 281,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 283,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 283,
+      "muscleId": 13
+    },
+    {
+      "exerciseId": 284,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 285,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 286,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 287,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 289,
+      "muscleId": 4
+    },
+    {
+      "exerciseId": 299,
+      "muscleId": 4
+    }
+  ],
+  "trainings": [
+    {
+      "end": 1641571702293,
+      "start": 1641564087797,
+      "trainingId": 1
+    },
+    {
+      "end": 1641725639765,
+      "start": 1641720610735,
+      "trainingId": 2
+    }
+  ],
+  "bits": [
+    {
+      "bitId": 1,
+      "exerciseId": 66,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641564087797,
+      "totalWeight": 1750,
+      "trainingId": 1
+    },
+    {
+      "bitId": 2,
+      "exerciseId": 66,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641564089822,
+      "totalWeight": 2750,
+      "trainingId": 1
+    },
+    {
+      "bitId": 3,
+      "exerciseId": 66,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641564257071,
+      "totalWeight": 3250,
+      "trainingId": 1
+    },
+    {
+      "bitId": 4,
+      "exerciseId": 66,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641564436967,
+      "totalWeight": 3750,
+      "trainingId": 1
+    },
+    {
+      "bitId": 5,
+      "exerciseId": 66,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 8,
+      "timestamp": 1641564775928,
+      "totalWeight": 3750,
+      "trainingId": 1
+    },
+    {
+      "bitId": 6,
+      "exerciseId": 66,
+      "instant": true,
+      "kilos": true,
+      "note": "",
+      "reps": 4,
+      "timestamp": 1641564778411,
+      "totalWeight": 3250,
+      "trainingId": 1
+    },
+    {
+      "bitId": 7,
+      "exerciseId": 52,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641564946526,
+      "totalWeight": 2000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 8,
+      "exerciseId": 52,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641565065610,
+      "totalWeight": 2500,
+      "trainingId": 1
+    },
+    {
+      "bitId": 9,
+      "exerciseId": 52,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641565228681,
+      "totalWeight": 2750,
+      "trainingId": 1
+    },
+    {
+      "bitId": 10,
+      "exerciseId": 52,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641565684270,
+      "totalWeight": 3000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 11,
+      "exerciseId": 73,
+      "instant": false,
+      "kilos": true,
+      "note": "1m",
+      "reps": 10,
+      "timestamp": 1641565713084,
+      "totalWeight": 2500,
+      "trainingId": 1
+    },
+    {
+      "bitId": 12,
+      "exerciseId": 73,
+      "instant": false,
+      "kilos": true,
+      "note": "1m",
+      "reps": 8,
+      "timestamp": 1641565882079,
+      "totalWeight": 3000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 13,
+      "exerciseId": 73,
+      "instant": true,
+      "kilos": true,
+      "note": "1m",
+      "reps": 4,
+      "timestamp": 1641565889052,
+      "totalWeight": 2000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 14,
+      "exerciseId": 73,
+      "instant": false,
+      "kilos": true,
+      "note": "1m",
+      "reps": 10,
+      "timestamp": 1641566081143,
+      "totalWeight": 2500,
+      "trainingId": 1
+    },
+    {
+      "bitId": 15,
+      "exerciseId": 73,
+      "instant": false,
+      "kilos": true,
+      "note": "1m",
+      "reps": 9,
+      "timestamp": 1641566424252,
+      "totalWeight": 3000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 16,
+      "exerciseId": 73,
+      "instant": true,
+      "kilos": true,
+      "note": "1m",
+      "reps": 3,
+      "timestamp": 1641566427327,
+      "totalWeight": 2500,
+      "trainingId": 1
+    },
+    {
+      "bitId": 17,
+      "exerciseId": 70,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641566669593,
+      "totalWeight": 3200,
+      "trainingId": 1
+    },
+    {
+      "bitId": 18,
+      "exerciseId": 70,
+      "instant": true,
+      "kilos": true,
+      "note": "",
+      "reps": 6,
+      "timestamp": 1641566674758,
+      "totalWeight": 1600,
+      "trainingId": 1
+    },
+    {
+      "bitId": 19,
+      "exerciseId": 70,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641566919154,
+      "totalWeight": 3600,
+      "trainingId": 1
+    },
+    {
+      "bitId": 20,
+      "exerciseId": 70,
+      "instant": true,
+      "kilos": true,
+      "note": "",
+      "reps": 5,
+      "timestamp": 1641566923874,
+      "totalWeight": 1600,
+      "trainingId": 1
+    },
+    {
+      "bitId": 21,
+      "exerciseId": 70,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641567164903,
+      "totalWeight": 3600,
+      "trainingId": 1
+    },
+    {
+      "bitId": 22,
+      "exerciseId": 70,
+      "instant": true,
+      "kilos": true,
+      "note": "",
+      "reps": 5,
+      "timestamp": 1641567168355,
+      "totalWeight": 1600,
+      "trainingId": 1
+    },
+    {
+      "bitId": 23,
+      "exerciseId": 70,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 7,
+      "timestamp": 1641567577872,
+      "totalWeight": 4000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 24,
+      "exerciseId": 70,
+      "instant": true,
+      "kilos": true,
+      "note": "",
+      "reps": 3,
+      "timestamp": 1641567582542,
+      "totalWeight": 3600,
+      "trainingId": 1
+    },
+    {
+      "bitId": 25,
+      "exerciseId": 70,
+      "instant": true,
+      "kilos": true,
+      "note": "",
+      "reps": 5,
+      "timestamp": 1641567586853,
+      "totalWeight": 1600,
+      "trainingId": 1
+    },
+    {
+      "bitId": 26,
+      "exerciseId": 271,
+      "instant": false,
+      "kilos": true,
+      "note": "8p",
+      "reps": 10,
+      "timestamp": 1641567710362,
+      "totalWeight": 2500,
+      "trainingId": 1
+    },
+    {
+      "bitId": 27,
+      "exerciseId": 271,
+      "instant": false,
+      "kilos": true,
+      "note": "8p",
+      "reps": 10,
+      "timestamp": 1641567767432,
+      "totalWeight": 3000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 28,
+      "exerciseId": 271,
+      "instant": false,
+      "kilos": true,
+      "note": "8p",
+      "reps": 10,
+      "timestamp": 1641567941179,
+      "totalWeight": 3500,
+      "trainingId": 1
+    },
+    {
+      "bitId": 29,
+      "exerciseId": 271,
+      "instant": false,
+      "kilos": true,
+      "note": "8p",
+      "reps": 10,
+      "timestamp": 1641568089100,
+      "totalWeight": 4000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 30,
+      "exerciseId": 271,
+      "instant": false,
+      "kilos": true,
+      "note": "8p",
+      "reps": 10,
+      "timestamp": 1641568292169,
+      "totalWeight": 4250,
+      "trainingId": 1
+    },
+    {
+      "bitId": 31,
+      "exerciseId": 272,
+      "instant": false,
+      "kilos": true,
+      "note": "8p",
+      "reps": 10,
+      "timestamp": 1641568393739,
+      "totalWeight": 2000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 32,
+      "exerciseId": 272,
+      "instant": false,
+      "kilos": true,
+      "note": "8p",
+      "reps": 10,
+      "timestamp": 1641568551497,
+      "totalWeight": 2250,
+      "trainingId": 1
+    },
+    {
+      "bitId": 33,
+      "exerciseId": 272,
+      "instant": false,
+      "kilos": true,
+      "note": "8p",
+      "reps": 6,
+      "timestamp": 1641568760990,
+      "totalWeight": 2500,
+      "trainingId": 1
+    },
+    {
+      "bitId": 34,
+      "exerciseId": 272,
+      "instant": true,
+      "kilos": true,
+      "note": "8p",
+      "reps": 5,
+      "timestamp": 1641568764141,
+      "totalWeight": 2000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 35,
+      "exerciseId": 272,
+      "instant": false,
+      "kilos": true,
+      "note": "8p",
+      "reps": 7,
+      "timestamp": 1641568857530,
+      "totalWeight": 2250,
+      "trainingId": 1
+    },
+    {
+      "bitId": 36,
+      "exerciseId": 272,
+      "instant": true,
+      "kilos": true,
+      "note": "8p",
+      "reps": 4,
+      "timestamp": 1641568858704,
+      "totalWeight": 2000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 37,
+      "exerciseId": 289,
+      "instant": false,
+      "kilos": true,
+      "note": "8p",
+      "reps": 10,
+      "timestamp": 1641569069770,
+      "totalWeight": 1000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 38,
+      "exerciseId": 289,
+      "instant": false,
+      "kilos": true,
+      "note": "8p",
+      "reps": 10,
+      "timestamp": 1641569171426,
+      "totalWeight": 1250,
+      "trainingId": 1
+    },
+    {
+      "bitId": 39,
+      "exerciseId": 289,
+      "instant": false,
+      "kilos": true,
+      "note": "8p",
+      "reps": 7,
+      "timestamp": 1641569376484,
+      "totalWeight": 1500,
+      "trainingId": 1
+    },
+    {
+      "bitId": 40,
+      "exerciseId": 289,
+      "instant": true,
+      "kilos": true,
+      "note": "8p",
+      "reps": 4,
+      "timestamp": 1641569380033,
+      "totalWeight": 1000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 41,
+      "exerciseId": 289,
+      "instant": false,
+      "kilos": true,
+      "note": "8p",
+      "reps": 8,
+      "timestamp": 1641569651753,
+      "totalWeight": 1500,
+      "trainingId": 1
+    },
+    {
+      "bitId": 42,
+      "exerciseId": 289,
+      "instant": true,
+      "kilos": true,
+      "note": "8p",
+      "reps": 3,
+      "timestamp": 1641569656993,
+      "totalWeight": 1000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 43,
+      "exerciseId": 289,
+      "instant": true,
+      "kilos": true,
+      "note": "8p",
+      "reps": 4,
+      "timestamp": 1641569659455,
+      "totalWeight": 500,
+      "trainingId": 1
+    },
+    {
+      "bitId": 44,
+      "exerciseId": 10,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 30,
+      "timestamp": 1641570119746,
+      "totalWeight": 0,
+      "trainingId": 1
+    },
+    {
+      "bitId": 45,
+      "exerciseId": 1,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 30,
+      "timestamp": 1641570138969,
+      "totalWeight": 0,
+      "trainingId": 1
+    },
+    {
+      "bitId": 46,
+      "exerciseId": 30,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 15,
+      "timestamp": 1641570155023,
+      "totalWeight": 0,
+      "trainingId": 1
+    },
+    {
+      "bitId": 47,
+      "exerciseId": 20,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 20,
+      "timestamp": 1641570170653,
+      "totalWeight": 0,
+      "trainingId": 1
+    },
+    {
+      "bitId": 48,
+      "exerciseId": 3,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 0,
+      "timestamp": 1641570198202,
+      "totalWeight": 100,
+      "trainingId": 1
+    },
+    {
+      "bitId": 49,
+      "exerciseId": 10,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 30,
+      "timestamp": 1641570717653,
+      "totalWeight": 0,
+      "trainingId": 1
+    },
+    {
+      "bitId": 50,
+      "exerciseId": 1,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 30,
+      "timestamp": 1641570720062,
+      "totalWeight": 0,
+      "trainingId": 1
+    },
+    {
+      "bitId": 51,
+      "exerciseId": 30,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 15,
+      "timestamp": 1641570723045,
+      "totalWeight": 0,
+      "trainingId": 1
+    },
+    {
+      "bitId": 52,
+      "exerciseId": 20,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 20,
+      "timestamp": 1641570725808,
+      "totalWeight": 0,
+      "trainingId": 1
+    },
+    {
+      "bitId": 53,
+      "exerciseId": 3,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 0,
+      "timestamp": 1641570728277,
+      "totalWeight": 100,
+      "trainingId": 1
+    },
+    {
+      "bitId": 54,
+      "exerciseId": 2,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 12,
+      "timestamp": 1641571012646,
+      "totalWeight": 1750,
+      "trainingId": 1
+    },
+    {
+      "bitId": 55,
+      "exerciseId": 2,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 12,
+      "timestamp": 1641571144726,
+      "totalWeight": 2000,
+      "trainingId": 1
+    },
+    {
+      "bitId": 56,
+      "exerciseId": 2,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 12,
+      "timestamp": 1641571351268,
+      "totalWeight": 2250,
+      "trainingId": 1
+    },
+    {
+      "bitId": 57,
+      "exerciseId": 2,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 12,
+      "timestamp": 1641571702293,
+      "totalWeight": 2500,
+      "trainingId": 1
+    },
+    {
+      "bitId": 58,
+      "exerciseId": 211,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641720610735,
+      "totalWeight": 2000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 59,
+      "exerciseId": 211,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641720672618,
+      "totalWeight": 4000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 60,
+      "exerciseId": 211,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641720860004,
+      "totalWeight": 6000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 61,
+      "exerciseId": 211,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641721091189,
+      "totalWeight": 8000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 62,
+      "exerciseId": 211,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 6,
+      "timestamp": 1641721407570,
+      "totalWeight": 9000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 63,
+      "exerciseId": 216,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641721577684,
+      "totalWeight": 2000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 64,
+      "exerciseId": 216,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641721786448,
+      "totalWeight": 2000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 65,
+      "exerciseId": 216,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641722089066,
+      "totalWeight": 2500,
+      "trainingId": 2
+    },
+    {
+      "bitId": 66,
+      "exerciseId": 227,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641722392669,
+      "totalWeight": 6000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 67,
+      "exerciseId": 227,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641722566414,
+      "totalWeight": 7000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 68,
+      "exerciseId": 227,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641722801032,
+      "totalWeight": 8000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 69,
+      "exerciseId": 227,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 9,
+      "timestamp": 1641723011884,
+      "totalWeight": 9000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 70,
+      "exerciseId": 227,
+      "instant": true,
+      "kilos": true,
+      "note": "",
+      "reps": 3,
+      "timestamp": 1641723015937,
+      "totalWeight": 8000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 71,
+      "exerciseId": 159,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641723238848,
+      "totalWeight": 3000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 72,
+      "exerciseId": 159,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641723447246,
+      "totalWeight": 3500,
+      "trainingId": 2
+    },
+    {
+      "bitId": 73,
+      "exerciseId": 159,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641723660765,
+      "totalWeight": 4000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 74,
+      "exerciseId": 159,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 8,
+      "timestamp": 1641724000668,
+      "totalWeight": 4500,
+      "trainingId": 2
+    },
+    {
+      "bitId": 75,
+      "exerciseId": 159,
+      "instant": true,
+      "kilos": true,
+      "note": "",
+      "reps": 3,
+      "timestamp": 1641724004334,
+      "totalWeight": 4000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 76,
+      "exerciseId": 89,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641724174971,
+      "totalWeight": 6000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 77,
+      "exerciseId": 89,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641724275477,
+      "totalWeight": 8000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 78,
+      "exerciseId": 89,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641725637835,
+      "totalWeight": 10000,
+      "trainingId": 2
+    },
+    {
+      "bitId": 79,
+      "exerciseId": 89,
+      "instant": false,
+      "kilos": true,
+      "note": "",
+      "reps": 10,
+      "timestamp": 1641725639765,
+      "totalWeight": 11000,
+      "trainingId": 2
+    }
+  ]
+}

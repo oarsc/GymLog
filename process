@@ -1,6 +1,7 @@
 #!/usr/bin/node
 
-const EXPORTED_FILE_RAW = './GymRun.csv';
+const GYMRUN_EXPORTED_FILE_RAW = './bak/GymRun.csv';
+const GYMLOG_EXPORTED_FILE_RAW = './bak/output.json';
 const NEW_DEFINITION_FILE = '../GymLog/app/src/main/assets/initialData.json';
 
 const fs = require('fs');
@@ -10,7 +11,6 @@ const STATUS_WEIGHT = 1;
 const STATUS_REPS = 2;
 const STATUS_DURATION = 3;
 const STATUS_DONE = 4;
-
 
 const MAPPING = {
   'Press de Pecho Plano con Barra de Pesas'                                          : 'Barbell Bench Press',
@@ -173,6 +173,12 @@ let EXCEPTIONS = {
 		'colgado': 'Leg Raise (hanging)'
 	},
 
+
+  'Extensión de Piernas con Máquina (sentado)' : {
+    'maquina': 'Machine Leg Extension, using plates (seated)',
+    'máquina': 'Machine Leg Extension, using plates (seated)',
+  }
+
   'Cruzadas con polea baja (de pie)' : {
     'SPECIAL': 'Low Dumbbell Flys (standing)'
   }
@@ -215,7 +221,7 @@ fs.readFile(NEW_DEFINITION_FILE, 'UTF-8', (err,data) => {
 
 
 /*
-fs.readFile(EXPORTED_FILE_RAW, 'UTF-8', (err, data) => {
+fs.readFile(GYMRUN_EXPORTED_FILE_RAW, 'UTF-8', (err, data) => {
 	let exercises_names = new Set();
 	let status = STATUS_NONE;
 
