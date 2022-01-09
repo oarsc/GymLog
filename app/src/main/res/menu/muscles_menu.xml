@@ -25,6 +25,12 @@
         android:id="@+id/loadButton"
         android:icon="@drawable/ic_search_24dp"
         android:title="@string/text_load"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/loadLegacyButton"
+        android:icon="@drawable/ic_search_24dp"
+        android:title="@string/text_load_legacy"
+        app:showAsAction="never"/>
 
 </menu>

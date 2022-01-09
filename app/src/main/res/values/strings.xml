@@ -33,6 +33,7 @@
     <string name="text_kg">kg</string>
     <string name="text_lb">lbs</string>
     <string name="text_load">Load</string>
+    <string name="text_load_legacy">Load Legacy</string>
     <string name="text_no_bar">No bar</string>
     <string name="text_notes">Notes</string>
     <string name="text_on_smallcaps">on</string>
