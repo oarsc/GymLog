@@ -2,6 +2,7 @@
 
 const GYMRUN_EXPORTED_FILE_RAW = './bak/GymRun.csv';
 const GYMLOG_EXPORTED_FILE_RAW = './bak/output.json';
+const OUTPUT_FILE = './bak/output-legacy.json';
 const NEW_DEFINITION_FILE = '../GymLog/app/src/main/assets/initialData.json';
 
 const fs = require('fs');
@@ -11,7 +12,7 @@ const {
 	EXCEPTIONS,
 	BAR,
 	BAR_SETTINGS,
-	BAR_FORMULA
+	FORMULA
 } = require('./constants');
 
 const requiresBar = (() => {
@@ -36,44 +37,99 @@ function parseDate(date) {
 
 
 let lastDate, lastName, lastNote;
-function processWeight([date, time, name, set, weight, reps, note = ""]) {
-	let bar = requiresBar(name);
-	let lastBar = bar? BAR_SETTINGS[name] : undefined;
+function processWeight([date, time, originalName, set, weight, reps, note]) {
+	weight = parseFloat(weight.replace(',','.'))
+	let name = MAPPING[originalName]? MAPPING[originalName] : originalName;
+	let bar = requiresBar(originalName);
+	let lastBar = bar? BAR_SETTINGS[originalName] : undefined;
+	let formula = FORMULA[originalName]? FORMULA[originalName] : a=>a;
+
+	if (name == null)
+		return false;
+
+	if (!note && typeof note != 'string') {
+		throw new Error("Error in note: " + arguments);
+	}
 
 	if (bar && !lastBar) {
-		throw new Error("No bar definition for: " + name);
+		throw new Error("No bar definition for: " + originalName);
 	}
+
+	if (note == '"') note = "";
 
 	date = parseDate(date);
 	let timestamp = Date.parse(`${date} ${time}`);
 
-	if (EXCEPTIONS[name]) {
-		if (lastDate == date && lastName == name && lastNote) {
-			//console.log('"'+note+'" -> "'+lastNote+'"');
-		} else {
+	if (EXCEPTIONS[originalName]) {
+		if (lastDate != date || lastName != originalName) {
 			lastDate = date;
-			lastName = name;
+			lastName = originalName;
 			lastNote = note;
+		}
+
+		let exc = EXCEPTIONS[originalName];
+
+
+		for (let key in exc.replace) {
+			if (note.indexOf(key) >= 0) {
+				lastNote = note;
+				break;
+			}
+		}
+
+
+		if (exc.CANCELLBY?.filter(n => note.match(n)).length) {
+			lastNote = '';
+		}
+		
+
+		for (let key in exc.replace) {
+			if (lastNote.indexOf(key) >= 0) {
+				name = exc.replace[key];
+				break;
+			}
+		}
+
+		if (exc.DIV2 && weight%2 == 0) {
+			name = exc.DIV2;
 		}
 	}
 
 	return {
-		name: MAPPING[name],
+		name: name,
 		bar: bar,
 		lastBar: lastBar,
 		note: note,
 		timestamp: timestamp,
-		weight: weight,
+		weight: formula(weight, originalName)*100,
 		reps: reps,
 	}
 }
 
-function processReps(row) {
-
+function processReps([date, time, originalName, set, reps, note]) {
+	if (!MAPPING[originalName]) return false;
+	return {
+		name: MAPPING[originalName],
+		bar: false,
+		lastBar: undefined,
+		note: note,
+		timestamp: Date.parse(`${parseDate(date)} ${time}`),
+		weight: 0,
+		reps: reps,
+	}
 }
 
-function processDuration(row) {
-
+function processDuration([date, time, originalName, duration, note]) {
+	if (!MAPPING[originalName]) return false;
+	return {
+		name: MAPPING[originalName],
+		bar: false,
+		lastBar: undefined,
+		note: note,
+		timestamp: Date.parse(`${parseDate(date)} ${time}`),
+		weight: parseFloat(duration.replace(',','.'))*100,
+		reps: 1,
+	}
 }
 
 
@@ -81,38 +137,39 @@ function processDuration(row) {
 fs.readFile(GYMRUN_EXPORTED_FILE_RAW, 'UTF-8', (err, data) => {
 	let status = STATUS.NONE;
 
-	data.split('\r\n')
+	let output = data.split('\r\n')
 		.map(text => text.trim())
-		.forEach(text => {
-			if (!text || status == STATUS.DONE) 
-				return;
+		.map(text => {
+			if (!text || status == STATUS.DONE) {}
+			else if (text == 'Date;Time;Exercise;Set;Weight;Reps;Note;')                  status = STATUS.WEIGHT;
+			else if (text == 'Date;Time;Exercise;Set;Reps;Note;')                         status = STATUS.REPS;
+			else if (text == 'Date;Time;Exercise;Duration;Note;')                         status = STATUS.DURATION;
+			else if (text == 'Date;Time;Weight;Note;' || text == 'Date;Time;Waist;Note;') status = STATUS.DONE;
+			else if (status == STATUS.NONE) {}
+			else if (status == STATUS.WEIGHT)                               return processWeight(text.split(';'));
+			else if (status == STATUS.REPS)                                 return processReps(text.split(';'));
+			else if (status == STATUS.DURATION)                             return processDuration(text.split(';'));
+			return false;
+		})
+		.filter(a=>a)
+		.sort((a,b) => a.timestamp<b.timestamp? -1 : a.timestamp>b.timestamp? 1 : 0);
 
-			if (text == 'Date;Time;Exercise;Set;Weight;Reps;Note;')
-				status = STATUS.WEIGHT;
 
-			else if (text == 'Date;Time;Exercise;Set;Reps;Note;')
-				status = STATUS.REPS;
+	let count = 1;
+	let trainingIdSupport = {};
+	output.forEach(ex => {
+		let key = new Date(ex.timestamp).toDateString();
+		if (!trainingIdSupport[key]) {
+			trainingIdSupport[key] = count++;
+		}
+		ex.trainingId = trainingIdSupport[key];
+	});
 
-			else if (text == 'Date;Time;Exercise;Duration;Note;')
-				status = STATUS.DURATION;
 
-			else if (text == 'Date;Time;Weight;Note;' || text == 'Date;Time;Waist;Note;')
-				status = STATUS.DONE;
-			
-			else if (status == STATUS.NONE)
-				return
-
-			else if (status == STATUS.WEIGHT) {
-				let res = processWeight(text.split(';'));
-				console.log(res);
-			} else if (status == STATUS.REPS) {
-				processReps(text.split(';'));
-			} else if (status == STATUS.DURATION) {
-				processDuration(text.split(';'));
-			}
+	fs.writeFile(OUTPUT_FILE, JSON.stringify(output), err => {
+			if (err) console.log(err);
 		});
 });
-/**/
 
 
 

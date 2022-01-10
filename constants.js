@@ -94,7 +94,7 @@ module.exports.MAPPING = {
 	'Flexiones de Bíceps con Mancuernas en Martillo (de pie)'                          : 'Dumbbell Biceps Hammer Curl (standing)',
 	'Abdominales de Giro, Piernas Elevadas'                                            : 'Twisting Sit-ups, Bent Legs',
 	'Dominadas en Máquina Sostenida, Agarre Medio por Encima'                          : 'Supported Machine Pull-ups, Overhand Medium Grip',
-	'Step up con Barra de Pesas, Inclinado (de pie)'                                   : 'Barbell Tipup, Bent Over (standing)',
+	'Step up con Barra de Pesas, Inclinado (de pie)'                                   : 'Barbell Tipup, Bent Over, Vertical Grip (standing)',
 	'Abdominales, Piernas Flexionadas'                                                 : 'Crunches, Bent Legs',
 	'Abdominales Parciales, Piernas Flexionadas'                                       : 'Crunches, Bent Legs',
 	'Apertura con Máquina (sentado)'                                                   : 'Machine Fly (seated)',
@@ -156,29 +156,42 @@ module.exports.MAPPING = {
 
 module.exports.EXCEPTIONS = {
 	'Press de Hombros con Barra de Pesas (de pie)' : {
-		'sentado': 'Barbell Shoulder Press (seated)'
+		replace: { 'sentado': 'Barbell Shoulder Press (seated)' },
 	},
-
 	'Elevación de la Rodilla, Apoyo en los Brazos' : {
-		'colgado': 'Knee Raise (hanging)'
+		replace: { 'colgado': 'Knee Raise (hanging)' },
 	},
 
 	'Levantamiento de Piernas, Apoyo en los Brazos' : {
-		'colgado': 'Leg Raise (hanging)'
+		replace: { 'colgado': 'Leg Raise (hanging)' },
+		CANCELLBY: ['normal', 'máquina'],
 	},
 
-
 	'Extensión de Piernas con Máquina (sentado)' : {
-		'maquina': 'Machine Leg Extension, using plates (seated)',
-		'máquina': 'Machine Leg Extension, using plates (seated)',
+		replace: {
+			'maquina': 'Machine Leg Extension, using plates (seated)',
+			'máquina': 'Machine Leg Extension, using plates (seated)',
+			'mantenido': 'Machine Leg Extension, using plates (seated)',
+			'1 pierna': 'Machine Leg Extension, using plates (seated)',
+			'1pie': 'Machine Leg Extension, using plates (seated)',
+		},
+		CANCELLBY: [ 'maquina dura' ],
 	},
 
 	'Cruzadas con polea baja (de pie)' : {
-		'SPECIAL': 'Low Dumbbell Flys (standing)'
+		'DIV2': 'Low Dumbbell Flys (standing)',
 	},
 
 	'Remo con Barra de Pesas, Inclinado (de pie)' : {
-		'tumbado': 'TODO'
+		replace: { 'tumbado': 'Barbell Flat High Bench Row (prone)' },
+	},
+
+	'Step up con Barra de Pesas, Inclinado (de pie)' : {
+		replace: {
+			'curvo': 'Barbell Tipup, Bent Over (standing)',
+			'agarre recto': 'Barbell Tipup, Bent Over (standing)',
+		},
+		CANCELLBY: ['cerrado', /^recto\*?$/, 'agarre metal', 'agarre plástico' ],
 	}
 };
 
@@ -238,8 +251,7 @@ Remo con Barra de Pesas, Inclinado (de pie) -- d.largo juan
 Remo con Barra de Pesas, Inclinado (de pie) -- tumbado
 /**/
 
-
-module.exports.BAR = [
+const BAR = module.exports.BAR = [
 	0,
 	7.5, // 1
 	10,  // 2
@@ -248,11 +260,12 @@ module.exports.BAR = [
 	25,  // 5
 ]
 
-module.exports.BAR_SETTINGS = {
+const BAR_SETTINGS = module.exports.BAR_SETTINGS = {
 	'Barra de Peso Muerto'                                                             : 4,
 	'Estocadas con Barra de Pesas'                                                     : 4,
 	'Flexiones de Antebrazo con Barra de Pesas Inversa(de pie)'                        : 4,
 	'Flexiones de Bíceps con Barra de Martillo (de pie)'                               : 2,
+	'Flexiones de Bíceps con Barra de Martillo (inclinado)'                            : 2,
 	'Flexiones de Bíceps con Barra de Pesas (inclinado)'                               : 1,
 	'Flexiones de Bíceps con Barra de Pesas, Agarre Amplio (de pie)'                   : 1,
 	'Flexiones de Bíceps con Barra de Pesas, Agarre Cerrado (de pie)'                  : 1,
@@ -276,11 +289,13 @@ module.exports.BAR_SETTINGS = {
 	'Step up con Barra de Pesas, Inclinado (de pie)'                                   : 4,
 };
 
-module.exports.BAR_FORMULA = {
+module.exports.FORMULA = {
+// BAR FORMULA
 	'Barra de Peso Muerto'                                                             : (weight, name) => BAR[BAR_SETTINGS[name]] + weight*2,
 	'Estocadas con Barra de Pesas'                                                     : (weight, name) => BAR[BAR_SETTINGS[name]] + weight*2,
 	'Flexiones de Antebrazo con Barra de Pesas Inversa(de pie)'                        : (weight, name) => BAR[BAR_SETTINGS[name]] + weight*2,
 	'Flexiones de Bíceps con Barra de Martillo (de pie)'                               : (weight, name) => BAR[BAR_SETTINGS[name]] + weight*2,
+	'Flexiones de Bíceps con Barra de Martillo (inclinado)'                            : (weight, name) => BAR[BAR_SETTINGS[name]] + weight*2,
 	'Flexiones de Bíceps con Barra de Pesas (inclinado)'                               : (weight, name) => BAR[BAR_SETTINGS[name]] + weight*2,
 	'Flexiones de Bíceps con Barra de Pesas, Agarre Amplio (de pie)'                   : (weight, name) => BAR[BAR_SETTINGS[name]] + weight*2,
 	'Flexiones de Bíceps con Barra de Pesas, Agarre Cerrado (de pie)'                  : (weight, name) => BAR[BAR_SETTINGS[name]] + weight*2,
@@ -301,5 +316,127 @@ module.exports.BAR_FORMULA = {
 	'Remo con Barra de Pesas, Inclinado (de pie)'                                      : (weight, name) => BAR[BAR_SETTINGS[name]] + weight*2,
 	'Remo Vertical con Barra de Pesas (de pie)'                                        : (weight, name) => BAR[BAR_SETTINGS[name]] + weight*2,
 	'Sentadillas con Barra de Pesas (de pie)'                                          : (weight, name) => BAR[BAR_SETTINGS[name]] + weight*2,
-	'Step up con Barra de Pesas, Inclinado (de pie)'                                   : (weight, name) => BAR[BAR_SETTINGS[name]] + weight*1,
+	'Step up con Barra de Pesas, Inclinado (de pie)'                                   : (weight, name) => BAR[BAR_SETTINGS[name]] + weight,
+
+// X2 FORMULAS
+	'Flexiones de Pecho con Mancuernas (inclinado)'                                    : (weight, name) => weight*2,
+	'Cruzadas con Cable-Polea (de pie)'                                                : (weight, name) => weight*2,
+	'Cruzadas con polea baja (de pie)'                                                 : (weight, name) => weight*2,
+	'Flexiones de Pecho con Mancuernas (declinado)'                                    : (weight, name) => weight*2,
+	'Remo en Banco Plano Alto con Mancuernas (prono)'                                  : (weight, name) => weight*2,
+	'Levantamiento Frontal con Mancuernas (de pie)'                                    : (weight, name) => weight*2,
+	'Levantamiento Lateral con Mancuernas (de pie)'                                    : (weight, name) => weight*2,
+	'Press de Hombros con Mancuernas (sentado)'                                        : (weight, name) => weight*2,
+	'Encogimiento de Hombros con Mancuernas (de pie)'                                  : (weight, name) => weight*2,
+	'Estocadas con Mancuernas'                                                         : (weight, name) => weight*2,
+	'Máquina de Prensa de Piernas (recto)'                                             : (weight, name) => weight*2,
+	'Balanceo de Pantorrillas con Máquina (sentado)'                                   : (weight, name) => weight*2,
+	'Balanceo de Pantorrillas con Máquina (de pie)'                                    : (weight, name) => weight*2,
+	'Flexiones de Bíceps Alternando las Mancuernas (sentado)'                          : (weight, name) => weight*2,
+	'Flexiones de Bíceps Alternando las Mancuernas en Martillo (sentado)'              : (weight, name) => weight*2,
+	'Flexiones de Bíceps con Cable-Polea por Arriba (de pie)'                          : (weight, name) => weight*2,
+	'Aperturas en Banco Plano con Cable-Polea'                                         : (weight, name) => weight*2,
+	'Aperturas en Banco con Cable-Polea (inclinado)'                                   : (weight, name) => weight*2,
+	'Aperturas en Banco Plano con Mancuernas Inversas (prono)'                         : (weight, name) => weight*2,
+	'arnold'                                                                           : (weight, name) => weight*2,
+	'aaaa cruzado'                                                                     : (weight, name) => weight*2,
+	'pecho superior maquina'                                                           : (weight, name) => weight*2,
+	'Press de Pecho Frontal con Máquina (sentado)'                                     : (weight, name) => weight*2,
+	'Máquina de Prensa de Piernas (inclinado)'                                         : (weight, name) => weight*2,
+	'Flexiones de Bíceps Alternando las Mancuernas (de pie)'                           : (weight, name) => weight*2,
+	'Aperturas con Mancuernas en Plano'                                                : (weight, name) => weight*2,
+	'Aperturas con Mancuernas (declinado)'                                             : (weight, name) => weight*2,
+	'Aperturas con Mancuernas (inclinado)'                                             : (weight, name) => weight*2,
+	'Press en Banco con Máquina (inclinado)'                                           : (weight, name) => weight*2,
+	'Flexiones de Bíceps Alternando las Mancuernas en Martillo (de pie)'               : (weight, name) => weight*2,
+	'Flexiones de Bíceps con Mancuernas (de pie)'                                      : (weight, name) => weight*2,
+	'Flexiones de Bíceps Concentradas con Mancuernas (sentado)'                        : (weight, name) => weight*2,
+	'Espalda con Máquina de Palanca (sentado)'                                         : (weight, name) => weight*2,
+	'bi un brazo ladeado'                                                              : (weight, name) => weight*2,
+	'Remo con Máquina de Palanca (sentado)'                                            : (weight, name) => weight*2,
+	'Flexiones de Pecho en Plano con Mancuernas'                                       : (weight, name) => weight*2,
+	'Flexiones de Bíceps con Mancuernas en Martillo (de pie)'                          : (weight, name) => weight*2,
+	'Apertura con Máquina (sentado)'                                                   : (weight, name) => weight*2,
+	'Flexiones de Bíceps con Mancuernas (sentado)'                                     : (weight, name) => weight*2,
+	'Press de Tríceps con Máquina (sentado)'                                           : (weight, name) => weight*2,
+	'Press Tate de Tríceps con Mancuernas (acostado)'                                  : (weight, name) => weight*2,
+	'Levantamiento de Pelvis, Piernas Flexionadas (acostado)'                          : (weight, name) => weight*2,
+	'Levantamiento Lateral con Mancuernas (inclinado)'                                 : (weight, name) => weight*2,
+	'Flexiones de Bíceps con Mancuernas en Martillo (sentado)'                         : (weight, name) => weight*2,
+	'Flexiones de Bíceps con Mancuernas en Martillo en la Máquina de Scott'            : (weight, name) => weight*2,
+
+// PLAIN FORMULAS
+	'Abdominales (declinado)'                                                          : (weight, name) => weight,
+	'Abdominales Parciales de Bicicleta'                                               : (weight, name) => weight,
+	'Dominadas, Agarre Medio por Encima'                                               : (weight, name) => weight,
+	'Espalda con Cable-Polea al Tórax, Agarre Amplio (sentado)'                        : (weight, name) => weight,
+	'Remo con Cable-Polea (sentado)'                                                   : (weight, name) => weight,
+	'Espalda a Tórax con Cable-Polea, Agarre Cerrado de Martillo (sentado)'            : (weight, name) => weight,
+	'Espalda a Tórax con Cable-Polea, Agarre Cerrado por Debajo (sentado)'             : (weight, name) => weight,
+	'Levantamiento Lateral con Cable-Polea en un solo Brazo (inclinado)'               : (weight, name) => weight,
+	'Extensión de la Cadera con Máquina'                                               : (weight, name) => weight,
+	'Flexiones de Pierna con Máquina (de pie)'                                         : (weight, name) => weight,
+	'Flexiones de Bíceps y Antebrazo con una sola Mancuerna'                           : (weight, name) => weight,
+	'Arrastre de Tríceps con Cable-Polea, Agarre por Debajo (de pie)'                  : (weight, name) => weight,
+	'Press de Tríceps con Cuerda y Cable-Polea (de pie)'                               : (weight, name) => weight,
+	'Flexiones de Bíceps con Cable-Polea (de pie)'                                     : (weight, name) => weight,
+	'Flexiones de Bíceps con Cuerda en Cable-Polea (de pie)'                           : (weight, name) => weight,
+	'Levantamiento Frontal con un solo Brazo en Cable-Polea (de pie)'                  : (weight, name) => weight,
+	'Remo Vertical con Cable-Polea (de pie)'                                           : (weight, name) => weight,
+	'Press de Tríceps con Cuerda y Cable-Polea por Arriba (inclinado)'                 : (weight, name) => weight,
+	'Halar con Cable-Polea y Brazo Recto (de pie)'                                     : (weight, name) => weight,
+	'Press de Tríceps con Cable-Polea por Arriba (arrodillado)'                        : (weight, name) => weight,
+	'Abdominales Parciales con Cable-Polea (sentado)'                                  : (weight, name) => weight,
+	'Patada de Tríceps con Cable-Polea (inclinado)'                                    : (weight, name) => weight,
+	'Flexión Lateral del Torso con Cable-Polea (de pie)'                               : (weight, name) => weight,
+	'bi'                                                                               : (weight, name) => weight,
+	'tri'                                                                              : (weight, name) => weight,
+	'Face Pull'                                                                        : (weight, name) => weight,
+	'espalda'                                                                          : (weight, name) => weight,
+	'máquina hombro pajaro'                                                            : (weight, name) => weight,
+	'Levantamiento Lateral con Mancuernas (máquina)'                                   : (weight, name) => weight,
+	'maquina abdos'                                                                    : (weight, name) => weight,
+	'Tracción en Barras Paralelas'                                                     : (weight, name) => weight,
+	'Mariposa con Máquinas (sentado)'                                                  : (weight, name) => weight,
+	'Levantamiento Frontal con Disco (de pie)'                                         : (weight, name) => weight,
+	'Patada de Tríceps con Mancuernas (inclinado)'                                     : (weight, name) => weight,
+	'Levantamiento Lateral con Mancuernas (un brazo)'                                  : (weight, name) => weight,
+	'Máquina de Aducción (sentado)'                                                    : (weight, name) => weight,
+	'Máquina de Abducción (sentado)'                                                   : (weight, name) => weight,
+	'Flexiones de Pierna con Máquina (prono)'                                          : (weight, name) => weight,
+	'dominadas rectas'                                                                 : (weight, name) => weight,
+	'sentadillas soporte'                                                              : (weight, name) => weight,
+	'Levantamiento de Piernas, Apoyo en los Brazos'                                    : (weight, name) => weight,
+	'Elevación de la Rodilla, Apoyo en los Brazos'                                     : (weight, name) => weight,
+	'Press de Tríceps con una Mancuerna con el Brazo Arriba (sentado)'                 : (weight, name) => weight,
+	'Flexiones de Pecho, Agarre Cerrado'                                               : (weight, name) => weight,
+	'Flexiones de Bíceps en Máquina Scott (sentado)'                                   : (weight, name) => weight,
+	'Extensión de Piernas con Máquina (sentado)'                                       : (weight, name) => weight,
+	'Abdominales obliquos con polea (Leñador)'                                         : (weight, name) => weight,
+	'Máquina de Hiperextensiones'                                                      : (weight, name) => weight,
+	'Flexiones de Pierna con Máquina (sentado)'                                        : (weight, name) => weight,
+	'Pullover en Banco Plano con Mancuernas'                                           : (weight, name) => weight,
+	'Abdominales de Giro, Piernas Elevadas'                                            : (weight, name) => weight,
+	'Dominadas en Máquina Sostenida, Agarre Medio por Encima'                          : (weight, name) => weight,
+	'Abdominales, Piernas Flexionadas'                                                 : (weight, name) => weight,
+	'Abdominales Parciales, Piernas Flexionadas'                                       : (weight, name) => weight,
+	'Levantamiento Lateral con Máquina (sentado)'                                      : (weight, name) => weight,
+	'Levantamiento de Piernas (acostado)'                                              : (weight, name) => weight,
+	'Press de Tríceps con Mancuernas Ambas con Brazos Arriba (sentado)'                : (weight, name) => weight,
+	'Sentadillas en Máquina de Palanca (de pie)'                                       : (weight, name) => weight,
+	'Flexiones de Pecho, Agarre Amplio'                                                : (weight, name) => weight,
+	'Barras Paralelas, Inclinado, Agarre Amplio'                                       : (weight, name) => weight,
+	'Rodamiento de Pesas (arrodillado)'                                                : (weight, name) => weight,
+	'Remo abs peso'                                                                    : (weight, name) => weight,
+	'Flexión Lateral del Torso con Mancuernas (de pie)'                                : (weight, name) => weight,
+	'Barras, Agarre Ancho'                                                             : (weight, name) => weight,
+	'Máquina de Hiperextensiones (sentado)'                                            : (weight, name) => weight,
+	'Flexiones de Muñecas y Antebrazo con Mancuernas (sentado)'                        : (weight, name) => weight,
+
+	'anillas espalda'                                                                  : (weight, name) => weight,
+	'dominadas anillas'                                                                : (weight, name) => weight,
+	'Spinning'                                                                         : (weight, name) => weight,
+	'Cinta de correr'                                                                  : (weight, name) => weight,
+	'Elíptica'                                                                         : (weight, name) => weight,
+	'Planks'                                                                           : (weight, name) => weight,
 };
