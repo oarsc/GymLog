@@ -172,6 +172,7 @@ public class DataBaseDumperService {
 
                 // Update most recent bit to exercises
                 database.exerciseDao().getAll().stream()
+                        .filter(ee -> Arrays.stream(bits).anyMatch(bb -> bb.exerciseId == ee.exerciseId))
                         .peek(ee ->
                             ee.lastTrained = Arrays.stream(bits)
                                     .filter(bb -> bb.exerciseId == ee.exerciseId)
@@ -261,11 +262,7 @@ public class DataBaseDumperService {
 
                 BitEntity[] bits = JsonUtils.mapObject(obj, exerciseObj -> {
                         BitEntity bitE = new BitEntity();
-
-
                         final String name = exerciseObj.getString("name");
-
-                        System.out.println("###### "+exerciseObj.toString());
 
                         Exercise exercise = exercises.stream()
                                 .filter(ex -> ex.getName().equals(name))
@@ -279,6 +276,10 @@ public class DataBaseDumperService {
                         bitE.kilos = true;
                         bitE.instant = false;
                         bitE.note = exerciseObj.getString("note");
+                        if (bitE.note.equals("/\\")) {
+                            bitE.note = "";
+                            bitE.instant = true;
+                        }
                         bitE.timestamp = Calendar.getInstance();
                         bitE.timestamp.setTimeInMillis(exerciseObj.getLong("timestamp"));
 
