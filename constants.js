@@ -195,61 +195,6 @@ module.exports.EXCEPTIONS = {
 	}
 };
 
-// NOTES:
-/*
-Cruzadas con polea baja (de pie) -- 
-Cruzadas con polea baja (de pie) -- "
-Cruzadas con polea baja (de pie) -- +
-Cruzadas con polea baja (de pie) -- /\
-Cruzadas con polea baja (de pie) -- de pie
-Cruzadas con polea baja (de pie) -- mancuernas
-Cruzadas con polea baja (de pie) -- mancuernas sentado
-Cruzadas con polea baja (de pie) -- polea
-Cruzadas con polea baja (de pie) -- poleas
-Cruzadas con polea baja (de pie) -- sentado
-Cruzadas con polea baja (de pie) -- tumbado
-Elevación de la Rodilla, Apoyo en los Brazos -- 
-Elevación de la Rodilla, Apoyo en los Brazos -- colgado
-Elevación de la Rodilla, Apoyo en los Brazos -- colgado lado
-Elevación de la Rodilla, Apoyo en los Brazos -- colgado lateral
-Elevación de la Rodilla, Apoyo en los Brazos -- colgado normal
-Elevación de la Rodilla, Apoyo en los Brazos -- fallo dedos
-Extensión de Piernas con Máquina (sentado) -- 
-Extensión de Piernas con Máquina (sentado) -- "
-Extensión de Piernas con Máquina (sentado) -- /\
-Extensión de Piernas con Máquina (sentado) -- 1 pierna
-Extensión de Piernas con Máquina (sentado) -- 1pie
-Extensión de Piernas con Máquina (sentado) -- d.corto
-Extensión de Piernas con Máquina (sentado) -- d.corto (compartida)
-Extensión de Piernas con Máquina (sentado) -- d.corto compartiendo
-Extensión de Piernas con Máquina (sentado) -- d.largo juan
-Extensión de Piernas con Máquina (sentado) -- dificil
-Extensión de Piernas con Máquina (sentado) -- difícil
-Extensión de Piernas con Máquina (sentado) -- difícil d.largo dani
-Extensión de Piernas con Máquina (sentado) -- difícil➕
-Extensión de Piernas con Máquina (sentado) -- facil
-Extensión de Piernas con Máquina (sentado) -- fácil
-Extensión de Piernas con Máquina (sentado) -- maquina
-Extensión de Piernas con Máquina (sentado) -- maquina dura
-Extensión de Piernas con Máquina (sentado) -- máquina
-Extensión de Piernas con Máquina (sentado) -- máquina "libre"
-Extensión de Piernas con Máquina (sentado) -- normal
-Levantamiento de Piernas, Apoyo en los Brazos -- 
-Levantamiento de Piernas, Apoyo en los Brazos -- colgado
-Levantamiento de Piernas, Apoyo en los Brazos -- descanso corto
-Levantamiento de Piernas, Apoyo en los Brazos -- fallo dedos
-Levantamiento de Piernas, Apoyo en los Brazos -- máquina
-Levantamiento de Piernas, Apoyo en los Brazos -- normal
-Press de Hombros con Barra de Pesas (de pie) -- 
-Press de Hombros con Barra de Pesas (de pie) -- "
-Press de Hombros con Barra de Pesas (de pie) -- 4x12,5kg sentado
-Press de Hombros con Barra de Pesas (de pie) -- 5x12,5kg sentado
-Press de Hombros con Barra de Pesas (de pie) -- barra 20kg de pie
-Press de Hombros con Barra de Pesas (de pie) -- sentado
-Remo con Barra de Pesas, Inclinado (de pie) -- 
-Remo con Barra de Pesas, Inclinado (de pie) -- d.largo juan
-Remo con Barra de Pesas, Inclinado (de pie) -- tumbado
-/**/
 
 const BAR = module.exports.BAR = [
 	0,

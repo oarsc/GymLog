@@ -5399,7 +5399,7 @@
   "bits": [
     {
       "bitId": 1,
-      "exerciseId": 66,
+      "exerciseId": 53,
       "instant": false,
       "kilos": true,
       "note": "",
@@ -5410,7 +5410,7 @@
     },
     {
       "bitId": 2,
-      "exerciseId": 66,
+      "exerciseId": 53,
       "instant": false,
       "kilos": true,
       "note": "",
@@ -5421,7 +5421,7 @@
     },
     {
       "bitId": 3,
-      "exerciseId": 66,
+      "exerciseId": 53,
       "instant": false,
       "kilos": true,
       "note": "",
@@ -5432,7 +5432,7 @@
     },
     {
       "bitId": 4,
-      "exerciseId": 66,
+      "exerciseId": 53,
       "instant": false,
       "kilos": true,
       "note": "",
@@ -5443,7 +5443,7 @@
     },
     {
       "bitId": 5,
-      "exerciseId": 66,
+      "exerciseId": 53,
       "instant": false,
       "kilos": true,
       "note": "",
@@ -5454,7 +5454,7 @@
     },
     {
       "bitId": 6,
-      "exerciseId": 66,
+      "exerciseId": 53,
       "instant": true,
       "kilos": true,
       "note": "",
@@ -5581,7 +5581,7 @@
       "note": "",
       "reps": 10,
       "timestamp": 1641566669593,
-      "totalWeight": 3200,
+      "totalWeight": 1600,
       "trainingId": 1
     },
     {
@@ -5592,7 +5592,7 @@
       "note": "",
       "reps": 6,
       "timestamp": 1641566674758,
-      "totalWeight": 1600,
+      "totalWeight": 800,
       "trainingId": 1
     },
     {
@@ -5603,7 +5603,7 @@
       "note": "",
       "reps": 10,
       "timestamp": 1641566919154,
-      "totalWeight": 3600,
+      "totalWeight": 1800,
       "trainingId": 1
     },
     {
@@ -5614,7 +5614,7 @@
       "note": "",
       "reps": 5,
       "timestamp": 1641566923874,
-      "totalWeight": 1600,
+      "totalWeight": 800,
       "trainingId": 1
     },
     {
@@ -5625,7 +5625,7 @@
       "note": "",
       "reps": 10,
       "timestamp": 1641567164903,
-      "totalWeight": 3600,
+      "totalWeight": 1800,
       "trainingId": 1
     },
     {
@@ -5636,7 +5636,7 @@
       "note": "",
       "reps": 5,
       "timestamp": 1641567168355,
-      "totalWeight": 1600,
+      "totalWeight": 800,
       "trainingId": 1
     },
     {
@@ -5647,7 +5647,7 @@
       "note": "",
       "reps": 7,
       "timestamp": 1641567577872,
-      "totalWeight": 4000,
+      "totalWeight": 2000,
       "trainingId": 1
     },
     {
@@ -5658,7 +5658,7 @@
       "note": "",
       "reps": 3,
       "timestamp": 1641567582542,
-      "totalWeight": 3600,
+      "totalWeight": 1800,
       "trainingId": 1
     },
     {
@@ -5669,7 +5669,7 @@
       "note": "",
       "reps": 5,
       "timestamp": 1641567586853,
-      "totalWeight": 1600,
+      "totalWeight": 800,
       "trainingId": 1
     },
     {

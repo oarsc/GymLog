@@ -1,0 +1,20 @@
+#!/usr/bin/node
+
+const INPUT_FILE = './bak/output.json';
+const OUTPUT_FILE = './bak/output2.json';
+
+const fs = require('fs');
+
+fs.readFile(INPUT_FILE, 'UTF-8', (err, data) => {
+	const json = JSON.parse(data);
+
+	const name = 'Machine Leverage Squats (standing)';
+
+	json.bits
+		.filter(b => b.exerciseName == name)
+		.forEach(b => b.totalWeight = b.totalWeight*2);
+	
+	fs.writeFile(OUTPUT_FILE, JSON.stringify(json), err => {
+			if (err) console.log(err);
+		});
+});
