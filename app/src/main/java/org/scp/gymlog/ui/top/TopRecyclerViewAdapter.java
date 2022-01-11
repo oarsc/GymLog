@@ -21,6 +21,7 @@ import org.scp.gymlog.util.WeightUtils;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerViewAdapter.ViewHolder> {
 
@@ -30,12 +31,18 @@ public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerView
     private final Calendar today;
     private final Context context;
 
+    private Consumer<Bit> onClickListener;
+
     public TopRecyclerViewAdapter(Context context, List<Bit> topBits, Exercise exercise, boolean internationalSystem) {
         this.context = context;
         this.topBits = topBits;
         this.exercise = exercise;
         this.internationalSystem = internationalSystem;
         this.today = Calendar.getInstance();
+    }
+
+    public void setOnClickListener(Consumer<Bit> onClickListener) {
+        this.onClickListener = onClickListener;
     }
 
     @Override
@@ -84,9 +91,9 @@ public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerView
             mTime = binding.time;
 
             itemView.setOnClickListener(v -> {
-                Intent intent = new Intent(context, TrainingActivity.class);
-                intent.putExtra("trainingId", topBit.getTrainingId());
-                context.startActivity(intent);
+                if (onClickListener != null) {
+                    onClickListener.accept(topBit);
+                }
             });
         }
 

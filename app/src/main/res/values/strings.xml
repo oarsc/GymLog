@@ -46,6 +46,7 @@
     <string name="text_title">Title</string>
     <string name="text_training">Training</string>
     <string name="text_find_top_records">Find top records</string>
+    <string name="text_find_same_weight_records">Find same weight records</string>
     <string name="text_weight">Weight</string>
 
     <string name="sort_alphabetically">Sort alphabetically</string>

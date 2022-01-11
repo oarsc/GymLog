@@ -1,7 +1,5 @@
 package org.scp.gymlog.ui.top;
 
-import static org.scp.gymlog.util.Constants.ONE_HUNDRED;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -21,30 +19,29 @@ import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.ui.common.DBAppCompatActivity;
-import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment;
 import org.scp.gymlog.ui.training.TrainingActivity;
 import org.scp.gymlog.util.Data;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TopActivity extends DBAppCompatActivity {
+public class TopSpecificActivity extends DBAppCompatActivity {
     private Exercise exercise;
     private List<Bit> topBits;
+    private int weight;
 
     @Override
     protected int onLoad(Bundle savedInstanceState, AppDatabase db) {
         int exerciseId = getIntent().getExtras().getInt("exerciseId");
+        weight = getIntent().getExtras().getInt("weight");
         exercise = Data.getInstance().getExercises().stream()
                 .filter(ex -> ex.getId() == exerciseId)
                 .findFirst()
                 .orElseThrow(() -> new InternalException("Exercise id not found"));
 
-        topBits = db.bitDao().findTops(exerciseId).stream()
-                .sorted(Comparator.comparing(bit -> -bit.totalWeight))
+        topBits = db.bitDao().findTops(exerciseId, weight).stream()
                 .map(bit -> new Bit().fromEntity(bit))
                 .collect(Collectors.toList());
 
@@ -68,23 +65,9 @@ public class TopActivity extends DBAppCompatActivity {
         historyRecyclerView.setAdapter(adapter);
 
         adapter.setOnClickListener(topBit -> {
-
-            MenuDialogFragment dialog = new MenuDialogFragment(
-                    R.menu.top_menu, action -> {
-                        if (action == R.id.showTraining) {
-                            Intent intent = new Intent(this, TrainingActivity.class);
-                            intent.putExtra("trainingId", topBit.getTrainingId());
-                            startActivity(intent);
-
-                        } else if (action == R.id.sameWeight) {
-                            Intent intent = new Intent(this, TopSpecificActivity.class);
-                            intent.putExtra("exerciseId", topBit.getExerciseId());
-                            intent.putExtra("weight", topBit.getWeight().getValue().multiply(ONE_HUNDRED).intValue());
-                            startActivity(intent);
-                        }
-                    });
-            dialog.show(getSupportFragmentManager(), null);
-
+            Intent intent = new Intent(this, TrainingActivity.class);
+            intent.putExtra("trainingId", topBit.getTrainingId());
+            startActivity(intent);
         });
     }
 
