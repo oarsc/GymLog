@@ -44,10 +44,9 @@ import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditWeightFormDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
-import org.scp.gymlog.ui.createexercise.CreateExerciseActivity;
 import org.scp.gymlog.ui.top.TopActivity;
 import org.scp.gymlog.ui.training.TrainingActivity;
-import org.scp.gymlog.util.Constants;
+import org.scp.gymlog.util.Constants.INTENT;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.FormatUtils;
 
@@ -209,10 +208,31 @@ public class RegistryActivity extends DBAppCompatActivity {
         if (item.getItemId() == R.id.topRanking) {
             Intent intent = new Intent(this, TopActivity.class);
             intent.putExtra("exerciseId", exercise.getId());
-            startActivity(intent);
+            startActivityForResult(INTENT.TOP_RECORDS, intent);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onActivityResult(int intentResultId, Intent data) {
+        if (data.getBooleanExtra("refresh", false)) {
+            if (intentResultId == INTENT.TOP_RECORDS) {
+                recyclerViewAdapter.notifyItemRangeChanged(0, log.size());
+                updateForms();
+
+            } else if (intentResultId == INTENT.TRAINING) {
+                DBThread.run(this, db -> {
+                    List<BitEntity> log = db.bitDao().getHistory(exercise.getId(), LOG_PAGES_SIZE);
+                    this.log.clear();
+                    log.stream()
+                            .map(bit -> new Bit().fromEntity(bit))
+                            .forEach(this.log::add);
+                    runOnUiThread(recyclerViewAdapter::notifyDataSetChanged);
+                });
+                updateForms();
+            }
+        }
     }
 
     private void showWeightDialog(EditText weightEditText) {
@@ -237,14 +257,7 @@ public class RegistryActivity extends DBAppCompatActivity {
                         exercise.setWeightSpec(result.getWeightSpec());
                         recyclerViewAdapter.notifyItemRangeChanged(0, log.size());
 
-                        weightModifier.setStep(exercise.getStep());
-                        weightSpecIcon.setImageResource(exercise.getWeightSpec().icon);
-                        if (exercise.isRequiresBar() == (exercise.getBar() == null)) {
-                            warningIcon.setVisibility(View.VISIBLE);
-                        } else {
-                            warningIcon.setVisibility(View.INVISIBLE);
-                        }
-
+                        updateForms();
                         DBThread.run(this, db ->
                             db.exerciseDao().update(exercise.toEntity())
                         );
@@ -252,6 +265,16 @@ public class RegistryActivity extends DBAppCompatActivity {
                 },
                 () -> {}, weightFormData);
         dialog.show(getSupportFragmentManager(), null);
+    }
+
+    private void updateForms() {
+        weightModifier.setStep(exercise.getStep());
+        weightSpecIcon.setImageResource(exercise.getWeightSpec().icon);
+        if (exercise.isRequiresBar() == (exercise.getBar() == null)) {
+            warningIcon.setVisibility(View.VISIBLE);
+        } else {
+            warningIcon.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void loadHistory() {
@@ -410,7 +433,7 @@ public class RegistryActivity extends DBAppCompatActivity {
                         if (result == R.id.showTraining) {
                             Intent intent = new Intent(this, TrainingActivity.class);
                             intent.putExtra("trainingId", bit.getTrainingId());
-                            startActivity(intent);
+                            startActivityForResult(INTENT.TRAINING, intent);
 
                         } else if (result == R.id.editBit) {
                             final boolean enableInstantSwitch = log.stream()

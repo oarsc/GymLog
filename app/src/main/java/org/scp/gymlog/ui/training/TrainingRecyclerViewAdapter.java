@@ -1,5 +1,6 @@
 package org.scp.gymlog.ui.training;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -11,18 +12,26 @@ import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.scp.gymlog.R;
 import org.scp.gymlog.databinding.ListElementFragmentHistoryBinding;
 import org.scp.gymlog.exceptions.LoadException;
+import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
+import org.scp.gymlog.room.DBThread;
+import org.scp.gymlog.ui.common.dialogs.EditBitLogDialogFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class TrainingRecyclerViewAdapter extends RecyclerView.Adapter<TrainingRecyclerViewAdapter.ViewHolder> {
@@ -32,10 +41,22 @@ public class TrainingRecyclerViewAdapter extends RecyclerView.Adapter<TrainingRe
     private final List<ViewHolder> holders = new ArrayList<>();
     private final boolean internationalSystem;
 
+    private Consumer<ExerciseBits> onLongClickListener;
+    private Consumer<Bit> onBitChangedListener;
+    private Set<Integer> expandedElements = new HashSet<>();
+
     public TrainingRecyclerViewAdapter(Context context, List<ExerciseBits> exerciseBits, boolean internationalSystem) {
         this.context = context;
         this.exerciseBits = exerciseBits;
         this.internationalSystem = internationalSystem;
+    }
+
+    public void setOnLongClickListener(Consumer<ExerciseBits> onLongClickListener) {
+        this.onLongClickListener = onLongClickListener;
+    }
+
+    public void setOnBitChangedListener(Consumer<Bit> onBitChangedListener) {
+        this.onBitChangedListener = onBitChangedListener;
     }
 
     @Override
@@ -82,7 +103,30 @@ public class TrainingRecyclerViewAdapter extends RecyclerView.Adapter<TrainingRe
                 return false;
             }
         });
-        holder.mBitList.setAdapter(new TrainingBitRecyclerViewAdapter(context, exerciseBit, internationalSystem));
+
+
+        TrainingBitRecyclerViewAdapter adapter = new TrainingBitRecyclerViewAdapter(context, exerciseBit, internationalSystem);
+        holder.mBitList.setAdapter(adapter);
+
+        adapter.setOnClickListener((bit, index) -> {
+            EditBitLogDialogFragment editDialog = new EditBitLogDialogFragment(
+                    R.string.title_registry,
+                    exercise,
+                    false,
+                    internationalSystem,
+                    b -> DBThread.run(context, db -> {
+                        db.bitDao().update(b.toEntity());
+                        ((Activity) context).runOnUiThread(() -> adapter.notifyItemChanged(index));
+                        if (onBitChangedListener != null) {
+                            onBitChangedListener.accept(b);
+                        }
+                    })
+            );
+            editDialog.setInitialValue(bit);
+            editDialog.show(((FragmentActivity) context).getSupportFragmentManager(), null);
+        });
+
+        holder.toggleBits(expandedElements.contains(position));
     }
 
     public void expandAll() {
@@ -117,7 +161,16 @@ public class TrainingRecyclerViewAdapter extends RecyclerView.Adapter<TrainingRe
             mBitList = binding.bitList;
 
             bitsContainer = binding.bitsContainer;
-            binding.header.setOnClickListener(v -> toggleBits());
+            binding.header.setOnClickListener(v -> {
+                toggleBits();
+            });
+            binding.header.setOnLongClickListener(v -> {
+                if (onLongClickListener != null) {
+                    onLongClickListener.accept(exerciseBit);
+                    return true;
+                }
+                return false;
+            });
         }
 
         public void toggleBits() {
@@ -125,10 +178,15 @@ public class TrainingRecyclerViewAdapter extends RecyclerView.Adapter<TrainingRe
         }
 
         public void toggleBits(boolean show) {
-            int visibility = bitsContainer.getVisibility();
-
-            if (show? visibility == View.GONE : visibility == View.VISIBLE ) {
+            if (bitsContainer.getVisibility() == (show? View.GONE : View.VISIBLE)) {
                 bitsContainer.setVisibility(show? View.VISIBLE : View.GONE);
+
+                int index = exerciseBits.indexOf(exerciseBit);
+                if (show) {
+                    expandedElements.add(index);
+                } else {
+                    expandedElements.remove(index);
+                }
             }
         }
 

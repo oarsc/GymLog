@@ -3,6 +3,7 @@ package org.scp.gymlog.ui.training;
 import static org.scp.gymlog.ui.main.history.HistoryFragment.getTrainingData;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.entities.BitEntity;
 import org.scp.gymlog.room.entities.TrainingEntity;
 import org.scp.gymlog.ui.common.DBAppCompatActivity;
+import org.scp.gymlog.ui.common.dialogs.EditExercisesLastsDialogFragment;
 import org.scp.gymlog.ui.main.history.TrainingData;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.DateUtils;
@@ -74,6 +76,30 @@ public class TrainingActivity extends DBAppCompatActivity {
         final RecyclerView historyRecyclerView = findViewById(R.id.historyList);
         historyRecyclerView.setLayoutManager(linearLayout = new LinearLayoutManager(this));
         historyRecyclerView.setAdapter(adapter = new TrainingRecyclerViewAdapter(this, exerciseBits, internationalSystem));
+
+        adapter.setOnLongClickListener(exerciseBit -> {
+            EditExercisesLastsDialogFragment dialog = new EditExercisesLastsDialogFragment(R.string.title_exercises,
+                    val -> {
+                        if (val != null) {
+                            Intent data = new Intent();
+                            data.putExtra("refresh", true);
+                            setResult(RESULT_OK, data);
+
+                            final int index = exerciseBits.indexOf(exerciseBit);
+                            runOnUiThread(() -> adapter.notifyItemChanged(index));
+                        }
+                    },
+                    ()->{},
+                    exerciseBit.getExercise(), internationalSystem);
+
+            dialog.show(getSupportFragmentManager(), null);
+        });
+
+        adapter.setOnBitChangedListener(bit -> {
+            Intent data = new Intent();
+            data.putExtra("refresh", true);
+            setResult(RESULT_OK, data);
+        });
     }
 
     @Override

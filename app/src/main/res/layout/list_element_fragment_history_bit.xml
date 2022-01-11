@@ -3,7 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="@dimen/activity_horizontal_margin">
+    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:attr/selectableItemBackground">
 
     <TextView
         android:id="@+id/time"

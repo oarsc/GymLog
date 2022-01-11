@@ -28,5 +28,7 @@ public class Constants {
         int CREATE_EXERCISE_FROM_MUSCLE = 3;
         int EDIT_EXERCISE = 4;
         int IMAGE_SELECTOR = 5;
+        int TRAINING = 6;
+        int TOP_RECORDS = 7;
     }
 }

@@ -10,11 +10,15 @@ import androidx.room.Update;
 import org.scp.gymlog.room.entities.ExerciseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 @Dao
 public interface ExerciseDao {
     @Query("SELECT * FROM exercise")
     List<ExerciseEntity> getAll();
+
+    @Query("SELECT * FROM exercise WHERE exerciseId = :exerciseId")
+    Optional<ExerciseEntity> getById(int exerciseId);
 
     @Transaction
     @Query("SELECT * FROM exercise")

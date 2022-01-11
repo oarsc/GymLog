@@ -17,6 +17,7 @@ import org.scp.gymlog.util.WeightUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class TrainingBitRecyclerViewAdapter extends RecyclerView.Adapter<TrainingBitRecyclerViewAdapter.ViewHolder> {
 
@@ -25,11 +26,17 @@ public class TrainingBitRecyclerViewAdapter extends RecyclerView.Adapter<Trainin
     private final boolean internationalSystem;
     private final Exercise exercise;
 
+    private BiConsumer<Bit, Integer> onClickListener;
+
     public TrainingBitRecyclerViewAdapter(Context context, ExerciseBits exerciseBit, boolean internationalSystem) {
         this.context = context;
         this.bits = exerciseBit.getBits();
         this.exercise = exerciseBit.getExercise();
         this.internationalSystem = internationalSystem;
+    }
+
+    public void setOnClickListener(BiConsumer<Bit, Integer> onClickListener) {
+        this.onClickListener = onClickListener;
     }
 
     @Override
@@ -82,6 +89,12 @@ public class TrainingBitRecyclerViewAdapter extends RecyclerView.Adapter<Trainin
             mReps = binding.reps;
             mTime = binding.time;
             mNote = binding.note;
+
+            itemView.setOnClickListener(v -> {
+                if (onClickListener != null) {
+                    onClickListener.accept(bit, bits.indexOf(bit));
+                }
+            });
         }
 
         @Override
