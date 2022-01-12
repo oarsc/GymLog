@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,6 @@ import java.util.stream.Stream;
 public class DataBaseDumperService {
 
     private final static String OUTPUT =  "output.json";
-    private final static String OUTPUT_LEGACY =  "output-legacy.json";
 
     public void save(Context context, AppDatabase database) throws JSONException, IOException {
         JSONObject object = new JSONObject();
@@ -77,7 +75,17 @@ public class DataBaseDumperService {
     }
 
     private JSONArray bits(AppDatabase database) {
-        return convertToJSONArray(database.bitDao().getAll());
+        JSONArray bits = convertToJSONArray(database.bitDao().getAll());
+        try {
+            JsonUtils.forEachObject(bits, bit -> {
+                int id = bit.getInt("exerciseId");
+                bit.remove("exerciseId");
+                bit.put("exerciseName", Data.getExercise(id).getName());
+            });
+        } catch (JSONException e) {
+            throw new LoadException("",e);
+        }
+        return bits;
     }
 
     private JSONArray convertToJSONArray(List<?> list) {
@@ -116,7 +124,7 @@ public class DataBaseDumperService {
                     if (matchingEx.isPresent()) {
                         exercisesIdMap.put(ent.exerciseId, matchingEx.get().getId());
                         ent.exerciseId = matchingEx.get().getId();
-                        //database.exerciseDao().update(ent);
+                        database.exerciseDao().update(ent);
                     } else {
                         exercisesIdMap.put(ent.exerciseId, ++newIds);
                         ent.exerciseId = newIds;
@@ -162,7 +170,7 @@ public class DataBaseDumperService {
                     trainingsIdMap.put(trainingOrig.get(i), (int) newTrIds[i]);
                 }
 
-                BitEntity[] bits = bits(obj.getJSONArray("bits"));
+                BitEntity[] bits = bits(obj.getJSONArray("bits"), exercises);
                 for (BitEntity bit : bits) {
                     bit.bitId = 0;
                     bit.exerciseId = exercisesIdMap.get(bit.exerciseId);
@@ -212,99 +220,21 @@ public class DataBaseDumperService {
         return convertToObject(list, TrainingEntity.class).toArray(TrainingEntity[]::new);
     }
 
-    private BitEntity[] bits(JSONArray list) throws JSONException {
+    private BitEntity[] bits(JSONArray list, ExerciseEntity[] exercises) throws JSONException {
+        JsonUtils.forEachObject(list, bit -> {
+            String name = bit.getString("exerciseName");
+            int id = Arrays.stream(exercises)
+                    .filter(e -> e.name.equals(name))
+                    .map(e -> e.exerciseId)
+                    .findFirst()
+                    .orElseThrow(() -> new LoadException("Couldn't find exercise: "+name));
+            bit.put("exerciseId", id);
+        });
         return convertToObject(list, BitEntity.class).toArray(BitEntity[]::new);
     }
 
 
     private <T> Stream<T> convertToObject(JSONArray list, Class<T> cls) throws JSONException {
         return JsonUtils.mapObject(list, json -> JsonUtils.objectify(json, cls));
-    }
-
-
-    public void loadLegacy(Context context, AppDatabase database) throws JSONException, IOException {
-        String saveStatePath = new ContextWrapper(context).getFilesDir().getPath()+"/"+OUTPUT_LEGACY;
-        if (new File(saveStatePath).exists()) {
-
-            try (BufferedReader br = new BufferedReader(new FileReader(saveStatePath))){
-
-                String line = br.lines().collect(Collectors.joining(""));
-                JSONArray obj = new JSONArray(line);
-
-                Map<Integer, Integer> trainingsIdMap = new HashMap<>();
-                List<TrainingEntity> trainings = new ArrayList<>();
-
-                JsonUtils.forEachObject(obj, exerciseObj -> {
-                    int trainingId = exerciseObj.getInt("trainingId");
-
-                    if (trainingsIdMap.containsKey(trainingId)) {
-                        TrainingEntity tre = trainings.get(trainings.size()-1);
-                        tre.end.setTimeInMillis(exerciseObj.getLong("timestamp"));
-
-                    } else {
-                        trainingsIdMap.put(trainingId, null);
-                        TrainingEntity tre = new TrainingEntity();
-                        tre.start = Calendar.getInstance();
-                        tre.end = Calendar.getInstance();
-                        tre.start.setTimeInMillis(exerciseObj.getLong("timestamp"));
-                        tre.end.setTimeInMillis(exerciseObj.getLong("timestamp"));
-                        trainings.add(tre);
-                    }
-                });
-
-                long[] ids = database.trainingDao().insertAll(trainings.toArray(new TrainingEntity[0]));
-                for (int i=0; i<ids.length; i++) {
-                    trainingsIdMap.put(i+1, (int)ids[i]);
-                }
-
-
-                List<Exercise> exercises = Data.getInstance().getExercises();
-
-                BitEntity[] bits = JsonUtils.mapObject(obj, exerciseObj -> {
-                        BitEntity bitE = new BitEntity();
-                        final String name = exerciseObj.getString("name");
-
-                        Exercise exercise = exercises.stream()
-                                .filter(ex -> ex.getName().equals(name))
-                                .findFirst()
-                                .orElseThrow(() -> new LoadException("Exercise not found: "+name));
-
-                        bitE.exerciseId = exercise.getId();
-                        bitE.trainingId = trainingsIdMap.get(exerciseObj.getInt("trainingId"));
-                        bitE.reps = exerciseObj.getInt("reps");
-                        bitE.totalWeight = exerciseObj.getInt("weight");
-                        bitE.kilos = true;
-                        bitE.instant = false;
-                        bitE.note = exerciseObj.getString("note");
-                        if (bitE.note.equals("/\\")) {
-                            bitE.note = "";
-                            bitE.instant = true;
-                        }
-                        bitE.timestamp = Calendar.getInstance();
-                        bitE.timestamp.setTimeInMillis(exerciseObj.getLong("timestamp"));
-
-                        return bitE;
-                    }).toArray(BitEntity[]::new);
-
-                //database.bitDao().clear();
-                database.bitDao().insertAll(bits);
-
-
-                // Update most recent bit to exercises
-                database.exerciseDao().getAll().stream()
-                        .peek(ee ->
-                            ee.lastTrained = Arrays.stream(bits)
-                                    .filter(bb -> bb.exerciseId == ee.exerciseId)
-                                    .map(bb -> bb.timestamp)
-                                    .reduce(DATE_ZERO, (val, acc) -> val.compareTo(acc) > 0? val:acc)
-                        )
-                        .filter(ee -> ee.lastTrained.compareTo(DATE_ZERO) > 0)
-                        .forEach(database.exerciseDao()::update);
-                /**/
-
-            } catch (JSONException | IOException e){
-                System.err.println("Couldn't load \""+saveStatePath+"\"");
-            }
-        }
     }
 }

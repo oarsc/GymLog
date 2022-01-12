@@ -84,14 +84,6 @@ public class MusclesFragment extends Fragment {
 					}
 				});
 
-			} else if (item.getItemId() == R.id.loadLegacyButton) {
-				DBThread.run(context, db -> {
-					try {
-						new DataBaseDumperService().loadLegacy(context, db);
-					} catch (JSONException | IOException e) {
-						throw new RuntimeException("",e);
-					}
-				});
 			}
 
 			return false;
