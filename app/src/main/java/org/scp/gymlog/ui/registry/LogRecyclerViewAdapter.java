@@ -5,17 +5,19 @@ import static org.scp.gymlog.util.Constants.DATE_ZERO;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.databinding.ListElementFragmentLogBinding;
+import org.scp.gymlog.databinding.ListElementFragmentLogMoreButtonBinding;
 import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.util.DateUtils;
 import org.scp.gymlog.util.FormatUtils;
+import org.scp.gymlog.util.Function;
 import org.scp.gymlog.util.WeightUtils;
 
 import java.math.BigDecimal;
@@ -30,6 +32,8 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
     private final int currentTrainingId;
     private final Exercise exercise;
     private BiConsumer<View, Bit> onClickElementListener;
+    private Function onLoadMoreListener;
+    private boolean fullyLoaded;
 
     public LogRecyclerViewAdapter(List<Bit> log, Exercise exercise, int currentTrainingId) {
         this.log = log;
@@ -42,29 +46,45 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         this.onClickElementListener = onClickElementListener;
     }
 
+    public void setOnLoadMoreListener(Function onLoadMoreListener) {
+        this.onLoadMoreListener = onLoadMoreListener;
+    }
+
+    public void setFullyLoaded(boolean fullyLoaded) {
+        this.fullyLoaded = fullyLoaded;
+        notifyItemRemoved(log.size());
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position == log.size()?
+                R.layout.list_element_fragment_log_more_button :
+                R.layout.list_element_fragment_log;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(
-                ListElementFragmentLogBinding.inflate(
-                        LayoutInflater.from(parent.getContext()), parent, false
-                )
-        );
+        if (viewType == R.layout.list_element_fragment_log_more_button) {
+            return new ViewHolder(
+                    ListElementFragmentLogMoreButtonBinding.inflate(
+                            LayoutInflater.from(parent.getContext()), parent, false
+                    )
+            );
+
+        } else {
+            return new ViewHolder(
+                    ListElementFragmentLogBinding.inflate(
+                            LayoutInflater.from(parent.getContext()), parent, false
+                    )
+            );
+        }
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if (position == log.size()) {
-            holder.bit = null;
-            holder.mDay.setText(R.string.symbol_empty);
-            holder.mSet.setText(R.string.symbol_empty);
-            holder.mWeight.setText(R.string.symbol_empty);
-            holder.mReps.setText(R.string.symbol_empty);
-            holder.mNotes.setText(R.string.symbol_empty);
-            holder.mLoadMore.setVisibility(View.VISIBLE);
-            holder.element.setPadding(0, 40, 0, 40);
+        if (holder.loadMoreBtn) {
             return;
         }
-
         Bit bit = holder.bit = log.get(position);
         int lastSet = 0;
         Calendar lastDate = DATE_ZERO;
@@ -117,7 +137,6 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         }
         holder.mReps.setText(String.valueOf(bit.getReps()));
         holder.mNotes.setText(bit.getNote());
-        holder.mLoadMore.setVisibility(View.INVISIBLE);
         holder.element.setPadding(0, 0, 0, 0);
     }
 
@@ -148,14 +167,15 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
 
     @Override
     public int getItemCount() {
-        return log.size() + 1;
+        return fullyLoaded? log.size() : (log.size() + 1); // + load more button
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public Bit bit;
-        public final TextView mDay, mSet, mWeight, mReps, mNotes, mLoadMore;
-        public final ConstraintLayout element;
+        public TextView mDay, mSet, mWeight, mReps, mNotes;
+        public LinearLayout element;
         public int set;
+        public boolean loadMoreBtn;
 
         public ViewHolder(ListElementFragmentLogBinding binding) {
             super(binding.getRoot());
@@ -164,7 +184,6 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
             mWeight = binding.weight;
             mReps = binding.reps;
             mNotes = binding.notes;
-            mLoadMore = binding.loadMore;
             element = binding.element;
 
             itemView.setOnClickListener(a-> {
@@ -173,6 +192,18 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
                 }
             });
         }
+
+        public ViewHolder(ListElementFragmentLogMoreButtonBinding binding) {
+            super(binding.getRoot());
+            loadMoreBtn = true;
+
+            itemView.setOnClickListener(a-> {
+                if (onLoadMoreListener != null) {
+                    onLoadMoreListener.call();
+                }
+            });
+        }
+
 
         @Override
         public String toString() {

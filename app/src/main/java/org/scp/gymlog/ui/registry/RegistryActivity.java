@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.preference.PreferenceManager;
@@ -114,6 +115,13 @@ public class RegistryActivity extends DBAppCompatActivity {
         recyclerView.setAdapter(recyclerViewAdapter = new LogRecyclerViewAdapter(log, exercise,
                 trainingId));
         recyclerViewAdapter.setOnClickElementListener(this::onClickBit);
+        recyclerViewAdapter.setOnLoadMoreListener(this::loadMoreHistory);
+
+        recyclerView.setNestedScrollingEnabled(true);
+
+        if (log.size() < LOG_PAGES_SIZE-1) {
+            recyclerViewAdapter.setFullyLoaded(true);
+        }
 
         // Save bit log
         findViewById(R.id.confirmSet).setOnClickListener(v -> saveBitLog(false));
@@ -317,19 +325,22 @@ public class RegistryActivity extends DBAppCompatActivity {
     }
 
     private void loadMoreHistory() {
-        final int size = log.size();
-        if (size > 0) {
-            DBThread.run(this, db -> {
-                final Bit bit = log.get(size-1);
-                final Calendar date = bit.getTimestamp();
-                final List<BitEntity> log = db.bitDao().getHistory(exercise.getId(), bit.getTrainingId(),
-                        date, LOG_PAGES_SIZE);
-                log.stream().map(b -> new Bit().fromEntity(b))
-                        .forEach(this.log::add);
+        final int initialSize = log.size();
+        DBThread.run(this, db -> {
+            final Bit bit = log.get(initialSize-1);
+            final Calendar date = bit.getTimestamp();
+            final List<BitEntity> log = db.bitDao().getHistory(exercise.getId(), bit.getTrainingId(),
+                    date, LOG_PAGES_SIZE);
+            log.stream().map(b -> new Bit().fromEntity(b))
+                    .forEach(this.log::add);
 
-                runOnUiThread(() -> recyclerViewAdapter.notifyItemRangeInserted(size, log.size()));
+            runOnUiThread(() -> {
+                recyclerViewAdapter.notifyItemRangeInserted(initialSize, log.size());
+                if (log.size() < LOG_PAGES_SIZE-1) {
+                    recyclerViewAdapter.setFullyLoaded(true);
+                }
             });
-        }
+        });
     }
 
     private void saveBitLog(boolean instant) {
@@ -445,43 +456,38 @@ public class RegistryActivity extends DBAppCompatActivity {
     }
 
     private void onClickBit(View view, Bit bit) {
-        if (bit == null) {
-            loadMoreHistory();
-        } else {
+        view.setBackgroundColor(getResources().getColor(R.color.backgroundAccent, getTheme()));
+        MenuDialogFragment dialog = new MenuDialogFragment(R.menu.bit_menu,
+                result -> {
+                    if (result == R.id.showTraining) {
+                        Intent intent = new Intent(this, TrainingActivity.class);
+                        intent.putExtra("trainingId", bit.getTrainingId());
+                        intent.putExtra("focusBit", bit.getId());
+                        startActivityForResult(INTENT.TRAINING, intent);
 
-            view.setBackgroundColor(getResources().getColor(R.color.backgroundAccent, getTheme()));
-            MenuDialogFragment dialog = new MenuDialogFragment(R.menu.bit_menu,
-                    result -> {
-                        if (result == R.id.showTraining) {
-                            Intent intent = new Intent(this, TrainingActivity.class);
-                            intent.putExtra("trainingId", bit.getTrainingId());
-                            intent.putExtra("focusBit", bit.getId());
-                            startActivityForResult(INTENT.TRAINING, intent);
+                    } else if (result == R.id.editBit) {
+                        final boolean enableInstantSwitch = log.stream()
+                                .filter(b -> b.getTrainingId() == bit.getTrainingId())
+                                .findFirst()
+                                .orElse(null) != bit;
+                        final boolean initialInstant = enableInstantSwitch && bit.isInstant();
 
-                        } else if (result == R.id.editBit) {
-                            final boolean enableInstantSwitch = log.stream()
-                                    .filter(b -> b.getTrainingId() == bit.getTrainingId())
-                                    .findFirst()
-                                    .orElse(null) != bit;
-                            final boolean initialInstant = enableInstantSwitch && bit.isInstant();
+                        EditBitLogDialogFragment editDialog = new EditBitLogDialogFragment(
+                                R.string.title_registry,
+                                exercise,
+                                enableInstantSwitch,
+                                usingInternationalSystem,
+                                b -> updateBitLog(b, initialInstant == b.isInstant())
+                        );
+                        editDialog.setInitialValue(bit);
+                        editDialog.show(getSupportFragmentManager(), null);
 
-                            EditBitLogDialogFragment editDialog = new EditBitLogDialogFragment(
-                                    R.string.title_registry,
-                                    exercise,
-                                    enableInstantSwitch,
-                                    usingInternationalSystem,
-                                    b -> updateBitLog(b, initialInstant == b.isInstant())
-                            );
-                            editDialog.setInitialValue(bit);
-                            editDialog.show(getSupportFragmentManager(), null);
-
-                        } else if (result == R.id.removeBit) {
-                            removeBitLog(bit);
-                        }
-                        view.setBackgroundColor(0x00000000);
-                    });
-            dialog.show(getSupportFragmentManager(), null);
-        }
+                    } else if (result == R.id.removeBit) {
+                        removeBitLog(bit);
+                    }
+                    view.setBackgroundColor(0x00000000);
+                });
+        dialog.show(getSupportFragmentManager(), null);
     }
 
     private void prepareExerciseListToRefreshWhenFinish() {

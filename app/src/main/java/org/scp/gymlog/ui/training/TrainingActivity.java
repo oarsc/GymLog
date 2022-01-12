@@ -97,7 +97,7 @@ public class TrainingActivity extends DBAppCompatActivity {
                 exerciseBits, internationalSystem, focusElement));
 
         if (focusElement >= 0) {
-            linearLayout.scrollToPositionWithOffset(focusElement, 0);
+            linearLayout.scrollToPositionWithOffset(focusElement, 60);
         }
 
         adapter.setOnLongClickListener(exerciseBit -> {
