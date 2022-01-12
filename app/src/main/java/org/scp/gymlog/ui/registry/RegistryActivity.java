@@ -10,6 +10,7 @@ import static org.scp.gymlog.util.WeightUtils.getWeightFromTotal;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.Menu;
@@ -29,6 +30,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.InternalException;
+import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Weight;
@@ -50,13 +52,15 @@ import org.scp.gymlog.util.Constants.INTENT;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.FormatUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class RegistryActivity extends DBAppCompatActivity {
-    private static final int LOG_PAGES_SIZE = 16;
+    private static final int LOG_PAGES_SIZE = 20;
 
     private Exercise exercise;
     private EditText weight;
@@ -102,9 +106,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         usingInternationalSystem = preferences.getBoolean("internationalSystem", true);
 
-
-        TextView title = findViewById(R.id.exerciseName);
-        title.setText(exercise.getName());
+        setHeaderInfo();
 
         // Logs:
         RecyclerView recyclerView = findViewById(R.id.log_list);
@@ -194,6 +196,26 @@ public class RegistryActivity extends DBAppCompatActivity {
         }
 
         loadHistory();
+    }
+
+    private void setHeaderInfo() {
+        View fragment = findViewById(R.id.fragmentExercise);
+        TextView title = findViewById(R.id.content);
+        TextView time = findViewById(R.id.time);
+        ImageView image = findViewById(R.id.image);
+
+        fragment.setClickable(false);
+        title.setText(exercise.getName());
+        time.setVisibility(View.GONE);
+        String fileName = "previews/" + exercise.getImage() + ".png";
+        try {
+            InputStream ims = getAssets().open(fileName);
+            Drawable d = Drawable.createFromStream(ims, null);
+            image.setImageDrawable(d);
+
+        } catch (IOException e) {
+            throw new LoadException("Could not read \""+fileName+"\"", e);
+        }
     }
 
     @Override
@@ -433,6 +455,7 @@ public class RegistryActivity extends DBAppCompatActivity {
                         if (result == R.id.showTraining) {
                             Intent intent = new Intent(this, TrainingActivity.class);
                             intent.putExtra("trainingId", bit.getTrainingId());
+                            intent.putExtra("focusBit", bit.getId());
                             startActivityForResult(INTENT.TRAINING, intent);
 
                         } else if (result == R.id.editBit) {

@@ -6,18 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".ui.registry.RegistryActivity">
 
-    <include layout="@layout/activity_registry_log_fragment"/>
+    <include
+        android:id="@+id/fragmentExercise"
+        layout="@layout/list_element_fragment_exercise"/>
 
-    <TextView
-        android:id="@+id/exerciseName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/text_margin"
-        android:textSize="@dimen/bold_text"
-        app:layout_constraintBottom_toTopOf="@id/editNotes"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/text_title" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/backgroundAccent"
+        app:layout_constraintBottom_toTopOf="@id/fragmentHistoryBits"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <include
+        android:id="@+id/fragmentHistoryBits"
+        layout="@layout/activity_registry_log_fragment" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/backgroundAccent"
+        app:layout_constraintTop_toBottomOf="@id/fragmentHistoryBits"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <TextView
         android:id="@+id/labelNotes"

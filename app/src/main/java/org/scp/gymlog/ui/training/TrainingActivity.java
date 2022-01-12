@@ -1,6 +1,7 @@
 package org.scp.gymlog.ui.training;
 
 import static org.scp.gymlog.ui.main.history.HistoryFragment.getTrainingData;
+import static org.scp.gymlog.util.LambdaUtils.valueEquals;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -73,9 +74,31 @@ public class TrainingActivity extends DBAppCompatActivity {
 
         setHeaderInfo();
 
+        int focusBit = getIntent().getExtras().getInt("focusBit", -1);
+        final int focusElement;
+        if (focusBit >= 0) {
+            int index = 0;
+            for (ExerciseBits exerciseBit : exerciseBits) {
+                if (exerciseBit.getBits().stream()
+                        .map(Bit::getId)
+                        .anyMatch(valueEquals(focusBit))) {
+                    break;
+                }
+                index++;
+            }
+            focusElement = index < exerciseBits.size()? index : -1;
+        } else {
+            focusElement = -1;
+        }
+
         final RecyclerView historyRecyclerView = findViewById(R.id.historyList);
         historyRecyclerView.setLayoutManager(linearLayout = new LinearLayoutManager(this));
-        historyRecyclerView.setAdapter(adapter = new TrainingRecyclerViewAdapter(this, exerciseBits, internationalSystem));
+        historyRecyclerView.setAdapter(adapter = new TrainingRecyclerViewAdapter(this,
+                exerciseBits, internationalSystem, focusElement));
+
+        if (focusElement >= 0) {
+            linearLayout.scrollToPositionWithOffset(focusElement, 0);
+        }
 
         adapter.setOnLongClickListener(exerciseBit -> {
             EditExercisesLastsDialogFragment dialog = new EditExercisesLastsDialogFragment(R.string.title_exercises,

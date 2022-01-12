@@ -48,8 +48,8 @@ public interface BitDao {
             "WHERE exerciseId = :exerciseId GROUP BY totalWeight ORDER BY timestamp")
     List<BitEntity> findTops(int exerciseId);
 
-    @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND totalWeight = :weight ORDER BY timestamp")
-    List<BitEntity> findTops(int exerciseId, int weight);
+    @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND totalWeight = :weight ORDER BY timestamp DESC")
+    List<BitEntity> findAllByExerciseAndWeight(int exerciseId, int weight);
 
     @Insert
     long insert(BitEntity bit);

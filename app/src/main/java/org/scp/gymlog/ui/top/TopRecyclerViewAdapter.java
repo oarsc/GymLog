@@ -32,6 +32,7 @@ public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerView
     private final Context context;
 
     private Consumer<Bit> onClickListener;
+    private Consumer<Bit> onLongClickListener;
 
     public TopRecyclerViewAdapter(Context context, List<Bit> topBits, Exercise exercise, boolean internationalSystem) {
         this.context = context;
@@ -43,6 +44,10 @@ public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerView
 
     public void setOnClickListener(Consumer<Bit> onClickListener) {
         this.onClickListener = onClickListener;
+    }
+
+    public void setOnLongClickListener(Consumer<Bit> onLongClickListener) {
+        this.onLongClickListener = onLongClickListener;
     }
 
     @Override
@@ -68,9 +73,10 @@ public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerView
 
         holder.mWeight.setText(FormatUtils.toString(weight));
         holder.mReps.setText(String.valueOf(topBit.getReps()));
-
-        holder.mTime.setText(DateUtils.getDateTime(topBit.getTimestamp())+ " ("+
+        holder.mTime.setText(DateUtils.getDate(topBit.getTimestamp())+ " ("+
                         DateUtils.calculateTimeLetter(topBit.getTimestamp(), today)+")");
+
+        holder.mNote.setText(topBit.getNote());
     }
 
     @Override
@@ -83,17 +89,26 @@ public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerView
         public final TextView mWeight;
         public final TextView mReps;
         public final TextView mTime;
+        public final TextView mNote;
 
         public ViewHolder(ListElementFragmentTopBinding binding) {
             super(binding.getRoot());
             mWeight = binding.weight;
             mReps = binding.reps;
             mTime = binding.time;
+            mNote = binding.note;
 
             itemView.setOnClickListener(v -> {
                 if (onClickListener != null) {
                     onClickListener.accept(topBit);
                 }
+            });
+
+            itemView.setOnLongClickListener(v -> {
+                if (onLongClickListener != null) {
+                    onLongClickListener.accept(topBit);
+                }
+                return true;
             });
         }
 

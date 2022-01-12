@@ -109,10 +109,12 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         );
 
         holder.mWeight.setText(FormatUtils.toString(weight));
-        if (bit.isInstant())
+        if (bit.isInstant()) {
             holder.mSet.setText(R.string.symbol_empty);
-        else
+            holder.itemView.setAlpha(0.4f);
+        } else {
             holder.mSet.setText(String.valueOf(bit.getSet()));
+        }
         holder.mReps.setText(String.valueOf(bit.getReps()));
         holder.mNotes.setText(bit.getNote());
         holder.mLoadMore.setVisibility(View.INVISIBLE);

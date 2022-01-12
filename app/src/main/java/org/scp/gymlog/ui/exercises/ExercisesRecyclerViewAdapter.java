@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -121,8 +122,10 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.exercise = exercises.get(orderedIndexes.get(position));
         holder.mContentView.setText(holder.exercise.getName());
-        holder.mTime.setText(DateUtils.calculateTimeLetter(
-                holder.exercise.getLastTrained(), today));
+
+        String timeStr = DateUtils.calculateTimeLetter(holder.exercise.getLastTrained(), today);
+        holder.mTime.setVisibility(timeStr.isEmpty()? View.GONE : View.VISIBLE);
+        holder.mTime.setText(timeStr);
 
         String fileName = "previews/" + holder.exercise.getImage() + ".png";
         try {

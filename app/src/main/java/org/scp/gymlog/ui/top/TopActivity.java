@@ -25,7 +25,6 @@ import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.ui.common.DBAppCompatActivity;
 import org.scp.gymlog.ui.common.dialogs.EditExercisesLastsDialogFragment;
-import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment;
 import org.scp.gymlog.ui.training.TrainingActivity;
 import org.scp.gymlog.util.Data;
 
@@ -34,6 +33,7 @@ import java.io.InputStream;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TopActivity extends DBAppCompatActivity {
     private Exercise exercise;
@@ -49,12 +49,14 @@ public class TopActivity extends DBAppCompatActivity {
                 .findFirst()
                 .orElseThrow(() -> new InternalException("Exercise id not found"));
 
-        topBits = db.bitDao().findTops(exerciseId).stream()
-                .sorted(Comparator.comparing(bit -> -bit.totalWeight))
-                .map(bit -> new Bit().fromEntity(bit))
-                .collect(Collectors.toList());
-
+        topBits = getBits(db, exerciseId).collect(Collectors.toList());
         return CONTINUE;
+    }
+
+    protected Stream<Bit> getBits(AppDatabase db, int exerciseId) {
+        return db.bitDao().findTops(exerciseId).stream()
+                .sorted(Comparator.comparing(bit -> -bit.totalWeight))
+                .map(bit -> new Bit().fromEntity(bit));
     }
 
     @Override
@@ -73,25 +75,22 @@ public class TopActivity extends DBAppCompatActivity {
         adapter = new TopRecyclerViewAdapter(this, topBits, exercise, internationalSystem);
         historyRecyclerView.setAdapter(adapter);
 
-        adapter.setOnClickListener(topBit -> {
+        adapter.setOnClickListener(this::onElementClicked);
+        adapter.setOnLongClickListener(this::onElementLongClicked);
+    }
 
-            MenuDialogFragment dialog = new MenuDialogFragment(
-                    R.menu.top_menu, action -> {
-                        if (action == R.id.showTraining) {
-                            Intent intent = new Intent(this, TrainingActivity.class);
-                            intent.putExtra("trainingId", topBit.getTrainingId());
-                            startActivityForResult(TRAINING, intent);
+    protected void onElementClicked(Bit topBit) {
+        Intent intent = new Intent(this, TrainingActivity.class);
+        intent.putExtra("trainingId", topBit.getTrainingId());
+        intent.putExtra("focusBit", topBit.getId());
+        startActivityForResult(TRAINING, intent);
+    }
 
-                        } else if (action == R.id.sameWeight) {
-                            Intent intent = new Intent(this, TopSpecificActivity.class);
-                            intent.putExtra("exerciseId", topBit.getExerciseId());
-                            intent.putExtra("weight", topBit.getWeight().getValue().multiply(ONE_HUNDRED).intValue());
-                            startActivityForResult(TOP_RECORDS, intent);
-                        }
-                    });
-            dialog.show(getSupportFragmentManager(), null);
-
-        });
+    protected void onElementLongClicked(Bit topBit) {
+        Intent intent = new Intent(this, TopSpecificActivity.class);
+        intent.putExtra("exerciseId", topBit.getExerciseId());
+        intent.putExtra("weight", topBit.getWeight().getValue().multiply(ONE_HUNDRED).intValue());
+        startActivityForResult(TOP_RECORDS, intent);
     }
 
     public void onActivityResult(int intentResultId, Intent data) {
@@ -102,11 +101,7 @@ public class TopActivity extends DBAppCompatActivity {
             } else if (intentResultId == TRAINING) {
                 DBThread.run(this, db -> {
                     topBits.clear();
-                    db.bitDao().findTops(exercise.getId()).stream()
-                            .sorted(Comparator.comparing(bit -> -bit.totalWeight))
-                            .map(bit -> new Bit().fromEntity(bit))
-                            .forEach(topBits::add);
-
+                    getBits(db, exercise.getId()).forEach(topBits::add);
                     runOnUiThread(() -> adapter.notifyDataSetChanged());
                 });
             }
@@ -116,9 +111,12 @@ public class TopActivity extends DBAppCompatActivity {
     private void setHeaderInfo() {
         View fragment = findViewById(R.id.fragmentExercise);
         ImageView image = findViewById(R.id.image);
+        TextView time = findViewById(R.id.time);
         TextView title = findViewById(R.id.content);
 
+
         title.setText(exercise.getName());
+        time.setVisibility(View.GONE);
         String fileName = "previews/" + exercise.getImage() + ".png";
         try {
             InputStream ims = getAssets().open(fileName);

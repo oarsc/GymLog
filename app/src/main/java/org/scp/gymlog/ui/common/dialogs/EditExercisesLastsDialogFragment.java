@@ -49,7 +49,7 @@ public class EditExercisesLastsDialogFragment extends CustomDialogFragment<Exerc
     private Bar bar;
     private WeightSpecification weightSpec;
 
-    private boolean internationalSystem;
+    private final boolean internationalSystem;
 
 
 

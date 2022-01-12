@@ -45,10 +45,14 @@ public class TrainingRecyclerViewAdapter extends RecyclerView.Adapter<TrainingRe
     private Consumer<Bit> onBitChangedListener;
     private Set<Integer> expandedElements = new HashSet<>();
 
-    public TrainingRecyclerViewAdapter(Context context, List<ExerciseBits> exerciseBits, boolean internationalSystem) {
+    public TrainingRecyclerViewAdapter(Context context, List<ExerciseBits> exerciseBits,
+                                       boolean internationalSystem, int focusElement) {
         this.context = context;
         this.exerciseBits = exerciseBits;
         this.internationalSystem = internationalSystem;
+        if (focusElement >= 0) {
+            expandedElements.add(focusElement);
+        }
     }
 
     public void setOnLongClickListener(Consumer<ExerciseBits> onLongClickListener) {
@@ -112,7 +116,7 @@ public class TrainingRecyclerViewAdapter extends RecyclerView.Adapter<TrainingRe
             EditBitLogDialogFragment editDialog = new EditBitLogDialogFragment(
                     R.string.title_registry,
                     exercise,
-                    false,
+                    exerciseBit.getBits().get(0) != bit,
                     internationalSystem,
                     b -> DBThread.run(context, db -> {
                         db.bitDao().update(b.toEntity());

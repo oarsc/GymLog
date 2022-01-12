@@ -21,7 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/list_text_margin"
+        android:paddingEnd="@dimen/list_text_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin"
         android:textColor="@color/gray" />
 
     <TextView
