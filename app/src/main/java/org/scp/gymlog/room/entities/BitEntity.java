@@ -10,6 +10,8 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.Relation;
 
+import org.scp.gymlog.util.JsonUtils.NoJsonify;
+
 import java.util.Calendar;
 
 @Entity(
@@ -36,6 +38,7 @@ import java.util.Calendar;
         }
 )
 public class BitEntity {
+    @NoJsonify
     @PrimaryKey(autoGenerate = true)
     public int bitId;
     public int exerciseId;

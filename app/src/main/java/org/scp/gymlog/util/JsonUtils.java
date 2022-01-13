@@ -1,6 +1,8 @@
 package org.scp.gymlog.util;
 
 import static org.scp.gymlog.util.FormatUtils.isAnyOf;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,6 +10,8 @@ import org.json.JSONObject;
 import org.scp.gymlog.model.WeightSpecification;
 import org.scp.gymlog.room.Converters;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -63,6 +67,10 @@ public class JsonUtils {
         try {
             JSONObject json = new JSONObject();
             for (Field field : obj.getClass().getFields()) {
+
+                if (field.isAnnotationPresent(NoJsonify.class))
+                    continue;
+
                 if (field.get(obj) != null) {
                     Type type = field.getType();
                     String fieldName = field.getName();
@@ -147,5 +155,10 @@ public class JsonUtils {
     @FunctionalInterface
     public interface JsonFunction<R,T> {
         R call(T t) throws JSONException;
+    }
+
+    @Retention(RUNTIME)
+    @Target({FIELD})
+    public @interface NoJsonify {
     }
 }

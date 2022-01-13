@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.room.AppDatabase;
-import org.scp.gymlog.room.entities.BarEntity;
 import org.scp.gymlog.room.entities.BitEntity;
 import org.scp.gymlog.room.entities.ExerciseEntity;
 import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
@@ -41,7 +40,6 @@ public class DataBaseDumperService {
     public void save(Context context, AppDatabase database) throws JSONException, IOException {
         JSONObject object = new JSONObject();
 
-        //object.put("bars", bars(database));
         object.put("exercises", exercises(database));
         object.put("primaries", primaryMuscles(database));
         object.put("secondaries", secondaryMuscles(database));
@@ -52,10 +50,6 @@ public class DataBaseDumperService {
         PrintWriter writer = new PrintWriter(saveStatePath, "UTF-8");
         writer.println(object.toString());
         writer.close();
-    }
-
-    private JSONArray bars(AppDatabase database) {
-        return convertToJSONArray(database.barDao().getAll());
     }
 
     private JSONArray exercises(AppDatabase database) {
@@ -104,12 +98,6 @@ public class DataBaseDumperService {
                 String line = br.lines().collect(Collectors.joining(""));
                 JSONObject obj = new JSONObject(line);
 
-                /*
-                BarEntity[] bars = bars(obj.getJSONArray("bars"));
-                database.barDao().clear();
-                database.barDao().insertAll(bars);
-                /**/
-
                 // EXERCISES:
                 ExerciseEntity[] exercises = exercises(obj.getJSONArray("exercises"));
                 Map<Integer, Integer> exercisesIdMap = new HashMap<>();
@@ -154,8 +142,6 @@ public class DataBaseDumperService {
                                 .toArray(SecondaryExerciseMuscleCrossRef[]::new)
                     );
 
-
-
                 List<Integer> trainingOrig = new ArrayList<>();
                 Map<Integer, Integer> trainingsIdMap = new HashMap<>();
 
@@ -172,8 +158,6 @@ public class DataBaseDumperService {
 
                 BitEntity[] bits = bits(obj.getJSONArray("bits"), exercises);
                 for (BitEntity bit : bits) {
-                    bit.bitId = 0;
-                    bit.exerciseId = exercisesIdMap.get(bit.exerciseId);
                     bit.trainingId = trainingsIdMap.get(bit.trainingId);
                 }
                 database.bitDao().insertAll(bits);
@@ -197,11 +181,6 @@ public class DataBaseDumperService {
         }
     }
 
-
-    private BarEntity[] bars(JSONArray list) throws JSONException {
-        return convertToObject(list, BarEntity.class).toArray(BarEntity[]::new);
-    }
-
     private ExerciseEntity[] exercises(JSONArray list) throws JSONException {
         return convertToObject(list, ExerciseEntity.class).toArray(ExerciseEntity[]::new);
     }
@@ -223,6 +202,11 @@ public class DataBaseDumperService {
     private BitEntity[] bits(JSONArray list, ExerciseEntity[] exercises) throws JSONException {
         JsonUtils.forEachObject(list, bit -> {
             String name = bit.getString("exerciseName");
+            /*int id = Data.getInstance().getExercises().stream()
+                    .filter(e -> e.getName().equals(name))
+                    .map(e -> e.getId())
+                    .findFirst()
+                    .orElseThrow(() -> new LoadException("Couldn't find exercise: "+name));*/
             int id = Arrays.stream(exercises)
                     .filter(e -> e.name.equals(name))
                     .map(e -> e.exerciseId)

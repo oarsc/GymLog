@@ -421,15 +421,15 @@
 {
 	"tag": "biceps_bar_pullups_close_overhand_grip",
 	"name": "Pull-ups, Underhand Close Grip",
-	"primary": [2, 6],
-	"secondary": [],
+	"primary": [2],
+	"secondary": [6],
 	"bar": false
 },
 {
 	"tag": "biceps_bar_pullups_close_overhand_grip",
 	"name": "Pull-ups, Overhand Close Grip",
-	"primary": [6, 8],
-	"secondary": [2],
+	"primary": [2],
+	"secondary": [6, 8],
 	"bar": false
 },
 {
@@ -595,14 +595,14 @@
 },
 {
 	"tag": "calves_machine_rocking_seated",
-	"name": "Machine Calf Raise (seated)",
+	"name": "Machine Soleus Calf Raise (seated)",
 	"primary": [11],
 	"secondary": [],
 	"bar": false
 },
 {
 	"tag": "calves_barbell_rocking_seated",
-	"name": "Barbell Calf Raise (seated)",
+	"name": "Barbell Soleus Calf Raise (seated)",
 	"primary": [11],
 	"secondary": [],
 	"bar": true
@@ -616,14 +616,14 @@
 },
 {
 	"tag": "calves_machine_leg_press_rocking_incline_close_feet",
-	"name": "Machine Leg Press Calf Rocking, Close Feet",
+	"name": "Machine Leg Press Calf Rocking",
 	"primary": [11],
 	"secondary": [],
 	"bar": false
 },
 {
-	"tag": "calves_machine_leg_press_rocking_incline_close_feet",
-	"name": "Machine Leg Press Calf Rocking, Wide Feet",
+	"tag": "calves_machine_leg_press_stand",
+	"name": "Machine Leg Press Calf Rocking (standing)",
 	"primary": [11],
 	"secondary": [],
 	"bar": false
@@ -748,20 +748,6 @@
 	"bar": false
 },
 {
-	"tag": "chest_machine_press_lying",
-	"name": "Machine Bench Press",
-	"primary": [1],
-	"secondary": [7, 4],
-	"bar": false
-},
-{
-	"tag": "chest_machine_press_incline",
-	"name": "Machine Front Press (seated)",
-	"primary": [1, 7],
-	"secondary": [4],
-	"bar": false
-},
-{
 	"tag": "chest_high_cable_crossover_standing",
 	"name": "Pulley Machine Crossover (standing)",
 	"primary": [1],
@@ -833,7 +819,7 @@
 },
 {
 	"tag": "chest_machine_dips",
-	"name": "Supported Machine Dips",
+	"name": "Supported Machine Chest Dips",
 	"primary": [1],
 	"secondary": [],
 	"bar": false
@@ -869,6 +855,13 @@
 {
 	"tag": "chest_bench_dumbbell_press_incline_hammer_grip",
 	"name": "Hammer Grip Dumbbell Bench Press (incline)",
+	"primary": [1],
+	"secondary": [4, 7],
+	"bar": false
+},
+{
+	"tag": "chest_machine_press_incline",
+	"name": "Machine Bench Press",
 	"primary": [1],
 	"secondary": [4, 7],
 	"bar": false
@@ -1028,6 +1021,13 @@
 	"bar": true
 },
 {
+	"tag": "forearm_pulley_machine_wrist_curls_standing_behind_back",
+	"name": "Pulley Machine Forearm Wrist Curl Behind Back (standing)",
+	"primary": [8],
+	"secondary": [],
+	"bar": false
+},
+{
 	"tag": "forearm_plate_reverse_curls_standing",
 	"name": "Reverse Plate Forearm Curl (standing)",
 	"primary": [8],
@@ -1135,15 +1135,15 @@
 {
 	"tag": "lat_bar_pullups_overhand",
 	"name": "Pull-ups, Overhand Medium Grip",
-	"primary": [2, 6],
-	"secondary": [8],
+	"primary": [2],
+	"secondary": [6, 8],
 	"bar": false
 },
 {
 	"tag": "lat_bar_pullups_underhand",
 	"name": "Pull-ups, Underhand Medium Grip",
-	"primary": [2, 6],
-	"secondary": [8],
+	"primary": [2],
+	"secondary": [6, 8],
 	"bar": false
 },
 {
@@ -1156,15 +1156,15 @@
 {
 	"tag": "lat_australian_pullups",
 	"name": "Australian Pull-ups",
-	"primary": [2, 6],
-	"secondary": [8],
+	"primary": [2],
+	"secondary": [6, 8],
 	"bar": false
 },
 {
 	"tag": "lat_australian_pullups",
 	"name": "Australian Ring Pull-ups",
-	"primary": [2, 6],
-	"secondary": [8],
+	"primary": [2],
+	"secondary": [6, 8],
 	"bar": false
 },
 {
@@ -1177,8 +1177,8 @@
 {
 	"tag": "lat_machine_supported_pullups_overhand_medium_grip",
 	"name": "Supported Machine Pull-ups, Overhand Medium Grip",
-	"primary": [2, 6],
-	"secondary": [8],
+	"primary": [2],
+	"secondary": [6, 8],
 	"bar": false
 },
 {
@@ -1191,8 +1191,8 @@
 {
 	"tag": "lat_machine_supported_pullups_underhand",
 	"name": "Supported Machine Pull-ups, Underhand Medium Grip",
-	"primary": [2, 6],
-	"secondary": [8],
+	"primary": [2],
+	"secondary": [6, 8],
 	"bar": false
 },
 {
@@ -1282,14 +1282,14 @@
 {
 	"tag": "lat_bar_pullups_underhand",
 	"name": "Pull-ups, Underhand Wide Grip",
-	"primary": [2, 6],
+	"primary": [2],
 	"secondary": [6, 8],
 	"bar": false
 },
 {
 	"tag": "lat_bar_pullups_overhand",
 	"name": "Pull-ups, Vertical Grip",
-	"primary": [2, 6],
+	"primary": [2],
 	"secondary": [6, 8],
 	"bar": false
 },
@@ -1357,13 +1357,6 @@
 	"bar": false
 },
 {
-	"tag": "lat_high_bench_barbell_row_lying",
-	"name": "Barbell Flat High Bench Row (prone)",
-	"primary": [2],
-	"secondary": [6],
-	"bar": true
-},
-{
 	"tag": "lat_high_bench_dumbbell_row_lying",
 	"name": "Dumbbell Flat High Bench Row (prone)",
 	"primary": [2],
@@ -1375,7 +1368,7 @@
 	"name": "Barbell Flat High Bench Row (prone)",
 	"primary": [2],
 	"secondary": [6],
-	"bar": false
+	"bar": true
 },
 {
 	"tag": "lat_bench_dumbbell_reverse_flys_lying",
@@ -1791,6 +1784,13 @@
 	"bar": false
 },
 {
+	"tag": "shoulders_machine_lateral_raise_seated",
+	"name": "Pulley Machine Lateral Raise (standing)",
+	"primary": [4],
+	"secondary": [5],
+	"bar": false
+},
+{
 	"tag": "shoulders_dumbbell_lateral_raise_standing_bent_over",
 	"name": "Dumbbell Lateral Raise (bent over)",
 	"primary": [4],
@@ -1820,14 +1820,14 @@
 },
 {
 	"tag": "shoulders_low_cable_front_raise_standing_single_arm",
-	"name": "Single Arm Pulley Machine Front Raise (standing)",
+	"name": "Pulley Machine Front Raise, Single Arm (standing)",
 	"primary": [4],
 	"secondary": [],
 	"bar": false
 },
 {
 	"tag": "shoulders_low_cable_robe_front_raise_standing",
-	"name": "Pulley Machine Rope Front Raise (standing)",
+	"name": "Pulley Machine Front Raise (standing)",
 	"primary": [4],
 	"secondary": [],
 	"bar": false
@@ -1883,7 +1883,7 @@
 },
 {
 	"tag": "triceps_bench_barbell_press_lying_close_grip",
-	"name": "Barbell Flat Bench Press, Close Grip",
+	"name": "Barbell Bench Press, Close Grip",
 	"primary": [7],
 	"secondary": [4],
 	"bar": true
@@ -1912,6 +1912,13 @@
 {
 	"tag": "triceps_low_cable_robe_overhead_french_press_standing",
 	"name": "Overhead Pulley Machine Triceps Rope Press (standing)",
+	"primary": [7],
+	"secondary": [4],
+	"bar": false
+},
+{
+	"tag": "triceps_low_cable_overhead_french_press_standing",
+	"name": "Overhead Pulley Machine Triceps Press (standing)",
 	"primary": [7],
 	"secondary": [4],
 	"bar": false

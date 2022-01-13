@@ -13,6 +13,7 @@ import androidx.room.PrimaryKey;
 import androidx.room.Relation;
 
 import org.scp.gymlog.model.WeightSpecification;
+import org.scp.gymlog.util.JsonUtils.NoJsonify;
 
 import java.util.Calendar;
 import java.util.List;
@@ -42,6 +43,7 @@ public class ExerciseEntity {
     public boolean requiresBar;
 
     // Last configs
+    @NoJsonify
     @NonNull
     public Calendar lastTrained;
     @NonNull

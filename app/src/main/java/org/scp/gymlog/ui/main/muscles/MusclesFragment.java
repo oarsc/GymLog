@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONException;
 import org.scp.gymlog.R;
+import org.scp.gymlog.SplashActivity;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.service.DataBaseDumperService;
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton;
@@ -65,7 +66,7 @@ public class MusclesFragment extends Fragment {
 				startActivity(intent);
 				return true;
 			} else if (item.getItemId() == R.id.searchButton) {
-
+;
 			} else if (item.getItemId() == R.id.saveButton) {
 				DBThread.run(context, db -> {
 					try {
@@ -79,6 +80,10 @@ public class MusclesFragment extends Fragment {
 				DBThread.run(context, db -> {
 					try {
 						new DataBaseDumperService().load(context, db);
+
+						Intent intent = new Intent(getActivity(), SplashActivity.class);
+						startActivity(intent);
+						getActivity().finish();
 					} catch (JSONException | IOException e) {
 						throw new RuntimeException("",e);
 					}
