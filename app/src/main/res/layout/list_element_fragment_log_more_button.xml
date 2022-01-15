@@ -9,4 +9,7 @@
     android:textSize="@dimen/bold_text"
     android:textStyle="bold"
     android:paddingVertical="@dimen/list_text_margin"
-    android:gravity="center"/>
+    android:gravity="center"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:attr/selectableItemBackground"/>

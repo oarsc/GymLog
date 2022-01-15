@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.preference.PreferenceManager;
@@ -44,14 +43,18 @@ import org.scp.gymlog.ui.common.components.NumberModifierView;
 import org.scp.gymlog.ui.common.dialogs.EditBitLogDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditNotesDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
+import org.scp.gymlog.ui.common.dialogs.EditTimerDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditWeightFormDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
+import org.scp.gymlog.service.NotificationService;
 import org.scp.gymlog.ui.top.TopActivity;
 import org.scp.gymlog.ui.training.TrainingActivity;
 import org.scp.gymlog.util.Constants.INTENT;
 import org.scp.gymlog.util.Data;
+import org.scp.gymlog.util.DateUtils;
 import org.scp.gymlog.util.FormatUtils;
+import org.scp.gymlog.util.SecondTickThread;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,6 +68,7 @@ public class RegistryActivity extends DBAppCompatActivity {
 
     private Exercise exercise;
     private EditText weight;
+    private TextView timer;
     private EditText reps;
     private EditText notes;
     private NumberModifierView weightModifier;
@@ -80,6 +84,13 @@ public class RegistryActivity extends DBAppCompatActivity {
     private boolean hiddenInstantSetButton;
 
     private boolean sendRefreshList = false;
+
+    private NotificationService notificationService;
+
+    private int defaultTimer;
+    private Thread countdownThread;
+    private Calendar activeCountdown;
+    private int defaultColor;
 
     @Override
     protected int onLoad(Bundle savedInstanceState, AppDatabase db) {
@@ -104,10 +115,47 @@ public class RegistryActivity extends DBAppCompatActivity {
         setContentView(R.layout.activity_registry);
         setTitle(R.string.title_registry);
 
+        notificationService = new NotificationService(this);
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         usingInternationalSystem = preferences.getBoolean("internationalSystem", true);
+        defaultTimer = Integer.parseInt(preferences.getString("restTime", "90"));
 
         setHeaderInfo();
+
+        // Timer button:
+        timer = findViewById(R.id.timerSeconds);
+        defaultColor = timer.getTextColors().getDefaultColor();
+
+        View timerButton = findViewById(R.id.timerButton);
+        timerButton.setOnClickListener(v -> {
+            EditTimerDialogFragment dialog = new EditTimerDialogFragment(R.string.text_notes,
+                    this, exercise, activeCountdown,
+                    result -> {
+                        if (exercise.getRestTime() != result) {
+                            exercise.setRestTime(result);
+                            DBThread.run(this, db -> db.exerciseDao().update(exercise.toEntity()));
+                        }
+                        if (countdownThread == null) {
+                            timer.setText(String.valueOf(result<0? defaultTimer : result));
+                        }
+                    });
+            dialog.setOnPlayListener(this::startTimer);
+            dialog.setOnStopListener(this::stopTimer);
+            dialog.show(getSupportFragmentManager(), null);
+        });
+
+        Calendar lastEndTime = NotificationService.getLastEndTime();
+        if (lastEndTime != null && Calendar.getInstance().compareTo(lastEndTime) < 0) {
+            startTimer(lastEndTime);
+
+        } else {
+            timer.setTextColor(defaultColor);
+            timer.setText(String.valueOf(
+                    exercise.getRestTime()<0? defaultTimer : exercise.getRestTime()
+                ));
+        }
+
 
         // Logs:
         RecyclerView recyclerView = findViewById(R.id.log_list);
@@ -141,7 +189,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         notes.setOnClickListener(view -> {
             EditNotesDialogFragment dialog = new EditNotesDialogFragment(R.string.text_notes,
                     exercise.getId(),
-                    result -> notes.setText(result.toString()));
+                    result -> notes.setText(result));
             dialog.setInitialValue(notes.getText().toString());
             dialog.show(getSupportFragmentManager(), null);
         });
@@ -167,7 +215,6 @@ public class RegistryActivity extends DBAppCompatActivity {
                 }
             }
         });
-
 
         // Weight and Reps Input fields:
         weight = findViewById(R.id.editWeight);
@@ -288,9 +335,7 @@ public class RegistryActivity extends DBAppCompatActivity {
                         recyclerViewAdapter.notifyItemRangeChanged(0, log.size());
 
                         updateForms();
-                        DBThread.run(this, db ->
-                            db.exerciseDao().update(exercise.toEntity())
-                        );
+                        DBThread.run(this, db -> db.exerciseDao().update(exercise.toEntity()));
                     }
                 },
                 () -> {}, weightFormData);
@@ -402,6 +447,8 @@ public class RegistryActivity extends DBAppCompatActivity {
                             90, 250);
                     confirmInstantButton.startAnimation(anim);
                 }
+
+                startTimer();
             });
         });
     }
@@ -500,4 +547,60 @@ public class RegistryActivity extends DBAppCompatActivity {
         }
     }
 
+    private void startTimer() {
+        int seconds = exercise.getRestTime()<0? defaultTimer : exercise.getRestTime();
+        Calendar endDate = Calendar.getInstance();
+        endDate.add(Calendar.SECOND, seconds);
+        startTimer(endDate, seconds);
+    }
+
+    private void startTimer(Calendar endDate, int seconds) {
+        if (seconds > 0) {
+            notificationService.showNotification(endDate, seconds, exercise.getName());
+            startTimer(endDate);
+        }
+    }
+
+    private void startTimer(Calendar endDate) {
+        activeCountdown = endDate;
+        if (countdownThread == null) {
+            countdownThread = new CountdownThread();
+            countdownThread.start();
+
+            int color = getResources().getColor(R.color.orange_light, getTheme());
+            timer.setTextColor(color);
+            ((TextView) findViewById(R.id.secondsText)).setTextColor(color);
+        }
+    }
+
+    private void stopTimer() {
+        activeCountdown = null;
+        notificationService.hideNotification();
+        if (countdownThread != null) {
+            countdownThread.interrupt();
+        }
+    }
+
+    private class CountdownThread extends SecondTickThread {
+        public CountdownThread() {
+            super(() -> {
+                int seconds = DateUtils.secondsDiff(Calendar.getInstance(), activeCountdown);
+                if (seconds > 0) {
+                    runOnUiThread(() -> timer.setText(String.valueOf(seconds)));
+                    return true;
+                }
+                return false;
+            });
+            onFinishListener = () -> {
+                countdownThread = null;
+                runOnUiThread(() -> {
+                    timer.setText(String.valueOf(
+                            exercise.getRestTime()<0? defaultTimer : exercise.getRestTime()
+                        ));
+                    timer.setTextColor(defaultColor);
+                    ((TextView) findViewById(R.id.secondsText)).setTextColor(defaultColor);
+                });
+            };
+        }
+    }
 }

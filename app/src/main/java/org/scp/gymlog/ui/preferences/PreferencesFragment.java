@@ -2,6 +2,7 @@ package org.scp.gymlog.ui.preferences;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.EditTextPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import org.scp.gymlog.R;
@@ -30,6 +32,15 @@ public class PreferencesFragment extends PreferenceFragmentCompat
 	@Override
 	public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 		setPreferencesFromResource(R.xml.preferences, rootKey);
+
+		EditTextPreference editTextPreference = getPreferenceManager().findPreference("restTime");
+		assert editTextPreference != null;
+		editTextPreference.setOnBindEditTextListener(editText -> {
+				editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+				editText.setSelection(editText.getText().length());
+			});
+		editTextPreference.setSummary(editTextPreference.getText()+" "+
+				getString(R.string.text_seconds).toLowerCase());
 	}
 
 	@Override
@@ -47,7 +58,15 @@ public class PreferencesFragment extends PreferenceFragmentCompat
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+
 		switch (key) {
+			case "restTime":
+				EditTextPreference pref = findPreference(key);
+				assert pref != null;
+				pref.setSummary(pref.getText()+" "+
+						getString(R.string.text_seconds).toLowerCase());
+				break;
 			case "nightTheme":
 				boolean value = sharedPreferences.getBoolean(key, false);
 

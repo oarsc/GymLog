@@ -3,6 +3,8 @@ package org.scp.gymlog.room.entities;
 import static androidx.room.ForeignKey.CASCADE;
 import static androidx.room.ForeignKey.SET_NULL;
 
+import static org.scp.gymlog.util.Constants.DATE_ZERO;
+
 import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
@@ -44,11 +46,11 @@ public class ExerciseEntity {
 
     // Last configs
     @NoJsonify
-    @NonNull
-    public Calendar lastTrained;
+    public Calendar lastTrained = DATE_ZERO;
     @NonNull
     public WeightSpecification lastWeightSpec;
     public int lastStep = 500;
+    public int lastRestTime = -1;
     public Integer lastBarId;
 
     public static class WithMuscles {

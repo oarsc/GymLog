@@ -18,6 +18,7 @@ import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.entities.MuscleEntity;
 import org.scp.gymlog.service.InitialDataService;
+import org.scp.gymlog.service.NotificationService;
 import org.scp.gymlog.ui.main.MainActivity;
 import org.scp.gymlog.util.Data;
 
@@ -38,6 +39,8 @@ public class SplashActivity extends AppCompatActivity {
             recreate();
 
         } else {
+            new NotificationService(this).createNotificationsChannel();
+
             DBThread.run(this, db -> {
                 List<MuscleEntity> muscles = db.muscleDao().getOnlyMuscles();
                 if (muscles.isEmpty()) {

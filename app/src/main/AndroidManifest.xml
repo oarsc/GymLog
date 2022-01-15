@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.scp.gymlog">
 
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -56,6 +61,12 @@
             android:theme="@style/Theme.GymLog.NoActionBar"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
+
+        <service
+            android:enabled="true"
+            android:exported="false"
+            android:label="NotificationLoggingWidget"
+            android:name=".ui.common.notifications.NotificationLoggingService" />
     </application>
 
 </manifest>

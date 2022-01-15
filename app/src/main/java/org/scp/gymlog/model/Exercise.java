@@ -32,6 +32,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 	private BigDecimal step = FIVE;
 	private boolean requiresBar;
 	private Bar bar;
+	private int restTime = -1;
 	private WeightSpecification weightSpec = WeightSpecification.NO_BAR_WEIGHT;
 
 	@Override
@@ -44,6 +45,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 		entity.lastStep = step.multiply(ONE_HUNDRED).intValue();
 		entity.requiresBar = requiresBar;
 		entity.lastWeightSpec = weightSpec;
+		entity.lastRestTime = restTime;
 		if (bar != null) {
 			entity.lastBarId = bar.getId();
 		}
@@ -60,6 +62,7 @@ public class Exercise implements EntityMapped<ExerciseEntity> {
 		step = BigDecimal.valueOf(entity.lastStep).divide(ONE_HUNDRED);
 		requiresBar = entity.requiresBar;
 		weightSpec = entity.lastWeightSpec;
+		restTime = entity.lastRestTime;
 		if (entity.lastBarId != null) {
 			bar = Data.getBar(entity.lastBarId);
 		}

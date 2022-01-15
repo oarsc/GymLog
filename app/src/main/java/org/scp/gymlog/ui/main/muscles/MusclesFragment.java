@@ -20,10 +20,12 @@ import org.scp.gymlog.SplashActivity;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.service.DataBaseDumperService;
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton;
+import org.scp.gymlog.service.NotificationService;
 import org.scp.gymlog.ui.createexercise.CreateExerciseActivity;
 import org.scp.gymlog.util.Constants.INTENT;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 /**
  * A fragment representing a list of Items.
@@ -51,6 +53,7 @@ public class MusclesFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_list_muscles, container, false);
 
 		context = view.getContext();
+
 		RecyclerView recyclerView = view.findViewById(R.id.musclesList);
 		recyclerView.setLayoutManager(new LinearLayoutManager(context));
 		recyclerView.setAdapter(new MusclesRecyclerViewAdapter());
@@ -66,6 +69,10 @@ public class MusclesFragment extends Fragment {
 				startActivity(intent);
 				return true;
 			} else if (item.getItemId() == R.id.searchButton) {
+				int seconds = 10;
+				Calendar cal = Calendar.getInstance();
+				cal.add(Calendar.SECOND, seconds);
+				new NotificationService(context).showNotification(cal, seconds, "Test notification");
 ;
 			} else if (item.getItemId() == R.id.saveButton) {
 				DBThread.run(context, db -> {
@@ -88,7 +95,6 @@ public class MusclesFragment extends Fragment {
 						throw new RuntimeException("",e);
 					}
 				});
-
 			}
 
 			return false;

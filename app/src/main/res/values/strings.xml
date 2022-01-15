@@ -28,6 +28,9 @@
 
     <string name="text_add">Add</string>
     <string name="text_collapse_all">Collapse all</string>
+    <string name="text_countdown">Countdown</string>
+    <string name="text_current_countdown">Current countdown</string>
+    <string name="text_exercise">Exercise</string>
     <string name="text_expand_all">Expand all</string>
     <string name="text_instantly">Instantly</string>
     <string name="text_kg">kg</string>
@@ -37,6 +40,7 @@
     <string name="text_notes">Notes</string>
     <string name="text_on_smallcaps">on</string>
     <string name="text_reps">Reps</string>
+    <string name="text_seconds">Seconds</string>
     <string name="text_set">Set</string>
     <string name="text_save">Save</string>
     <string name="text_started_at">Started at</string>
@@ -64,8 +68,11 @@
     <string name="symbol_3_middle_points">···</string>
     <string name="symbol_bar">/</string>
     <string name="symbol_empty"/>
+    <string name="symbol_is_space">:&#160;</string>
     <string name="symbol_hyphen">-</string>
+    <string name="symbol_s">s</string>
     <string name="symbol_space">&#160;</string>
+    <string name="symbol_zero">0</string>
 
     <string name="support_open_parentheses">(</string>
     <string name="support_close_parentheses">)</string>
@@ -114,10 +121,20 @@
     <string name="month_november">November</string>
     <string name="month_december">December</string>
 
+    <!-- Notifications -->
+    <string name="notification_title_countdown">@string/text_countdown</string>
+    <string name="notification_title_ready">Ready</string>
+    <string name="notification_fill_1">:&#160;</string>
+    <string name="notification_rest_finished">Rest finished</string>
+
     <!-- Weight Specifications -->
     <string name="weight_spec_total">Total weight</string>
     <string name="weight_spec_no_bar">Only weight from plates</string>
     <string name="weight_spec_one_side">Weight from one extreme</string>
+
+    <!-- Preference Default -->
+    <string name="default_header">Default</string>
+    <string name="default_rest_time">Default rest time</string>
 
     <!-- Preference Titles -->
     <string name="units_header">Units</string>

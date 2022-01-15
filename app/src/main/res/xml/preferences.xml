@@ -1,6 +1,14 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory app:title="@string/default_header">
+        <EditTextPreference
+            app:key="restTime"
+            app:title="@string/default_rest_time"
+            android:inputType="numberDecimal"
+            android:defaultValue="90" />
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/units_header">
         <SwitchPreferenceCompat
             app:key="internationalSystem"

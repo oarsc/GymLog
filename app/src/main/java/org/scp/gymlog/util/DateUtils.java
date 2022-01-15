@@ -11,7 +11,7 @@ public class DateUtils {
         Calendar d2p = getFirstTimeOfDay(d2);
         int currentYear = d1p.get(Calendar.YEAR);
 
-        int diffDays = (int) (Math.abs(d1p.getTimeInMillis() - d2p.getTimeInMillis()) / 86400000L);
+        int diffDays = (int) (Math.abs(diff(d1p, d2p)) / 86400000L);
         int diffYears = 0;
 
         int yearDays;
@@ -22,6 +22,14 @@ public class DateUtils {
         }
 
         return new int[] {diffYears, diffDays};
+    }
+
+    public static int secondsDiff(Calendar earliest, Calendar latest) {
+        return (int) (diff(earliest, latest) / 1000L);
+    }
+
+    public static long diff(Calendar earliest, Calendar latest) {
+        return latest.getTimeInMillis() - earliest.getTimeInMillis();
     }
 
     public static boolean isLeapYear(int year) {
