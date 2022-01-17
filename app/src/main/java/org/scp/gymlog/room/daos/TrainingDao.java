@@ -29,6 +29,9 @@ public interface TrainingDao {
     @Update
     void update(TrainingEntity training);
 
+    @Query("UPDATE training SET trainingId = :newId WHERE trainingId = :oldId")
+    int updateId(int oldId, int newId);
+
     @Insert
     long insert(TrainingEntity training);
 

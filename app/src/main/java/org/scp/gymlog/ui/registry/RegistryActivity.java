@@ -76,6 +76,7 @@ public class RegistryActivity extends DBAppCompatActivity {
     private ImageView warningIcon;
     private ImageView confirmInstantButton;
     private LogRecyclerViewAdapter recyclerViewAdapter;
+    private LinearLayoutManager recyclerViewLayout;
 
     private boolean usingInternationalSystem;
     private final List<Bit> log = new ArrayList<>();
@@ -159,7 +160,7 @@ public class RegistryActivity extends DBAppCompatActivity {
 
         // Logs:
         RecyclerView recyclerView = findViewById(R.id.log_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(recyclerViewLayout = new LinearLayoutManager(this));
         recyclerView.setAdapter(recyclerViewAdapter = new LogRecyclerViewAdapter(log, exercise,
                 trainingId));
         recyclerViewAdapter.setOnClickElementListener(this::onClickBit);
@@ -427,6 +428,7 @@ public class RegistryActivity extends DBAppCompatActivity {
                     } else {
                         log.add(idx, bit);
                         recyclerViewAdapter.notifyItemInserted(idx);
+                        recyclerViewLayout.scrollToPosition(0);
                         added = true;
                         break;
                     }

@@ -79,7 +79,7 @@ public class MusclesFragment extends Fragment {
 					try {
 						new DataBaseDumperService().save(context, db);
 					} catch (JSONException | IOException e) {
-						throw new RuntimeException("",e);
+						throw new RuntimeException(e);
 					}
 				});
 
@@ -92,7 +92,7 @@ public class MusclesFragment extends Fragment {
 						startActivity(intent);
 						getActivity().finish();
 					} catch (JSONException | IOException e) {
-						throw new RuntimeException("",e);
+						throw new RuntimeException(e);
 					}
 				});
 			}

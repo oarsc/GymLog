@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.scp.gymlog.R;
 import org.scp.gymlog.room.DBThread;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 

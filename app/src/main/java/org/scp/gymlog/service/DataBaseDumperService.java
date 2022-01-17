@@ -163,6 +163,7 @@ public class DataBaseDumperService {
                 database.bitDao().insertAll(bits);
 
                 // Update most recent bit to exercises
+                //*
                 database.exerciseDao().getAll().stream()
                         .filter(ee -> Arrays.stream(bits).anyMatch(bb -> bb.exerciseId == ee.exerciseId))
                         .peek(ee ->
@@ -173,6 +174,19 @@ public class DataBaseDumperService {
                         )
                         .filter(ee -> ee.lastTrained.compareTo(DATE_ZERO) > 0)
                         .forEach(database.exerciseDao()::update);
+                /**/
+
+                // Reindex trainings:
+                /*
+                List<TrainingEntity> allTrainings = database.trainingDao().getAll();
+                allTrainings.sort(Comparator.comparing(t -> t.trainingId));
+                for (int i=1; i<=allTrainings.size(); i++) {
+                    TrainingEntity tr = allTrainings.get(i-1);
+                    if (tr.trainingId != i) {
+                        database.trainingDao().updateId(tr.trainingId, i);
+                        tr.trainingId = i;
+                    }
+                }
                 /**/
 
             } catch (JSONException | IOException e){
