@@ -17,14 +17,20 @@
 
     <item
         android:id="@+id/saveButton"
-        android:icon="@drawable/ic_search_24dp"
+        android:icon="@drawable/ic_dot_24dp"
         android:title="@string/text_save"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/loadButton"
-        android:icon="@drawable/ic_search_24dp"
+        android:icon="@drawable/ic_dot_24dp"
         android:title="@string/text_load"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/testButton"
+        android:icon="@drawable/ic_dot_24dp"
+        android:title="@string/text_test"
         app:showAsAction="never"/>
 
 </menu>

@@ -15,8 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorPrimary"
-        android:src="@drawable/ic_dot_black_24dp" />
+        app:tint="?attr/colorPrimary" />
 
     <TextView
         android:id="@+id/title"
