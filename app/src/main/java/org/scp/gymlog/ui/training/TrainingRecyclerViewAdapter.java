@@ -33,21 +33,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class TrainingRecyclerViewAdapter extends RecyclerView.Adapter<TrainingRecyclerViewAdapter.ViewHolder> {
 
     private final List<ExerciseBits> exerciseBits;
-    private final Context context;
     private final List<ViewHolder> holders = new ArrayList<>();
     private final boolean internationalSystem;
 
     private Consumer<ExerciseBits> onLongClickListener;
     private Consumer<Bit> onBitChangedListener;
-    private Set<Integer> expandedElements = new HashSet<>();
 
-    public TrainingRecyclerViewAdapter(Context context, List<ExerciseBits> exerciseBits,
+    private final Set<Integer> expandedElements = new HashSet<>();
+
+    public TrainingRecyclerViewAdapter(List<ExerciseBits> exerciseBits,
                                        boolean internationalSystem, int focusElement) {
-        this.context = context;
         this.exerciseBits = exerciseBits;
         this.internationalSystem = internationalSystem;
         if (focusElement >= 0) {
@@ -75,6 +75,7 @@ public class TrainingRecyclerViewAdapter extends RecyclerView.Adapter<TrainingRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holders.add(holder);
+        Context context = holder.itemView.getContext();
 
         ExerciseBits exerciseBit = holder.exerciseBit = exerciseBits.get(position);
 
@@ -109,7 +110,7 @@ public class TrainingRecyclerViewAdapter extends RecyclerView.Adapter<TrainingRe
         });
 
 
-        TrainingBitRecyclerViewAdapter adapter = new TrainingBitRecyclerViewAdapter(context, exerciseBit, internationalSystem);
+        TrainingBitRecyclerViewAdapter adapter = new TrainingBitRecyclerViewAdapter(exerciseBit, internationalSystem);
         holder.mBitList.setAdapter(adapter);
 
         adapter.setOnClickListener((bit, index) -> {
@@ -134,10 +135,13 @@ public class TrainingRecyclerViewAdapter extends RecyclerView.Adapter<TrainingRe
     }
 
     public void expandAll() {
+        IntStream.range(0, exerciseBits.size())
+                .forEach(expandedElements::add);
         holders.forEach(holder -> holder.toggleBits(true));
     }
 
     public void collapseAll() {
+        expandedElements.clear();
         holders.forEach(holder -> holder.toggleBits(false));
     }
 

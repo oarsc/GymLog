@@ -21,14 +21,34 @@ public class Constants {
         DATE_FUTURE.setTimeInMillis(32503590000000L);
     }
 
+    public enum IntentReference {
+        NONE,
+        REGISTRY,
+        EXERCISE_LIST,
+        CREATE_EXERCISE,
+        CREATE_EXERCISE_FROM_MUSCLE,
+        EDIT_EXERCISE,
+        IMAGE_SELECTOR,
+        TRAINING,
+        TOP_RECORDS,
+
+        SAVE_FILE,
+        LOAD_FILE
+    }
+/*
     public interface INTENT {
         int NONE = 0;
         int REGISTRY = 1;
+        int EXERCISE_LIST = 7;
         int CREATE_EXERCISE = 2;
         int CREATE_EXERCISE_FROM_MUSCLE = 3;
         int EDIT_EXERCISE = 4;
         int IMAGE_SELECTOR = 5;
         int TRAINING = 6;
         int TOP_RECORDS = 7;
+
+        int SAVE_FILE = 300;
+        int LOAD_FILE = 301;
     }
+ */
 }

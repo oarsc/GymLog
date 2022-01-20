@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerViewAdapter.ViewHolder> {
 
@@ -67,16 +68,13 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         if (viewType == R.layout.list_element_fragment_log_more_button) {
             return new ViewHolder(
                     ListElementFragmentLogMoreButtonBinding.inflate(
-                            LayoutInflater.from(parent.getContext()), parent, false
-                    )
-            );
-
+                            LayoutInflater.from(parent.getContext()), parent, false)
+                );
         } else {
             return new ViewHolder(
                     ListElementFragmentLogBinding.inflate(
-                            LayoutInflater.from(parent.getContext()), parent, false
-                    )
-            );
+                            LayoutInflater.from(parent.getContext()), parent, false)
+                );
         }
     }
 
@@ -131,13 +129,19 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         holder.mWeight.setText(FormatUtils.toString(weight));
         if (bit.isInstant()) {
             holder.mSet.setText(R.string.symbol_empty);
-            holder.itemView.setAlpha(0.4f);
+            setAlpha(holder, 0.4f);
         } else {
             holder.mSet.setText(String.valueOf(bit.getSet()));
+            setAlpha(holder, 1f);
         }
         holder.mReps.setText(String.valueOf(bit.getReps()));
         holder.mNotes.setText(bit.getNote());
         holder.element.setPadding(0, 0, 0, 0);
+    }
+
+    private void setAlpha(final ViewHolder holder, final float alpha) {
+        Stream.of(holder.mWeight, holder.mReps, holder.mNotes)
+                .forEach(v -> v.setAlpha(alpha));
     }
 
     public void notifyTrainingIdChanged(int trainingId, int preIndex) {

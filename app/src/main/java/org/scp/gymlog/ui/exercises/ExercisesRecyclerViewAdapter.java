@@ -35,7 +35,6 @@ import java.util.stream.IntStream;
 public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<ExercisesRecyclerViewAdapter.ViewHolder> {
 
     private final List<Exercise> exercises;
-    private final Context context;
     private final List<Integer> orderedIndexes;
     private final BiConsumer<Exercise, Integer> menuOptionCallback;
     private Order order;
@@ -43,12 +42,11 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
 
     private Consumer<Exercise> onClickListener;
 
-    public ExercisesRecyclerViewAdapter(List<Integer> exercisesList, Context context, Order order,
+    public ExercisesRecyclerViewAdapter(List<Integer> exercisesList, Order order,
                                         BiConsumer<Exercise, Integer> menuOptionCallback) {
         Data data = Data.getInstance();
         this.today = Calendar.getInstance();
         this.menuOptionCallback = menuOptionCallback;
-        this.context = context;
         this.exercises = exercisesList.stream()
                 .map(id -> Data.getExercise(data, id))
                 .collect(Collectors.toList());
@@ -120,6 +118,8 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        Context context = holder.itemView.getContext();
+
         holder.exercise = exercises.get(orderedIndexes.get(position));
         holder.mContentView.setText(holder.exercise.getName());
 
@@ -163,8 +163,11 @@ public class ExercisesRecyclerViewAdapter extends RecyclerView.Adapter<Exercises
 
             itemView.setOnLongClickListener(a-> {
                 MenuDialogFragment dialog = new MenuDialogFragment(
-                        R.menu.exercise_menu, action -> menuOptionCallback.accept(exercise, action));
-                dialog.show(((FragmentActivity) context).getSupportFragmentManager(), null);
+                        R.menu.exercise_menu,
+                        action -> menuOptionCallback.accept(exercise, action));
+
+                FragmentActivity activity = (FragmentActivity)binding.content.getContext();
+                dialog.show(activity.getSupportFragmentManager(), null);
                 return true;
             });
         }

@@ -26,7 +26,7 @@ import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.ui.common.CustomAppCompatActivity;
 import org.scp.gymlog.ui.common.activity.ImageSelectorActivity;
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment;
-import org.scp.gymlog.util.Constants.INTENT;
+import org.scp.gymlog.util.Constants.IntentReference;
 import org.scp.gymlog.util.Data;
 
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 	private FormElement iconOption;
 	private FormElement musclesOption;
 	private FormElement musclesSecondaryOption;
-	private int mode;
+	private IntentReference caller;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +56,8 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		setContentView(R.layout.activity_create_exercise);
 		setTitle(R.string.title_create_exercise);
 
-		mode = getIntent().getExtras().getInt(INTENT_CALLER_ID);
-		if (mode == INTENT.EDIT_EXERCISE) {
+		caller = getIntentCall();
+		if (caller == IntentReference.EDIT_EXERCISE) {
 			editingExercise = Data.getExercise(getIntent().getExtras().getInt("exerciseId"));
 			name = editingExercise.getName();
 			imageName = editingExercise.getImage();
@@ -67,7 +67,7 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		} else {
 			name = "";
 			imageName = "";
-			if (mode == INTENT.CREATE_EXERCISE_FROM_MUSCLE) {
+			if (caller == IntentReference.CREATE_EXERCISE_FROM_MUSCLE) {
 				muscles.add(
 						Data.getMuscle(getIntent().getExtras().getInt("muscleId"))
 				);
@@ -107,7 +107,7 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		} else {
 			Intent data = new Intent();
 
-			if (mode == INTENT.EDIT_EXERCISE) {
+			if (caller == IntentReference.EDIT_EXERCISE) {
 				data.putExtra("exerciseId", editingExercise.getId());
 
 				editingExercise.setRequiresBar(requiresBar);
@@ -227,13 +227,13 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 
 	private void openImageSelectorActivity() {
 		Intent intent = new Intent(this, ImageSelectorActivity.class);
-		intent.putExtra("title", INTENT.CREATE_EXERCISE);
-		startActivityForResult(INTENT.IMAGE_SELECTOR, intent);
+		intent.putExtra("title", IntentReference.CREATE_EXERCISE.ordinal());
+		startActivityForResult(intent, IntentReference.IMAGE_SELECTOR);
 	}
 
 	@Override
-	public void onActivityResult(int intentResultId, Intent data) {
-		if (intentResultId == INTENT.IMAGE_SELECTOR) {
+	public void onActivityResult(IntentReference intentReference, Intent data) {
+		if (intentReference == IntentReference.IMAGE_SELECTOR) {
 			String fileName = data.getStringExtra("fileName");
 			if (fileName != null) {
 

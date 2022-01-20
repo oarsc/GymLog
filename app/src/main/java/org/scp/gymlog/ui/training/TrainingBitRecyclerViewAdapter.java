@@ -1,6 +1,5 @@
 package org.scp.gymlog.ui.training;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,18 +17,17 @@ import org.scp.gymlog.util.WeightUtils;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 public class TrainingBitRecyclerViewAdapter extends RecyclerView.Adapter<TrainingBitRecyclerViewAdapter.ViewHolder> {
 
     private final List<Bit> bits;
-    private final Context context;
     private final boolean internationalSystem;
     private final Exercise exercise;
 
     private BiConsumer<Bit, Integer> onClickListener;
 
-    public TrainingBitRecyclerViewAdapter(Context context, ExerciseBits exerciseBit, boolean internationalSystem) {
-        this.context = context;
+    public TrainingBitRecyclerViewAdapter(ExerciseBits exerciseBit, boolean internationalSystem) {
         this.bits = exerciseBit.getBits();
         this.exercise = exerciseBit.getExercise();
         this.internationalSystem = internationalSystem;
@@ -65,10 +63,16 @@ public class TrainingBitRecyclerViewAdapter extends RecyclerView.Adapter<Trainin
 
         if (bit.isInstant()) {
             holder.mTime.setText(R.string.symbol_empty);
-            holder.itemView.setAlpha(0.4f);
+            setAlpha(holder, 0.4f);
         } else {
             holder.mTime.setText(DateUtils.getTime(bit.getTimestamp()));
+            setAlpha(holder, 1f);
         }
+    }
+
+    private void setAlpha(final ViewHolder holder, final float alpha) {
+        Stream.of(holder.mWeight, holder.mReps, holder.mNote)
+                .forEach(v -> v.setAlpha(alpha));
     }
 
     @Override

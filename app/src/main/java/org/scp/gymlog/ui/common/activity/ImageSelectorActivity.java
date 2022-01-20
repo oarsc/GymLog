@@ -14,7 +14,7 @@ import com.google.android.flexbox.FlexboxLayout;
 import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.ui.common.CustomAppCompatActivity;
-import org.scp.gymlog.util.Constants.INTENT;
+import org.scp.gymlog.util.Constants.IntentReference;
 import org.scp.gymlog.util.TaskRunner;
 
 import java.io.IOException;
@@ -35,15 +35,13 @@ public class ImageSelectorActivity extends CustomAppCompatActivity {
         layout = findViewById(R.id.imageSelectorLayout);
         defaultLayoutParams = new RelativeLayout.LayoutParams(175, 175);
 
-        switch (title) {
-            case INTENT.CREATE_EXERCISE:
-                setTitle(R.string.title_create_exercise);
-                try {
-                    loadExercises();
-                } catch (IOException e) {
-                    throw new LoadException("Error loading exercises", e);
-                }
-                break;
+        if (title == IntentReference.CREATE_EXERCISE.ordinal()) {
+            setTitle(R.string.title_create_exercise);
+            try {
+                loadExercises();
+            } catch (IOException e) {
+                throw new LoadException("Error loading exercises", e);
+            }
         }
     }
 

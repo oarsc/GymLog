@@ -93,8 +93,8 @@ public class TrainingActivity extends DBAppCompatActivity {
 
         final RecyclerView historyRecyclerView = findViewById(R.id.historyList);
         historyRecyclerView.setLayoutManager(linearLayout = new LinearLayoutManager(this));
-        historyRecyclerView.setAdapter(adapter = new TrainingRecyclerViewAdapter(this,
-                exerciseBits, internationalSystem, focusElement));
+        historyRecyclerView.setAdapter(adapter = new TrainingRecyclerViewAdapter(exerciseBits,
+                internationalSystem, focusElement));
 
         if (focusElement >= 0) {
             linearLayout.scrollToPositionWithOffset(focusElement, 60);

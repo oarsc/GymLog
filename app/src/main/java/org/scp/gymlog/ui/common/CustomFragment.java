@@ -2,15 +2,14 @@ package org.scp.gymlog.ui.common;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import org.scp.gymlog.util.Constants.IntentReference;
 
-public abstract class CustomAppCompatActivity extends AppCompatActivity {
+public class CustomFragment extends Fragment {
     private static final String INTENT_CALLER_ID = "_intentCallerId";
     private IntentReference intentResultId = IntentReference.NONE;
 
@@ -23,24 +22,6 @@ public abstract class CustomAppCompatActivity extends AppCompatActivity {
                 intentResultId = IntentReference.NONE;
             });
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    public IntentReference getIntentCall() {
-        int mode = getIntent().getExtras().getInt(INTENT_CALLER_ID);
-        return IntentReference.values()[mode];
-    }
 
     public void onActivityResult(IntentReference intentReference, Intent data) {}
 

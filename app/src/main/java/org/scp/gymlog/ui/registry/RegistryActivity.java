@@ -37,6 +37,7 @@ import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.entities.BitEntity;
+import org.scp.gymlog.service.NotificationService;
 import org.scp.gymlog.ui.common.DBAppCompatActivity;
 import org.scp.gymlog.ui.common.animations.ResizeWidthAnimation;
 import org.scp.gymlog.ui.common.components.NumberModifierView;
@@ -47,10 +48,9 @@ import org.scp.gymlog.ui.common.dialogs.EditTimerDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditWeightFormDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
-import org.scp.gymlog.service.NotificationService;
 import org.scp.gymlog.ui.top.TopActivity;
 import org.scp.gymlog.ui.training.TrainingActivity;
-import org.scp.gymlog.util.Constants.INTENT;
+import org.scp.gymlog.util.Constants.IntentReference;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.DateUtils;
 import org.scp.gymlog.util.FormatUtils;
@@ -286,20 +286,20 @@ public class RegistryActivity extends DBAppCompatActivity {
         if (item.getItemId() == R.id.topRanking) {
             Intent intent = new Intent(this, TopActivity.class);
             intent.putExtra("exerciseId", exercise.getId());
-            startActivityForResult(INTENT.TOP_RECORDS, intent);
+            startActivityForResult(intent, IntentReference.TOP_RECORDS);
             return true;
         }
         return false;
     }
 
     @Override
-    public void onActivityResult(int intentResultId, Intent data) {
+    public void onActivityResult(IntentReference intentReference, Intent data) {
         if (data.getBooleanExtra("refresh", false)) {
-            if (intentResultId == INTENT.TOP_RECORDS) {
+            if (intentReference == IntentReference.TOP_RECORDS) {
                 recyclerViewAdapter.notifyItemRangeChanged(0, log.size());
                 updateForms();
 
-            } else if (intentResultId == INTENT.TRAINING) {
+            } else if (intentReference == IntentReference.TRAINING) {
                 DBThread.run(this, db -> {
                     List<BitEntity> log = db.bitDao().getHistory(exercise.getId(), LOG_PAGES_SIZE);
                     this.log.clear();
@@ -512,7 +512,7 @@ public class RegistryActivity extends DBAppCompatActivity {
                         Intent intent = new Intent(this, TrainingActivity.class);
                         intent.putExtra("trainingId", bit.getTrainingId());
                         intent.putExtra("focusBit", bit.getId());
-                        startActivityForResult(INTENT.TRAINING, intent);
+                        startActivityForResult(intent, IntentReference.TRAINING);
 
                     } else if (result == R.id.editBit) {
                         final boolean enableInstantSwitch = log.stream()

@@ -29,13 +29,11 @@ public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerView
     private final Exercise exercise;
     private final boolean internationalSystem;
     private final Calendar today;
-    private final Context context;
 
     private Consumer<Bit> onClickListener;
     private Consumer<Bit> onLongClickListener;
 
-    public TopRecyclerViewAdapter(Context context, List<Bit> topBits, Exercise exercise, boolean internationalSystem) {
-        this.context = context;
+    public TopRecyclerViewAdapter(List<Bit> topBits, Exercise exercise, boolean internationalSystem) {
         this.topBits = topBits;
         this.exercise = exercise;
         this.internationalSystem = internationalSystem;

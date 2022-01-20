@@ -1,7 +1,6 @@
 package org.scp.gymlog.ui.top;
 
-import static org.scp.gymlog.util.Constants.INTENT.TOP_RECORDS;
-import static org.scp.gymlog.util.Constants.INTENT.TRAINING;
+import org.scp.gymlog.util.Constants.IntentReference;
 import static org.scp.gymlog.util.Constants.ONE_HUNDRED;
 
 import android.content.Intent;
@@ -72,7 +71,7 @@ public class TopActivity extends DBAppCompatActivity {
         final RecyclerView historyRecyclerView = findViewById(R.id.topList);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new TopRecyclerViewAdapter(this, topBits, exercise, internationalSystem);
+        adapter = new TopRecyclerViewAdapter(topBits, exercise, internationalSystem);
         historyRecyclerView.setAdapter(adapter);
 
         adapter.setOnClickListener(this::onElementClicked);
@@ -83,22 +82,22 @@ public class TopActivity extends DBAppCompatActivity {
         Intent intent = new Intent(this, TrainingActivity.class);
         intent.putExtra("trainingId", topBit.getTrainingId());
         intent.putExtra("focusBit", topBit.getId());
-        startActivityForResult(TRAINING, intent);
+        startActivityForResult(intent, IntentReference.TRAINING);
     }
 
     protected void onElementLongClicked(Bit topBit) {
         Intent intent = new Intent(this, TopSpecificActivity.class);
         intent.putExtra("exerciseId", topBit.getExerciseId());
         intent.putExtra("weight", topBit.getWeight().getValue().multiply(ONE_HUNDRED).intValue());
-        startActivityForResult(TOP_RECORDS, intent);
+        startActivityForResult(intent, IntentReference.TOP_RECORDS);
     }
 
-    public void onActivityResult(int intentResultId, Intent data) {
+    public void onActivityResult(IntentReference intentReference, Intent data) {
         if (data.getBooleanExtra("refresh", false)) {
-            if (intentResultId == TOP_RECORDS) {
+            if (intentReference == IntentReference.TOP_RECORDS) {
                 adapter.notifyItemRangeChanged(0, topBits.size());
 
-            } else if (intentResultId == TRAINING) {
+            } else if (intentReference == IntentReference.TRAINING) {
                 DBThread.run(this, db -> {
                     topBits.clear();
                     getBits(db, exercise.getId()).forEach(topBits::add);

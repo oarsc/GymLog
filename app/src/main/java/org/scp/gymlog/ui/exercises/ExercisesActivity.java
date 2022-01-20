@@ -1,6 +1,6 @@
 package org.scp.gymlog.ui.exercises;
 
-import static org.scp.gymlog.util.Constants.INTENT;
+import static org.scp.gymlog.util.Constants.IntentReference;
 import static org.scp.gymlog.util.LambdaUtils.valueEquals;
 
 import android.content.Intent;
@@ -61,12 +61,12 @@ public class ExercisesActivity extends DBAppCompatActivity {
         setTitle(muscle.getText());
         exercisesRecyclerView = findViewById(R.id.exercisesList);
         exercisesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerAdapter = new ExercisesRecyclerViewAdapter(exercisesId, this, order,
+        recyclerAdapter = new ExercisesRecyclerViewAdapter(exercisesId, order,
                 this::onExerciseItemMenuSelected);
         recyclerAdapter.setOnClickListener(ex -> {
             Intent intent = new Intent(this, RegistryActivity.class);
             intent.putExtra("exerciseId", ex.getId());
-            startActivityForResult(INTENT.REGISTRY, intent);
+            startActivityForResult(intent, IntentReference.REGISTRY);
         });
         exercisesRecyclerView.setAdapter(recyclerAdapter);
 
@@ -91,7 +91,7 @@ public class ExercisesActivity extends DBAppCompatActivity {
         if (item.getItemId() == R.id.create_button) {
             Intent intent = new Intent(this, CreateExerciseActivity.class);
             intent.putExtra("muscleId", muscleId);
-            startActivityForResult(INTENT.CREATE_EXERCISE_FROM_MUSCLE, intent);
+            startActivityForResult(intent, IntentReference.CREATE_EXERCISE_FROM_MUSCLE);
 
         } else if (item.getItemId() == R.id.sortAlphabetically) {
             recyclerAdapter.switchOrder(order = Order.ALPHABETICALLY);
@@ -122,7 +122,7 @@ public class ExercisesActivity extends DBAppCompatActivity {
         } else if (action == R.id.editExercise) {
             Intent intent = new Intent(this, CreateExerciseActivity.class);
             intent.putExtra("exerciseId", exercise.getId());
-            startActivityForResult(INTENT.EDIT_EXERCISE, intent);
+            startActivityForResult(intent, IntentReference.EDIT_EXERCISE);
 
         } else if (action == R.id.removeExercise) {
             TextDialogFragment dialog = new TextDialogFragment(R.string.dialog_confirm_remove_exercise_title,
@@ -146,8 +146,8 @@ public class ExercisesActivity extends DBAppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(int intentResultId, Intent data) {
-        if (intentResultId == INTENT.EDIT_EXERCISE) {
+    public void onActivityResult(IntentReference intentReference, Intent data) {
+        if (intentReference == IntentReference.EDIT_EXERCISE) {
             int id = data.getIntExtra("exerciseId", -1);
             Exercise ex = Data.getExercise(id);
             boolean hasMuscle = ex.getPrimaryMuscles().stream().map(Muscle::getId)
@@ -159,7 +159,7 @@ public class ExercisesActivity extends DBAppCompatActivity {
                 exercisesId.removeIf(valueEquals(ex.getId()));
             }
 
-        } else if (intentResultId == INTENT.CREATE_EXERCISE_FROM_MUSCLE) {
+        } else if (intentReference == IntentReference.CREATE_EXERCISE_FROM_MUSCLE) {
             int id = data.getIntExtra("exerciseId", -1);
             Exercise ex = Data.getExercise(id);
             boolean hasMuscle = ex.getPrimaryMuscles().stream().map(Muscle::getId)
@@ -168,7 +168,7 @@ public class ExercisesActivity extends DBAppCompatActivity {
                 exercisesId.add(ex.getId());
                 recyclerAdapter.addExercise(ex);
             }
-        } else if (intentResultId == INTENT.REGISTRY) {
+        } else if (intentReference == IntentReference.REGISTRY) {
             if (data.getBooleanExtra("refresh", false)) {
                 if (order.equals(Order.ALPHABETICALLY)) {
                     int id = data.getIntExtra("exerciseId", -1);
