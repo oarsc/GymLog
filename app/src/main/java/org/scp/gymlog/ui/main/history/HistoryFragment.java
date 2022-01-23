@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import androidx.appcompat.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
+import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.entities.BitEntity;
@@ -103,51 +104,54 @@ public class HistoryFragment extends Fragment {
 		final Resources resources = getResources();
 		List<Muscle> allMuscles = Data.getInstance().getMuscles();
 		DBThread.run(getContext(), db -> {
-
 			List<BitEntity> bits = db.bitDao().getHistory(first, end);
 
-			getActivity().runOnUiThread(() -> {
-				while (first.compareTo(end) < 0) {
-					Map<Muscle, float[]> summary = allMuscles.stream()
-							.collect(Collectors.toMap(muscle->muscle, s->new float[]{0}));
+			int i = 0;
+			while (first.compareTo(end) < 0) {
+				Map<Muscle, float[]> summary = allMuscles.stream()
+						.collect(Collectors.toMap(muscle->muscle, s->new float[]{0}));
 
-					bits.stream()
-							.filter(bit -> first.compareTo(DateUtils.getFirstTimeOfDay(bit.timestamp)) == 0)
-							.map(bit -> Data.getExercise(bit.exerciseId))
-							.forEach(exercise -> {
-								int secondariesCount = exercise.getSecondaryMuscles().size();
-								float primaryShare = secondariesCount>0? 7f : 9;
-								float secondaryShare = secondariesCount>0? 3f/secondariesCount : 0;
+				for (; i<bits.size(); i++) {
+					BitEntity bit = bits.get(i);
 
-								exercise.getPrimaryMuscles().stream()
-										.map(summary::get)
-										.forEach(i -> i[0]+=primaryShare);
+					if (first.compareTo(DateUtils.getFirstTimeOfDay(bit.timestamp)) == 0) {
+						Exercise exercise = Data.getExercise(bit.exerciseId);
 
-								exercise.getSecondaryMuscles().stream()
-										.map(summary::get)
-										.forEach(i -> i[0]+=secondaryShare);
-							});
+						int secondariesCount = exercise.getSecondaryMuscles().size();
+						float primaryShare = secondariesCount>0? 7 : 9;
+						float secondaryShare = secondariesCount>0? 3f/secondariesCount : 0;
 
-					List<PieDataInfo> data = summary.entrySet().stream()
-							.filter(entry -> entry.getValue()[0] > 0)
-							.sorted(Comparator.comparing(entry -> entry.getValue()[0]))
-							.map(entry -> {
-								PieDataInfo dataInfo = new PieDataInfo();
-								dataInfo.setValue(entry.getValue()[0]);
-								dataInfo.setColor(
-										ResourcesCompat.getColor(resources, entry.getKey().getColor(), null)
-								);
-								return dataInfo;
-							})
-							.collect(Collectors.toList());
+						exercise.getPrimaryMuscles().stream()
+								.map(summary::get)
+								.forEach(f -> f[0]+=primaryShare);
 
-					if (!data.isEmpty()) {
-						calendarView.setDayData(first.getTimeInMillis(), data);
-					}
-					first.add(Calendar.DAY_OF_YEAR, 1);
+						exercise.getSecondaryMuscles().stream()
+								.map(summary::get)
+								.forEach(f -> f[0]+=secondaryShare);
+					} else break;
 				}
-				calendarView.setEnabled(true);
-			});
+
+				List<PieDataInfo> data = summary.entrySet().stream()
+						.filter(entry -> entry.getValue()[0] > 0)
+						.sorted(Comparator.comparing(entry -> entry.getValue()[0]))
+						.map(entry -> {
+							PieDataInfo dataInfo = new PieDataInfo();
+							dataInfo.setValue(entry.getValue()[0]);
+							dataInfo.setColor(
+								ResourcesCompat.getColor(resources, entry.getKey().getColor(), null)
+							);
+							return dataInfo;
+						})
+						.collect(Collectors.toList());
+
+				if (!data.isEmpty()) {
+					long millis = first.getTimeInMillis();
+					getActivity().runOnUiThread(() -> calendarView.setDayData(millis, data));
+				}
+				first.add(Calendar.DAY_OF_YEAR, 1);
+			}
+
+			getActivity().runOnUiThread(() -> calendarView.setEnabled(true));
 		});
 	}
 

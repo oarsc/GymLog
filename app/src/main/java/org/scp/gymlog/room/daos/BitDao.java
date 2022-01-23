@@ -25,7 +25,7 @@ public interface BitDao {
             "ORDER BY trainingId DESC, timestamp LIMIT :limit")
     List<BitEntity> getHistory(int exerciseId, int trainingId, Calendar date, int limit);
 
-    @Query("SELECT * FROM bit WHERE :dateStart <= timestamp AND timestamp < :dateEnd")
+    @Query("SELECT * FROM bit WHERE :dateStart <= timestamp AND timestamp < :dateEnd ORDER BY timestamp")
     List<BitEntity> getHistory(Calendar dateStart, Calendar dateEnd);
 
     @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND trainingId = :trainingId ORDER BY timestamp")
