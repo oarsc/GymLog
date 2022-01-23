@@ -82,6 +82,12 @@ public class DataBaseDumperService {
                 int id = bit.getInt("exerciseId");
                 bit.remove("exerciseId");
                 bit.put("exerciseName", Data.getExercise(id).getName());
+
+                if (bit.getBoolean("kilos"))
+                    bit.remove("kilos");
+
+                if (bit.getString("note").isEmpty())
+                    bit.remove("note");
             });
         } catch (JSONException e) {
             throw new LoadException("",e);
@@ -226,6 +232,9 @@ public class DataBaseDumperService {
                     .findFirst()
                     .orElseThrow(() -> new LoadException("Couldn't find exercise: "+name));
             bit.put("exerciseId", id);
+
+            if (!bit.has("kilos")) bit.put("kilos", true);
+            if (!bit.has("note")) bit.put("note", "");
         });
         return convertToObject(list, BitEntity.class).toArray(BitEntity[]::new);
     }
