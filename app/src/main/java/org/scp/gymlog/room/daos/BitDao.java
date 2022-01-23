@@ -40,7 +40,7 @@ public interface BitDao {
     @Query("SELECT timestamp FROM bit WHERE trainingId = :trainingId ORDER BY timestamp ASC LIMIT 1")
     Optional<Calendar> getFirstTimestampByTrainingId(int trainingId);
 
-    @Query("SELECT DISTINCT note FROM bit WHERE exerciseId = :exerciseId ORDER BY timestamp DESC "+
+    @Query("SELECT DISTINCT note FROM bit WHERE exerciseId = :exerciseId AND note <> '' ORDER BY timestamp DESC "+
             "LIMIT :limit")
     List<String> getNotesHistory(int exerciseId, int limit);
 

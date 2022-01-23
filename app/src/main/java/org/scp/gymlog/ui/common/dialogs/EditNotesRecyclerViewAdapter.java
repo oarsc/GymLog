@@ -1,6 +1,5 @@
 package org.scp.gymlog.ui.common.dialogs;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;

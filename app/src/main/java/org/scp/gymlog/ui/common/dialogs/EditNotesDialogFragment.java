@@ -52,12 +52,11 @@ public class EditNotesDialogFragment extends CustomDialogFragment<String> {
         ImageView clearButton = view.findViewById(R.id.clearButton);
         clearButton.setOnClickListener(v -> input.getText().clear());
 
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(title)
                 .setView(view)
                 .setPositiveButton(R.string.button_confirm, (dialog, id) -> {
-                    String text = input.getText().toString();
+                    String text = input.getText().toString().trim();
                     confirm.accept(text);
                 })
                 .setNegativeButton(R.string.button_cancel, (dialog, id) -> {});
