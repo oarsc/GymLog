@@ -1,6 +1,5 @@
 package org.scp.gymlog.ui.main.history;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +8,8 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,18 +37,20 @@ public class HistoryFragment extends Fragment {
 
 	private HistoryCalendarView calendarView;
 	private HistoryRecyclerViewAdapter historyAdapter;
+	private HistoryLegendRecyclerViewAdapter legendAdapter;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 
 		final View view = inflater.inflate(R.layout.fragment_history, container, false);
 
+		// LEGEND LIST
 		final RecyclerView legendRecyclerView = view.findViewById(R.id.legend);
 		legendRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2) {
 			@Override
 			public boolean canScrollVertically() { return false; }
 		});
-		legendRecyclerView.setAdapter(new HistoryLegendRecyclerViewAdapter());
+		legendRecyclerView.setAdapter(legendAdapter = new HistoryLegendRecyclerViewAdapter());
 
 		final ImageView showLegendIcon = view.findViewById(R.id.showLegendIcon);
 		view.findViewById(R.id.showLegend).setOnClickListener(v -> {
@@ -62,6 +63,7 @@ public class HistoryFragment extends Fragment {
 			}
 		});
 
+		// TRAININGS LIST
 		final RecyclerView trainingRecyclerView = view.findViewById(R.id.trainingList);
 		trainingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
 			@Override
@@ -69,16 +71,18 @@ public class HistoryFragment extends Fragment {
 		});
 		trainingRecyclerView.setAdapter(historyAdapter = new HistoryRecyclerViewAdapter());
 
+		// CALENDAR
 		calendarView = view.findViewById(R.id.calendarView);
-		calendarView.setOnSelectDayListener(this::selectDay);
-		calendarView.setOnChangeListener(this::updateData);
+		calendarView.setOnSelectDayListener(this::onDaySelected);
+		calendarView.setOnMonthChangeListener(this::updateMonthData);
 
+		// TOOLBAR
 		Toolbar toolbar = view.findViewById(R.id.toolbar);
 		toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 		return view;
 	}
 
-	private void selectDay(Calendar startDate) {
+	private void onDaySelected(Calendar startDate, List<Muscle> muscles) {
 		Calendar endDate = (Calendar) startDate.clone();
 		endDate.add(Calendar.DAY_OF_YEAR, 1);
 
@@ -96,12 +100,14 @@ public class HistoryFragment extends Fragment {
 				historyAdapter.add(td);
 			});
 
-			getActivity().runOnUiThread(() -> historyAdapter.notifyItemsChanged(initialSize, endSize));
+			runOnUiThread(() -> {
+				legendAdapter.focusMuscles(muscles);
+				historyAdapter.notifyItemsChanged(initialSize, endSize);
+			});
 		});
 	}
 
-	private void updateData(Calendar first, Calendar end) {
-		final Resources resources = getResources();
+	private void updateMonthData(Calendar first, Calendar end) {
 		List<Muscle> allMuscles = Data.getInstance().getMuscles();
 		DBThread.run(getContext(), db -> {
 			List<BitEntity> bits = db.bitDao().getHistory(first, end);
@@ -131,27 +137,35 @@ public class HistoryFragment extends Fragment {
 					} else break;
 				}
 
-				List<PieDataInfo> data = summary.entrySet().stream()
+				final List<PieDataInfo> data = summary.entrySet().stream()
 						.filter(entry -> entry.getValue()[0] > 0)
 						.sorted(Comparator.comparing(entry -> entry.getValue()[0]))
 						.map(entry -> {
 							PieDataInfo dataInfo = new PieDataInfo();
 							dataInfo.setValue(entry.getValue()[0]);
-							dataInfo.setColor(
-								ResourcesCompat.getColor(resources, entry.getKey().getColor(), null)
-							);
+							dataInfo.setMuscle(entry.getKey());
 							return dataInfo;
 						})
 						.collect(Collectors.toList());
 
 				if (!data.isEmpty()) {
 					long millis = first.getTimeInMillis();
-					getActivity().runOnUiThread(() -> calendarView.setDayData(millis, data));
+					runOnUiThread(() -> calendarView.setDayData(millis, data));
+				}
+
+				if (calendarView.isSelected(first) && !data.isEmpty()) {
+					runOnUiThread(() ->
+							legendAdapter.focusMuscles(
+									data.stream()
+											.map(PieDataInfo::getMuscle)
+											.collect(Collectors.toList())
+								)
+						);
 				}
 				first.add(Calendar.DAY_OF_YEAR, 1);
 			}
 
-			getActivity().runOnUiThread(() -> calendarView.setEnabled(true));
+			runOnUiThread(() -> calendarView.setEnabled(true));
 		});
 	}
 
@@ -190,8 +204,13 @@ public class HistoryFragment extends Fragment {
 		td.setId(training.trainingId);
 		td.setStartDate(training.start);
 		td.setMostUsedMuscles(mostUsedMuscles);
-
 		return td;
+	}
+
+	private void runOnUiThread(Runnable action) {
+		FragmentActivity activity = getActivity();
+		assert activity != null;
+		activity.runOnUiThread(action);
 	}
 
 	static class MuscleCount {

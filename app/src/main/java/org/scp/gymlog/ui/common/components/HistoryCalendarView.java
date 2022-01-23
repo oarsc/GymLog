@@ -24,13 +24,13 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 
 import org.scp.gymlog.R;
+import org.scp.gymlog.model.Muscle;
 
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
@@ -42,14 +42,17 @@ public class HistoryCalendarView extends FrameLayout {
     private Calendar selectedDay;
 
     private final Map<Long, View> daysMap;
-    private BiConsumer<Calendar, Calendar> onChangeListener;
-    private Consumer<Calendar> onSelectDayListener;
+    private final Map<Long, List<Muscle>> dayDataMap;
+
+    private BiConsumer<Calendar, Calendar> onMonthChangeListener;
+    private BiConsumer<Calendar, List<Muscle>> onSelectDayListener;
 
     public HistoryCalendarView(Context context, AttributeSet attrs) {
         super(context, attrs);
         inflate(getContext(), R.layout.view_calendar, this);
 
         daysMap = new HashMap<>();
+        dayDataMap = new HashMap<>();
         selectedDay = getFirstTimeOfDay(Calendar.getInstance());
 
         firstDayOfMonth = (Calendar) selectedDay.clone();
@@ -64,9 +67,18 @@ public class HistoryCalendarView extends FrameLayout {
 
     private void moveMonth(boolean next) {
         setEnabled(false);
+        dayDataMap.clear();
         firstDayOfMonth.add(MONTH, next? 1 : -1);
         updateHeader();
         drawWeeks();
+    }
+
+    public boolean isSelected(Calendar calendar) {
+        return selectedDay.compareTo(calendar) == 0;
+    }
+
+    public boolean isSelected(Long value) {
+        return selectedDay.getTimeInMillis() == value;
     }
 
     private void updateHeader() {
@@ -133,8 +145,8 @@ public class HistoryCalendarView extends FrameLayout {
 
         updateSelectedDay();
 
-        if (onChangeListener != null) {
-            onChangeListener.accept(firstDay, lastDay);
+        if (onMonthChangeListener != null) {
+            onMonthChangeListener.accept(firstDay, lastDay);
         }
     }
 
@@ -168,7 +180,7 @@ public class HistoryCalendarView extends FrameLayout {
         }
         selectedDay = selectDay;
         if (onSelectDayListener != null) {
-            onSelectDayListener.accept(selectedDay);
+            onSelectDayListener.accept(selectedDay, dayDataMap.get(selectDay.getTimeInMillis()));
         }
         int currentMonth = firstDayOfMonth.get(MONTH);
         int selectedMonth = selectDay.get(MONTH);
@@ -186,7 +198,9 @@ public class HistoryCalendarView extends FrameLayout {
     }
 
     public void setDayData(Long dayTime, List<PieDataInfo> values) {
+        dayDataMap.put(dayTime, values.stream().map(PieDataInfo::getMuscle).collect(Collectors.toList()));
         View day = daysMap.get(dayTime);
+
         if (day == null) {
             throw new RuntimeException("COULD NOT FIND DAY "+dayTime+" IN MONTH: "+
                     daysMap.keySet().stream()
@@ -214,7 +228,9 @@ public class HistoryCalendarView extends FrameLayout {
 
         dataSet.setColors(
                 values.stream()
-                        .map(PieDataInfo::getColor)
+                        .map(PieDataInfo::getMuscle)
+                        .map(Muscle::getColor)
+                        .map(c -> ResourcesCompat.getColor(getContext().getResources(), c, null))
                         .collect(Collectors.toList()));
 
         dataSet.setDrawValues(false);
@@ -230,11 +246,11 @@ public class HistoryCalendarView extends FrameLayout {
         chart.setData(pieData);
     }
 
-    public void setOnChangeListener(BiConsumer<Calendar, Calendar> onChangeListener) {
-        this.onChangeListener = onChangeListener;
+    public void setOnMonthChangeListener(BiConsumer<Calendar, Calendar> onMonthChangeListener) {
+        this.onMonthChangeListener = onMonthChangeListener;
 
         // send current calendar
-        if (onChangeListener != null) {
+        if (onMonthChangeListener != null) {
             int month = firstDayOfMonth.get(MONTH);
             Calendar firstDay = calculateFirstDay();
             Calendar lastDay = (Calendar) firstDay.clone();
@@ -244,16 +260,16 @@ public class HistoryCalendarView extends FrameLayout {
                 }
             } while (lastDay.get(MONTH) == month);
 
-            onChangeListener.accept(firstDay, lastDay);
+            onMonthChangeListener.accept(firstDay, lastDay);
         }
     }
 
-    public void setOnSelectDayListener(Consumer<Calendar> onSelectDayListener) {
+    public void setOnSelectDayListener(BiConsumer<Calendar, List<Muscle>> onSelectDayListener) {
         this.onSelectDayListener = onSelectDayListener;
 
         // send current selected day
         if (onSelectDayListener != null) {
-            onSelectDayListener.accept(selectedDay);
+            onSelectDayListener.accept(selectedDay, null);
         }
     }
 
@@ -265,6 +281,6 @@ public class HistoryCalendarView extends FrameLayout {
     @Getter @Setter
     public static class  PieDataInfo {
         private float value;
-        private int color;
+        private Muscle muscle;
     }
 }
