@@ -1,8 +1,6 @@
 package org.scp.gymlog.ui.common.dialogs;
 
 import static org.scp.gymlog.util.Constants.ONE_HUNDRED;
-import static org.scp.gymlog.util.FormatUtils.toKilograms;
-import static org.scp.gymlog.util.FormatUtils.toPounds;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -30,8 +28,6 @@ import org.scp.gymlog.util.FormatUtils;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public class EditExercisesLastsDialogFragment extends CustomDialogFragment<Exercise> {

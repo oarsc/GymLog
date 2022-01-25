@@ -78,7 +78,7 @@ public class RegistryActivity extends DBAppCompatActivity {
     private LogRecyclerViewAdapter recyclerViewAdapter;
     private LinearLayoutManager recyclerViewLayout;
 
-    private boolean usingInternationalSystem;
+    private boolean internationalSystem;
     private final List<Bit> log = new ArrayList<>();
     private int trainingId;
     private boolean notesLocked = false;
@@ -119,7 +119,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         notificationService = new NotificationService(this);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        usingInternationalSystem = preferences.getBoolean("internationalSystem", true);
+        internationalSystem = preferences.getBoolean("internationalSystem", true);
         defaultTimer = Integer.parseInt(preferences.getString("restTime", "90"));
 
         setHeaderInfo();
@@ -162,7 +162,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.log_list);
         recyclerView.setLayoutManager(recyclerViewLayout = new LinearLayoutManager(this));
         recyclerView.setAdapter(recyclerViewAdapter = new LogRecyclerViewAdapter(log, exercise,
-                trainingId));
+                trainingId, internationalSystem));
         recyclerViewAdapter.setOnClickElementListener(this::onClickBit);
         recyclerViewAdapter.setOnLoadMoreListener(this::loadMoreHistory);
 
@@ -234,7 +234,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         });
 
         TextView unitTextView = findViewById(R.id.unit);
-        unitTextView.setText(usingInternationalSystem?
+        unitTextView.setText(internationalSystem ?
                 R.string.text_kg :
                 R.string.text_lb);
 
@@ -318,7 +318,7 @@ public class RegistryActivity extends DBAppCompatActivity {
 
         Weight weight = new Weight(
                 toBigDecimal(weightEditText.getText().toString()),
-                usingInternationalSystem
+                internationalSystem
         );
         weightFormData.setWeight(weight);
         weightFormData.setStep(exercise.getStep());
@@ -359,10 +359,10 @@ public class RegistryActivity extends DBAppCompatActivity {
             reps.setText(String.valueOf(bit.getReps()));
 
             BigDecimal partialWeight = getWeightFromTotal(
-                    bit.getWeight().getValue(usingInternationalSystem),
+                    bit.getWeight(),
                     exercise.getWeightSpec(),
                     exercise.getBar(),
-                    usingInternationalSystem);
+                    internationalSystem);
 
             weight.setText(FormatUtils.toString(partialWeight));
         } else {
@@ -403,9 +403,9 @@ public class RegistryActivity extends DBAppCompatActivity {
                     toBigDecimal(weight.getText().toString()),
                     exercise.getWeightSpec(),
                     exercise.getBar(),
-                    usingInternationalSystem);
+                    internationalSystem);
 
-            bit.setWeight(new Weight(totalWeight, usingInternationalSystem));
+            bit.setWeight(new Weight(totalWeight, internationalSystem));
             bit.setNote(notes.getText().toString());
             bit.setReps(toInt(reps.getText().toString()));
             bit.setTimestamp(Calendar.getInstance());
@@ -525,7 +525,7 @@ public class RegistryActivity extends DBAppCompatActivity {
                                 R.string.title_registry,
                                 exercise,
                                 enableInstantSwitch,
-                                usingInternationalSystem,
+                                internationalSystem,
                                 b -> updateBitLog(b, initialInstant == b.isInstant())
                         );
                         editDialog.setInitialValue(bit);

@@ -1,14 +1,70 @@
 package org.scp.gymlog.util;
 
+import static org.scp.gymlog.util.Constants.LBS_RATIO;
 import static org.scp.gymlog.util.Constants.TWO;
 
+import androidx.annotation.NonNull;
+
 import org.scp.gymlog.model.Bar;
+import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.model.WeightSpecification;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class WeightUtils {
+    private final static int DEFAULT_SCALE = 2;
+
+    private static boolean exactConversion = false;
+    private static BigDecimal conversionStep = new BigDecimal("1");
+
+    public static void setConvertParameters(boolean exactConversion, @NonNull String conversionStep) {
+        WeightUtils.exactConversion = exactConversion;
+        WeightUtils.conversionStep = new BigDecimal(conversionStep);
+    }
+
+    public static BigDecimal toKilograms(Weight weight) {
+        return weight.toKg();
+    }
+
+    public static BigDecimal toKilograms(BigDecimal pounds) {
+        return toKilograms(pounds, DEFAULT_SCALE);
+    }
+
+    public static BigDecimal toKilograms(BigDecimal pounds, int scale) {
+        if (scale < 0)
+            return pounds.divide(LBS_RATIO, LBS_RATIO.scale(), RoundingMode.HALF_UP);
+
+        if (exactConversion)
+            return pounds.divide(LBS_RATIO, scale, RoundingMode.HALF_UP);
+
+        return pounds
+                .divide(conversionStep, conversionStep.scale(), RoundingMode.HALF_UP)
+                .divide(LBS_RATIO, 0, RoundingMode.HALF_UP)
+                .multiply(conversionStep);
+    }
+
+    public static BigDecimal toPounds(Weight weight) {
+        return weight.toLbs();
+    }
+
+    public static BigDecimal toPounds(BigDecimal kilograms) {
+        return toPounds(kilograms, DEFAULT_SCALE);
+    }
+
+    public static BigDecimal toPounds(BigDecimal kilograms, int scale) {
+        if (scale < 0)
+            return kilograms.multiply(LBS_RATIO);
+
+        if (exactConversion)
+            return kilograms.multiply(LBS_RATIO).setScale(scale, RoundingMode.HALF_UP);
+
+        return kilograms
+                .divide(conversionStep, conversionStep.scale(), RoundingMode.HALF_UP)
+                .multiply(LBS_RATIO).setScale(0, RoundingMode.HALF_UP)
+                .multiply(conversionStep);
+    }
+
     public static BigDecimal getTotalWeight(BigDecimal value, WeightSpecification weightSpec,
                                       Bar bar, boolean internationalSystem) {
         switch (weightSpec) {
@@ -23,21 +79,23 @@ public class WeightUtils {
         }
     }
 
-    public static BigDecimal getWeightFromTotal(BigDecimal total, WeightSpecification weightSpec,
+    public static BigDecimal getWeightFromTotal(Weight weight, WeightSpecification weightSpec,
                                                 Bar bar, boolean internationalSystem) {
         switch (weightSpec) {
             case ONE_SIDE_WEIGHT:
                 if (bar != null) {
-                    return total.subtract(bar.getWeight().getValue(internationalSystem))
-                            .divide(TWO, 2, RoundingMode.HALF_UP);
+                    BigDecimal barWeight = bar.getWeight().getValue(weight.isInternationalSystem(), -1);
+                    return weight.op(v -> v.subtract(barWeight).divide(TWO, 2, RoundingMode.HALF_UP))
+                            .getValue(internationalSystem);
                 }
-                return total.divide(TWO, 2, RoundingMode.HALF_UP);
+                return weight.op(v -> v.divide(TWO, 2, RoundingMode.HALF_UP)).getValue(internationalSystem);
             case NO_BAR_WEIGHT:
                 if (bar != null) {
-                    return total.subtract(bar.getWeight().getValue(internationalSystem));
+                    BigDecimal barWeight = bar.getWeight().getValue(weight.isInternationalSystem(), -1);
+                    return weight.op(v -> v.subtract(barWeight)).getValue(internationalSystem);
                 }
             default:
-                return total;
+                return weight.getValue(internationalSystem);
         }
     }
 }

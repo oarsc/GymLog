@@ -3,9 +3,9 @@ package org.scp.gymlog.ui.common.dialogs;
 import static org.scp.gymlog.util.Constants.ONE_HUNDRED;
 import static org.scp.gymlog.util.Constants.ONE_THOUSAND;
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
-import static org.scp.gymlog.util.FormatUtils.toKilograms;
-import static org.scp.gymlog.util.FormatUtils.toPounds;
 import static org.scp.gymlog.util.WeightUtils.getTotalWeight;
+import static org.scp.gymlog.util.WeightUtils.toKilograms;
+import static org.scp.gymlog.util.WeightUtils.toPounds;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

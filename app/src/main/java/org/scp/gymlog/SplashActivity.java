@@ -21,6 +21,7 @@ import org.scp.gymlog.service.InitialDataService;
 import org.scp.gymlog.service.NotificationService;
 import org.scp.gymlog.ui.main.MainActivity;
 import org.scp.gymlog.util.Data;
+import org.scp.gymlog.util.WeightUtils;
 
 import java.util.List;
 
@@ -39,6 +40,10 @@ public class SplashActivity extends AppCompatActivity {
             recreate();
 
         } else {
+            WeightUtils.setConvertParameters(
+                    preferences.getBoolean("conversionExactValue", false),
+                    preferences.getString("conversionStep","1"));
+
             new NotificationService(this).createNotificationsChannel();
 
             DBThread.run(this, db -> {
@@ -93,6 +98,7 @@ public class SplashActivity extends AppCompatActivity {
 
     public void goMain(){
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("loaded", true);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();

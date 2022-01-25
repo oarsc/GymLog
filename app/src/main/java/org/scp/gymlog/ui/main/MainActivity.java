@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (Data.getInstance().getMuscles().isEmpty()) {
+		if (!getIntent().getExtras().getBoolean("loaded", false)) {
 			Intent intent = new Intent(this, SplashActivity.class);
 			startActivity(intent);
 			finish();

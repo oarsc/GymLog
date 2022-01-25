@@ -16,6 +16,20 @@
             app:summaryOff="@string/international_system_off"
             app:summaryOn="@string/international_system_on"
             android:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            app:key="conversionExactValue"
+            app:title="@string/exact_value_title"
+            android:defaultValue="false"
+            android:disableDependentsState="true" />
+
+        <EditTextPreference
+            app:key="conversionStep"
+            app:title="@string/value_step_title"
+            android:inputType="numberDecimal"
+            android:defaultValue="1"
+            android:dependency="conversionExactValue" />
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/customization_header">

@@ -63,7 +63,7 @@ public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerView
         Bit topBit = holder.topBit = topBits.get(position);
 
         BigDecimal weight = WeightUtils.getWeightFromTotal(
-                topBit.getWeight().getValue(internationalSystem),
+                topBit.getWeight(),
                 exercise.getWeightSpec(),
                 exercise.getBar(),
                 internationalSystem

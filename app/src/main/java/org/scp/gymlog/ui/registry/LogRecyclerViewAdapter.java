@@ -34,12 +34,15 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
     private BiConsumer<View, Bit> onClickElementListener;
     private Runnable onLoadMoreListener;
     private boolean fullyLoaded;
+    private final boolean internationalSystem;
 
-    public LogRecyclerViewAdapter(List<Bit> log, Exercise exercise, int currentTrainingId) {
+    public LogRecyclerViewAdapter(List<Bit> log, Exercise exercise, int currentTrainingId,
+                                  boolean internationalSystem) {
         this.log = log;
         this.today = Calendar.getInstance();
         this.currentTrainingId = currentTrainingId;
         this.exercise = exercise;
+        this.internationalSystem = internationalSystem;
     }
 
     public void setOnClickElementListener(BiConsumer<View, Bit> onClickElementListener) {
@@ -119,10 +122,10 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         }
 
         BigDecimal weight = WeightUtils.getWeightFromTotal(
-                bit.getWeight().getValue(),
+                bit.getWeight(),
                 exercise.getWeightSpec(),
                 exercise.getBar(),
-                bit.getWeight().isInternationalSystem()
+                internationalSystem
         );
 
         holder.mWeight.setText(FormatUtils.toString(weight));

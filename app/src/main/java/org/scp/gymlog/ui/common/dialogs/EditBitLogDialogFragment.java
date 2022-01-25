@@ -71,7 +71,7 @@ public class EditBitLogDialogFragment extends CustomDialogFragment<Bit> {
         view.findViewById(R.id.clearButton).setOnClickListener(btn -> editNotes.getText().clear());
 
         BigDecimal weight = WeightUtils.getWeightFromTotal(
-                initialValue.getWeight().getValue(internationalSystem),
+                initialValue.getWeight(),
                 exercise.getWeightSpec(),
                 exercise.getBar(),
                 internationalSystem

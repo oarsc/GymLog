@@ -145,6 +145,8 @@
     <string name="international_system_title">Use international system units</string>
     <string name="international_system_on">Currently using kgs by default</string>
     <string name="international_system_off">Currently using lbs by default</string>
+    <string name="exact_value_title">Exact value conversion</string>
+    <string name="value_step_title">Conversion step value</string>
 
     <!-- Customization Preferences -->
     <string name="night_theme_title">Use night theme</string>

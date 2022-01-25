@@ -13,8 +13,10 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.EditTextPreference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 
 import org.scp.gymlog.R;
+import org.scp.gymlog.util.WeightUtils;
 
 public class PreferencesFragment extends PreferenceFragmentCompat
 		implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -33,14 +35,28 @@ public class PreferencesFragment extends PreferenceFragmentCompat
 	public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 		setPreferencesFromResource(R.xml.preferences, rootKey);
 
-		EditTextPreference editTextPreference = getPreferenceManager().findPreference("restTime");
+		loadNumberedEditText("restTime",
+				InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED,
+				getString(R.string.text_seconds).toLowerCase());
+
+		loadNumberedEditText("conversionStep",
+				InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED |
+						InputType.TYPE_NUMBER_FLAG_DECIMAL,
+				null);
+	}
+
+	private void loadNumberedEditText(String key, int inputType, String summarySuffix) {
+		EditTextPreference editTextPreference = getPreferenceManager().findPreference(key);
 		assert editTextPreference != null;
 		editTextPreference.setOnBindEditTextListener(editText -> {
-				editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
-				editText.setSelection(editText.getText().length());
-			});
-		editTextPreference.setSummary(editTextPreference.getText()+" "+
-				getString(R.string.text_seconds).toLowerCase());
+			editText.setInputType(inputType);
+			editText.setSelection(editText.getText().length());
+		});
+		if (summarySuffix == null) {
+			editTextPreference.setSummary(editTextPreference.getText());
+		} else {
+			editTextPreference.setSummary(editTextPreference.getText() +" "+ summarySuffix);
+		}
 	}
 
 	@Override
@@ -58,14 +74,20 @@ public class PreferencesFragment extends PreferenceFragmentCompat
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-
 		switch (key) {
 			case "restTime":
-				EditTextPreference pref = findPreference(key);
-				assert pref != null;
-				pref.setSummary(pref.getText()+" "+
+				EditTextPreference prefRestTime = findPreference(key);
+				assert prefRestTime != null;
+				prefRestTime.setSummary(prefRestTime.getText()+" "+
 						getString(R.string.text_seconds).toLowerCase());
+				break;
+			case "conversionStep":
+				EditTextPreference prefConversionStep = findPreference(key);
+				assert prefConversionStep != null;
+				prefConversionStep.setSummary(prefConversionStep.getText());
+
+			case "conversionExactValue":
+				updateFormatUtils();
 				break;
 			case "nightTheme":
 				boolean value = sharedPreferences.getBoolean(key, false);
@@ -80,7 +102,14 @@ public class PreferencesFragment extends PreferenceFragmentCompat
 		}
 	}
 
+	private void updateFormatUtils() {
+		EditTextPreference prefRestTime = findPreference("conversionStep");
+		SwitchPreferenceCompat conversionExactValue = findPreference("conversionExactValue");
 
-
-
+		if (prefRestTime != null && conversionExactValue != null) {
+			WeightUtils.setConvertParameters(
+					conversionExactValue.isChecked(),
+					prefRestTime.getText());
+		}
+	}
 }

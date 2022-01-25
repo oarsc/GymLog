@@ -51,7 +51,7 @@ public class TrainingBitRecyclerViewAdapter extends RecyclerView.Adapter<Trainin
         Bit bit = holder.bit = bits.get(position);
 
         BigDecimal weight = WeightUtils.getWeightFromTotal(
-                bit.getWeight().getValue(internationalSystem),
+                bit.getWeight(),
                 exercise.getWeightSpec(),
                 exercise.getBar(),
                 internationalSystem
