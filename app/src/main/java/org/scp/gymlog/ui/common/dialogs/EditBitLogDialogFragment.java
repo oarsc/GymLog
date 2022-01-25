@@ -21,7 +21,6 @@ import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.ui.common.components.NumberModifierView;
 import org.scp.gymlog.util.FormatUtils;
-import org.scp.gymlog.util.Function;
 import org.scp.gymlog.util.WeightUtils;
 
 import java.math.BigDecimal;
@@ -36,7 +35,7 @@ public class EditBitLogDialogFragment extends CustomDialogFragment<Bit> {
     public EditBitLogDialogFragment(@StringRes int title, Exercise exercise,
                                     boolean enableInstantSwitch,
                                     boolean internationalSystem, Consumer<Bit> confirm,
-                                    Function cancel) {
+                                    Runnable cancel) {
         super(title, confirm, cancel);
         this.enableInstantSwitch = enableInstantSwitch;
         this.exercise = exercise;
@@ -110,7 +109,7 @@ public class EditBitLogDialogFragment extends CustomDialogFragment<Bit> {
                     initialValue.setInstant(instantSwitch.isChecked());
                     confirm.accept(initialValue);
                 })
-                .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.call());
+                .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.run());
 
         return builder.create();
     }

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class SecondTickThread extends Thread {
     private final Supplier<Boolean> onTickListener;
-    protected Function onFinishListener;
+    protected Runnable onFinishListener;
 
     public SecondTickThread(Supplier<Boolean> onTickListener) {
         this.onTickListener = onTickListener;
@@ -21,7 +21,7 @@ public class SecondTickThread extends Thread {
             // Thread interrupted
         } finally {
             if (onFinishListener != null) {
-                onFinishListener.call();
+                onFinishListener.run();
             }
         }
     }

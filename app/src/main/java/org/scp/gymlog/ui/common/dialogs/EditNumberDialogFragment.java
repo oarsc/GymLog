@@ -19,7 +19,6 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import org.scp.gymlog.R;
 import org.scp.gymlog.ui.common.components.NumberModifierView;
 import org.scp.gymlog.util.FormatUtils;
-import org.scp.gymlog.util.Function;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -30,7 +29,7 @@ public class EditNumberDialogFragment extends CustomDialogFragment<BigDecimal> {
     private boolean allowNegatives = false;
     private boolean showButtons = true;
 
-    public EditNumberDialogFragment(@StringRes int title, Consumer<BigDecimal> confirm, Function cancel) {
+    public EditNumberDialogFragment(@StringRes int title, Consumer<BigDecimal> confirm, Runnable cancel) {
         super(title, confirm, cancel);
         initialValue = BigDecimal.ZERO;
     }
@@ -84,7 +83,7 @@ public class EditNumberDialogFragment extends CustomDialogFragment<BigDecimal> {
                     String value = input.getText().toString();
                     confirm.accept(toBigDecimal(value));
                 })
-                .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.call());
+                .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.run());
 
         Dialog dialog = builder.create();
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);

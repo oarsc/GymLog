@@ -11,13 +11,12 @@ import android.widget.EditText;
 import androidx.annotation.StringRes;
 
 import org.scp.gymlog.R;
-import org.scp.gymlog.util.Function;
 
 import java.util.function.Consumer;
 
 public class EditTextDialogFragment extends CustomDialogFragment<String> {
 
-    public EditTextDialogFragment(@StringRes int title, Consumer<String> confirm, Function cancel) {
+    public EditTextDialogFragment(@StringRes int title, Consumer<String> confirm, Runnable cancel) {
         super(title, confirm, cancel);
         initialValue = "";
     }
@@ -44,7 +43,7 @@ public class EditTextDialogFragment extends CustomDialogFragment<String> {
                     String text = input.getText().toString();
                     confirm.accept(text);
                 })
-                .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.call());
+                .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.run());
 
         Dialog dialog = builder.create();
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);

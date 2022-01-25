@@ -22,7 +22,6 @@ import org.scp.gymlog.R;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.util.DateUtils;
 import org.scp.gymlog.util.FormatUtils;
-import org.scp.gymlog.util.Function;
 import org.scp.gymlog.util.SecondTickThread;
 
 import java.util.Calendar;
@@ -34,7 +33,7 @@ public class EditTimerDialogFragment extends CustomDialogFragment<Integer> {
     private final Exercise exercise;
     private Calendar endingCountdown;
 
-    private Function onStopListener;
+    private Runnable onStopListener;
     private BiConsumer<Calendar, Integer> onPlayListener;
 
     private Thread countdownThread;
@@ -63,7 +62,7 @@ public class EditTimerDialogFragment extends CustomDialogFragment<Integer> {
         }
     }
 
-    public void setOnStopListener(Function onStopListener) {
+    public void setOnStopListener(Runnable onStopListener) {
         this.onStopListener = onStopListener;
     }
 
@@ -107,7 +106,7 @@ public class EditTimerDialogFragment extends CustomDialogFragment<Integer> {
                 countdownBox.setVisibility(View.GONE);
             }
             if (onStopListener != null) {
-                onStopListener.call();
+                onStopListener.run();
             }
         });
 
@@ -142,7 +141,7 @@ public class EditTimerDialogFragment extends CustomDialogFragment<Integer> {
                         confirm.accept(seconds);
                     }
                 })
-                .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.call());
+                .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.run());
 
         return builder.create();
     }

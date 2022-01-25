@@ -6,18 +6,16 @@ import android.os.Bundle;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.DialogFragment;
 
-import org.scp.gymlog.util.Function;
-
 import java.util.function.Consumer;
 
 public abstract class CustomDialogFragment<T> extends DialogFragment {
 
     protected int title;
     protected Consumer<T> confirm;
-    protected Function cancel;
+    protected Runnable cancel;
     protected T initialValue;
 
-    public CustomDialogFragment(@StringRes int title, Consumer<T> confirm, Function cancel) {
+    public CustomDialogFragment(@StringRes int title, Consumer<T> confirm, Runnable cancel) {
         this.title = title;
         this.confirm = confirm;
         this.cancel = cancel;

@@ -33,7 +33,6 @@ import org.scp.gymlog.ui.common.components.NumberModifierView;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.FormatUtils;
-import org.scp.gymlog.util.Function;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -55,7 +54,7 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
     private Weight weight;
 
     public EditWeightFormDialogFragment(@StringRes int title, Consumer<WeightFormData> confirm,
-                                        Function cancel, WeightFormData initialValue) {
+                                        Runnable cancel, WeightFormData initialValue) {
         super(title, confirm, cancel);
         this.initialValue = initialValue;
         weight = initialValue.getWeight();
@@ -74,7 +73,7 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
                 .setPositiveButton(R.string.button_confirm, (dialog, id) ->
                         confirm.accept(confirmData())
                 )
-                .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.call());
+                .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.run());
         return builder.create();
     }
 

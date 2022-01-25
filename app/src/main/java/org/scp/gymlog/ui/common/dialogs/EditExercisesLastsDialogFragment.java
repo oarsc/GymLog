@@ -27,7 +27,6 @@ import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.entities.ExerciseEntity;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.FormatUtils;
-import org.scp.gymlog.util.Function;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -54,7 +53,7 @@ public class EditExercisesLastsDialogFragment extends CustomDialogFragment<Exerc
 
 
     public EditExercisesLastsDialogFragment(@StringRes int title, Consumer<Exercise> confirm,
-                                            Function cancel, Exercise initialValue, boolean internationalSystem) {
+                                            Runnable cancel, Exercise initialValue, boolean internationalSystem) {
         super(title, confirm, cancel);
         this.initialValue = initialValue;
         this.internationalSystem = internationalSystem;
@@ -75,7 +74,7 @@ public class EditExercisesLastsDialogFragment extends CustomDialogFragment<Exerc
         builder.setMessage(title)
                 .setView(view)
                 .setPositiveButton(R.string.button_confirm, (dialog, id) -> confirm())
-                .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.call());
+                .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.run());
         return builder.create();
     }
 
