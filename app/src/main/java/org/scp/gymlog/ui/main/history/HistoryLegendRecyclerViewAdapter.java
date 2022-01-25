@@ -15,6 +15,7 @@ import org.scp.gymlog.databinding.ListElementFragmentLegendBinding;
 import org.scp.gymlog.model.Muscle;
 import org.scp.gymlog.util.Data;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class HistoryLegendRecyclerViewAdapter extends RecyclerView.Adapter<Histo
 	private boolean showingAll = false;
 
 	public HistoryLegendRecyclerViewAdapter() {
-		muscles = Data.getInstance().getMuscles();
+		muscles = new ArrayList<>(Data.getInstance().getMuscles());
 		size = muscles.size();
 	}
 
