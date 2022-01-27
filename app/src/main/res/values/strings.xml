@@ -30,6 +30,7 @@
     <string name="text_collapse_all">Collapse all</string>
     <string name="text_countdown">Countdown</string>
     <string name="text_current_countdown">Current countdown</string>
+    <string name="text_default">Default</string>
     <string name="text_exercise">Exercise</string>
     <string name="text_expand_all">Expand all</string>
     <string name="text_instantly">Instantly</string>
@@ -50,6 +51,7 @@
     <string name="text_title">Title</string>
     <string name="text_training">Training</string>
     <string name="text_find_top_records">Find top records</string>
+    <string name="text_variations">Variations</string>
     <string name="text_weight">Weight</string>
 
     <string name="sort_alphabetically">Sort alphabetically</string>
@@ -85,6 +87,7 @@
     <string name="button_confirm">OK</string>
     <string name="button_cancel">Cancel</string>
 
+    <string name="form_edit_variations">Edit Variations</string>
     <string name="form_image">Image</string>
     <string name="form_name">Name</string>
     <string name="form_primary_muscles">Primary Muscular Groups</string>

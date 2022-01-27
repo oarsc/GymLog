@@ -22,16 +22,22 @@ import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
+import org.scp.gymlog.model.Variation;
 import org.scp.gymlog.room.DBThread;
+import org.scp.gymlog.room.entities.VariationEntity;
 import org.scp.gymlog.ui.common.CustomAppCompatActivity;
 import org.scp.gymlog.ui.common.activity.ImageSelectorActivity;
+import org.scp.gymlog.ui.common.dialogs.EditNotesDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment;
+import org.scp.gymlog.ui.common.dialogs.EditVariationsDialogFragment;
 import org.scp.gymlog.util.Constants.IntentReference;
 import org.scp.gymlog.util.Data;
+import org.scp.gymlog.util.LambdaUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,6 +50,7 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 	private boolean requiresBar;
 	private final List<Muscle> muscles = new ArrayList<>();
 	private final List<Muscle> musclesSecondary = new ArrayList<>();
+	private final List<Variation> variations = new ArrayList<>();
 
 	private FormElement iconOption;
 	private FormElement musclesOption;
@@ -64,6 +71,7 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 			requiresBar = editingExercise.isRequiresBar();
 			muscles.addAll(editingExercise.getPrimaryMuscles());
 			musclesSecondary.addAll(editingExercise.getSecondaryMuscles());
+			variations.addAll(editingExercise.getVariations());
 		} else {
 			name = "";
 			imageName = "";
@@ -117,10 +125,13 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 				editingExercise.getPrimaryMuscles().addAll(muscles);
 				editingExercise.getSecondaryMuscles().clear();
 				editingExercise.getSecondaryMuscles().addAll(musclesSecondary);
+				editingExercise.getVariations().clear();
+				editingExercise.getVariations().addAll(variations);
 
 				DBThread.run(this, db -> {
 					db.exerciseDao().update(editingExercise.toEntity());
 
+					// Muscles
 					db.exerciseMuscleCrossRefDao()
 							.clearMusclesFromExercise(editingExercise.getId());
 
@@ -132,6 +143,26 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 
 					db.exerciseMuscleCrossRefDao()
 							.insertAll(editingExercise.toSecondaryMuscleListEntities());
+
+					// Variations
+					db.variationDao().updateAll(
+							Arrays.stream(editingExercise.toVariationListEntities())
+									.filter(v -> v.variationId > 0)
+									.toArray(VariationEntity[]::new));
+
+					List<Variation> newVariations = variations.stream()
+							.filter(v -> v.getId() == 0)
+							.collect(Collectors.toList());
+
+					long[] ids = db.variationDao().insertAll(
+							newVariations.stream()
+								.map(v -> {
+									VariationEntity entity = v.toEntity();
+									entity.exerciseId = editingExercise.getId();
+									return entity;
+								}).toArray(VariationEntity[]::new)
+						);
+					LambdaUtils.indexForEach(newVariations, (i, v) -> v.setId((int) ids[i]));
 
 					runOnUiThread(() -> {
 						setResult(Activity.RESULT_OK, data);
@@ -147,17 +178,25 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 				exercise.setImage(imageName);
 				exercise.getPrimaryMuscles().addAll(muscles);
 				exercise.getSecondaryMuscles().addAll(musclesSecondary);
+				exercise.getVariations().addAll(variations);
 
 				DBThread.run(this, db -> {
 					final int id = (int) db.exerciseDao().insert(exercise.toEntity());
 					exercise.setId(id);
 					data.putExtra("exerciseId", id);
 
+					// Muscles
 					db.exerciseMuscleCrossRefDao()
 							.insertAll(exercise.toMuscleListEntities());
 
 					db.exerciseMuscleCrossRefDao()
 							.insertAll(exercise.toSecondaryMuscleListEntities());
+
+					// Variations
+					long[] ids = db.variationDao()
+							.insertAll(exercise.toVariationListEntities());
+
+					LambdaUtils.indexForEach(variations, (i, v) -> v.setId((int) ids[i]));
 
 					Data.getInstance().getExercises().add(exercise);
 					runOnUiThread(() -> {
@@ -178,7 +217,7 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		form.add(iconOption);
 		//iconOption.setDrawable(R.drawable.ic_label_black_24dp);
 		iconOption.setTitle(R.string.form_image);
-		iconOption.setValueStr(" ");
+		iconOption.setValue(R.string.symbol_empty);
 		if (!imageName.isEmpty()) {
 			iconOption.setDrawable(getIconDrawable(imageName));
 		}
@@ -221,6 +260,17 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 		requiresBarOption.setValue(requiresBar? R.string.form_bar_value :
 				R.string.form_no_bar_value);
 		requiresBarOption.setOnClickListener(v -> switchEnableBar(requiresBarOption));
+
+
+
+		FormElement variationOption = new FormElement();
+		form.add(variationOption);
+		variationOption.setDrawable(
+				ResourcesCompat.getDrawable(resources, R.drawable.ic_dot_24dp, null)
+		);
+		variationOption.setTitle(R.string.form_edit_variations);
+		variationOption.setValue(R.string.symbol_empty);
+		variationOption.setOnClickListener(v -> editVariations());
 
 		return form;
 	}
@@ -313,6 +363,15 @@ public class CreateExerciseActivity extends CustomAppCompatActivity {
 				R.string.form_no_bar_value);
 
 		option.update();
+	}
+
+	private void editVariations() {
+		EditVariationsDialogFragment dialog = new EditVariationsDialogFragment(variations,
+				editedVariations -> {
+					variations.clear();
+					variations.addAll(editedVariations);
+				});
+		dialog.show(getSupportFragmentManager(), null);
 	}
 
 	private Drawable getIconDrawable(String imageName) {

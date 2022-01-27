@@ -1,5 +1,6 @@
 package org.scp.gymlog.ui.registry;
 
+import static org.scp.gymlog.ui.common.dialogs.TextSelectDialogFragment.DIALOG_CLOSED;
 import static org.scp.gymlog.util.Constants.ONE_THOUSAND;
 import static org.scp.gymlog.util.FormatUtils.toBigDecimal;
 import static org.scp.gymlog.util.FormatUtils.toInt;
@@ -7,6 +8,7 @@ import static org.scp.gymlog.util.LambdaUtils.valueEquals;
 import static org.scp.gymlog.util.WeightUtils.getTotalWeight;
 import static org.scp.gymlog.util.WeightUtils.getWeightFromTotal;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,6 +35,7 @@ import org.scp.gymlog.exceptions.InternalException;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Exercise;
+import org.scp.gymlog.model.Variation;
 import org.scp.gymlog.model.Weight;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
@@ -47,6 +50,7 @@ import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditTimerDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.EditWeightFormDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment;
+import org.scp.gymlog.ui.common.dialogs.TextSelectDialogFragment;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
 import org.scp.gymlog.ui.top.TopActivity;
 import org.scp.gymlog.ui.training.TrainingActivity;
@@ -62,11 +66,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RegistryActivity extends DBAppCompatActivity {
     private static final int LOG_PAGES_SIZE = 20;
 
     private Exercise exercise;
+    private Variation variation;
     private EditText weight;
     private TextView timer;
     private EditText reps;
@@ -99,12 +105,26 @@ public class RegistryActivity extends DBAppCompatActivity {
                 .ifPresent(training -> trainingId = training.trainingId);
 
         int exerciseId = getIntent().getExtras().getInt("exerciseId");
+        int variationId = getIntent().getExtras().getInt("variationId", 0);
+
         exercise = Data.getInstance().getExercises().stream()
                 .filter(ex -> ex.getId() == exerciseId)
                 .findFirst()
-                .orElseThrow(() -> new InternalException("Exercise id not found"));
+                .orElseThrow(() -> new InternalException("Exercise id not found: "+exerciseId));
 
-        List<BitEntity> log = db.bitDao().getHistory(exerciseId, LOG_PAGES_SIZE);
+        if (variationId > 0) {
+            variation = exercise.getVariations().stream()
+                    .filter(v -> v.getId() == variationId)
+                    .findFirst()
+                    .orElseThrow(() -> new InternalException("Filter not found: "+exerciseId+"-"+variationId));
+        }
+
+        List<BitEntity> log;
+        if (variationId > 0) {
+            log = db.bitDao().getHistory(exerciseId, variationId, LOG_PAGES_SIZE);
+        } else {
+            log = db.bitDao().getHistory(exerciseId, LOG_PAGES_SIZE);
+        }
         log.stream()
                 .map(bit -> new Bit().fromEntity(bit))
                 .forEach(this.log::add);
@@ -116,6 +136,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         setContentView(R.layout.activity_registry);
         setTitle(R.string.title_registry);
 
+        prepareExerciseListToRefreshWhenFinish();
         notificationService = new NotificationService(this);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -156,6 +177,33 @@ public class RegistryActivity extends DBAppCompatActivity {
                     exercise.getRestTime()<0? defaultTimer : exercise.getRestTime()
                 ));
         }
+
+        // Variations
+        if (exercise.getVariations().isEmpty()) {
+            findViewById(R.id.variationBox).setVisibility(View.GONE);
+        } else if (variation != null) {
+            TextView text = findViewById(R.id.variationText);
+            text.setText(variation.getName());
+        }
+        findViewById(R.id.variationBox).setOnClickListener(v -> {
+            List<String> names = exercise.getVariations().stream()
+                    .map(Variation::getName)
+                    .collect(Collectors.toList());
+
+            names.add(0, getResources().getString(R.string.text_default));
+
+            TextSelectDialogFragment dialog = new TextSelectDialogFragment(names, (idx, name) -> {
+                if (idx != DIALOG_CLOSED) {
+                    if (idx == 0) {
+                        switchVariation(0);
+                    } else {
+                        int id = exercise.getVariations().get(idx - 1).getId();
+                        switchVariation(id);
+                    }
+                }
+            });
+            dialog.show(getSupportFragmentManager(), null);
+        });
 
 
         // Logs:
@@ -313,6 +361,40 @@ public class RegistryActivity extends DBAppCompatActivity {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private void switchVariation(int variationId) {
+        DBThread.run(this, db -> {
+            final List<BitEntity> log;
+            final int exerciseId = exercise.getId();
+
+            if (variationId == 0) {
+                log = db.bitDao().getHistory(exerciseId, LOG_PAGES_SIZE);
+                variation = null;
+            } else {
+                log = db.bitDao().getHistory(exerciseId, variationId, LOG_PAGES_SIZE);
+                variation = exercise.getVariations().stream()
+                        .filter(v -> v.getId() == variationId)
+                        .findFirst()
+                        .orElseThrow(() -> new InternalException("Variation not found: "+exerciseId
+                                +"-"+variationId));
+            }
+
+            this.log.clear();
+            log.stream()
+                    .map(bit -> new Bit().fromEntity(bit))
+                    .forEach(this.log::add);
+
+            runOnUiThread(() -> {
+                recyclerViewAdapter.notifyDataSetChanged();
+                recyclerViewAdapter.setFullyLoaded(log.size() < LOG_PAGES_SIZE-1);
+
+                TextView text = findViewById(R.id.variationText);
+                if (variation == null) text.setText(R.string.text_default);
+                else                   text.setText(variation.getName());
+            });
+        });
+    }
+
     private void showWeightDialog(EditText weightEditText) {
         WeightFormData weightFormData = new WeightFormData();
 
@@ -411,6 +493,8 @@ public class RegistryActivity extends DBAppCompatActivity {
             bit.setTimestamp(Calendar.getInstance());
             bit.setTrainingId(trainingId);
             bit.setInstant(instant);
+            if (variation != null)
+                bit.setVariationId(variation.getId());
 
             exercise.setLastTrained(Calendar.getInstance());
 
@@ -538,6 +622,8 @@ public class RegistryActivity extends DBAppCompatActivity {
                 });
         dialog.show(getSupportFragmentManager(), null);
     }
+
+
 
     private void prepareExerciseListToRefreshWhenFinish() {
         if (!sendRefreshList) {

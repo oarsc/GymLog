@@ -56,6 +56,30 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/variationBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground" >
+        <TextView
+            android:id="@+id/variationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/list_text_margin"
+            android:paddingEnd="@dimen/list_text_margin"
+            android:paddingStart="0dp"
+            android:text="@string/text_default" />
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_arrow_down_24dp" />
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -69,7 +93,7 @@
         android:layout_height="0dp"
 
         app:layout_constraintBottom_toTopOf="@id/editNotes"
-        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintTop_toBottomOf="@id/variationBox"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
 

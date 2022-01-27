@@ -22,14 +22,10 @@ public interface ExerciseDao {
 
     @Transaction
     @Query("SELECT * FROM exercise")
-    List<ExerciseEntity.WithMuscles> getAllWithMuscles();
+    List<ExerciseEntity.WithMusclesAndVariations> getAllWithMusclesAndVariations();
 
     @Query("SELECT exerciseId FROM exercise_x_muscle_group WHERE muscleId = :muscleId")
     List<Integer> getExercisesIdByMuscleId(int muscleId);
-
-    @Transaction
-    @Query("SELECT * FROM exercise WHERE exerciseId IN (:exerciseIds)")
-    List<ExerciseEntity.WithMuscles> getByIds(int... exerciseIds);
 
     @Insert
     long insert(ExerciseEntity exercise);

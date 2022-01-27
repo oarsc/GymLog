@@ -14,6 +14,7 @@ import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Bar;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
+import org.scp.gymlog.model.Variation;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.entities.MuscleEntity;
@@ -69,7 +70,7 @@ public class SplashActivity extends AppCompatActivity {
         List<Muscle> muscles = data.getMuscles();
         List<Exercise> exercises = data.getExercises();
         exercises.clear();
-        db.exerciseDao().getAllWithMuscles().stream()
+        db.exerciseDao().getAllWithMusclesAndVariations().stream()
                 .map(x -> {
                     Exercise e = new Exercise().fromEntity(x.exercise);
                     x.primaryMuscles.stream()
@@ -87,6 +88,10 @@ public class SplashActivity extends AppCompatActivity {
                                     .findFirst()
                                     .orElseThrow(()->new LoadException("Muscle "+id+" not found in local structure")))
                             .forEach(e.getSecondaryMuscles()::add);
+
+                    x.variations.stream()
+                            .map(variations -> new Variation().fromEntity(variations))
+                            .forEach(e.getVariations()::add);
 
                     return e;
                 })

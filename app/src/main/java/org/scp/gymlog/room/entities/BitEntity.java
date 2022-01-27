@@ -10,6 +10,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.Relation;
 
+import org.scp.gymlog.util.Constants;
 import org.scp.gymlog.util.JsonUtils.NoJsonify;
 
 import java.util.Calendar;
@@ -34,7 +35,9 @@ import java.util.Calendar;
                 @Index("exerciseId"),
                 @Index("trainingId"),
                 @Index({ "exerciseId", "timestamp" }),
+                @Index({ "exerciseId", "variationId", "timestamp" }),
                 @Index({ "exerciseId", "trainingId", "timestamp" }),
+                @Index({ "exerciseId", "variationId", "trainingId", "timestamp" }),
         }
 )
 public class BitEntity {
@@ -42,6 +45,7 @@ public class BitEntity {
     @PrimaryKey(autoGenerate = true)
     public int bitId;
     public int exerciseId;
+    public Integer variationId;
     public int trainingId;
     public int reps;
     public int totalWeight;

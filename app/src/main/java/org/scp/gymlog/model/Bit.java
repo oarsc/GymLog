@@ -22,6 +22,7 @@ import lombok.Setter;
 public class Bit implements EntityMapped<BitEntity> {
 	private int id;
 	private int exerciseId;
+	private int variationId;
 	private int trainingId;
 	private int reps;
 	private Weight weight;
@@ -36,6 +37,9 @@ public class Bit implements EntityMapped<BitEntity> {
 		BitEntity entity = new BitEntity();
 		entity.bitId = id;
 		entity.exerciseId = exerciseId;
+		if (variationId > 0) {
+			entity.variationId = variationId;
+		}
 		entity.trainingId = trainingId;
 		entity.note = note;
 		entity.timestamp = timestamp;
@@ -51,6 +55,9 @@ public class Bit implements EntityMapped<BitEntity> {
 	public Bit fromEntity(@NonNull BitEntity entity) {
 		id = entity.bitId;
 		exerciseId = entity.exerciseId;
+		if (entity.variationId != null) {
+			variationId = entity.variationId;
+		}
 		trainingId = entity.trainingId;
 		note = entity.note;
 		timestamp = entity.timestamp;

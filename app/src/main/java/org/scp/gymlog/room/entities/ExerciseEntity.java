@@ -53,7 +53,7 @@ public class ExerciseEntity {
     public int lastRestTime = -1;
     public Integer lastBarId;
 
-    public static class WithMuscles {
+    public static class WithMusclesAndVariations {
         @Embedded
         public ExerciseEntity exercise;
         @Relation(
@@ -68,5 +68,11 @@ public class ExerciseEntity {
                 associateBy = @Junction(SecondaryExerciseMuscleCrossRef.class)
         )
         public List<MuscleEntity> secondaryMuscles;
+        @Relation(
+                parentColumn = "exerciseId",
+                entityColumn = "variationId",
+                associateBy = @Junction(VariationEntity.class)
+        )
+        public List<VariationEntity> variations;
     }
 }

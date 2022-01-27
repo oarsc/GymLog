@@ -54,8 +54,11 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
     }
 
     public void setFullyLoaded(boolean fullyLoaded) {
-        this.fullyLoaded = fullyLoaded;
-        notifyItemRemoved(log.size());
+        if (this.fullyLoaded != fullyLoaded) {
+            this.fullyLoaded = fullyLoaded;
+            if (fullyLoaded) notifyItemRemoved(log.size());
+            else             notifyItemInserted(log.size());
+        }
     }
 
     @Override

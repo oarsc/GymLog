@@ -2,36 +2,31 @@ package org.scp.gymlog.service;
 
 import static org.scp.gymlog.util.Constants.DATE_ZERO;
 
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.net.Uri;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.scp.gymlog.exceptions.LoadException;
+import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Exercise;
+import org.scp.gymlog.model.Variation;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.entities.BitEntity;
 import org.scp.gymlog.room.entities.ExerciseEntity;
 import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef;
 import org.scp.gymlog.room.entities.SecondaryExerciseMuscleCrossRef;
 import org.scp.gymlog.room.entities.TrainingEntity;
+import org.scp.gymlog.room.entities.VariationEntity;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.JsonUtils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -63,6 +58,10 @@ public class DataBaseDumperService {
         return convertToJSONArray(database.exerciseDao().getAll());
     }
 
+    private JSONArray variations(AppDatabase database) {
+        return convertToJSONArray(database.variationDao().getAll());
+    }
+
     private JSONArray primaryMuscles(AppDatabase database) {
         return convertToJSONArray(database.exerciseMuscleCrossRefDao().getAll());
     }
@@ -80,14 +79,26 @@ public class DataBaseDumperService {
         try {
             JsonUtils.forEachObject(bits, bit -> {
                 int id = bit.getInt("exerciseId");
+                Exercise exercise = Data.getExercise(id);
                 bit.remove("exerciseId");
-                bit.put("exerciseName", Data.getExercise(id).getName());
+                bit.put("exerciseName", exercise.getName());
 
                 if (bit.getBoolean("kilos"))
                     bit.remove("kilos");
 
                 if (bit.getString("note").isEmpty())
                     bit.remove("note");
+
+                if (bit.has("variationId")) {
+                    int varId = bit.getInt("variationId");
+                    bit.remove("variationId");
+                    Variation variation = exercise.getVariations().stream()
+                            .filter(v -> v.getId() == varId)
+                            .findAny()
+                            .orElseThrow(() -> new LoadException("Can't find variation"));
+
+                    bit.put("variation", variation.getName());
+                }
             });
         } catch (JSONException e) {
             throw new LoadException("",e);
@@ -165,7 +176,10 @@ public class DataBaseDumperService {
                 trainingsIdMap.put(trainingOrig.get(i), (int) newTrIds[i]);
             }
 
-            BitEntity[] bits = bits(obj.getJSONArray("bits"), exercises);
+            Map<String, VariationEntity> variations = new HashMap<>();
+            BitEntity[] bits = bits(obj.getJSONArray("bits"), exercises, variations);
+            database.variationDao().insertAll(variations.values().toArray(new VariationEntity[0]));
+
             for (BitEntity bit : bits) {
                 bit.trainingId = trainingsIdMap.get(bit.trainingId);
             }
@@ -204,6 +218,10 @@ public class DataBaseDumperService {
         return convertToObject(list, ExerciseEntity.class).toArray(ExerciseEntity[]::new);
     }
 
+    private VariationEntity[] variations(JSONArray list) throws JSONException {
+        return convertToObject(list, VariationEntity.class).toArray(VariationEntity[]::new);
+    }
+
     private ExerciseMuscleCrossRef[] primaryMuscles(JSONArray list) throws JSONException {
         return convertToObject(list, ExerciseMuscleCrossRef.class)
                 .toArray(ExerciseMuscleCrossRef[]::new);
@@ -218,7 +236,7 @@ public class DataBaseDumperService {
         return convertToObject(list, TrainingEntity.class).toArray(TrainingEntity[]::new);
     }
 
-    private BitEntity[] bits(JSONArray list, ExerciseEntity[] exercises) throws JSONException {
+    private BitEntity[] bits(JSONArray list, ExerciseEntity[] exercises, Map<String, VariationEntity> variations) throws JSONException {
         JsonUtils.forEachObject(list, bit -> {
             String name = bit.getString("exerciseName");
             /*int id = Data.getInstance().getExercises().stream()
@@ -235,10 +253,30 @@ public class DataBaseDumperService {
 
             if (!bit.has("kilos")) bit.put("kilos", true);
             if (!bit.has("note")) bit.put("note", "");
+
+            VariationEntity variation = extractEntity(bit, variations);
+            if (variation != null) {
+                bit.put("variationId", variation.variationId);
+            }
         });
         return convertToObject(list, BitEntity.class).toArray(BitEntity[]::new);
     }
 
+    private VariationEntity extractEntity(JSONObject bit, Map<String, VariationEntity> variations) throws JSONException {
+        if (!bit.has("variation")) {
+            return null;
+        }
+
+        String key = bit.getInt("exerciseId") + bit.getString("variation");
+        if (!variations.containsKey(key)) {
+            VariationEntity variation = new VariationEntity();
+            variation.exerciseId = bit.getInt("exerciseId");
+            variation.name = bit.getString("variation");
+            variation.variationId = variations.size() + 1;
+            variations.put(key, variation);
+        }
+        return variations.get(key);
+    }
 
     private <T> Stream<T> convertToObject(JSONArray list, Class<T> cls) throws JSONException {
         return JsonUtils.mapObject(list, json -> JsonUtils.objectify(json, cls));
