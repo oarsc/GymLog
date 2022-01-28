@@ -95,7 +95,7 @@ public class HistoryFragment extends Fragment {
 			historyAdapter.clear();
 
 			trainings.forEach(training -> {
-				List<BitEntity> bits = db.bitDao().getHistoryByTrainingId(training.trainingId);;
+				List<BitEntity> bits = db.bitDao().getHistoryByTrainingId(training.trainingId);
 				TrainingData td = getTrainingData(training, bits);
 				historyAdapter.add(td);
 			});

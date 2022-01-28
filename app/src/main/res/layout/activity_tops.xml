@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <include
@@ -18,63 +18,11 @@
         app:layout_constraintBottom_toTopOf="@id/bottomPanel"
         app:layout_constraintRight_toRightOf="parent"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/list_text_margin"
-        android:paddingHorizontal="@dimen/activity_horizontal_margin">
-
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:textColor="@color/gray"
-            android:textStyle="bold"
-            android:text="@string/text_time"
-            android:textSize="@dimen/slightly_smaller_text" />
-
-        <TextView
-            android:id="@+id/weight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textColor="@color/gray"
-            android:textStyle="bold"
-            android:text="@string/text_weight"
-            android:textSize="@dimen/slightly_smaller_text" />
-
-        <TextView
-            android:id="@+id/reps"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:textColor="@color/gray"
-            android:textStyle="bold"
-            android:text="@string/text_reps"
-            android:textSize="@dimen/slightly_smaller_text" />
-
-        <TextView
-            android:id="@+id/note"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:textColor="@color/gray"
-            android:textStyle="bold"
-            android:text="@string/text_notes"
-            android:textSize="@dimen/slightly_smaller_text" />
-
-    </LinearLayout>
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/topList"
+        android:id="@+id/variantTopList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.top.TopActivity"
-        tools:listitem="@layout/list_element_fragment_top" />
+        tools:listitem="@layout/list_element_fragment_top_variation" />
 
 </LinearLayout>

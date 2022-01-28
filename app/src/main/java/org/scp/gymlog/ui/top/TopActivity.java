@@ -1,6 +1,5 @@
 package org.scp.gymlog.ui.top;
 
-import org.scp.gymlog.util.Constants.IntentReference;
 import static org.scp.gymlog.util.Constants.ONE_HUNDRED;
 
 import android.content.Intent;
@@ -20,23 +19,32 @@ import org.scp.gymlog.exceptions.InternalException;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Exercise;
+import org.scp.gymlog.model.Variation;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.ui.common.DBAppCompatActivity;
 import org.scp.gymlog.ui.common.dialogs.EditExercisesLastsDialogFragment;
+import org.scp.gymlog.ui.top.rows.ITopRow;
+import org.scp.gymlog.ui.top.rows.TopBitRow;
+import org.scp.gymlog.ui.top.rows.TopEmptySpaceRow;
+import org.scp.gymlog.ui.top.rows.TopHeaderRow;
+import org.scp.gymlog.ui.top.rows.TopVariationRow;
 import org.scp.gymlog.ui.training.TrainingActivity;
+import org.scp.gymlog.util.Constants.IntentReference;
 import org.scp.gymlog.util.Data;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class TopActivity extends DBAppCompatActivity {
     private Exercise exercise;
-    private List<Bit> topBits;
+    private final List<ITopRow> listData = new ArrayList<>();
     private boolean internationalSystem;
     private TopRecyclerViewAdapter adapter;
 
@@ -48,14 +56,36 @@ public class TopActivity extends DBAppCompatActivity {
                 .findFirst()
                 .orElseThrow(() -> new InternalException("Exercise id not found"));
 
-        topBits = getBits(db, exerciseId).collect(Collectors.toList());
+        transformBitsToRows(getBits(db, exerciseId));
         return CONTINUE;
     }
 
     protected Stream<Bit> getBits(AppDatabase db, int exerciseId) {
         return db.bitDao().findTops(exerciseId).stream()
-                .sorted(Comparator.comparing(bit -> -bit.totalWeight))
                 .map(bit -> new Bit().fromEntity(bit));
+    }
+
+    protected Comparator<? super Bit> order() {
+        return Comparator.comparing(bit -> bit.getWeight().getValue().negate());
+    }
+
+    private void transformBitsToRows(Stream<Bit> bits) {
+        final Set<Integer> variations = new HashSet<>();
+        listData.clear();
+        bits.sorted(Comparator.comparingInt(Bit::getVariationId).thenComparing(order()))
+                .forEachOrdered(bit -> {
+                    int variationId = bit.getVariationId();
+                    if (!variations.contains(variationId)) {
+                        variations.add(variationId);
+                        if (variationId != 0) {
+                            Variation variation = Data.getVariation(exercise, variationId);
+                            listData.add(new TopVariationRow(variation));
+                        }
+                        listData.add(new TopHeaderRow());
+                    }
+                    listData.add(new TopBitRow(bit));
+                });
+        listData.add(new TopEmptySpaceRow());
     }
 
     @Override
@@ -68,10 +98,10 @@ public class TopActivity extends DBAppCompatActivity {
 
         setHeaderInfo();
 
-        final RecyclerView historyRecyclerView = findViewById(R.id.topList);
+        final RecyclerView historyRecyclerView = findViewById(R.id.variantTopList);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new TopRecyclerViewAdapter(topBits, exercise, internationalSystem);
+        adapter = new TopRecyclerViewAdapter(listData, exercise, internationalSystem);
         historyRecyclerView.setAdapter(adapter);
 
         adapter.setOnClickListener(this::onElementClicked);
@@ -89,18 +119,18 @@ public class TopActivity extends DBAppCompatActivity {
         Intent intent = new Intent(this, TopSpecificActivity.class);
         intent.putExtra("exerciseId", topBit.getExerciseId());
         intent.putExtra("weight", topBit.getWeight().getValue().multiply(ONE_HUNDRED).intValue());
+        intent.putExtra("variationId", topBit.getVariationId());
         startActivityForResult(intent, IntentReference.TOP_RECORDS);
     }
 
     public void onActivityResult(IntentReference intentReference, Intent data) {
         if (data.getBooleanExtra("refresh", false)) {
             if (intentReference == IntentReference.TOP_RECORDS) {
-                adapter.notifyItemRangeChanged(0, topBits.size());
+                adapter.notifyItemRangeChanged(0, listData.size());
 
             } else if (intentReference == IntentReference.TRAINING) {
                 DBThread.run(this, db -> {
-                    topBits.clear();
-                    getBits(db, exercise.getId()).forEach(topBits::add);
+                    transformBitsToRows(getBits(db, exercise.getId()));
                     runOnUiThread(() -> adapter.notifyDataSetChanged());
                 });
             }
@@ -133,7 +163,7 @@ public class TopActivity extends DBAppCompatActivity {
                             Intent data = new Intent();
                             data.putExtra("refresh", true);
                             setResult(RESULT_OK, data);
-                            runOnUiThread(() -> adapter.notifyItemRangeChanged(0, topBits.size()));
+                            runOnUiThread(() -> adapter.notifyItemRangeChanged(0, listData.size()));
                         }
                     },
                     ()->{},
@@ -142,4 +172,5 @@ public class TopActivity extends DBAppCompatActivity {
             dialog.show(getSupportFragmentManager(), null);
         });
     }
+
 }

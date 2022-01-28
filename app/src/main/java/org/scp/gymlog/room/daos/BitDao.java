@@ -52,11 +52,14 @@ public interface BitDao {
     List<String> getNotesHistory(int exerciseId, int limit);
 
     @Query("SELECT MAX(reps) AS reps, * FROM bit "+
-            "WHERE exerciseId = :exerciseId GROUP BY totalWeight ORDER BY timestamp")
+            "WHERE exerciseId = :exerciseId GROUP BY totalWeight, variationId ORDER BY timestamp")
     List<BitEntity> findTops(int exerciseId);
 
-    @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND totalWeight = :weight ORDER BY timestamp DESC")
+    @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND variationId IS NULL AND totalWeight = :weight ORDER BY timestamp DESC")
     List<BitEntity> findAllByExerciseAndWeight(int exerciseId, int weight);
+
+    @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND variationId = :variationId AND totalWeight = :weight ORDER BY timestamp DESC")
+    List<BitEntity> findAllByExerciseAndWeight(int exerciseId, int variationId, int weight);
 
     @Insert
     long insert(BitEntity bit);

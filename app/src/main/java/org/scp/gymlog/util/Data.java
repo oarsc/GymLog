@@ -5,6 +5,7 @@ import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Bar;
 import org.scp.gymlog.model.Exercise;
 import org.scp.gymlog.model.Muscle;
+import org.scp.gymlog.model.Variation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,6 +74,14 @@ public class Data {
 				.filter(muscle -> muscle.getId() == muscleId)
 				.findFirst()
 				.orElseThrow(() -> new LoadException("NO MUSCLE FOUND id:"+muscleId));
+	}
+
+	public static Variation getVariation(Exercise exercise, int variationId) {
+		return exercise.getVariations().stream()
+				.filter(variation -> variation.getId() == variationId)
+				.findFirst()
+				.orElseThrow(() -> new LoadException("NO VARIATION "+ variationId +
+						" FOUND FOR EXERCISE: "+ exercise.getId()));
 	}
 
 	public static Muscle getMuscle(int muscleId) {

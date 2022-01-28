@@ -71,72 +71,12 @@
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
-        android:id="@+id/bitsContainer"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bitList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:layout_marginBottom="@dimen/activity_vertical_margin">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/activity_horizontal_margin">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:textColor="@color/gray"
-                android:text="@string/text_time"
-                android:textSize="@dimen/slightly_smaller_text" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:textColor="@color/gray"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:text="@string/text_weight"
-                android:textSize="@dimen/slightly_smaller_text" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:textColor="@color/gray"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:text="@string/text_reps"
-                android:textSize="@dimen/slightly_smaller_text" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:textColor="@color/gray"
-                android:text="@string/text_notes"
-                android:textSize="@dimen/slightly_smaller_text" />
-
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bitList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:context=".ui.training.TrainingActivity"
-            tools:listitem="@layout/list_element_fragment_history_bit" />
-
-    </LinearLayout>
+        tools:context=".ui.training.TrainingActivity"
+        tools:listitem="@layout/list_element_fragment_history_bit"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
 </LinearLayout>

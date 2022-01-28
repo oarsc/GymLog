@@ -1,206 +1,155 @@
 package org.scp.gymlog.ui.training;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.cardview.widget.CardView;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.scp.gymlog.R;
-import org.scp.gymlog.databinding.ListElementFragmentHistoryBinding;
-import org.scp.gymlog.exceptions.LoadException;
+import org.scp.gymlog.databinding.ListElementFragmentHistoryBitBinding;
+import org.scp.gymlog.databinding.ListElementFragmentHistoryHeadersBinding;
+import org.scp.gymlog.databinding.ListElementFragmentHistoryVariationBinding;
 import org.scp.gymlog.model.Bit;
-import org.scp.gymlog.model.Exercise;
-import org.scp.gymlog.model.Muscle;
-import org.scp.gymlog.room.DBThread;
-import org.scp.gymlog.ui.common.dialogs.EditBitLogDialogFragment;
+import org.scp.gymlog.ui.training.rows.ITrainingRow;
+import org.scp.gymlog.ui.training.rows.ITrainingRow.Type;
+import org.scp.gymlog.ui.training.rows.TrainingBitRow;
+import org.scp.gymlog.ui.training.rows.TrainingVariationRow;
+import org.scp.gymlog.util.DateUtils;
+import org.scp.gymlog.util.FormatUtils;
+import org.scp.gymlog.util.WeightUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.math.BigDecimal;
+import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 public class TrainingRecyclerViewAdapter extends RecyclerView.Adapter<TrainingRecyclerViewAdapter.ViewHolder> {
 
-    private final List<ExerciseBits> exerciseBits;
-    private final List<ViewHolder> holders = new ArrayList<>();
+    private final ExerciseRows rows;
     private final boolean internationalSystem;
 
-    private Consumer<ExerciseBits> onLongClickListener;
-    private Consumer<Bit> onBitChangedListener;
+    private BiConsumer<Bit, Integer> onClickListener;
 
-    private final Set<Integer> expandedElements = new HashSet<>();
-
-    public TrainingRecyclerViewAdapter(List<ExerciseBits> exerciseBits,
-                                       boolean internationalSystem, int focusElement) {
-        this.exerciseBits = exerciseBits;
+    public TrainingRecyclerViewAdapter(ExerciseRows exerciseRows, boolean internationalSystem) {
+        this.rows = exerciseRows;
         this.internationalSystem = internationalSystem;
-        if (focusElement >= 0) {
-            expandedElements.add(focusElement);
+    }
+
+    public void setOnClickListener(BiConsumer<Bit, Integer> onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        switch (rows.get(position).getType()) {
+            case BIT:       return R.layout.list_element_fragment_history_bit;
+            case VARIATION: return R.layout.list_element_fragment_history_variation;
+            default:        return R.layout.list_element_fragment_history_headers;
         }
-    }
-
-    public void setOnLongClickListener(Consumer<ExerciseBits> onLongClickListener) {
-        this.onLongClickListener = onLongClickListener;
-    }
-
-    public void setOnBitChangedListener(Consumer<Bit> onBitChangedListener) {
-        this.onBitChangedListener = onBitChangedListener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == R.layout.list_element_fragment_history_bit)
+            return new ViewHolder(
+                    ListElementFragmentHistoryBitBinding.inflate(
+                            LayoutInflater.from(parent.getContext()), parent, false
+                    ));
+
+        if (viewType == R.layout.list_element_fragment_history_variation)
+            return new ViewHolder(
+                    ListElementFragmentHistoryVariationBinding.inflate(
+                            LayoutInflater.from(parent.getContext()), parent, false
+                    ));
+
         return new ViewHolder(
-                ListElementFragmentHistoryBinding.inflate(
+                ListElementFragmentHistoryHeadersBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false
-                )
-        );
+                ));
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holders.add(holder);
-        Context context = holder.itemView.getContext();
+        ITrainingRow row = rows.get(position);
 
-        ExerciseBits exerciseBit = holder.exerciseBit = exerciseBits.get(position);
-
-        Exercise exercise = exerciseBit.getExercise();
-        holder.mTitle.setText(exercise.getName());
-        holder.mSubtitle.setText(
-                exercise.getPrimaryMuscles().stream()
-                        .map(Muscle::getText)
-                        .map(context.getResources()::getString)
-                        .collect(Collectors.joining(", "))
-            );
-
-        holder.mIndicator.setCardBackgroundColor(
-                ResourcesCompat.getColor(context.getResources(),
-                        exercise.getPrimaryMuscles().get(0).getColor(), null));
-
-        String fileName = "previews/" + exercise.getImage() + ".png";
-        try {
-            InputStream ims = context.getAssets().open(fileName);
-            Drawable d = Drawable.createFromStream(ims, null);
-            holder.mImage.setImageDrawable(d);
-
-        } catch (IOException e) {
-            throw new LoadException("Could not read \""+fileName+"\"", e);
+        if (row.getType() == Type.HEADER) {
+            return;
         }
 
-        holder.mBitList.setLayoutManager(new LinearLayoutManager(context) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        });
+        if (row.getType() == Type.VARIATION) {
+            TrainingVariationRow vRow = (TrainingVariationRow) row;
+            holder.mNote.setText(vRow.getVariation().getName());
+            return;
+        }
 
+        TrainingBitRow bRow = holder.bitRow = (TrainingBitRow) row;
+        Bit bit = bRow.getBit();
 
-        TrainingBitRecyclerViewAdapter adapter = new TrainingBitRecyclerViewAdapter(exerciseBit, internationalSystem);
-        holder.mBitList.setAdapter(adapter);
-
-        adapter.setOnClickListener((bit, index) -> {
-            EditBitLogDialogFragment editDialog = new EditBitLogDialogFragment(
-                    R.string.title_registry,
-                    exercise,
-                    exerciseBit.getBits().get(0) != bit,
-                    internationalSystem,
-                    b -> DBThread.run(context, db -> {
-                        db.bitDao().update(b.toEntity());
-                        ((Activity) context).runOnUiThread(() -> adapter.notifyItemChanged(index));
-                        if (onBitChangedListener != null) {
-                            onBitChangedListener.accept(b);
-                        }
-                    })
+        BigDecimal weight = WeightUtils.getWeightFromTotal(
+                bit.getWeight(),
+                rows.getExercise().getWeightSpec(),
+                rows.getExercise().getBar(),
+                internationalSystem
             );
-            editDialog.setInitialValue(bit);
-            editDialog.show(((FragmentActivity) context).getSupportFragmentManager(), null);
-        });
 
-        holder.toggleBits(expandedElements.contains(position));
+        holder.mWeight.setText(FormatUtils.toString(weight));
+        holder.mReps.setText(String.valueOf(bit.getReps()));
+        holder.mNote.setText(String.valueOf(bit.getNote()));
+
+        if (bit.isInstant()) {
+            holder.mTime.setText(R.string.symbol_empty);
+            setAlpha(holder, 0.4f);
+        } else {
+            holder.mTime.setText(DateUtils.getTime(bit.getTimestamp()));
+            setAlpha(holder, 1f);
+        }
     }
 
-    public void expandAll() {
-        IntStream.range(0, exerciseBits.size())
-                .forEach(expandedElements::add);
-        holders.forEach(holder -> holder.toggleBits(true));
-    }
-
-    public void collapseAll() {
-        expandedElements.clear();
-        holders.forEach(holder -> holder.toggleBits(false));
+    private void setAlpha(final ViewHolder holder, final float alpha) {
+        Stream.of(holder.mWeight, holder.mReps, holder.mNote)
+                .forEach(v -> v.setAlpha(alpha));
     }
 
     @Override
     public int getItemCount() {
-        return exerciseBits.size();
+        return rows.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public ExerciseBits exerciseBit;
-        public final TextView mTitle;
-        public final TextView mSubtitle;
-        public final CardView mIndicator;
-        public final ImageView mImage;
-        public final RecyclerView mBitList;
+        public TrainingBitRow bitRow;
+        public final TextView mWeight;
+        public final TextView mReps;
+        public final TextView mTime;
+        public final TextView mNote;
 
-        private final LinearLayout bitsContainer;
-
-        public ViewHolder(ListElementFragmentHistoryBinding binding) {
+        public ViewHolder(ListElementFragmentHistoryBitBinding binding) {
             super(binding.getRoot());
-            mTitle = binding.title;
-            mSubtitle = binding.subtitle;
-            mIndicator = binding.indicator;
-            mImage = binding.image;
-            mBitList = binding.bitList;
+            mWeight = binding.weight;
+            mReps = binding.reps;
+            mTime = binding.time;
+            mNote = binding.note;
 
-            bitsContainer = binding.bitsContainer;
-            binding.header.setOnClickListener(v -> {
-                toggleBits();
-            });
-            binding.header.setOnLongClickListener(v -> {
-                if (onLongClickListener != null) {
-                    onLongClickListener.accept(exerciseBit);
-                    return true;
+            itemView.setOnClickListener(v -> {
+                if (onClickListener != null) {
+                    onClickListener.accept(bitRow.getBit(), rows.indexOf(bitRow));
                 }
-                return false;
             });
         }
 
-        public void toggleBits() {
-            toggleBits(bitsContainer.getVisibility() == View.GONE);
+        public ViewHolder(ListElementFragmentHistoryVariationBinding binding) {
+            super(binding.getRoot());
+            mWeight = mReps = mTime = null;
+            mNote = binding.variationName;
         }
 
-        public void toggleBits(boolean show) {
-            if (bitsContainer.getVisibility() == (show? View.GONE : View.VISIBLE)) {
-                bitsContainer.setVisibility(show? View.VISIBLE : View.GONE);
-
-                int index = exerciseBits.indexOf(exerciseBit);
-                if (show) {
-                    expandedElements.add(index);
-                } else {
-                    expandedElements.remove(index);
-                }
-            }
+        public ViewHolder(ListElementFragmentHistoryHeadersBinding binding) {
+            super(binding.getRoot());
+            mWeight = mReps = mTime = mNote = null;
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mTitle.getText() + "'";
+            return super.toString() + " '" + mWeight.getText() + "'";
         }
     }
 }

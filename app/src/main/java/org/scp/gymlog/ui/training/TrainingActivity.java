@@ -21,12 +21,17 @@ import org.scp.gymlog.R;
 import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Muscle;
+import org.scp.gymlog.model.Variation;
 import org.scp.gymlog.room.AppDatabase;
 import org.scp.gymlog.room.entities.BitEntity;
 import org.scp.gymlog.room.entities.TrainingEntity;
 import org.scp.gymlog.ui.common.DBAppCompatActivity;
 import org.scp.gymlog.ui.common.dialogs.EditExercisesLastsDialogFragment;
 import org.scp.gymlog.ui.main.history.TrainingData;
+import org.scp.gymlog.ui.training.rows.ITrainingRow;
+import org.scp.gymlog.ui.training.rows.TrainingBitRow;
+import org.scp.gymlog.ui.training.rows.TrainingHeaderRow;
+import org.scp.gymlog.ui.training.rows.TrainingVariationRow;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.DateUtils;
 
@@ -36,8 +41,8 @@ import java.util.stream.Collectors;
 
 public class TrainingActivity extends DBAppCompatActivity {
     private TrainingData trainingData;
-    private final List<ExerciseBits> exerciseBits = new ArrayList<>();
-    private TrainingRecyclerViewAdapter adapter;
+    private final List<ExerciseRows> exerciseRows = new ArrayList<>();
+    private TrainingMainRecyclerViewAdapter adapter;
     private LinearLayoutManager linearLayout;
 
     @Override
@@ -49,19 +54,46 @@ public class TrainingActivity extends DBAppCompatActivity {
         trainingData = getTrainingData(training, bits);
 
         for (BitEntity bit : bits) {
-            ExerciseBits exerciseBit = exerciseBits.stream()
+            ExerciseRows exerciseRow = exerciseRows.stream()
                     .filter(eb -> eb.getExercise().getId() == bit.exerciseId)
                     .findAny()
                     .orElseGet(() -> {
-                        ExerciseBits eb = new ExerciseBits(Data.getExercise(bit.exerciseId));
-                        exerciseBits.add(eb);
+                        ExerciseRows eb = new ExerciseRows(Data.getExercise(bit.exerciseId));
+                        exerciseRows.add(eb);
                         return eb;
                     });
 
-            exerciseBit.getBits().add(new Bit().fromEntity(bit));
+            int lastVar = getLastVar(exerciseRow);
+            int var = bit.variationId == null? 0 : bit.variationId;
+            if (var != lastVar) {
+                if (lastVar != -1 || var > 0) {
+                    Variation variation = Data.getVariation(exerciseRow.getExercise(), var);
+                    exerciseRow.add(new TrainingVariationRow(variation));
+                }
+                exerciseRow.add(new TrainingHeaderRow());
+            }
+            exerciseRow.add(new TrainingBitRow(new Bit().fromEntity(bit)));
         }
 
         return CONTINUE;
+    }
+
+    private int getLastVar(ExerciseRows exerciseRow) {
+        if (exerciseRow.isEmpty()) return -1;
+
+        int i = exerciseRow.size();
+        boolean found;
+        ITrainingRow row;
+        do {
+            row = exerciseRow.get(--i);
+            found = row instanceof TrainingVariationRow;
+        } while (!found && i > 0);
+
+        if (found) {
+            TrainingVariationRow vRow = (TrainingVariationRow) row;
+            return vRow.getVariation().getId();
+        }
+        return 0;
     }
 
     @Override
@@ -78,29 +110,32 @@ public class TrainingActivity extends DBAppCompatActivity {
         final int focusElement;
         if (focusBit >= 0) {
             int index = 0;
-            for (ExerciseBits exerciseBit : exerciseBits) {
-                if (exerciseBit.getBits().stream()
+            for (ExerciseRows exerciseRow : exerciseRows) {
+                if (exerciseRow.stream()
+                        .filter(row -> row instanceof TrainingBitRow)
+                        .map(row -> (TrainingBitRow) row)
+                        .map(TrainingBitRow::getBit)
                         .map(Bit::getId)
                         .anyMatch(valueEquals(focusBit))) {
                     break;
                 }
                 index++;
             }
-            focusElement = index < exerciseBits.size()? index : -1;
+            focusElement = index < exerciseRows.size()? index : -1;
         } else {
             focusElement = -1;
         }
 
         final RecyclerView historyRecyclerView = findViewById(R.id.historyList);
         historyRecyclerView.setLayoutManager(linearLayout = new LinearLayoutManager(this));
-        historyRecyclerView.setAdapter(adapter = new TrainingRecyclerViewAdapter(exerciseBits,
+        historyRecyclerView.setAdapter(adapter = new TrainingMainRecyclerViewAdapter(exerciseRows,
                 internationalSystem, focusElement));
 
         if (focusElement >= 0) {
             linearLayout.scrollToPositionWithOffset(focusElement, 60);
         }
 
-        adapter.setOnLongClickListener(exerciseBit -> {
+        adapter.setOnLongClickListener(exerciseRow -> {
             EditExercisesLastsDialogFragment dialog = new EditExercisesLastsDialogFragment(R.string.title_exercises,
                     val -> {
                         if (val != null) {
@@ -108,12 +143,12 @@ public class TrainingActivity extends DBAppCompatActivity {
                             data.putExtra("refresh", true);
                             setResult(RESULT_OK, data);
 
-                            final int index = exerciseBits.indexOf(exerciseBit);
+                            final int index = exerciseRows.indexOf(exerciseRow);
                             runOnUiThread(() -> adapter.notifyItemChanged(index));
                         }
                     },
                     ()->{},
-                    exerciseBit.getExercise(), internationalSystem);
+                    exerciseRow.getExercise(), internationalSystem);
 
             dialog.show(getSupportFragmentManager(), null);
         });

@@ -1,19 +1,23 @@
 package org.scp.gymlog.ui.top;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.scp.gymlog.databinding.ListElementFragmentTopBinding;
+import org.scp.gymlog.R;
+import org.scp.gymlog.databinding.ListElementFragmentTopBitBinding;
+import org.scp.gymlog.databinding.ListElementFragmentTopHeadersBinding;
+import org.scp.gymlog.databinding.ListElementFragmentTopSpaceBinding;
+import org.scp.gymlog.databinding.ListElementFragmentTopVariationBinding;
 import org.scp.gymlog.model.Bit;
 import org.scp.gymlog.model.Exercise;
-import org.scp.gymlog.ui.main.MainActivity;
-import org.scp.gymlog.ui.training.TrainingActivity;
+import org.scp.gymlog.ui.top.rows.ITopRow;
+import org.scp.gymlog.ui.top.rows.TopBitRow;
+import org.scp.gymlog.ui.top.rows.TopVariationRow;
 import org.scp.gymlog.util.DateUtils;
 import org.scp.gymlog.util.FormatUtils;
 import org.scp.gymlog.util.WeightUtils;
@@ -25,7 +29,7 @@ import java.util.function.Consumer;
 
 public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Bit> topBits;
+    private final List<ITopRow> rows;
     private final Exercise exercise;
     private final boolean internationalSystem;
     private final Calendar today;
@@ -33,8 +37,8 @@ public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerView
     private Consumer<Bit> onClickListener;
     private Consumer<Bit> onLongClickListener;
 
-    public TopRecyclerViewAdapter(List<Bit> topBits, Exercise exercise, boolean internationalSystem) {
-        this.topBits = topBits;
+    public TopRecyclerViewAdapter(List<ITopRow> rows, Exercise exercise, boolean internationalSystem) {
+        this.rows = rows;
         this.exercise = exercise;
         this.internationalSystem = internationalSystem;
         this.today = Calendar.getInstance();
@@ -49,18 +53,59 @@ public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerView
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public int getItemViewType(int position) {
+        switch (rows.get(position).getType()) {
+            case BIT:       return R.layout.list_element_fragment_top_bit;
+            case VARIATION: return R.layout.list_element_fragment_top_variation;
+            case HEADER:    return R.layout.list_element_fragment_top_headers;
+            default:        return R.layout.list_element_fragment_top_space;
+        }
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == R.layout.list_element_fragment_top_bit)
+            return new ViewHolder(
+                    ListElementFragmentTopBitBinding.inflate(
+                            LayoutInflater.from(parent.getContext()), parent, false
+                    ));
+
+        if (viewType == R.layout.list_element_fragment_top_variation)
+            return new ViewHolder(
+                    ListElementFragmentTopVariationBinding.inflate(
+                            LayoutInflater.from(parent.getContext()), parent, false
+                    ));
+
+        if (viewType == R.layout.list_element_fragment_top_headers)
+            return new ViewHolder(
+                    ListElementFragmentTopHeadersBinding.inflate(
+                            LayoutInflater.from(parent.getContext()), parent, false
+                    ));
+
         return new ViewHolder(
-                ListElementFragmentTopBinding.inflate(
+                ListElementFragmentTopSpaceBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false
-                )
-        );
+                ));
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Bit topBit = holder.topBit = topBits.get(position);
+        ITopRow row = rows.get(position);
+
+        if (row.getType() == ITopRow.Type.HEADER || row.getType() == ITopRow.Type.SPACE) {
+            return;
+        }
+
+        if (row.getType() == ITopRow.Type.VARIATION) {
+            TopVariationRow vRow = (TopVariationRow) row;
+            holder.mNote.setText(vRow.getVariation().getName());
+            return;
+        }
+
+        TopBitRow bRow = (TopBitRow) row;
+        Bit topBit = holder.topBit = bRow.getBit();
 
         BigDecimal weight = WeightUtils.getWeightFromTotal(
                 topBit.getWeight(),
@@ -79,7 +124,7 @@ public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerView
 
     @Override
     public int getItemCount() {
-        return topBits.size();
+        return rows.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -89,7 +134,7 @@ public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerView
         public final TextView mTime;
         public final TextView mNote;
 
-        public ViewHolder(ListElementFragmentTopBinding binding) {
+        public ViewHolder(ListElementFragmentTopBitBinding binding) {
             super(binding.getRoot());
             mWeight = binding.weight;
             mReps = binding.reps;
@@ -110,9 +155,20 @@ public class TopRecyclerViewAdapter extends RecyclerView.Adapter<TopRecyclerView
             });
         }
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mWeight.getText() + "'";
+        public ViewHolder(ListElementFragmentTopVariationBinding binding) {
+            super(binding.getRoot());
+            mWeight = mReps = mTime = null;
+            mNote = binding.variationName;
+        }
+
+        public ViewHolder(ListElementFragmentTopHeadersBinding binding) {
+            super(binding.getRoot());
+            mWeight = mReps = mTime = mNote = null;
+        }
+
+        public ViewHolder(ListElementFragmentTopSpaceBinding binding) {
+            super(binding.getRoot());
+            mWeight = mReps = mTime = mNote = null;
         }
     }
 }
