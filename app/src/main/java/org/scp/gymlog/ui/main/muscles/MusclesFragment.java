@@ -118,7 +118,7 @@ public class MusclesFragment extends CustomFragment {
 						.getContentResolver()
 						.openOutputStream(data.getData())){
 
-					dataBaseDumperService.save(fileOutputStream, db);
+					dataBaseDumperService.save(getContext(), fileOutputStream, db);
 					getActivity().runOnUiThread(() ->
 							Toast.makeText(getActivity(), "Saved", Toast.LENGTH_LONG).show());
 
@@ -132,7 +132,7 @@ public class MusclesFragment extends CustomFragment {
 				try (InputStream inputStream = context.getContentResolver()
 						.openInputStream(data.getData())){
 
-					dataBaseDumperService.load(inputStream, db);
+					dataBaseDumperService.load(getContext(), inputStream, db);
 					Intent intent = new Intent(getActivity(), SplashActivity.class);
 					startActivity(intent);
 					getActivity().finish();

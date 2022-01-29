@@ -2,6 +2,11 @@ package org.scp.gymlog.service;
 
 import static org.scp.gymlog.util.Constants.DATE_ZERO;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.preference.PreferenceManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +35,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,9 +46,10 @@ public class DataBaseDumperService {
 
     public final static String OUTPUT = "output.json";
 
-    public void save(FileOutputStream fos, AppDatabase database) throws JSONException, IOException {
+    public void save(Context context, FileOutputStream fos, AppDatabase database) throws JSONException, IOException {
         JSONObject object = new JSONObject();
 
+        object.put("prefs", prefs(context));
         object.put("exercises", exercises(database));
         object.put("primaries", primaryMuscles(database));
         object.put("secondaries", secondaryMuscles(database));
@@ -54,12 +61,13 @@ public class DataBaseDumperService {
         writer.close();
     }
 
-    private JSONArray exercises(AppDatabase database) {
-        return convertToJSONArray(database.exerciseDao().getAll());
+    private JSONObject prefs(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return new JSONObject(preferences.getAll());
     }
 
-    private JSONArray variations(AppDatabase database) {
-        return convertToJSONArray(database.variationDao().getAll());
+    private JSONArray exercises(AppDatabase database) {
+        return convertToJSONArray(database.exerciseDao().getAll());
     }
 
     private JSONArray primaryMuscles(AppDatabase database) {
@@ -112,11 +120,14 @@ public class DataBaseDumperService {
                 .collect(JsonUtils.collector());
     }
 
-    public void load(InputStream inputStream, AppDatabase database) throws JSONException, IOException {
+    public void load(Context context, InputStream inputStream, AppDatabase database) throws JSONException, IOException {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))){
 
             String line = br.lines().collect(Collectors.joining(""));
             JSONObject obj = new JSONObject(line);
+
+            // PREFS
+            prefs(context, obj.getJSONObject("prefs"));
 
             // EXERCISES:
             ExerciseEntity[] exercises = exercises(obj.getJSONArray("exercises"));
@@ -212,6 +223,27 @@ public class DataBaseDumperService {
             }
             /**/
         }
+    }
+
+    private void prefs(Context context, JSONObject prefs) throws JSONException {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        Iterator<String> keys = prefs.keys();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            Object val = prefs.get(key);
+
+            if (val instanceof String) {
+                editor.putString(key, prefs.getString(key));
+            } else if (val instanceof Integer) {
+                editor.putInt(key, prefs.getInt(key));
+            } else if (val instanceof Boolean) {
+                editor.putBoolean(key, prefs.getBoolean(key));
+            }
+        }
+
+        editor.apply();
     }
 
     private ExerciseEntity[] exercises(JSONArray list) throws JSONException {
