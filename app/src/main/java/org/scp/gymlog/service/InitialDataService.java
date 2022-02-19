@@ -54,6 +54,7 @@ public class InitialDataService {
         Arrays.asList(
                 new Bar(++barId, new Weight(new BigDecimal("7.5"), true)),
                 new Bar(++barId, new Weight(new BigDecimal("10"), true)),
+                new Bar(++barId, new Weight(new BigDecimal("12"), true)),
                 new Bar(++barId, new Weight(new BigDecimal("15"), true)),
                 new Bar(++barId, new Weight(new BigDecimal("20"), true)),
                 new Bar(++barId, new Weight(new BigDecimal("25"), true))
