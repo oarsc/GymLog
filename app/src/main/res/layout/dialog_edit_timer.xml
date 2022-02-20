@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:animateLayoutChanges="true"
     android:paddingHorizontal="@dimen/dialog_margin">
 
     <LinearLayout
@@ -37,6 +36,7 @@
                 android:text="@string/symbol_zero"/>
 
             <TextView
+                android:id="@+id/secondLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/symbol_s"/>
@@ -52,6 +52,16 @@
             android:focusable="true"
             android:padding="10dp"
             android:src="@drawable/ic_stop_24dp" />
+
+        <ImageView
+            android:id="@+id/playButton"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="10dp"
+            android:src="@drawable/ic_play_24dp" />
 
     </LinearLayout>
 
@@ -93,6 +103,7 @@
                 tools:ignore="LabelFor" />
 
             <TextView
+                android:id="@+id/inputSecondsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -107,25 +118,17 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
-            android:id="@+id/clearButton"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="10dp"
-            android:src="@drawable/ic_cross_24dp" />
-
-        <ImageView
-            android:id="@+id/playButton"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="10dp"
-            android:src="@drawable/ic_play_24dp" />
+        <org.scp.gymlog.ui.common.components.NumberModifierView
+            android:id="@+id/modifier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            app:target="@id/editTimer"
+            app:step="5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
     </LinearLayout>
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,7 +12,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ import org.scp.gymlog.util.SecondTickThread;
 import java.util.Calendar;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class EditTimerDialogFragment extends CustomDialogFragment<Integer> {
 
@@ -38,7 +40,8 @@ public class EditTimerDialogFragment extends CustomDialogFragment<Integer> {
 
     private Thread countdownThread;
     private TextView currentTimer;
-    private LinearLayout countdownBox;
+    private TextView secondLabel;
+    private ImageView stopButton;
 
     private final int defaultValue;
     private boolean isDefaultValue;
@@ -75,11 +78,12 @@ public class EditTimerDialogFragment extends CustomDialogFragment<Integer> {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_edit_timer, null);
 
-        countdownBox = view.findViewById(R.id.countdownBox);
+        stopButton = view.findViewById(R.id.stopButton);
+        secondLabel = view.findViewById(R.id.secondLabel);
         currentTimer = view.findViewById(R.id.currentTimer);
 
         if (endingCountdown == null) {
-            countdownBox.setVisibility(View.GONE);
+            uiStopCounter();
 
         } else {
             countdownThread = new CountdownThread(getActivity());
@@ -95,15 +99,19 @@ public class EditTimerDialogFragment extends CustomDialogFragment<Integer> {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                isDefaultValue = false;
+                if (isDefaultValue) {
+                    isDefaultValue = false;
+                    setInputAlpha(view, 1f);
+                }
             }
         });
+        if (isDefaultValue) setInputAlpha(view, 0.4f);
 
         view.findViewById(R.id.stopButton).setOnClickListener(v -> {
             if (countdownThread != null) {
                 countdownThread.interrupt();
             } else {
-                countdownBox.setVisibility(View.GONE);
+                uiStopCounter();
             }
             if (onStopListener != null) {
                 onStopListener.run();
@@ -114,7 +122,7 @@ public class EditTimerDialogFragment extends CustomDialogFragment<Integer> {
             int seconds = FormatUtils.toInt(editNotes.getText().toString());
             Calendar endingCountdown = Calendar.getInstance();
             endingCountdown.add(Calendar.SECOND, seconds);
-            countdownBox.setVisibility(View.VISIBLE);
+            stopButton.setVisibility(View.VISIBLE);
             this.endingCountdown = endingCountdown;
             if (countdownThread == null) {
                 countdownThread = new CountdownThread(getActivity());
@@ -123,11 +131,6 @@ public class EditTimerDialogFragment extends CustomDialogFragment<Integer> {
             if (onPlayListener != null) {
                 onPlayListener.accept(endingCountdown, seconds);
             }
-        });
-
-        view.findViewById(R.id.clearButton).setOnClickListener(v -> {
-            editNotes.setText(String.valueOf(defaultValue));
-            isDefaultValue = true;
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -141,9 +144,18 @@ public class EditTimerDialogFragment extends CustomDialogFragment<Integer> {
                         confirm.accept(seconds);
                     }
                 })
+                .setNeutralButton(R.string.text_default, (dialog, id) -> confirm.accept(-1))
                 .setNegativeButton(R.string.button_cancel, (dialog, id) -> cancel.run());
 
         return builder.create();
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (countdownThread != null) {
+            countdownThread.interrupt();
+        }
     }
 
     private class CountdownThread extends SecondTickThread {
@@ -151,16 +163,34 @@ public class EditTimerDialogFragment extends CustomDialogFragment<Integer> {
             super(() -> {
                 int seconds = DateUtils.secondsDiff(Calendar.getInstance(), endingCountdown);
                 if (seconds > 0) {
-                    activity.runOnUiThread(() -> currentTimer.setText(String.valueOf(seconds)));
+                    activity.runOnUiThread(() -> {
+                        currentTimer.setText(String.valueOf(seconds));
+                        secondLabel.setVisibility(View.VISIBLE);
+                    });
                     return true;
                 }
                 return false;
             });
 
             onFinishListener = () -> {
-                activity.runOnUiThread(() -> countdownBox.setVisibility(View.GONE));
+                activity.runOnUiThread(EditTimerDialogFragment.this::uiStopCounter);
                 countdownThread = null;
             };
+        }
+    }
+
+    private void setInputAlpha(View view, float alpha) {
+        Stream.of(R.id.editTimer, R.id.inputSecondsLabel)
+                .<View>map(view::findViewById)
+                .forEach(v -> v.setAlpha(alpha));
+    }
+
+    private void uiStopCounter() {
+        stopButton.setVisibility(View.GONE);
+        secondLabel.setVisibility(View.GONE);
+        Context context = getContext();
+        if (context != null) {
+            currentTimer.setText(context.getResources().getString(R.string.text_none).toLowerCase());
         }
     }
 }
