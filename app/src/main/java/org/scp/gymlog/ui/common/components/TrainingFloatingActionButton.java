@@ -16,6 +16,7 @@ import org.scp.gymlog.exceptions.LoadException;
 import org.scp.gymlog.room.DBThread;
 import org.scp.gymlog.room.daos.TrainingDao;
 import org.scp.gymlog.room.entities.TrainingEntity;
+import org.scp.gymlog.service.NotificationService;
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment;
 import org.scp.gymlog.util.Data;
 
@@ -24,22 +25,25 @@ import java.util.Optional;
 
 public class TrainingFloatingActionButton extends FloatingActionButton {
 
+    private NotificationService notificationService;
+
     public TrainingFloatingActionButton(@NonNull Context context) {
         super(context);
-        onCreate();
+        onCreate(context);
     }
 
     public TrainingFloatingActionButton(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        onCreate();
+        onCreate(context);
     }
 
     public TrainingFloatingActionButton(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        onCreate();
+        onCreate(context);
     }
 
-    private void onCreate() {
+    private void onCreate(@NonNull Context context) {
+        notificationService = new NotificationService(context);
         setOnClickListener(l -> {
             int trainingId = Data.getInstance().getTrainingId();
 
@@ -48,6 +52,7 @@ public class TrainingFloatingActionButton extends FloatingActionButton {
                         R.string.dialog_confirm_training_text,
                         confirmed -> {
                             if (confirmed) {
+                                notificationService.hideNotification();
                                 DBThread.run(getContext(), db -> {
                                     TrainingDao dao = db.trainingDao();
                                     TrainingEntity training = dao.getTraining(trainingId)
