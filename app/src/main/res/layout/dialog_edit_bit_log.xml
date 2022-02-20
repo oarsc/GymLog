@@ -57,7 +57,7 @@
         android:layout_height="48dp"
         android:ems="5"
         android:textAlignment="viewEnd"
-        android:paddingEnd="26dp"
+        android:paddingEnd="30dp"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toBottomOf="@id/weightModifier"
         app:layout_constraintRight_toLeftOf="@id/weightModifier"
@@ -78,10 +78,30 @@
         android:id="@+id/weightModifier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginBottom="30dp"
         app:target="@id/editWeight"
         app:layout_constraintBottom_toTopOf="@id/repsModifier"
         app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/converted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewEnd"
+        android:paddingEnd="24dp"
+        android:text="@string/symbol_zero"
+        app:layout_constraintTop_toBottomOf="@id/weightModifier"
+        app:layout_constraintRight_toRightOf="@id/unit"
+        tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/convertUnit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/weightModifier"
+        app:layout_constraintRight_toRightOf="@id/editWeight"
+        android:layout_marginEnd="6dp"
+        android:text="@string/text_lb" />
 
     <TextView
         android:id="@+id/labelReps"
@@ -98,7 +118,7 @@
         android:layout_height="48dp"
         android:ems="5"
         android:textAlignment="viewEnd"
-        android:paddingEnd="26dp"
+        android:paddingEnd="30dp"
         android:inputType="number"
         app:layout_constraintBottom_toBottomOf="@id/repsModifier"
         app:layout_constraintRight_toLeftOf="@id/repsModifier"

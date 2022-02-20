@@ -3,6 +3,8 @@ package org.scp.gymlog.model;
 import static org.scp.gymlog.util.WeightUtils.toKilograms;
 import static org.scp.gymlog.util.WeightUtils.toPounds;
 
+import org.scp.gymlog.util.WeightFormatter;
+
 import java.math.BigDecimal;
 import java.util.function.Function;
 
@@ -19,8 +21,8 @@ public class Weight implements Comparable<Weight>{
         return internationalSystem? toKg() : toLbs();
     }
 
-    public BigDecimal getValue(boolean internationalSystem, int scale) {
-        return internationalSystem? toKg(scale) : toLbs(scale);
+    public BigDecimal getValue(boolean internationalSystem, WeightFormatter formatter) {
+        return internationalSystem? toKg(formatter) : toLbs(formatter);
     }
 
     public BigDecimal toKg() {
@@ -31,12 +33,12 @@ public class Weight implements Comparable<Weight>{
         return internationalSystem? toPounds(value) : value;
     }
 
-    public BigDecimal toKg(int scale) {
-        return internationalSystem? value : toKilograms(value, scale);
+    public BigDecimal toKg(WeightFormatter formatter) {
+        return internationalSystem? value : toKilograms(value, formatter);
     }
 
-    public BigDecimal toLbs(int scale) {
-        return internationalSystem? toPounds(value, scale) : value;
+    public BigDecimal toLbs(WeightFormatter formatter) {
+        return internationalSystem? toPounds(value, formatter) : value;
     }
 
     public Weight add(Weight weight) {

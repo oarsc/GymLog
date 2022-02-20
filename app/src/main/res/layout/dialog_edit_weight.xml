@@ -28,7 +28,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:ems="5"
                 android:textAlignment="viewEnd"
-                android:paddingEnd="26dp"
+                android:paddingEnd="30dp"
                 android:inputType="numberDecimal"
                 tools:ignore="LabelFor,RtlSymmetry"
                 android:imeOptions="actionDone"

@@ -59,6 +59,7 @@ import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.DateUtils;
 import org.scp.gymlog.util.FormatUtils;
 import org.scp.gymlog.util.SecondTickThread;
+import org.scp.gymlog.util.WeightUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -282,9 +283,7 @@ public class RegistryActivity extends DBAppCompatActivity {
         });
 
         TextView unitTextView = findViewById(R.id.unit);
-        unitTextView.setText(internationalSystem ?
-                R.string.text_kg :
-                R.string.text_lb);
+        unitTextView.setText(WeightUtils.unit(internationalSystem));
 
         weightModifier = findViewById(R.id.weightModifier);
         weightModifier.setStep(exercise.getStep());

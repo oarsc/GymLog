@@ -33,6 +33,7 @@ import org.scp.gymlog.ui.common.components.NumberModifierView;
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData;
 import org.scp.gymlog.util.Data;
 import org.scp.gymlog.util.FormatUtils;
+import org.scp.gymlog.util.WeightUtils;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -103,13 +104,11 @@ public class EditWeightFormDialogFragment extends CustomDialogFragment<WeightFor
         }
         updateConvertedUnit(weight.getValue());
 
-        if (weight.isInternationalSystem()) {
-            Arrays.stream(convertUnit).forEach(x -> x.setText(R.string.text_lb));
-            Arrays.stream(unit).forEach(x -> x.setText(R.string.text_kg));
-        } else {
-            Arrays.stream(convertUnit).forEach(x -> x.setText(R.string.text_kg));
-            Arrays.stream(unit).forEach(x -> x.setText(R.string.text_lb));
-        }
+        int unitResString = WeightUtils.unit(weight.isInternationalSystem());
+        Arrays.stream(unit).forEach(x -> x.setText(unitResString));
+        int unitResConvertString = WeightUtils.unit(!weight.isInternationalSystem());
+        Arrays.stream(convertUnit).forEach(x -> x.setText(unitResConvertString));
+
         input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         input.setFilters(new InputFilter[] {(source, start, end, dest, dstart, dend) -> {
             BigDecimal input = FormatUtils.toBigDecimal(dest.toString() + source.toString());

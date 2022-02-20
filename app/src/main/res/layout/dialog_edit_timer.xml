@@ -96,7 +96,7 @@
                 android:ems="5"
                 android:textAlignment="viewEnd"
                 android:paddingStart="0dp"
-                android:paddingEnd="26dp"
+                android:paddingEnd="30dp"
                 android:inputType="numberSigned|number"
                 android:imeOptions="actionDone"
                 android:autofillHints="false"
