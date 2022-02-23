@@ -1,7 +1,7 @@
 #!/usr/bin/node
 
-const INPUT_FILE = './bak/output.json';
-const OUTPUT_FILE = './bak/output2.json';
+const INPUT_FILE = './original-baks/output.json';
+const OUTPUT_FILE = './original-baks/output2.json';
 
 const fs = require('fs');
 

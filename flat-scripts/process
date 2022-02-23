@@ -1,9 +1,9 @@
 #!/usr/bin/node
 
-const GYMRUN_EXPORTED_FILE_RAW = './bak/GymRun.csv';
-const GYMLOG_EXPORTED_FILE_RAW = './bak/output.json';
-const OUTPUT_FILE = './bak/output-legacy.json';
-const NEW_DEFINITION_FILE = '../GymLog/app/src/main/assets/initialData.json';
+const GYMRUN_EXPORTED_FILE_RAW = './original-baks/GymRun.csv';
+const GYMLOG_EXPORTED_FILE_RAW = './original-baks/output.json';
+const OUTPUT_FILE = './original-baks/output-legacy.json';
+const NEW_DEFINITION_FILE = '../../GymLog/app/src/main/assets/initialData.json';
 
 const fs = require('fs');
 const {
