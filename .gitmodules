@@ -1,0 +1,3 @@
+[submodule "private/js/custom-front-js-mods"]
+	path = private/js/custom-front-js-mods
+	url = git@github.com:scopz/custom-front-js-mods.git
