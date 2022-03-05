@@ -7,6 +7,7 @@ const filesConfiguration = [
 	in: [
 		'core-js',
 		'./private/js/custom-front-js-mods/dom-modifications.js',
+		'regenerator-runtime/runtime',
 	],
 	out: "polyfill.min.js"
 },

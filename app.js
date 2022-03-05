@@ -19,8 +19,8 @@ app.use(lessMiddleware(path.join(__dirname, 'private'), {
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/',      require('./src/routes/index'));
-app.use('/users', require('./src/routes/users'));
+app.use('/',     require('./src/routes/index'));
+app.use('/read', require('./src/routes/reader'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

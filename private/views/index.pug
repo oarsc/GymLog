@@ -1,5 +1,21 @@
 extends layout
 
 block content
-	h1= title
-	p Welcome to #{title}
+	form#filterForm
+		input(type='text', autocomplete='off', placeholder='exerciseName', name='exerciseName')
+		input(type='text', autocomplete='off', placeholder='note', name='note')
+		input(type='text', autocomplete='off', placeholder='trainingId', name='trainingId')
+		button#filterBtn(disabled) filter
+		button#showIdsBtn(disabled) show trainingIds
+		button#showNotesBtn(disabled) show notes
+
+	form#commandForm
+		input(type='text', autocomplete='off', placeholder='command', name='command')
+		button#commandBtn(disabled) execute
+
+	button#exportBtn(disabled) exportResult
+	div#commandSummary
+	div#resultsSummary
+	div#code
+
+	script(type='text/javascript', src='./js/main.min.js')
