@@ -66,9 +66,11 @@ public class TrainingActivity extends DBAppCompatActivity {
             int lastVar = getLastVar(exerciseRow);
             int var = bit.variationId == null? 0 : bit.variationId;
             if (var != lastVar) {
-                if (lastVar != -1 || var > 0) {
+                if (var > 0) {
                     Variation variation = Data.getVariation(exerciseRow.getExercise(), var);
                     exerciseRow.add(new TrainingVariationRow(variation));
+                } else if (lastVar != -1) {
+                    exerciseRow.add(new TrainingVariationRow(null));
                 }
                 exerciseRow.add(new TrainingHeaderRow());
             }
@@ -91,7 +93,8 @@ public class TrainingActivity extends DBAppCompatActivity {
 
         if (found) {
             TrainingVariationRow vRow = (TrainingVariationRow) row;
-            return vRow.getVariation().getId();
+            Variation variation = vRow.getVariation();
+            return variation==null? 0 : vRow.getVariation().getId();
         }
         return 0;
     }

@@ -11,6 +11,7 @@ import org.scp.gymlog.databinding.ListElementFragmentHistoryBitBinding;
 import org.scp.gymlog.databinding.ListElementFragmentHistoryHeadersBinding;
 import org.scp.gymlog.databinding.ListElementFragmentHistoryVariationBinding;
 import org.scp.gymlog.model.Bit;
+import org.scp.gymlog.model.Variation;
 import org.scp.gymlog.ui.training.rows.ITrainingRow;
 import org.scp.gymlog.ui.training.rows.ITrainingRow.Type;
 import org.scp.gymlog.ui.training.rows.TrainingBitRow;
@@ -78,7 +79,12 @@ public class TrainingRecyclerViewAdapter extends RecyclerView.Adapter<TrainingRe
 
         if (row.getType() == Type.VARIATION) {
             TrainingVariationRow vRow = (TrainingVariationRow) row;
-            holder.mNote.setText(vRow.getVariation().getName());
+            Variation variation = vRow.getVariation();
+            if (variation == null) {
+                holder.mNote.setText(R.string.text_default);
+            } else {
+                holder.mNote.setText(vRow.getVariation().getName());
+            }
             return;
         }
 

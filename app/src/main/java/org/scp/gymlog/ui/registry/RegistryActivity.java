@@ -456,8 +456,14 @@ public class RegistryActivity extends DBAppCompatActivity {
         DBThread.run(this, db -> {
             final Bit bit = log.get(initialSize-1);
             final Calendar date = bit.getTimestamp();
-            final List<BitEntity> log = db.bitDao().getHistory(exercise.getId(), bit.getTrainingId(),
-                    date, LOG_PAGES_SIZE);
+            final List<BitEntity> log;
+            if (variation == null) {
+                log = db.bitDao().getHistory(exercise.getId(), bit.getTrainingId(),
+                        date, LOG_PAGES_SIZE);
+            } else {
+                log = db.bitDao().getHistory(exercise.getId(), variation.getId(), bit.getTrainingId(),
+                        date, LOG_PAGES_SIZE);
+            }
             log.stream().map(b -> new Bit().fromEntity(b))
                     .forEach(this.log::add);
 
