@@ -12,14 +12,18 @@ buildscript {
     }
 }
 
+plugins {
+    id 'org.jetbrains.kotlin.android' version '1.6.20' apply false
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
 allprojects {
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:deprecation"
         }
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
