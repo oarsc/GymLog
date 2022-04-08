@@ -1,0 +1,46 @@
+package org.scp.gymlog.ui.common.dialogs
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import org.scp.gymlog.databinding.ListElementFragmentTextBinding
+import java.util.function.Consumer
+
+class EditNotesRecyclerViewAdapter(
+    private val values: List<String>,
+    private val onClick: Consumer<String>
+) : RecyclerView.Adapter<EditNotesRecyclerViewAdapter.ViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(
+            ListElementFragmentTextBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            )
+        )
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.mContentView.text = values[position]
+    }
+
+    override fun getItemCount(): Int {
+        return values.size
+    }
+
+    inner class ViewHolder(
+        binding: ListElementFragmentTextBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        val mContentView: TextView = binding.content
+
+        init {
+            itemView.setOnClickListener { onClick.accept(mContentView.text.toString()) }
+        }
+
+        override fun toString(): String {
+            return super.toString() + " '" + mContentView.text + "'"
+        }
+    }
+}

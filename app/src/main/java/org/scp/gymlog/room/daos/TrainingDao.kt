@@ -1,0 +1,41 @@
+package org.scp.gymlog.room.daos
+
+import androidx.room.*
+import org.scp.gymlog.room.entities.TrainingEntity
+import java.util.*
+
+@Dao
+interface TrainingDao {
+    @Query("SELECT * FROM training")
+    fun getAll(): List<TrainingEntity>
+
+    @Query("SELECT * FROM training WHERE `end` IS NULL")
+    fun getCurrentTraining(): Optional<TrainingEntity>
+
+    @Query("SELECT * FROM training WHERE trainingId = :trainingId")
+    fun getTraining(trainingId: Int): Optional<TrainingEntity>
+
+    @Query("SELECT * FROM training WHERE :startDate <= start AND start < :endDate")
+    fun getTrainingByStartDate(startDate: Calendar, endDate: Calendar): List<TrainingEntity>
+
+    @Update
+    fun update(training: TrainingEntity)
+
+    @Query("UPDATE training SET trainingId = :newId WHERE trainingId = :oldId")
+    fun updateId(oldId: Int, newId: Int): Int
+
+    @Insert
+    fun insert(training: TrainingEntity): Long
+
+    @Insert
+    fun insertAll(training: List<TrainingEntity>): LongArray
+
+    @Delete
+    fun delete(training: TrainingEntity)
+
+    @Query("DELETE FROM training WHERE trainingId NOT IN (SELECT DISTINCT trainingId FROM bit)")
+    fun deleteEmptyTraining(): Int
+
+    @Query("DELETE FROM training")
+    fun clear()
+}

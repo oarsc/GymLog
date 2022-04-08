@@ -1,0 +1,178 @@
+package org.scp.gymlog.ui.training
+
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
+import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import org.scp.gymlog.R
+import org.scp.gymlog.exceptions.LoadException
+import org.scp.gymlog.model.Bit
+import org.scp.gymlog.model.Muscle
+import org.scp.gymlog.room.AppDatabase
+import org.scp.gymlog.ui.common.DBAppCompatActivity
+import org.scp.gymlog.ui.common.dialogs.EditExercisesLastsDialogFragment
+import org.scp.gymlog.ui.main.history.HistoryFragment.Companion.getTrainingData
+import org.scp.gymlog.ui.main.history.TrainingData
+import org.scp.gymlog.ui.training.rows.ITrainingRow
+import org.scp.gymlog.ui.training.rows.TrainingBitRow
+import org.scp.gymlog.ui.training.rows.TrainingHeaderRow
+import org.scp.gymlog.ui.training.rows.TrainingVariationRow
+import org.scp.gymlog.util.Data
+import org.scp.gymlog.util.DateUtils
+import java.util.function.Consumer
+
+class TrainingActivity : DBAppCompatActivity() {
+
+    private val exerciseRows: MutableList<ExerciseRows> = ArrayList()
+    private var trainingData: TrainingData? = null
+    private var adapter: TrainingMainRecyclerViewAdapter? = null
+    private var linearLayout: LinearLayoutManager? = null
+
+    override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
+        val trainingId = intent.extras!!.getInt("trainingId")
+        val training = db.trainingDao().getTraining(trainingId)
+            .orElseThrow { LoadException("Cannot find trainingId: $trainingId") }
+        val bits = db.bitDao().getHistoryByTrainingId(trainingId)
+        trainingData = getTrainingData(training, bits)
+
+        for (bit in bits) {
+            val exerciseRow = exerciseRows
+                .filter { eb: ExerciseRows -> eb.exercise.id == bit.exerciseId }
+                .getOrElse(0) {
+                    ExerciseRows(Data.getExercise(bit.exerciseId))
+                        .also { exerciseRows.add(it) }
+                }
+
+            val lastVariationId = getLastVar(exerciseRow)
+            val variationId = bit.variationId ?: 0
+
+            if (variationId != lastVariationId) {
+                if (variationId > 0) {
+                    val variation = Data.getVariation(exerciseRow.exercise, variationId)
+                    exerciseRow.add(TrainingVariationRow(variation))
+                } else if (lastVariationId != -1) {
+                    exerciseRow.add(TrainingVariationRow(null))
+                }
+                exerciseRow.add(TrainingHeaderRow())
+            }
+            exerciseRow.add(TrainingBitRow(Bit(bit)))
+        }
+        return CONTINUE
+    }
+
+    private fun getLastVar(exerciseRow: ExerciseRows): Int {
+        if (exerciseRow.isEmpty()) return -1
+
+        var i = exerciseRow.size
+        var found: Boolean
+        var row: ITrainingRow
+        do {
+            row = exerciseRow[--i]
+            found = row is TrainingVariationRow
+        } while (!found && i > 0)
+
+        if (found) {
+            val vRow = row as TrainingVariationRow
+            return vRow.variation?.id ?: 0
+        }
+        return 0
+    }
+
+    override fun onDelayedCreate(savedInstanceState: Bundle?) {
+        setContentView(R.layout.activity_training)
+        setTitle(R.string.title_training)
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val internationalSystem = preferences.getBoolean("internationalSystem", true)
+
+        setHeaderInfo()
+
+        val focusBit = intent.extras!!.getInt("focusBit", -1)
+        val focusElement: Int = if (focusBit >= 0) {
+                var index = 0
+                for (exerciseRow in exerciseRows) {
+                    if (exerciseRow.filterIsInstance<TrainingBitRow>()
+                            .map { row -> row.bit.id }
+                            .any { id -> id == focusBit })
+                        break
+                    else
+                        index++
+                }
+                if (index < exerciseRows.size) index
+                else -1
+            } else -1
+
+        val historyRecyclerView: RecyclerView = findViewById(R.id.historyList)
+        historyRecyclerView.layoutManager = LinearLayoutManager(this).also { linearLayout = it }
+        historyRecyclerView.adapter = TrainingMainRecyclerViewAdapter(exerciseRows,
+            internationalSystem, focusElement
+        ).also { adapter = it }
+
+        if (focusElement >= 0) {
+            linearLayout!!.scrollToPositionWithOffset(focusElement, 60)
+        }
+
+        adapter!!.onLongClickListener = Consumer { exerciseRow ->
+            val dialog = EditExercisesLastsDialogFragment(R.string.title_exercises,
+                exerciseRow.exercise, internationalSystem,
+                {
+                    val data = Intent()
+                    data.putExtra("refresh", true)
+                    setResult(RESULT_OK, data)
+                    val index = exerciseRows.indexOf(exerciseRow)
+                    runOnUiThread { adapter!!.notifyItemChanged(index) }
+                })
+            dialog.show(supportFragmentManager, null)
+        }
+
+        adapter!!.onBitChangedListener = Consumer {
+            val data = Intent()
+            data.putExtra("refresh", true)
+            setResult(RESULT_OK, data)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.expand_collapse_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.expandButton) {
+            adapter!!.expandAll()
+        } else if (item.itemId == R.id.collapseButton) {
+            adapter!!.collapseAll()
+            linearLayout!!.scrollToPosition(0)
+        }
+        return false
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setHeaderInfo() {
+        val fragment: View = findViewById(R.id.fragmentTraining)
+        val title: TextView = findViewById(R.id.title)
+        val subtitle: TextView = findViewById(R.id.subtitle)
+        val indicator: View = findViewById(R.id.indicator)
+
+        fragment.isClickable = false
+
+        title.text = (resources.getString(R.string.text_training) + " #${trainingData!!.id} " + resources.getString(
+                R.string.text_on_smallcaps
+            )
+                    + " " + DateUtils.getDate(trainingData!!.startDate))
+
+        subtitle.text = trainingData!!.mostUsedMuscles
+            .map(Muscle::text)
+            .map { textRes -> resources.getString(textRes) }
+            .joinToString { it }
+
+        indicator.setBackgroundResource(trainingData!!.mostUsedMuscles[0].color)
+    }
+}

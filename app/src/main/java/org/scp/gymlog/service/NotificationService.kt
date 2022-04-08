@@ -1,0 +1,60 @@
+package org.scp.gymlog.service
+
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
+import org.scp.gymlog.R
+import org.scp.gymlog.ui.common.notifications.NotificationLoggingService
+import org.scp.gymlog.util.Constants.DATE_ZERO
+import java.util.*
+
+class NotificationService(private val context: Context) {
+
+    companion object {
+        const val COUNTDOWN_CHANNEL = "countdown"
+        const val READY_CHANNEL = "ready"
+        const val NOTIFICATION_COUNTDOWN_ID = 1
+        const val NOTIFICATION_READY_ID = 2
+        var lastEndTime: Calendar = DATE_ZERO
+            private set
+    }
+
+    fun showNotification(endTime: Calendar, seconds: Int, exerciseName: String?) {
+        if (Calendar.getInstance() > endTime) return
+        lastEndTime = endTime
+        val intent = Intent(context, NotificationLoggingService::class.java)
+        intent.putExtra("seconds", seconds)
+        intent.putExtra("milliseconds", endTime.timeInMillis)
+        intent.putExtra("name", exerciseName)
+        context.stopService(intent)
+        context.startService(intent)
+    }
+
+    fun hideNotification() {
+        val intent = Intent(context, NotificationLoggingService::class.java)
+        intent.action = NotificationLoggingService.ACTION_STOP
+        context.startService(intent)
+        lastEndTime = DATE_ZERO
+    }
+
+    fun createNotificationsChannel() {
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        val notificationManager = context.getSystemService(
+            NotificationManager::class.java
+        )
+        val countdownChannel = NotificationChannel(COUNTDOWN_CHANNEL,
+            context.getString(R.string.notification_title_countdown),
+            NotificationManager.IMPORTANCE_DEFAULT)
+
+        countdownChannel.setSound(null, null)
+        notificationManager.createNotificationChannel(countdownChannel)
+
+        val readyChannel = NotificationChannel(READY_CHANNEL,
+            context.getString(R.string.notification_title_ready),
+            NotificationManager.IMPORTANCE_HIGH)
+
+        notificationManager.createNotificationChannel(readyChannel)
+    }
+}

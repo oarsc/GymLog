@@ -1,0 +1,99 @@
+package org.scp.gymlog.ui.main.history
+
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import org.scp.gymlog.R
+import org.scp.gymlog.databinding.ListElementFragmentTrainingBinding
+import org.scp.gymlog.model.Muscle
+import org.scp.gymlog.ui.training.TrainingActivity
+import org.scp.gymlog.util.DateUtils
+
+class HistoryRecyclerViewAdapter : RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder>() {
+
+	private val trainingDataList: MutableList<TrainingData> = ArrayList()
+	private var context: Context? = null
+
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+		context = parent.context
+		return ViewHolder(
+			ListElementFragmentTrainingBinding.inflate(
+				LayoutInflater.from(context), parent, false
+			)
+		)
+	}
+
+	@SuppressLint("SetTextI18n")
+	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+		val data = trainingDataList[position]
+		holder.id = data.id
+		holder.mTitle.text =
+			(context!!.resources.getString(R.string.text_training) + " #${data.id}: " + context!!.resources.getString(
+				R.string.text_started_at
+			) + " " + DateUtils.getTime(data.startDate))
+
+		holder.mSubtitle.text = data.mostUsedMuscles
+			.map(Muscle::text)
+			.map { resText -> context!!.resources.getString(resText) }
+			.joinToString { it }
+
+		holder.mIndicator.setBackgroundResource(data.mostUsedMuscles[0].color)
+	}
+
+	fun clear() {
+		trainingDataList.clear()
+	}
+
+	fun size(): Int {
+		return trainingDataList.size
+	}
+
+	fun add(trainingData: TrainingData) {
+		trainingDataList.add(trainingData)
+	}
+
+	@SuppressLint("NotifyDataSetChanged")
+	fun notifyItemsChanged(initialSize: Int, endSize: Int) {
+		if (initialSize == 0) {
+			if (endSize != 0) {
+				notifyItemInserted(endSize)
+			}
+		} else if (endSize == 0) {
+			notifyItemRangeRemoved(0, initialSize)
+		} else if (initialSize == endSize) {
+			notifyItemRangeChanged(0, initialSize)
+		} else {
+			notifyDataSetChanged()
+		}
+	}
+
+	override fun getItemCount(): Int {
+		return trainingDataList.size
+	}
+
+	inner class ViewHolder(binding: ListElementFragmentTrainingBinding) :
+		RecyclerView.ViewHolder(binding.root) {
+
+		var id = 0
+		val mTitle: TextView = binding.title
+		val mSubtitle: TextView = binding.subtitle
+		val mIndicator: View = binding.indicator
+
+		init {
+			itemView.setOnClickListener {
+				val intent = Intent(context, TrainingActivity::class.java)
+				intent.putExtra("trainingId", id)
+				context!!.startActivity(intent)
+			}
+		}
+
+		override fun toString(): String {
+			return super.toString() + " '" + mTitle.text + "'"
+		}
+	}
+}
