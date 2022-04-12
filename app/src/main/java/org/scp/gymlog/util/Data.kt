@@ -38,35 +38,27 @@ object Data {
 	}
 
 	fun getBar(barId: Int): Bar {
-		return bars.stream()
+		return bars
 			.filter { bar: Bar -> bar.id == barId }
-			.findFirst()
-			.orElseThrow { LoadException("NO BAR FOUND id:$barId") }
+			.getOrElse(0) { throw LoadException("NO BAR FOUND id:$barId") }
 	}
 
 	fun getExercise(exerciseId: Int): Exercise {
-		return exercises.stream()
+		return exercises
 			.filter { exercise: Exercise -> exercise.id == exerciseId }
-			.findFirst()
-			.orElseThrow { LoadException("NO EXERCISE FOUND id:$exerciseId") }
+			.getOrElse(0) { throw LoadException("NO EXERCISE FOUND id:$exerciseId") }
 	}
 
 	fun getMuscle(muscleId: Int): Muscle {
-		return muscles.stream()
+		return muscles
 			.filter { muscle: Muscle -> muscle.id == muscleId }
-			.findFirst()
-			.orElseThrow { LoadException("NO MUSCLE FOUND id:$muscleId") }
+			.getOrElse(0) { throw LoadException("NO MUSCLE FOUND id:$muscleId") }
 	}
 
 	fun getVariation(exercise: Exercise, variationId: Int): Variation {
-		return exercise.variations.stream()
+		return exercise.variations
 			.filter { variation: Variation -> variation.id == variationId }
-			.findFirst()
-			.orElseThrow {
-				LoadException(
-					"NO VARIATION " + variationId +
-							" FOUND FOR EXERCISE: " + exercise.id
-				)
-			}
+			.getOrElse(0) { throw
+				LoadException("NO VARIATION $variationId FOUND FOR EXERCISE: ${exercise.id}") }
 	}
 }

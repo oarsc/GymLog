@@ -20,7 +20,6 @@ import org.scp.gymlog.ui.common.components.HistoryCalendarView.PieDataInfo
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils
 import java.util.*
-import java.util.stream.Collectors
 
 class HistoryFragment : Fragment() {
 
@@ -107,8 +106,8 @@ class HistoryFragment : Fragment() {
 
 			var i = 0
 			while (first < end) {
-				val summary: Map<Muscle, FloatArray> = allMuscles.stream()
-					.collect(Collectors.toMap({ muscle -> muscle }, { floatArrayOf(0f) }))
+				val summary: Map<Muscle, FloatArray> = allMuscles
+					.fold(HashMap()) { acc, muscle -> acc.apply { acc[muscle] = floatArrayOf(0f) } }
 
 				while (i < bits.size) {
 					val bit = bits[i]

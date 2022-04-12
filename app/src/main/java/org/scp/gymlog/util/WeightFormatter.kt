@@ -1,8 +1,5 @@
 package org.scp.gymlog.util
 
-import lombok.Getter
-
-@Getter
 class WeightFormatter {
 
     companion object {

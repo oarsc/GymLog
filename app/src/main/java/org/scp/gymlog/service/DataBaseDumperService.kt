@@ -13,7 +13,7 @@ import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.JsonUtils
 import java.io.*
-import java.util.stream.Collectors
+import java.util.stream.Collectors.joining
 import kotlin.reflect.KClass
 
 class DataBaseDumperService {
@@ -84,15 +84,15 @@ class DataBaseDumperService {
     }
 
     private fun convertToJSONArray(list: List<Any>): JSONArray {
-        return list.stream()
+        return list
             .map { obj: Any -> JsonUtils.jsonify(obj) }
-            .collect(JsonUtils.collector())
+            .let { JsonUtils.collector(it) }
     }
 
     @Throws(JSONException::class, IOException::class)
     fun load(context: Context, inputStream: InputStream, database: AppDatabase) {
         BufferedReader(InputStreamReader(inputStream)).use { br ->
-            val line = br.lines().collect(Collectors.joining(""))
+            val line = br.lines().collect(joining(""))
             val obj = JSONObject(line)
 
             // PREFS

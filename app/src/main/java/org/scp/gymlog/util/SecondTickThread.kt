@@ -1,9 +1,7 @@
 package org.scp.gymlog.util
 
-import lombok.Setter
 import java.util.function.Supplier
 
-@Setter
 open class SecondTickThread(private val onTickListener: Supplier<Boolean>) : Thread() {
 
     var onFinishListener: Runnable? = null

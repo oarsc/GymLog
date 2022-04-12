@@ -69,20 +69,20 @@ class SplashActivity : AppCompatActivity() {
                 x.primaryMuscles!!
                     .map(MuscleEntity::muscleId)
                     .map { id: Int ->
-                        Data.muscles.stream()
+                        Data.muscles
                             .filter { group: Muscle -> group.id == id }
-                            .findFirst()
-                            .orElseThrow { LoadException("Muscle $id not found in local structure") }
+                            .getOrElse(0) {
+                                throw LoadException("Muscle $id not found in local structure") }
                     }
                     .forEach { muscle -> exercise.primaryMuscles.add(muscle) }
 
                 x.secondaryMuscles!!
                     .map(MuscleEntity::muscleId)
                     .map { id: Int ->
-                        Data.muscles.stream()
+                        Data.muscles
                             .filter { group: Muscle -> group.id == id }
-                            .findFirst()
-                            .orElseThrow { LoadException("Muscle $id not found in local structure") }
+                            .getOrElse(0) {
+                                throw LoadException("Muscle $id not found in local structure") }
                     }
                     .forEach { muscle -> exercise.secondaryMuscles.add(muscle) }
 

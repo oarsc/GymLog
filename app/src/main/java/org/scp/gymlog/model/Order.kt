@@ -8,10 +8,10 @@ enum class Order(val code: String) {
 
     companion object {
         fun getByCode(code: String): Order {
-            return Arrays.stream(values())
-                    .filter { order: Order -> order.code == code }
-                    .findFirst()
-                    .orElseThrow { IllegalArgumentException("No order found for name \"$code\"") }
+            return values()
+                    .filter { order -> order.code == code }
+                    .getOrElse(0) {
+                        throw IllegalArgumentException("No order found for name \"$code\"") }
         }
     }
 }

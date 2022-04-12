@@ -1,12 +1,10 @@
 package org.scp.gymlog.model
 
-import lombok.Getter
 import org.scp.gymlog.util.WeightFormatter
 import org.scp.gymlog.util.WeightUtils
 import java.math.BigDecimal
 import java.util.function.Function
 
-@Getter
 class Weight(val value: BigDecimal, val internationalSystem: Boolean) : Comparable<Weight> {
 
     companion object {

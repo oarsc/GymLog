@@ -1,7 +1,6 @@
 package org.scp.gymlog.ui.training
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -17,8 +16,6 @@ import org.scp.gymlog.util.DateUtils
 import org.scp.gymlog.util.FormatUtils.toString
 import org.scp.gymlog.util.WeightUtils.getWeightFromTotal
 import java.util.function.BiConsumer
-import java.util.function.Consumer
-import java.util.stream.Stream
 
 class TrainingRecyclerViewAdapter(
     private val rows: ExerciseRows,

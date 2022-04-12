@@ -9,7 +9,6 @@ import org.scp.gymlog.room.Converters.fromWeightSpecification
 import org.scp.gymlog.room.Converters.toDate
 import org.scp.gymlog.room.Converters.toWeightSpecification
 import java.util.*
-import java.util.stream.Collector
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KType
@@ -126,11 +125,10 @@ object JsonUtils {
         }
     }
 
-    fun <T> collector(): Collector<T, JSONArray, JSONArray> {
-        return Collector.of(
-            { JSONArray() },
-            { obj: JSONArray, value: T -> obj.put(value) },
-            { obj: JSONArray, value: Any? -> obj.put(value) })
+    fun <T> collector(input : List<T>): JSONArray {
+        return JSONArray().also {
+            input.forEach { obj -> it.put(obj) }
+        }
     }
 
     fun interface JsonConsumer<T> {

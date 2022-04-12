@@ -75,7 +75,7 @@ class EditExercisesLastsDialogFragment(
             val popup =  PopupMenu(activity, layoutStep)
             val menu = popup.menu
 
-            Arrays.stream(Data.STEPS_KG).forEach { size: Int ->
+            Data.STEPS_KG.forEach { size: Int ->
                 menu.add(0, size, size,
                     FormatUtils.toString(
                         BigDecimal.valueOf(size.toLong()) .divide(Constants.ONE_HUNDRED)))
