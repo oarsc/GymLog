@@ -3,6 +3,7 @@ package org.scp.gymlog.ui.common.dialogs
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
@@ -24,6 +25,7 @@ import java.util.function.Consumer
 import java.util.function.Supplier
 
 class EditTimerDialogFragment(
+    private val ctx: Context,
     @StringRes title: Int,
     exercise: Exercise,
     private var endingCountdown: Calendar?,
@@ -42,7 +44,7 @@ class EditTimerDialogFragment(
     private var isDefaultValue = false
 
     init {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
         defaultValue = preferences.getString("restTime", "90")!!.toInt()
 
         val restTime = exercise.restTime
@@ -86,7 +88,7 @@ class EditTimerDialogFragment(
         if (isDefaultValue) setInputAlpha(view, 0.4f)
 
         view.findViewById<View>(R.id.stopButton).setOnClickListener {
-            countdownThread?.run() ?: uiStopCounter()
+            countdownThread?.interrupt() ?: uiStopCounter()
             onStopListener?.run()
         }
 
@@ -137,11 +139,8 @@ class EditTimerDialogFragment(
     private fun uiStopCounter() {
         stopButton?.visibility = View.GONE
         secondLabel?.visibility = View.GONE
-        val context = context
-        if (context != null) {
-            currentTimer?.text = context.resources.getString(R.string.text_none)
-                .lowercase(Locale.getDefault())
-        }
+        currentTimer?.text = ctx.resources.getString(R.string.text_none)
+            .lowercase(Locale.getDefault())
     }
 
     private inner class CountdownThread(activity: Activity) : SecondTickThread(Supplier {

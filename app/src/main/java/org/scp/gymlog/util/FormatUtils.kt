@@ -26,10 +26,11 @@ object FormatUtils {
                 FORMAT.parseObject(string) as BigDecimal
             } catch (e: NumberFormatException) {
                 e.printStackTrace()
+                BigDecimal.ZERO
             } catch (e: ParseException) {
                 e.printStackTrace()
+                BigDecimal.ZERO
             }
-            BigDecimal.ZERO
         }
     }
 

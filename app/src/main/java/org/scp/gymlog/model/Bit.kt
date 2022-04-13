@@ -13,7 +13,7 @@ class Bit(val exerciseId: Int, val variationId: Int): EntityMappable<BitEntity> 
 	var reps = 0
 	var weight = Weight.INVALID
 	var note: String = ""
-	val timestamp: Calendar = Calendar.getInstance()
+	var timestamp: Calendar = Calendar.getInstance()
 	var instant = false
 	var set = 0 // used in logRecyclerViewAdapter
 
@@ -22,6 +22,7 @@ class Bit(val exerciseId: Int, val variationId: Int): EntityMappable<BitEntity> 
 		trainingId = entity.trainingId
 		note = entity.note
 		reps = entity.reps
+		timestamp = entity.timestamp
 		instant = entity.instant
 		weight = Weight(
 			BigDecimal.valueOf(entity.totalWeight.toLong()).divide(Constants.ONE_HUNDRED),

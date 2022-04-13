@@ -122,7 +122,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
         val timerButton: View = findViewById(R.id.timerButton)
         timerButton.setOnClickListener {
-            val dialog = EditTimerDialogFragment(R.string.text_notes,
+            val dialog = EditTimerDialogFragment(this, R.string.text_notes,
                 exercise!!, activeCountdown) { result ->
                 if (exercise!!.restTime != result) {
                     exercise!!.restTime = result
@@ -562,7 +562,7 @@ class RegistryActivity : DBAppCompatActivity() {
                 R.id.editBit -> {
                     val enableInstantSwitch = log
                         .filter { b -> b.trainingId == bit.trainingId }
-                        .getOrNull(0) === bit
+                        .getOrNull(0) !== bit
                     val initialInstant = enableInstantSwitch && bit.instant
 
                     val editDialog = EditBitLogDialogFragment(
