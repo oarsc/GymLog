@@ -14,7 +14,7 @@ import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef
 import org.scp.gymlog.room.entities.SecondaryExerciseMuscleCrossRef
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.JsonUtils
+import org.scp.gymlog.util.JsonUtils.map
 import java.io.IOException
 import java.math.BigDecimal
 
@@ -53,7 +53,7 @@ class InitialDataService {
             val exerciseDao = db.exerciseDao()
             val exXmuscleDao = db.exerciseMuscleCrossRefDao()
             try {
-                JsonUtils.forEachObject(exercisesArray) { exerciseObj: JSONObject ->
+                exercisesArray.map(JSONArray::getJSONObject).forEach { exerciseObj: JSONObject ->
                     val ex = ExerciseEntity()
                     ex.image = exerciseObj.getString("tag")
                     ex.name = exerciseObj.getString("name")
@@ -65,9 +65,8 @@ class InitialDataService {
                     ex.lastWeightSpec = WeightSpecification.NO_BAR_WEIGHT
                     ex.exerciseId = exerciseDao.insert(ex).toInt()
 
-                    val muscle1Links = JsonUtils.mapInt(
-                            exerciseObj.getJSONArray("primary")
-                        ) { muscleId: Int ->
+                    val muscle1Links = exerciseObj.getJSONArray("primary").map(JSONArray::getInt)
+                        .map { muscleId: Int ->
                             val exXmuscle = ExerciseMuscleCrossRef()
                             exXmuscle.exerciseId = ex.exerciseId
                             exXmuscle.muscleId = muscleId
@@ -75,9 +74,8 @@ class InitialDataService {
                         }
                     exXmuscleDao.insertAll(muscle1Links)
 
-                    val muscle2Links = JsonUtils.mapInt(
-                            exerciseObj.getJSONArray("secondary")
-                        ) { muscleId: Int ->
+                    val muscle2Links = exerciseObj.getJSONArray("secondary").map(JSONArray::getInt)
+                        .map { muscleId: Int ->
                             val exXmuscle = SecondaryExerciseMuscleCrossRef()
                             exXmuscle.exerciseId = ex.exerciseId
                             exXmuscle.muscleId = muscleId

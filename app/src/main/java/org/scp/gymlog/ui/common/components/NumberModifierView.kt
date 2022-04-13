@@ -26,21 +26,14 @@ class NumberModifierView(context: Context, attrs: AttributeSet) : LinearLayout(c
 
     init {
         targetId = attrs.getAttributeResourceValue(
-            "http://schemas.android.com/apk/res-auto",
-            "target",
-            -1)
+            "http://schemas.android.com/apk/res-auto", "target", -1)
 
         allowNegatives = attrs.getAttributeBooleanValue(
-            "http://schemas.android.com/apk/res-auto",
-            "negatives",
-            false)
+            "http://schemas.android.com/apk/res-auto", "negatives", false)
 
         step = BigDecimal.valueOf(
             attrs.getAttributeFloatValue(
-                "http://schemas.android.com/apk/res-auto",
-                "step",
-                1f
-            ).toDouble())
+                "http://schemas.android.com/apk/res-auto", "step", 1f).toDouble())
 
         autoAdd = autoStep()
         autoSub = autoStep(false)

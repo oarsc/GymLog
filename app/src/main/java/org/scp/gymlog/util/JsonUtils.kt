@@ -9,6 +9,7 @@ import org.scp.gymlog.room.Converters.fromWeightSpecification
 import org.scp.gymlog.room.Converters.toDate
 import org.scp.gymlog.room.Converters.toWeightSpecification
 import java.util.*
+import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KType
@@ -17,46 +18,17 @@ import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 
 object JsonUtils {
-    @Throws(JSONException::class)
-    fun forEachInt(jsonArray: JSONArray, consumer: JsonConsumer<Int>) {
-        val length = jsonArray.length()
-        for (i in 0 until length) {
-            consumer.accept(jsonArray.getInt(i))
-        }
-    }
 
-    @Throws(JSONException::class)
-    fun <T> mapInt(jsonArray: JSONArray, function: JsonFunction<T, Int>): List<T> {
-        val supList: MutableList<T> = ArrayList()
-        forEachInt(jsonArray) { i: Int ->
-            supList.add(function.call(i))
-        }
-        return supList
-    }
+    val <T : Any> List<T>.toJsonArray: JSONArray
+        get() = JSONArray().also { this.forEach { obj -> it.put(obj) } }
 
-    @Throws(JSONException::class)
-    fun forEachString(jsonArray: JSONArray, consumer: JsonConsumer<String?>) {
-        val length = jsonArray.length()
-        for (i in 0 until length) {
-            consumer.accept(jsonArray.getString(i))
+    fun <T> JSONArray.map(function: KCallable<T>): List<T> {
+        return ArrayList<T>().also { list ->
+            val length = this.length()
+            for (i in 0 until length) {
+                list.add(function.call(this, i))
+            }
         }
-    }
-
-    @Throws(JSONException::class)
-    fun forEachObject(jsonArray: JSONArray, consumer: JsonConsumer<JSONObject>) {
-        val length = jsonArray.length()
-        for (i in 0 until length) {
-            consumer.accept(jsonArray.getJSONObject(i))
-        }
-    }
-
-    @Throws(JSONException::class)
-    fun <T> mapObject(jsonArray: JSONArray, function: JsonFunction<T, JSONObject>): List<T> {
-        val supList: MutableList<T> = ArrayList()
-        forEachObject(jsonArray) { obj: JSONObject ->
-            supList.add(function.call(obj))
-        }
-        return supList
     }
 
     fun jsonify(obj: Any): JSONObject {
@@ -122,12 +94,6 @@ object JsonUtils {
             return obj
         } catch (e: Exception) {
             throw RuntimeException("An exception occurred", e)
-        }
-    }
-
-    fun <T> collector(input : List<T>): JSONArray {
-        return JSONArray().also {
-            input.forEach { obj -> it.put(obj) }
         }
     }
 

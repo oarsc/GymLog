@@ -89,9 +89,7 @@ class LogRecyclerViewAdapter(
             val lastDateDiff = DateUtils.yearsAndDaysDiff(lastDate, bit.timestamp)
 
             if (lastDateDiff[0] != 0 || lastDateDiff[1] != 0) {
-                val dayLabel = DateUtils.calculateTimeLetter(
-                    bit.timestamp, today
-                )
+                val dayLabel = DateUtils.calculateTimeLetter(bit.timestamp, today)
                 holder.mDay!!.text = dayLabel
                 bit.set = 1
             } else {

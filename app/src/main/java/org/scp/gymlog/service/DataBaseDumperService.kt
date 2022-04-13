@@ -12,6 +12,8 @@ import org.scp.gymlog.room.entities.*
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.JsonUtils
+import org.scp.gymlog.util.JsonUtils.map
+import org.scp.gymlog.util.JsonUtils.toJsonArray
 import java.io.*
 import java.util.stream.Collectors.joining
 import kotlin.reflect.KClass
@@ -60,7 +62,7 @@ class DataBaseDumperService {
     private fun bits(database: AppDatabase): JSONArray {
         val bits = convertToJSONArray(database.bitDao().getAll())
         try {
-            JsonUtils.forEachObject(bits) { bit: JSONObject ->
+            bits.map(JSONArray::getJSONObject).forEach { bit: JSONObject ->
                 val id = bit.getInt("exerciseId")
                 val exercise = Data.getExercise(id)
                 bit.remove("exerciseId")
@@ -86,7 +88,7 @@ class DataBaseDumperService {
     private fun convertToJSONArray(list: List<Any>): JSONArray {
         return list
             .map { obj: Any -> JsonUtils.jsonify(obj) }
-            .let { JsonUtils.collector(it) }
+            .toJsonArray
     }
 
     @Throws(JSONException::class, IOException::class)
@@ -224,7 +226,7 @@ class DataBaseDumperService {
             exercises: List<ExerciseEntity>,
             variations: MutableMap<String, VariationEntity>): List<BitEntity> {
 
-        JsonUtils.forEachObject(list) { bit: JSONObject ->
+        list.map(JSONArray::getJSONObject).forEach { bit: JSONObject ->
             val name = bit.getString("exerciseName")
             /*
             val id = Data.getInstance().exercises
@@ -270,6 +272,7 @@ class DataBaseDumperService {
 
     @Throws(JSONException::class)
     private fun <T : Any> convertToObject(list: JSONArray, cls: KClass<T>): List<T> {
-        return JsonUtils.mapObject(list) { json -> JsonUtils.objectify(json, cls) }
+        return list.map(JSONArray::getJSONObject)
+            .map { json -> JsonUtils.objectify(json, cls) }
     }
 }
