@@ -10,7 +10,8 @@ class Muscle(
 	val id: Int,
 	@field:StringRes val text: Int,
 	@field:DrawableRes val icon: Int,
-	@field:ColorRes val color: Int) : EntityMappable<MuscleEntity?> {
+	@field:ColorRes val color: Int
+) : EntityMappable<MuscleEntity> {
 
 	override fun toEntity(): MuscleEntity {
 		val entity = MuscleEntity()

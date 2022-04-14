@@ -35,11 +35,15 @@ import org.scp.gymlog.ui.common.dialogs.*
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData
 import org.scp.gymlog.ui.top.TopActivity
 import org.scp.gymlog.ui.training.TrainingActivity
-import org.scp.gymlog.util.*
+import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.FormatUtils.toBigDecimal
-import org.scp.gymlog.util.FormatUtils.toString
+import org.scp.gymlog.util.DateUtils.diffSeconds
+import org.scp.gymlog.util.FormatUtils.bigDecimal
+import org.scp.gymlog.util.FormatUtils.integer
+import org.scp.gymlog.util.FormatUtils.safeBigDecimal
+import org.scp.gymlog.util.SecondTickThread
+import org.scp.gymlog.util.WeightUtils
 import java.io.IOException
 import java.math.BigDecimal
 import java.util.*
@@ -52,29 +56,29 @@ class RegistryActivity : DBAppCompatActivity() {
         private const val LOG_PAGES_SIZE = 20
     }
 
-    private var exercise: Exercise? = null
+    private lateinit var exercise: Exercise
     private var variation: Variation? = null
-    private var weight: EditText? = null
-    private var timer: TextView? = null
-    private var reps: EditText? = null
-    private var notes: EditText? = null
-    private var weightModifier: NumberModifierView? = null
-    private var weightSpecIcon: ImageView? = null
-    private var warningIcon: ImageView? = null
-    private var confirmInstantButton: ImageView? = null
-    private var recyclerViewAdapter: LogRecyclerViewAdapter? = null
-    private var recyclerViewLayout: LinearLayoutManager? = null
+    private val weight: EditText by lazy { findViewById(R.id.editWeight) }
+    private val timer: TextView by lazy { findViewById(R.id.timerSeconds) }
+    private val reps: EditText by lazy { findViewById(R.id.editReps) }
+    private val notes: EditText by lazy { findViewById(R.id.editNotes) }
+    private val weightModifier: NumberModifierView by lazy { findViewById(R.id.weightModifier) }
+    private val weightSpecIcon: ImageView by lazy { findViewById(R.id.weightSpecIcon) }
+    private val warningIcon: ImageView by lazy { findViewById(R.id.warning) }
+    private val confirmInstantButton: ImageView by lazy { findViewById(R.id.confirm) }
+    private lateinit var recyclerViewLayout: LinearLayoutManager
+    private lateinit var recyclerViewAdapter: LogRecyclerViewAdapter
     private var internationalSystem = false
     private val log: MutableList<Bit> = ArrayList()
     private var trainingId = 0
     private var notesLocked = false
     private var hiddenInstantSetButton = false
     private var sendRefreshList = false
-    private var notificationService: NotificationService? = null
+    private lateinit var notificationService: NotificationService
     private var defaultTimer = 0
     private var countdownThread: Thread? = null
     private var activeCountdown: Calendar? = null
-    private var defaultColor = 0
+    private val defaultTimeColor by lazy { timer.textColors.defaultColor }
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
         db.trainingDao().getCurrentTraining()
@@ -88,7 +92,7 @@ class RegistryActivity : DBAppCompatActivity() {
             .getOrElse(0) { throw InternalException("Exercise id not found: $exerciseId") }
 
         if (variationId > 0) {
-            variation = exercise!!.variations
+            variation = exercise.variations
                 .filter { v: Variation -> v.id == variationId }
                 .getOrElse(0) { throw InternalException("Filter not found: $exerciseId-$variationId") }
         }
@@ -117,22 +121,19 @@ class RegistryActivity : DBAppCompatActivity() {
         setHeaderInfo()
 
         // Timer button:
-        timer = findViewById(R.id.timerSeconds)
-        defaultColor = timer!!.textColors.defaultColor
-
         val timerButton: View = findViewById(R.id.timerButton)
         timerButton.setOnClickListener {
             val dialog = EditTimerDialogFragment(this, R.string.text_notes,
-                exercise!!, activeCountdown) { result ->
-                if (exercise!!.restTime != result) {
-                    exercise!!.restTime = result
-                    DBThread.run(this) { db -> db.exerciseDao().update(exercise!!.toEntity()) }
+                exercise, activeCountdown) { result ->
+                if (exercise.restTime != result) {
+                    exercise.restTime = result
+                    DBThread.run(this) { db -> db.exerciseDao().update(exercise.toEntity()) }
                 }
                 if (countdownThread == null) {
                     if (result < 0)
-                        timer!!.text = defaultTimer.toString()
+                        timer.text = defaultTimer.toString()
                     else
-                        timer!!.text = result.toString()
+                        timer.text = result.toString()
                 }
             }
             dialog.onPlayListener = BiConsumer { endDate, seconds ->
@@ -146,22 +147,22 @@ class RegistryActivity : DBAppCompatActivity() {
             startTimer(lastEndTime)
 
         } else {
-            timer!!.setTextColor(defaultColor)
-            if (exercise!!.restTime < 0)
-                timer!!.text = defaultTimer.toString()
+            timer.setTextColor(defaultTimeColor)
+            if (exercise.restTime < 0)
+                timer.text = defaultTimer.toString()
             else
-                timer!!.text = exercise!!.restTime.toString()
+                timer.text = exercise.restTime.toString()
         }
 
         // Variations
-        if (exercise!!.variations.isEmpty()) {
+        if (exercise.variations.isEmpty()) {
             findViewById<View>(R.id.variationBox).visibility = View.GONE
         } else if (variation != null) {
             val text: TextView = findViewById(R.id.variationText)
             text.text = variation!!.name
         }
         findViewById<View>(R.id.variationBox).setOnClickListener {
-            val names = exercise!!.variations.map(Variation::name).toMutableList()
+            val names = exercise.variations.map(Variation::name).toMutableList()
             names.add(0, resources.getString(R.string.text_default))
 
             val dialog = TextSelectDialogFragment(names) { idx,_ ->
@@ -169,7 +170,7 @@ class RegistryActivity : DBAppCompatActivity() {
                     if (idx == 0) {
                         switchVariation(0)
                     } else {
-                        val id = exercise!!.variations[idx - 1].id
+                        val id = exercise.variations[idx - 1].id
                         switchVariation(id)
                     }
                 }
@@ -178,44 +179,42 @@ class RegistryActivity : DBAppCompatActivity() {
         }
 
         // Logs:
-        val recyclerView: RecyclerView = findViewById(R.id.log_list)
-
         recyclerViewLayout = LinearLayoutManager(this)
-            .also { recyclerView.layoutManager = it }
-        recyclerViewAdapter = LogRecyclerViewAdapter(log, exercise!!, trainingId, internationalSystem)
-            .also { recyclerView.adapter = it }
+        recyclerViewAdapter = LogRecyclerViewAdapter(log, exercise, trainingId, internationalSystem)
 
-        recyclerViewAdapter!!.onClickElementListener = BiConsumer { view, bit -> onClickBit(view, bit) }
-        recyclerViewAdapter!!.onLoadMoreListener = Runnable { loadMoreHistory() }
-
-        recyclerView.isNestedScrollingEnabled = true
+        recyclerViewAdapter.onClickElementListener = BiConsumer { view, bit -> onClickBit(view, bit) }
+        recyclerViewAdapter.onLoadMoreListener = Runnable { loadMoreHistory() }
         if (log.size < LOG_PAGES_SIZE - 1) {
-            recyclerViewAdapter!!.setFullyLoaded(true)
+            recyclerViewAdapter.setFullyLoaded(true)
+        }
+
+        findViewById<RecyclerView>(R.id.log_list).apply {
+            layoutManager = recyclerViewLayout
+            adapter = recyclerViewAdapter
+            isNestedScrollingEnabled = true
         }
 
         // Save bit log
         findViewById<View>(R.id.confirmSet).setOnClickListener { saveBitLog(false) }
-        confirmInstantButton = findViewById(R.id.confirm)
-        confirmInstantButton!!.setOnClickListener { saveBitLog(true) }
+        confirmInstantButton.setOnClickListener { saveBitLog(true) }
 
         hiddenInstantSetButton = log.map(Bit::trainingId).none { id -> id == trainingId }
 
         if (hiddenInstantSetButton) {
-            confirmInstantButton!!.layoutParams.width = 0
+            confirmInstantButton.layoutParams.width = 0
         }
 
         // Notes
-        notes = findViewById(R.id.editNotes)
-        notes!!.setOnClickListener {
-            val dialog = EditNotesDialogFragment(R.string.text_notes, exercise!!.id, notes!!.text.toString())
-                { result: String -> notes!!.setText(result) }
+        notes.setOnClickListener {
+            val dialog = EditNotesDialogFragment(R.string.text_notes, exercise.id, notes.text.toString())
+                { result: String -> notes.setText(result) }
             dialog.show(supportFragmentManager, null)
         }
 
         val clearNote: ImageView = findViewById(R.id.clearNote)
         val lockNote: ImageView = findViewById(R.id.lockNote)
         clearNote.setOnClickListener {
-            notes!!.text.clear()
+            notes.text.clear()
             if (notesLocked) {
                 notesLocked = false
                 lockNote.setImageResource(R.drawable.ic_unlock_24dp)
@@ -223,7 +222,7 @@ class RegistryActivity : DBAppCompatActivity() {
         }
 
         lockNote.setOnClickListener {
-            if (notes!!.text.toString().isNotEmpty()) {
+            if (notes.text.toString().isNotEmpty()) {
                 notesLocked = !notesLocked
                 if (notesLocked) {
                     lockNote.setImageResource(R.drawable.ic_lock_24dp)
@@ -234,37 +233,32 @@ class RegistryActivity : DBAppCompatActivity() {
         }
 
         // Weight and Reps Input fields:
-        weight = findViewById(R.id.editWeight)
-        weight!!.filters = arrayOf(InputFilter { source: CharSequence, _, _, dest: Spanned, _, _ ->
-            val input = FormatUtils.toBigDecimal(dest.toString() + source.toString())
+        weight.filters = arrayOf(InputFilter { source: CharSequence, _, _, dest: Spanned, _, _ ->
+            val input = (dest.toString() + source.toString()).safeBigDecimal()
             if (input < Constants.ONE_THOUSAND && input.scale() < 3)
                 null
             else
                 ""
         })
-        weight!!.setOnClickListener { showWeightDialog(weight) }
+        weight.setOnClickListener { showWeightDialog(weight) }
 
-        reps = findViewById(R.id.editReps)
-        reps!!.setOnClickListener {
-            val dialog = EditNumberDialogFragment(R.string.text_reps, reps!!.text.toString(),
-                { result: BigDecimal -> reps!!.setText(toString(result)) })
+        reps.setOnClickListener {
+            val dialog = EditNumberDialogFragment(R.string.text_reps, reps.text.toString(),
+                { result: BigDecimal -> reps.bigDecimal = result })
             dialog.show(supportFragmentManager, null)
         }
 
         val unitTextView: TextView = findViewById(R.id.unit)
         unitTextView.setText(WeightUtils.unit(internationalSystem))
 
-        weightModifier = findViewById(R.id.weightModifier)
-        weightModifier!!.setStep(exercise!!.step)
+        weightModifier.setStep(exercise.step)
 
-        weightSpecIcon = findViewById(R.id.weightSpecIcon)
-        weightSpecIcon!!.setImageResource(exercise!!.weightSpec.icon)
+        weightSpecIcon.setImageResource(exercise.weightSpec.icon)
 
-        warningIcon = findViewById(R.id.warning)
-        if (exercise!!.requiresBar == (exercise!!.bar == null)) {
-            warningIcon!!.visibility = View.VISIBLE
+        if (exercise.requiresBar == (exercise.bar == null)) {
+            warningIcon.visibility = View.VISIBLE
         } else {
-            warningIcon!!.visibility = View.INVISIBLE
+            warningIcon.visibility = View.INVISIBLE
         }
 
         loadHistory()
@@ -277,9 +271,9 @@ class RegistryActivity : DBAppCompatActivity() {
         val image: ImageView = findViewById(R.id.image)
 
         fragment.isClickable = false
-        title.text = exercise!!.name
+        title.text = exercise.name
         time.visibility = View.GONE
-        val fileName = "previews/" + exercise!!.image + ".png"
+        val fileName = "previews/" + exercise.image + ".png"
         try {
             val ims = assets.open(fileName)
             val d = Drawable.createFromStream(ims, null)
@@ -299,7 +293,7 @@ class RegistryActivity : DBAppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.topRanking) {
             val intent = Intent(this, TopActivity::class.java)
-            intent.putExtra("exerciseId", exercise!!.id)
+            intent.putExtra("exerciseId", exercise.id)
             startActivityForResult(intent, IntentReference.TOP_RECORDS)
             return true
         }
@@ -310,16 +304,16 @@ class RegistryActivity : DBAppCompatActivity() {
         if (data.getBooleanExtra("refresh", false)) {
             when (intentReference) {
                 IntentReference.TOP_RECORDS -> {
-                    recyclerViewAdapter!!.notifyItemRangeChanged(0, log.size)
+                    recyclerViewAdapter.notifyItemRangeChanged(0, log.size)
                     updateForms()
                 }
                 IntentReference.TRAINING -> {
                     DBThread.run(this) { db ->
-                        val log = db.bitDao().getHistory(exercise!!.id, LOG_PAGES_SIZE)
+                        val log = db.bitDao().getHistory(exercise.id, LOG_PAGES_SIZE)
                         this.log.clear()
                         log.map { entity: BitEntity -> Bit(entity) }
                             .forEach { e -> this.log.add(e) }
-                        runOnUiThread { recyclerViewAdapter!!.notifyDataSetChanged() }
+                        runOnUiThread { recyclerViewAdapter.notifyDataSetChanged() }
                     }
                     updateForms()
                 }
@@ -332,14 +326,14 @@ class RegistryActivity : DBAppCompatActivity() {
     private fun switchVariation(variationId: Int) {
         DBThread.run(this) { db ->
             val log: List<BitEntity>
-            val exerciseId = exercise!!.id
+            val exerciseId = exercise.id
 
             if (variationId == 0) {
                 log = db.bitDao().getHistory(exerciseId, LOG_PAGES_SIZE)
                 variation = null
             } else {
                 log = db.bitDao().getHistory(exerciseId, variationId, LOG_PAGES_SIZE)
-                variation = exercise!!.variations
+                variation = exercise.variations
                     .filter { v: Variation -> v.id == variationId }
                     .getOrElse(0) { throw InternalException("Variation not found: $exerciseId-$variationId") }
             }
@@ -349,8 +343,8 @@ class RegistryActivity : DBAppCompatActivity() {
                 .forEach { e -> this.log.add(e) }
 
             runOnUiThread {
-                recyclerViewAdapter!!.notifyDataSetChanged()
-                recyclerViewAdapter!!.setFullyLoaded(log.size < LOG_PAGES_SIZE - 1)
+                recyclerViewAdapter.notifyDataSetChanged()
+                recyclerViewAdapter.setFullyLoaded(log.size < LOG_PAGES_SIZE - 1)
 
                 val text: TextView = findViewById(R.id.variationText)
                 if (variation == null)
@@ -364,23 +358,23 @@ class RegistryActivity : DBAppCompatActivity() {
     private fun showWeightDialog(weightEditText: EditText?) {
         val weightFormData = WeightFormData()
 
-        val weight = Weight(toBigDecimal(weightEditText!!.text.toString()), internationalSystem)
+        val weight = Weight(weightEditText!!.bigDecimal, internationalSystem)
         weightFormData.weight = weight
-        weightFormData.step = exercise!!.step
-        weightFormData.bar = exercise!!.bar
-        weightFormData.requiresBar = exercise!!.requiresBar
-        weightFormData.weightSpec = exercise!!.weightSpec
+        weightFormData.step = exercise.step
+        weightFormData.bar = exercise.bar
+        weightFormData.requiresBar = exercise.requiresBar
+        weightFormData.weightSpec = exercise.weightSpec
 
         val dialog = EditWeightFormDialogFragment(weightFormData, R.string.text_weight, { result: WeightFormData ->
-                weightEditText.setText(FormatUtils.toString(result.weight!!.value))
+                weightEditText.bigDecimal = result.weight!!.value
                 if (result.exerciseUpdated) {
-                    exercise!!.bar = result.bar
-                    exercise!!.step = result.step!!
-                    exercise!!.weightSpec = result.weightSpec!!
-                    recyclerViewAdapter!!.notifyItemRangeChanged(0, log.size)
+                    exercise.bar = result.bar
+                    exercise.step = result.step!!
+                    exercise.weightSpec = result.weightSpec!!
+                    recyclerViewAdapter.notifyItemRangeChanged(0, log.size)
 
                     updateForms()
-                    DBThread.run(this) { db -> db.exerciseDao().update(exercise!!.toEntity()) }
+                    DBThread.run(this) { db -> db.exerciseDao().update(exercise.toEntity()) }
                 }
             }
         )
@@ -388,29 +382,29 @@ class RegistryActivity : DBAppCompatActivity() {
     }
 
     private fun updateForms() {
-        weightModifier!!.setStep(exercise!!.step)
-        weightSpecIcon!!.setImageResource(exercise!!.weightSpec.icon)
-        if (exercise!!.requiresBar == (exercise!!.bar == null)) {
-            warningIcon!!.visibility = View.VISIBLE
+        weightModifier.setStep(exercise.step)
+        weightSpecIcon.setImageResource(exercise.weightSpec.icon)
+        if (exercise.requiresBar == (exercise.bar == null)) {
+            warningIcon.visibility = View.VISIBLE
         } else {
-            warningIcon!!.visibility = View.INVISIBLE
+            warningIcon.visibility = View.INVISIBLE
         }
     }
 
     private fun loadHistory() {
         if (log.isNotEmpty()) {
             val bit = log[0]
-            reps!!.setText(java.lang.String.valueOf(bit.reps))
+            reps.integer = bit.reps
 
             val partialWeight = WeightUtils.getWeightFromTotal(
                 bit.weight,
-                exercise!!.weightSpec,
-                exercise!!.bar,
+                exercise.weightSpec,
+                exercise.bar,
                 internationalSystem)
 
-            weight!!.setText(FormatUtils.toString(partialWeight))
+            weight.bigDecimal = partialWeight
         } else {
-            reps!!.setText("10")
+            reps.setText("10")
         }
     }
 
@@ -420,19 +414,19 @@ class RegistryActivity : DBAppCompatActivity() {
             val bit = log[initialSize - 1]
             val date = bit.timestamp
             val log: List<BitEntity> = if (variation == null)
-                    db.bitDao().getHistory(exercise!!.id, bit.trainingId,
+                    db.bitDao().getHistory(exercise.id, bit.trainingId,
                         date, LOG_PAGES_SIZE)
                 else
-                    db.bitDao().getHistory(exercise!!.id, variation!!.id, bit.trainingId,
+                    db.bitDao().getHistory(exercise.id, variation!!.id, bit.trainingId,
                         date, LOG_PAGES_SIZE)
 
             log.map { bitEntity -> Bit(bitEntity) }
                 .forEach { b -> this.log.add(b) }
 
             runOnUiThread {
-                recyclerViewAdapter!!.notifyItemRangeInserted(initialSize, log.size)
+                recyclerViewAdapter.notifyItemRangeInserted(initialSize, log.size)
                 if (log.size < LOG_PAGES_SIZE - 1) {
-                    recyclerViewAdapter!!.setFullyLoaded(true)
+                    recyclerViewAdapter.setFullyLoaded(true)
                 }
             }
         }
@@ -445,25 +439,25 @@ class RegistryActivity : DBAppCompatActivity() {
             return
         }
         DBThread.run(this) { db ->
-            val bit = Bit(exercise!!.id, if (variation == null) 0 else variation!!.id)
+            val bit = Bit(exercise.id, if (variation == null) 0 else variation!!.id)
 
             val totalWeight = WeightUtils.getTotalWeight(
-                toBigDecimal(weight!!.text.toString()),
-                exercise!!.weightSpec,
-                exercise!!.bar,
+                weight.bigDecimal,
+                exercise.weightSpec,
+                exercise.bar,
                 internationalSystem)
 
             bit.weight = Weight(totalWeight, internationalSystem)
-            bit.note = notes!!.text.toString()
-            bit.reps = FormatUtils.toInt(reps!!.text.toString())
+            bit.note = notes.text.toString()
+            bit.reps = reps.integer
             bit.trainingId = trainingId
             bit.instant = instant
 
-            exercise!!.lastTrained = Calendar.getInstance()
+            exercise.lastTrained = Calendar.getInstance()
 
             // SAVE TO DB:
             bit.id = db.bitDao().insert(bit.toEntity()).toInt()
-            db.exerciseDao().update(exercise!!.toEntity())
+            db.exerciseDao().update(exercise.toEntity())
             prepareExerciseListToRefreshWhenFinish()
 
             runOnUiThread {
@@ -474,8 +468,8 @@ class RegistryActivity : DBAppCompatActivity() {
                         idx++
                     } else {
                         log.add(idx, bit)
-                        recyclerViewAdapter!!.notifyItemInserted(idx)
-                        recyclerViewLayout!!.scrollToPosition(0)
+                        recyclerViewAdapter.notifyItemInserted(idx)
+                        recyclerViewLayout.scrollToPosition(0)
                         added = true
                         break
                     }
@@ -483,17 +477,17 @@ class RegistryActivity : DBAppCompatActivity() {
 
                 if (!added) {
                     log.add(bit)
-                    recyclerViewAdapter!!.notifyItemInserted(log.size - 1)
+                    recyclerViewAdapter.notifyItemInserted(log.size - 1)
                 }
 
                 if (!notesLocked) {
-                    notes!!.setText(R.string.symbol_empty)
+                    notes.setText(R.string.symbol_empty)
                 }
 
                 if (hiddenInstantSetButton) {
                     hiddenInstantSetButton = false
-                    val anim = ResizeWidthAnimation(confirmInstantButton!!, 90, 250)
-                    confirmInstantButton!!.startAnimation(anim)
+                    val anim = ResizeWidthAnimation(confirmInstantButton, 90, 250)
+                    confirmInstantButton.startAnimation(anim)
                 }
                 startTimer()
             }
@@ -520,17 +514,17 @@ class RegistryActivity : DBAppCompatActivity() {
             }
 
             runOnUiThread {
-                recyclerViewAdapter!!.notifyItemRemoved(index)
+                recyclerViewAdapter.notifyItemRemoved(index)
                 if (index == 0) {
                     if (log.isNotEmpty()) {
                         if (log[0].trainingId != trainingId) {
-                            recyclerViewAdapter!!.notifyItemChanged(0)
+                            recyclerViewAdapter.notifyItemChanged(0)
                         } else {
-                            recyclerViewAdapter!!.notifyTrainingIdChanged(trainingId, 0)
+                            recyclerViewAdapter.notifyTrainingIdChanged(trainingId, 0)
                         }
                     }
                 } else {
-                    recyclerViewAdapter!!.notifyTrainingIdChanged(trainingId, index)
+                    recyclerViewAdapter.notifyTrainingIdChanged(trainingId, index)
                 }
             }
         }
@@ -542,9 +536,9 @@ class RegistryActivity : DBAppCompatActivity() {
             val index = log.indexOf(bit)
             runOnUiThread {
                 if (updateTrainingId)
-                    recyclerViewAdapter!!.notifyItemChanged(index)
+                    recyclerViewAdapter.notifyItemChanged(index)
                 else
-                    recyclerViewAdapter!!.notifyTrainingIdChanged(bit.trainingId, index)
+                    recyclerViewAdapter.notifyTrainingIdChanged(bit.trainingId, index)
             }
         }
     }
@@ -567,7 +561,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
                     val editDialog = EditBitLogDialogFragment(
                         R.string.title_registry,
-                        exercise!!,
+                        exercise,
                         enableInstantSwitch,
                         internationalSystem,
                         bit,
@@ -587,13 +581,13 @@ class RegistryActivity : DBAppCompatActivity() {
             sendRefreshList = true
             val data = Intent()
             data.putExtra("refresh", true)
-            data.putExtra("exerciseId", exercise!!.id)
+            data.putExtra("exerciseId", exercise.id)
             setResult(RESULT_OK, data)
         }
     }
 
     private fun startTimer() {
-        val seconds = if (exercise!!.restTime < 0) defaultTimer else exercise!!.restTime
+        val seconds = if (exercise.restTime < 0) defaultTimer else exercise.restTime
         val endDate = Calendar.getInstance()
         endDate.add(Calendar.SECOND, seconds)
         startTimer(endDate, seconds)
@@ -601,7 +595,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
     private fun startTimer(endDate: Calendar, seconds: Int) {
         if (seconds > 0) {
-            notificationService!!.showNotification(endDate, seconds, exercise!!.name)
+            notificationService.showNotification(endDate, seconds, exercise.name)
             startTimer(endDate)
         }
     }
@@ -609,26 +603,25 @@ class RegistryActivity : DBAppCompatActivity() {
     private fun startTimer(endDate: Calendar) {
         activeCountdown = endDate
         if (countdownThread == null) {
-            countdownThread = CountdownThread()
-            countdownThread!!.start()
+            countdownThread = CountdownThread().also(Thread::start)
 
             val color = resources.getColor(R.color.orange_light, theme)
-            timer!!.setTextColor(color)
+            timer.setTextColor(color)
             findViewById<TextView>(R.id.secondsText).setTextColor(color)
         }
     }
 
     private fun stopTimer() {
         activeCountdown = null
-        notificationService!!.hideNotification()
+        notificationService.hideNotification()
         countdownThread?.interrupt()
     }
 
     private inner class CountdownThread :
         SecondTickThread(Supplier {
-            val seconds = DateUtils.secondsDiff(Calendar.getInstance(), activeCountdown!!)
+            val seconds = activeCountdown!!.diffSeconds()
             if (seconds > 0) {
-                runOnUiThread { timer!!.text = seconds.toString() }
+                runOnUiThread { timer.text = seconds.toString() }
                 true
             } else false
         }) {
@@ -637,16 +630,15 @@ class RegistryActivity : DBAppCompatActivity() {
             onFinishListener = Runnable {
                 countdownThread = null
                 runOnUiThread {
-                    if (exercise!!.restTime < 0)
-                        timer!!.text = defaultTimer.toString()
+                    if (exercise.restTime < 0)
+                        timer.text = defaultTimer.toString()
                     else
-                        timer!!.text = exercise!!.restTime.toString()
+                        timer.text = exercise.restTime.toString()
 
-                    timer!!.setTextColor(defaultColor)
-                    findViewById<TextView>(R.id.secondsText).setTextColor(defaultColor)
+                    timer.setTextColor(defaultTimeColor)
+                    findViewById<TextView>(R.id.secondsText).setTextColor(defaultTimeColor)
                 }
             }
         }
     }
-
 }

@@ -2,6 +2,7 @@ package org.scp.gymlog.util
 
 import android.util.DisplayMetrics
 import android.util.TypedValue
+import android.widget.TextView
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.Format
@@ -18,12 +19,12 @@ object FormatUtils {
         FORMAT = decimalFormat
     }
 
-    fun toBigDecimal(string: String): BigDecimal {
-        return if (string.isEmpty())
+    fun String.safeBigDecimal(): BigDecimal {
+        return if (this.isBlank())
             BigDecimal.ZERO
         else {
             try {
-                FORMAT.parseObject(string) as BigDecimal
+                FORMAT.parseObject(this) as BigDecimal
             } catch (e: NumberFormatException) {
                 e.printStackTrace()
                 BigDecimal.ZERO
@@ -34,18 +35,26 @@ object FormatUtils {
         }
     }
 
-    fun toInt(string: String): Int {
+    fun String.safeInt(): Int {
         return try {
-            string.toInt()
+            this.toInt()
         } catch (e: NumberFormatException) {
             e.printStackTrace()
             0
         }
     }
 
-    fun toString(bigDecimal: BigDecimal): String {
-        return FORMAT.format(bigDecimal)
+    fun BigDecimal.toLocaleString(): String {
+        return FORMAT.format(this);
     }
+
+    var TextView.bigDecimal: BigDecimal
+        get() = this.text.toString().safeBigDecimal()
+        set(value) { text = value.toLocaleString() }
+
+    var TextView.integer: Int
+        get() = this.text.toString().safeInt()
+        set(value) { text = value.toString() }
 
     fun toDp(displayMetrics: DisplayMetrics, value: Int): Int {
         return toDpFloat(displayMetrics, value).toInt()
@@ -59,8 +68,7 @@ object FormatUtils {
         )
     }
 
-    @SafeVarargs
-    fun <T> isAnyOf(needle: T, vararg haystack: T): Boolean {
-        return listOf(*haystack).contains(needle)
+    fun <T> T.isAnyOf(vararg haystack: T): Boolean {
+        return listOf(*haystack).contains(this)
     }
 }

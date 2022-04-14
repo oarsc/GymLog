@@ -12,7 +12,7 @@ class WeightFormatter {
     var scale = 0
     var exactScale = false
 
-    protected constructor(exactScale: Boolean) {
+    constructor(exactScale: Boolean) {
         this.exactScale = exactScale
     }
 

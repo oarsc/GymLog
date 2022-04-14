@@ -3,7 +3,6 @@ package org.scp.gymlog.ui.common.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.annotation.StringRes

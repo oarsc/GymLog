@@ -24,15 +24,15 @@ import org.scp.gymlog.ui.training.rows.TrainingBitRow
 import org.scp.gymlog.ui.training.rows.TrainingHeaderRow
 import org.scp.gymlog.ui.training.rows.TrainingVariationRow
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.DateUtils
+import org.scp.gymlog.util.DateUtils.getDateString
 import java.util.function.Consumer
 
 class TrainingActivity : DBAppCompatActivity() {
 
     private val exerciseRows: MutableList<ExerciseRows> = ArrayList()
-    private var trainingData: TrainingData? = null
-    private var adapter: TrainingMainRecyclerViewAdapter? = null
-    private var linearLayout: LinearLayoutManager? = null
+    private lateinit var trainingData: TrainingData
+    private lateinit var adapter: TrainingMainRecyclerViewAdapter
+    private lateinit var linearLayout: LinearLayoutManager
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
         val trainingId = intent.extras!!.getInt("trainingId")
@@ -66,6 +66,61 @@ class TrainingActivity : DBAppCompatActivity() {
         return CONTINUE
     }
 
+    override fun onDelayedCreate(savedInstanceState: Bundle?) {
+        setContentView(R.layout.activity_training)
+        setTitle(R.string.title_training)
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val internationalSystem = preferences.getBoolean("internationalSystem", true)
+
+        setHeaderInfo()
+
+        val focusBit = intent.extras!!.getInt("focusBit", -1)
+        val focusElement: Int = if (focusBit >= 0) {
+            var index = 0
+            for (exerciseRow in exerciseRows) {
+                if (exerciseRow.filterIsInstance<TrainingBitRow>()
+                        .map { row -> row.bit.id }
+                        .any { id -> id == focusBit })
+                    break
+                else
+                    index++
+            }
+            if (index < exerciseRows.size) index
+            else -1
+        } else -1
+
+        val historyRecyclerView: RecyclerView = findViewById(R.id.historyList)
+        historyRecyclerView.layoutManager = LinearLayoutManager(this).also { linearLayout = it }
+        historyRecyclerView.adapter = TrainingMainRecyclerViewAdapter(exerciseRows,
+            internationalSystem, focusElement
+        ).also { adapter = it }
+
+        if (focusElement >= 0) {
+            linearLayout.scrollToPositionWithOffset(focusElement, 60)
+        }
+
+        adapter.onLongClickListener = Consumer { exerciseRow ->
+            val dialog = EditExercisesLastsDialogFragment(R.string.title_exercises,
+                exerciseRow.exercise, internationalSystem,
+                {
+                    val data = Intent()
+                    data.putExtra("refresh", true)
+                    setResult(RESULT_OK, data)
+                    val index = exerciseRows.indexOf(exerciseRow)
+                    runOnUiThread { adapter.notifyItemChanged(index) }
+                })
+            dialog.show(supportFragmentManager, null)
+        }
+
+        adapter.onBitChangedListener = Consumer {
+            val data = Intent()
+            data.putExtra("refresh", true)
+            setResult(RESULT_OK, data)
+        }
+    }
+
+
     private fun getLastVar(exerciseRow: ExerciseRows): Int {
         if (exerciseRow.isEmpty()) return -1
 
@@ -84,60 +139,6 @@ class TrainingActivity : DBAppCompatActivity() {
         return 0
     }
 
-    override fun onDelayedCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_training)
-        setTitle(R.string.title_training)
-
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val internationalSystem = preferences.getBoolean("internationalSystem", true)
-
-        setHeaderInfo()
-
-        val focusBit = intent.extras!!.getInt("focusBit", -1)
-        val focusElement: Int = if (focusBit >= 0) {
-                var index = 0
-                for (exerciseRow in exerciseRows) {
-                    if (exerciseRow.filterIsInstance<TrainingBitRow>()
-                            .map { row -> row.bit.id }
-                            .any { id -> id == focusBit })
-                        break
-                    else
-                        index++
-                }
-                if (index < exerciseRows.size) index
-                else -1
-            } else -1
-
-        val historyRecyclerView: RecyclerView = findViewById(R.id.historyList)
-        historyRecyclerView.layoutManager = LinearLayoutManager(this).also { linearLayout = it }
-        historyRecyclerView.adapter = TrainingMainRecyclerViewAdapter(exerciseRows,
-            internationalSystem, focusElement
-        ).also { adapter = it }
-
-        if (focusElement >= 0) {
-            linearLayout!!.scrollToPositionWithOffset(focusElement, 60)
-        }
-
-        adapter!!.onLongClickListener = Consumer { exerciseRow ->
-            val dialog = EditExercisesLastsDialogFragment(R.string.title_exercises,
-                exerciseRow.exercise, internationalSystem,
-                {
-                    val data = Intent()
-                    data.putExtra("refresh", true)
-                    setResult(RESULT_OK, data)
-                    val index = exerciseRows.indexOf(exerciseRow)
-                    runOnUiThread { adapter!!.notifyItemChanged(index) }
-                })
-            dialog.show(supportFragmentManager, null)
-        }
-
-        adapter!!.onBitChangedListener = Consumer {
-            val data = Intent()
-            data.putExtra("refresh", true)
-            setResult(RESULT_OK, data)
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.expand_collapse_menu, menu)
@@ -146,10 +147,10 @@ class TrainingActivity : DBAppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.expandButton) {
-            adapter!!.expandAll()
+            adapter.expandAll()
         } else if (item.itemId == R.id.collapseButton) {
-            adapter!!.collapseAll()
-            linearLayout!!.scrollToPosition(0)
+            adapter.collapseAll()
+            linearLayout.scrollToPosition(0)
         }
         return false
     }
@@ -163,16 +164,16 @@ class TrainingActivity : DBAppCompatActivity() {
 
         fragment.isClickable = false
 
-        title.text = (resources.getString(R.string.text_training) + " #${trainingData!!.id} " + resources.getString(
+        title.text = (resources.getString(R.string.text_training) + " #${trainingData.id} " + resources.getString(
                 R.string.text_on_smallcaps
             )
-                    + " " + DateUtils.getDate(trainingData!!.startDate))
+                    + " " + trainingData.startDate.getDateString())
 
-        subtitle.text = trainingData!!.mostUsedMuscles
+        subtitle.text = trainingData.mostUsedMuscles
             .map(Muscle::text)
             .map { textRes -> resources.getString(textRes) }
             .joinToString { it }
 
-        indicator.setBackgroundResource(trainingData!!.mostUsedMuscles[0].color)
+        indicator.setBackgroundResource(trainingData.mostUsedMuscles[0].color)
     }
 }

@@ -22,9 +22,9 @@ class EditVariationsDialogFragment(
     private val confirm: Consumer<List<Variation>>
 ) : DialogFragment() {
 
-    private var input: EditText? = null
+    private lateinit var input: EditText
     private var selectedIndex = 0
-    private var adapter: EditVariationsRecyclerViewAdapter? = null
+    private lateinit var adapter: EditVariationsRecyclerViewAdapter
 
     private val variations: MutableList<Variation> = variations
         .map { variation -> variation.clone() }
@@ -35,34 +35,34 @@ class EditVariationsDialogFragment(
         val view = inflater.inflate(R.layout.dialog_edit_variations, null)
 
         input = view.findViewById(R.id.dialogText)
-        input!!.isEnabled = false
-        input!!.onFocusChangeListener = OnFocusChangeListener { _,_ ->
-            input!!.post {
+        input.isEnabled = false
+        input.onFocusChangeListener = OnFocusChangeListener { _,_ ->
+            input.post {
                 val inputMethodManager =
                     requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT)
             }
         }
 
-        input!!.addTextChangedListener(object : TextWatcher {
+        input.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                adapter!!.updateText(selectedIndex, s.toString())
+                adapter.updateText(selectedIndex, s.toString())
             }
         })
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.variationsList)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = EditVariationsRecyclerViewAdapter(variations) { index, name ->
-            selectVariation(index, name)
-        }.also{adapter = it}
+        adapter = EditVariationsRecyclerViewAdapter(variations, this::selectVariation)
+        view.findViewById<RecyclerView>(R.id.variationsList).apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = this@EditVariationsDialogFragment.adapter
+        }
 
         val addButton: ImageView = view.findViewById(R.id.addButton)
         addButton.setOnClickListener {
             val variation = Variation("New " + variations.size)
             variations.add(variation)
-            adapter!!.notifyItemInserted(variations.size - 1)
+            adapter.notifyItemInserted(variations.size - 1)
         }
 
         val builder = AlertDialog.Builder(activity)
@@ -76,9 +76,9 @@ class EditVariationsDialogFragment(
 
     private fun selectVariation(index: Int, name: String) {
         selectedIndex = index
-        input!!.isEnabled = true
-        input!!.setText(name)
-        input!!.setSelection(name.length)
-        input!!.requestFocus()
+        input.isEnabled = true
+        input.setText(name)
+        input.setSelection(name.length)
+        input.requestFocus()
     }
 }

@@ -16,8 +16,8 @@ import androidx.annotation.StringRes
 import androidx.preference.PreferenceManager
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Exercise
-import org.scp.gymlog.util.DateUtils
-import org.scp.gymlog.util.FormatUtils
+import org.scp.gymlog.util.DateUtils.diffSeconds
+import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.SecondTickThread
 import java.util.*
 import java.util.function.BiConsumer
@@ -37,9 +37,9 @@ class EditTimerDialogFragment(
     var onStopListener: Runnable? = null
     var onPlayListener: BiConsumer<Calendar, Int>? = null
     private var countdownThread: Thread? = null
-    private var currentTimer: TextView? = null
-    private var secondLabel: TextView? = null
-    private var stopButton: ImageView? = null
+    private lateinit var currentTimer: TextView
+    private lateinit var secondLabel: TextView
+    private lateinit var stopButton: ImageView
     private val defaultValue: Int
     private var isDefaultValue = false
 
@@ -61,16 +61,16 @@ class EditTimerDialogFragment(
         val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.dialog_edit_timer, null)
 
-        stopButton = view.findViewById(R.id.stopButton)
-        secondLabel = view.findViewById(R.id.secondLabel)
         currentTimer = view.findViewById(R.id.currentTimer)
+        secondLabel = view.findViewById(R.id.secondLabel)
+        stopButton = view.findViewById(R.id.stopButton)
 
         if (endingCountdown == null) {
             uiStopCounter()
 
         } else {
             countdownThread = CountdownThread(activity as Activity)
-            countdownThread!!.start()
+                .also(Thread::start)
         }
 
         val editNotes: EditText = view.findViewById(R.id.editTimer)
@@ -93,16 +93,16 @@ class EditTimerDialogFragment(
         }
 
         view.findViewById<View>(R.id.playButton).setOnClickListener {
-            val seconds = FormatUtils.toInt(editNotes.text.toString())
+            val seconds = editNotes.integer
             val endingCountdown = Calendar.getInstance()
 
             endingCountdown.add(Calendar.SECOND, seconds)
-            stopButton!!.visibility = View.VISIBLE
+            stopButton.visibility = View.VISIBLE
 
             this.endingCountdown = endingCountdown
             if (countdownThread == null) {
                 countdownThread = CountdownThread(activity as Activity)
-                countdownThread!!.start()
+                    .also(Thread::start)
             }
 
             onPlayListener?.accept(endingCountdown, seconds)
@@ -112,7 +112,7 @@ class EditTimerDialogFragment(
         builder.setMessage(title)
             .setView(view)
             .setPositiveButton(R.string.button_confirm) { _,_ ->
-                val seconds = FormatUtils.toInt(editNotes.text.toString())
+                val seconds = editNotes.integer
                 if (seconds == defaultValue && isDefaultValue) {
                     confirm.accept(-1)
                 } else {
@@ -137,18 +137,17 @@ class EditTimerDialogFragment(
     }
 
     private fun uiStopCounter() {
-        stopButton?.visibility = View.GONE
-        secondLabel?.visibility = View.GONE
-        currentTimer?.text = ctx.resources.getString(R.string.text_none)
-            .lowercase(Locale.getDefault())
+        stopButton.visibility = View.GONE
+        secondLabel.visibility = View.GONE
+        currentTimer.text = ctx.resources.getString(R.string.text_none).lowercase(Locale.getDefault())
     }
 
     private inner class CountdownThread(activity: Activity) : SecondTickThread(Supplier {
-        val seconds = DateUtils.secondsDiff(Calendar.getInstance(), endingCountdown!!)
+        val seconds = endingCountdown!!.diffSeconds()
         if (seconds > 0) {
             activity.runOnUiThread {
-                currentTimer!!.text = seconds.toString()
-                secondLabel!!.visibility = View.VISIBLE
+                currentTimer.integer = seconds
+                secondLabel.visibility = View.VISIBLE
             }
             true
         } else false

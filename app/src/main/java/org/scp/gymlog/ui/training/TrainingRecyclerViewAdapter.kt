@@ -12,10 +12,11 @@ import org.scp.gymlog.model.Bit
 import org.scp.gymlog.ui.training.rows.ITrainingRow
 import org.scp.gymlog.ui.training.rows.TrainingBitRow
 import org.scp.gymlog.ui.training.rows.TrainingVariationRow
-import org.scp.gymlog.util.DateUtils
-import org.scp.gymlog.util.FormatUtils.toString
+import org.scp.gymlog.util.DateUtils.getTimeString
+import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.WeightUtils.getWeightFromTotal
 import java.util.function.BiConsumer
+
 
 class TrainingRecyclerViewAdapter(
     private val rows: ExerciseRows,
@@ -79,15 +80,15 @@ class TrainingRecyclerViewAdapter(
                     internationalSystem
                 )
 
-                holder.mWeight!!.text = toString(weight)
-                holder.mReps!!.text = java.lang.String.valueOf(bit.reps)
+                holder.mWeight!!.bigDecimal = weight
+                holder.mReps!!.text = bit.reps.toString()
                 holder.mNote!!.text = bit.note
 
                 if (bit.instant) {
                     holder.mTime!!.setText(R.string.symbol_empty)
                     setAlpha(holder, 0.4f)
                 } else {
-                    holder.mTime!!.text = DateUtils.getTime(bit.timestamp)
+                    holder.mTime!!.text = bit.timestamp.getTimeString()
                     setAlpha(holder, 1f)
                 }
             }

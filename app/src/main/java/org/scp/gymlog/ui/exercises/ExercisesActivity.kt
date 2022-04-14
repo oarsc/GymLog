@@ -23,15 +23,15 @@ import org.scp.gymlog.ui.registry.RegistryActivity
 import org.scp.gymlog.ui.top.TopActivity
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.LambdaUtils.valueEquals
 import java.util.function.Consumer
 
 class ExercisesActivity : DBAppCompatActivity() {
+
     private var muscleId = 0
-    private var exercisesId: MutableList<Int>? = null
+    private lateinit var exercisesId: MutableList<Int>
     private var order: Order = Order.ALPHABETICALLY
-    private var recyclerAdapter: ExercisesRecyclerViewAdapter? = null
-    private var exercisesRecyclerView: RecyclerView? = null
+    private lateinit var recyclerAdapter: ExercisesRecyclerViewAdapter
+    private lateinit var exercisesRecyclerView: RecyclerView
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
         muscleId = intent.extras!!.getInt("muscleId")
@@ -50,17 +50,20 @@ class ExercisesActivity : DBAppCompatActivity() {
             .getOrElse(0) { throw InternalException("Muscle id not found") }
 
         setTitle(muscle.text)
-        exercisesRecyclerView = findViewById(R.id.exercisesList)
-        exercisesRecyclerView!!.layoutManager = LinearLayoutManager(this)
-        exercisesRecyclerView!!.adapter = ExercisesRecyclerViewAdapter(exercisesId!!, order)
-            { exercise, action -> onExerciseItemMenuSelected(exercise, action) }
-            .also { recyclerAdapter = it }
 
-        recyclerAdapter!!.onClickListener = (Consumer { exercise ->
+        recyclerAdapter = ExercisesRecyclerViewAdapter(exercisesId, order) { exercise, action ->
+            onExerciseItemMenuSelected(exercise, action) }
+
+        recyclerAdapter.onClickListener = (Consumer { exercise ->
             val intent = Intent(this, RegistryActivity::class.java)
             intent.putExtra("exerciseId", exercise.id)
             startActivityForResult(intent, IntentReference.REGISTRY)
         })
+
+        exercisesRecyclerView = findViewById<RecyclerView>(R.id.exercisesList).apply {
+            layoutManager = LinearLayoutManager(this@ExercisesActivity)
+            adapter = recyclerAdapter
+        }
 
         findViewById<TrainingFloatingActionButton>(R.id.fabTraining).updateFloatingActionButton()
     }
@@ -72,7 +75,6 @@ class ExercisesActivity : DBAppCompatActivity() {
         when (order) {
             Order.ALPHABETICALLY -> menu.findItem(R.id.sortAlphabetically).isChecked = true
             Order.LAST_USED -> menu.findItem(R.id.sortLastUsed).isChecked = true
-            else -> {}
         }
         return true
     }
@@ -85,14 +87,14 @@ class ExercisesActivity : DBAppCompatActivity() {
                 startActivityForResult(intent, IntentReference.CREATE_EXERCISE_FROM_MUSCLE)
             }
             R.id.sortAlphabetically -> {
-                order = Order.ALPHABETICALLY.also { recyclerAdapter!!.switchOrder(it) }
+                order = Order.ALPHABETICALLY.also { recyclerAdapter.switchOrder(it) }
                 val editor = PreferenceManager.getDefaultSharedPreferences(this).edit()
                 editor.putString("exercisesSortLastUsed", order.code)
                 editor.apply()
                 item.isChecked = true
             }
             R.id.sortLastUsed -> {
-                order = Order.LAST_USED.also { recyclerAdapter!!.switchOrder(it) }
+                order = Order.LAST_USED.also { recyclerAdapter.switchOrder(it) }
                 val editor = PreferenceManager.getDefaultSharedPreferences(this).edit()
                 editor.putString("exercisesSortLastUsed", order.code)
                 editor.apply()
@@ -122,11 +124,11 @@ class ExercisesActivity : DBAppCompatActivity() {
                     if (confirmed) {
                         DBThread.run(this) { db ->
                             if (db.exerciseDao().delete(exercise.toEntity()) == 1) {
-                                runOnUiThread { recyclerAdapter!!.removeExercise(exercise) }
+                                runOnUiThread { recyclerAdapter.removeExercise(exercise) }
                                 db.trainingDao().deleteEmptyTraining()
 
-                                exercisesId!!.remove(exercise.id)
-                                Data.exercises.removeIf(valueEquals(exercise))
+                                exercisesId.remove(exercise.id)
+                                Data.exercises.removeIf { ex -> ex === exercise }
                             }
                         }
                     }
@@ -146,10 +148,10 @@ class ExercisesActivity : DBAppCompatActivity() {
                     .any { id -> id == muscleId }
 
                 if (hasMuscle) {
-                    recyclerAdapter!!.updateNotify(exercise)
+                    recyclerAdapter.updateNotify(exercise)
                 } else {
-                    recyclerAdapter!!.removeExercise(exercise)
-                    exercisesId!!.remove(exercise.id)
+                    recyclerAdapter.removeExercise(exercise)
+                    exercisesId.remove(exercise.id)
                 }
             }
             IntentReference.CREATE_EXERCISE_FROM_MUSCLE -> {
@@ -160,8 +162,8 @@ class ExercisesActivity : DBAppCompatActivity() {
                     .any { id -> id == muscleId }
 
                 if (hasMuscle) {
-                    exercisesId!!.add(exercise.id)
-                    recyclerAdapter!!.addExercise(exercise)
+                    exercisesId.add(exercise.id)
+                    recyclerAdapter.addExercise(exercise)
                 }
             }
             IntentReference.REGISTRY -> {
@@ -169,10 +171,10 @@ class ExercisesActivity : DBAppCompatActivity() {
                     if (order == Order.ALPHABETICALLY) {
                         val id = data.getIntExtra("exerciseId", -1)
                         val ex = Data.getExercise(id)
-                        recyclerAdapter!!.updateNotify(ex)
+                        recyclerAdapter.updateNotify(ex)
                     } else {
-                        exercisesRecyclerView!!.scrollToPosition(0)
-                        recyclerAdapter!!.switchOrder(order)
+                        exercisesRecyclerView.scrollToPosition(0)
+                        recyclerAdapter.switchOrder(order)
                     }
                 }
             }

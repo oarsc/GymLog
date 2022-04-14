@@ -1,7 +1,8 @@
 package org.scp.gymlog.model
 
 import org.scp.gymlog.util.WeightFormatter
-import org.scp.gymlog.util.WeightUtils
+import org.scp.gymlog.util.WeightUtils.toKilograms
+import org.scp.gymlog.util.WeightUtils.toPounds
 import java.math.BigDecimal
 import java.util.function.Function
 
@@ -22,19 +23,19 @@ class Weight(val value: BigDecimal, val internationalSystem: Boolean) : Comparab
     }
 
     fun toKg(): BigDecimal {
-        return if (internationalSystem) value else WeightUtils.toKilograms(value)
+        return if (internationalSystem) value else value.toKilograms()
     }
 
     fun toLbs(): BigDecimal {
-        return if (internationalSystem) WeightUtils.toPounds(value) else value
+        return if (internationalSystem) value.toPounds() else value
     }
 
     private fun toKg(formatter: WeightFormatter): BigDecimal {
-        return if (internationalSystem) value else WeightUtils.toKilograms(value, formatter)
+        return if (internationalSystem) value else value.toKilograms(formatter)
     }
 
     private fun toLbs(formatter: WeightFormatter): BigDecimal {
-        return if (internationalSystem) WeightUtils.toPounds(value, formatter) else value
+        return if (internationalSystem) value.toPounds(formatter) else value
     }
 
     fun add(weight: Weight): Weight {

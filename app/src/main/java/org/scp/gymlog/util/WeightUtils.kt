@@ -23,63 +23,52 @@ object WeightUtils {
         return if (internationalSystem) R.string.text_kg else R.string.text_lb
     }
 
-    fun toKilograms(weight: Weight): BigDecimal {
-        return weight.toKg()
-    }
 
-    @JvmOverloads
-    fun toKilograms(
-        pounds: BigDecimal,
+    fun BigDecimal.toKilograms(
         formatter: WeightFormatter = WeightFormatter.DEFAULT_WEIGHT_FORMATTER
-    ): BigDecimal {
+    ) :BigDecimal {
         if (formatter.exactScale)
-            return pounds.divide(
+            return this.divide(
                 Constants.LBS_RATIO,
                 Constants.LBS_RATIO.scale(),
                 RoundingMode.HALF_UP
             )
 
         if (formatter.forceScale)
-            return pounds.divide(
+            return this.divide(
                 Constants.LBS_RATIO,
                 formatter.scale,
                 RoundingMode.HALF_UP
             )
 
         return if (exactConversion)
-            pounds.divide(
+            this.divide(
                 Constants.LBS_RATIO,
                 DEFAULT_SCALE,
                 RoundingMode.HALF_UP)
         else
-            pounds.divide(
-                    Constants.LBS_RATIO,
-                    Constants.LBS_RATIO.scale(),
-                    RoundingMode.HALF_UP)
+            this.divide(
+                Constants.LBS_RATIO,
+                Constants.LBS_RATIO.scale(),
+                RoundingMode.HALF_UP)
                 .divide(conversionStep, conversionStep.scale(), RoundingMode.HALF_UP)
                 .multiply(conversionStep)
     }
 
-    fun toPounds(weight: Weight): BigDecimal {
-        return weight.toLbs()
-    }
-
-    @JvmOverloads
-    fun toPounds(
-        kilograms: BigDecimal,
+    fun BigDecimal.toPounds(
         formatter: WeightFormatter = WeightFormatter.DEFAULT_WEIGHT_FORMATTER
     ): BigDecimal {
         if (formatter.exactScale)
-            return kilograms.multiply(Constants.LBS_RATIO)
+            return this.multiply(Constants.LBS_RATIO)
 
         if (formatter.forceScale)
-            return kilograms.multiply(Constants.LBS_RATIO)
+            return this.multiply(Constants.LBS_RATIO)
                 .setScale(formatter.scale, RoundingMode.HALF_UP)
 
         return if (exactConversion)
-            kilograms.multiply(Constants.LBS_RATIO)
+            this.multiply(Constants.LBS_RATIO)
                 .setScale(DEFAULT_SCALE, RoundingMode.HALF_UP)
-        else kilograms.multiply(Constants.LBS_RATIO)
+        else this.multiply(Constants.LBS_RATIO)
             .divide(conversionStep, conversionStep.scale(), RoundingMode.HALF_UP)
             .setScale(0, RoundingMode.HALF_UP)
             .multiply(conversionStep)
@@ -135,10 +124,12 @@ object WeightUtils {
                         weight.internationalSystem,
                         WeightFormatter.EXACT_FORMATTER
                     )
-                    return weight.op { v -> v.subtract(barWeight)
+                    weight.op { v -> v.subtract(barWeight)
                         .divide(Constants.TWO, 2, RoundingMode.HALF_UP)
                     }
-                } else weight.op { v -> v.divide(Constants.TWO,2, RoundingMode.HALF_UP) }
+                } else {
+                    weight.op { v -> v.divide(Constants.TWO,2, RoundingMode.HALF_UP) }
+                }
             }
             WeightSpecification.NO_BAR_WEIGHT -> {
                 if (bar != null) {
@@ -146,8 +137,10 @@ object WeightUtils {
                         weight.internationalSystem,
                         WeightFormatter.EXACT_FORMATTER
                     )
-                    return weight.op { v -> v.subtract(barWeight) }
-                } else weight
+                    weight.op { v -> v.subtract(barWeight) }
+                } else {
+                    weight
+                }
             }
             else -> weight
         }

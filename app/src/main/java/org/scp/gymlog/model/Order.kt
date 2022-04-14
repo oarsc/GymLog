@@ -1,7 +1,5 @@
 package org.scp.gymlog.model
 
-import java.util.Arrays
-
 enum class Order(val code: String) {
     ALPHABETICALLY("alphabetically"),
     LAST_USED("last_used");

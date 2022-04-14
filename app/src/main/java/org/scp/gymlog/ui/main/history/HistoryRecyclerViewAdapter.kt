@@ -12,18 +12,18 @@ import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListElementFragmentTrainingBinding
 import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.ui.training.TrainingActivity
-import org.scp.gymlog.util.DateUtils
+import org.scp.gymlog.util.DateUtils.getTimeString
 
 class HistoryRecyclerViewAdapter : RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder>() {
 
 	private val trainingDataList: MutableList<TrainingData> = ArrayList()
-	private var context: Context? = null
+	private lateinit var ctx: Context
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-		context = parent.context
+		ctx = parent.context
 		return ViewHolder(
 			ListElementFragmentTrainingBinding.inflate(
-				LayoutInflater.from(context), parent, false
+				LayoutInflater.from(ctx), parent, false
 			)
 		)
 	}
@@ -33,13 +33,13 @@ class HistoryRecyclerViewAdapter : RecyclerView.Adapter<HistoryRecyclerViewAdapt
 		val data = trainingDataList[position]
 		holder.id = data.id
 		holder.mTitle.text =
-			(context!!.resources.getString(R.string.text_training) + " #${data.id}: " + context!!.resources.getString(
+			(ctx.resources.getString(R.string.text_training) + " #${data.id}: " + ctx.resources.getString(
 				R.string.text_started_at
-			) + " " + DateUtils.getTime(data.startDate))
+			) + " " + data.startDate.getTimeString())
 
 		holder.mSubtitle.text = data.mostUsedMuscles
 			.map(Muscle::text)
-			.map { resText -> context!!.resources.getString(resText) }
+			.map { resText -> ctx.resources.getString(resText) }
 			.joinToString { it }
 
 		holder.mIndicator.setBackgroundResource(data.mostUsedMuscles[0].color)
@@ -86,9 +86,9 @@ class HistoryRecyclerViewAdapter : RecyclerView.Adapter<HistoryRecyclerViewAdapt
 
 		init {
 			itemView.setOnClickListener {
-				val intent = Intent(context, TrainingActivity::class.java)
+				val intent = Intent(ctx, TrainingActivity::class.java)
 				intent.putExtra("trainingId", id)
-				context!!.startActivity(intent)
+				ctx.startActivity(intent)
 			}
 		}
 

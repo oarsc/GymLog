@@ -24,7 +24,6 @@ import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment
 import org.scp.gymlog.ui.common.dialogs.EditVariationsDialogFragment
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.LambdaUtils.indexForEach
 import java.io.IOException
 import java.util.regex.Pattern
 
@@ -37,19 +36,18 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 	private val muscles: MutableList<Muscle> = ArrayList()
 	private val musclesSecondary: MutableList<Muscle> = ArrayList()
 	private val variations: MutableList<Variation> = ArrayList()
-	private var iconOption: FormElement? = null
-	private var nameOption: FormElement? = null
-	private var musclesOption: FormElement? = null
-	private var musclesSecondaryOption: FormElement? = null
-	private var requiresBarOption: FormElement? = null
-	private var caller: IntentReference? = null
+	private lateinit var iconOption: FormElement
+	private lateinit var nameOption: FormElement
+	private lateinit var musclesOption: FormElement
+	private lateinit var musclesSecondaryOption: FormElement
+	private lateinit var requiresBarOption: FormElement
+	private val caller: IntentReference by lazy { getIntentCall() }
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_create_exercise)
 		setTitle(R.string.title_create_exercise)
 
-		caller = getIntentCall()
 		if (caller === IntentReference.EDIT_EXERCISE) {
 			editingExercise = Data.getExercise(intent.extras!!.getInt("exerciseId"))
 			name = editingExercise!!.name
@@ -138,7 +136,7 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 								entity
 							})
 
-					indexForEach(newVariations) { index, variation ->
+					newVariations.withIndex().forEach { (index, variation) ->
 						variation.id = ids[index].toInt()
 					}
 
@@ -170,7 +168,7 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 
 					// Variations
 					val ids = db.variationDao().insertAll(exercise.toVariationListEntities())
-					indexForEach(variations) { index, variation ->
+					variations.withIndex().forEach { (index, variation) ->
 						variation.id = ids[index].toInt()
 					}
 
@@ -186,7 +184,6 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 	}
 
 	private fun createForm(): List<FormElement> {
-		val resources = resources
 		val form: MutableList<FormElement> = ArrayList()
 
 		iconOption = FormElement(
@@ -194,32 +191,28 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 			value = R.string.symbol_empty,
 			drawable = if (imageName.isBlank()) null else getIconDrawable(imageName),
 			onClickListener = { openImageSelectorActivity() }
-		)
-		form.add(iconOption!!)
+		).also(form::add)
 
 		nameOption = FormElement(
 			title = R.string.form_name,
 			valueStr = name,
 			drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_label_black_24dp, null),
-			onClickListener = { showExerciseNameDialog(nameOption!!) }
-		)
-		form.add(nameOption!!)
+			onClickListener = { showExerciseNameDialog(nameOption) }
+		).also(form::add)
 
 		musclesOption = FormElement(
 			title = R.string.form_primary_muscles,
 			valueStr = getMusclesLabelText(muscles),
 			drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_body_black_24dp, null),
-			onClickListener = { showMuscleSelector(musclesOption!!, true) }
-		)
-		form.add(musclesOption!!)
+			onClickListener = { showMuscleSelector(musclesOption, true) }
+		).also(form::add)
 
 		musclesSecondaryOption = FormElement(
 			title = R.string.form_secondary_muscles,
 			valueStr = getMusclesLabelText(musclesSecondary),
 			drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_body_black_24dp, null),
-			onClickListener = { showMuscleSelector(musclesSecondaryOption!!, false) }
-		)
-		form.add(musclesSecondaryOption!!)
+			onClickListener = { showMuscleSelector(musclesSecondaryOption, false) }
+		).also(form::add)
 
 		requiresBarOption = FormElement(
 			title = R.string.form_requires_bar,
@@ -227,17 +220,15 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 			drawable = ResourcesCompat.getDrawable(resources,
 				if (requiresBar) R.drawable.ic_bar_enable_24dp else R.drawable.ic_bar_disable_24dp,
 				null),
-			onClickListener = { switchEnableBar(requiresBarOption!!) }
-		)
-		form.add(requiresBarOption!!)
+			onClickListener = { switchEnableBar(requiresBarOption) }
+		).also(form::add)
 
-		val variationOption = FormElement(
+		FormElement(
 			title = R.string.form_edit_variations,
 			value = R.string.symbol_empty,
 			drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_dot_24dp, null),
 			onClickListener = { editVariations() }
-		)
-		form.add(variationOption)
+		).also(form::add)
 
 		return form
 	}
@@ -262,8 +253,8 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 					if (name != null && name.isNotBlank()) {
 						imageName = name
 						val d = getIconDrawable(imageName)
-						iconOption!!.drawable = d
-						iconOption!!.update()
+						iconOption.drawable = d
+						iconOption.update()
 					}
 				}
 			}

@@ -16,8 +16,7 @@ import org.scp.gymlog.R
 import org.scp.gymlog.util.WeightUtils
 import java.util.*
 
-class PreferencesFragment : PreferenceFragmentCompat(),
-	OnSharedPreferenceChangeListener {
+class PreferencesFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
 
 	override fun onCreateView(
 		inflater: LayoutInflater,

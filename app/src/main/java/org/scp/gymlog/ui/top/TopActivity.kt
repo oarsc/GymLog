@@ -28,10 +28,10 @@ import java.util.function.Consumer
 
 open class TopActivity : DBAppCompatActivity() {
 
-    private var exercise: Exercise? = null
+    private lateinit var exercise: Exercise
     private val listData: MutableList<ITopRow> = ArrayList()
     private var internationalSystem = false
-    private var adapter: TopRecyclerViewAdapter? = null
+    private lateinit var adapter: TopRecyclerViewAdapter
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
         val exerciseId = intent.extras!!.getInt("exerciseId")
@@ -41,6 +41,25 @@ open class TopActivity : DBAppCompatActivity() {
 
         transformBitsToRows(getBits(db, exerciseId))
         return CONTINUE
+    }
+
+    override fun onDelayedCreate(savedInstanceState: Bundle?) {
+        setContentView(R.layout.activity_tops)
+        setTitle(R.string.title_top_records)
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        internationalSystem = preferences.getBoolean("internationalSystem", true)
+
+        setHeaderInfo()
+
+        val historyRecyclerView: RecyclerView = findViewById(R.id.variantTopList)
+        historyRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        adapter = TopRecyclerViewAdapter(listData, exercise, internationalSystem)
+        historyRecyclerView.adapter = adapter
+
+        adapter.onClickListener = Consumer { topBit -> onElementClicked(topBit) }
+        adapter.onLongClickListener = Consumer { topBit -> onElementLongClicked(topBit) }
     }
 
     protected open fun getBits(db: AppDatabase, exerciseId: Int): MutableList<Bit> {
@@ -62,7 +81,7 @@ open class TopActivity : DBAppCompatActivity() {
                 if (!variations.contains(variationId)) {
                     variations.add(variationId)
                     if (variationId != 0) {
-                        val variation = Data.getVariation(exercise!!, variationId)
+                        val variation = Data.getVariation(exercise, variationId)
                         listData.add(TopVariationRow(variation))
                     }
                     listData.add(TopHeaderRow())
@@ -70,25 +89,6 @@ open class TopActivity : DBAppCompatActivity() {
                 listData.add(TopBitRow(bit))
             }
         listData.add(TopEmptySpaceRow())
-    }
-
-    override fun onDelayedCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_tops)
-        setTitle(R.string.title_top_records)
-
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        internationalSystem = preferences.getBoolean("internationalSystem", true)
-
-        setHeaderInfo()
-
-        val historyRecyclerView: RecyclerView = findViewById(R.id.variantTopList)
-        historyRecyclerView.layoutManager = LinearLayoutManager(this)
-
-        adapter = TopRecyclerViewAdapter(listData, exercise!!, internationalSystem)
-        historyRecyclerView.adapter = adapter
-
-        adapter!!.onClickListener = Consumer { topBit -> onElementClicked(topBit) }
-        adapter!!.onLongClickListener = Consumer { topBit -> onElementLongClicked(topBit) }
     }
 
     private fun onElementClicked(topBit: Bit) {
@@ -109,12 +109,12 @@ open class TopActivity : DBAppCompatActivity() {
     override fun onActivityResult(intentReference: IntentReference, data: Intent) {
         if (data.getBooleanExtra("refresh", false)) {
             if (intentReference === IntentReference.TOP_RECORDS) {
-                adapter!!.notifyItemRangeChanged(0, listData.size)
+                adapter.notifyItemRangeChanged(0, listData.size)
 
             } else if (intentReference === IntentReference.TRAINING) {
                 DBThread.run(this) { db ->
-                    transformBitsToRows(getBits(db, exercise!!.id))
-                    runOnUiThread { adapter!!.notifyDataSetChanged() }
+                    transformBitsToRows(getBits(db, exercise.id))
+                    runOnUiThread { adapter.notifyDataSetChanged() }
                 }
             }
         }
@@ -126,9 +126,9 @@ open class TopActivity : DBAppCompatActivity() {
         val time: TextView = findViewById(R.id.time)
         val title: TextView = findViewById(R.id.content)
 
-        title.text = exercise!!.name
+        title.text = exercise.name
         time.visibility = View.GONE
-        val fileName = "previews/" + exercise!!.image + ".png"
+        val fileName = "previews/" + exercise.image + ".png"
         try {
             val ims = assets.open(fileName)
             val d = Drawable.createFromStream(ims, null)
@@ -139,12 +139,12 @@ open class TopActivity : DBAppCompatActivity() {
 
         fragment.setOnClickListener {
             val dialog = EditExercisesLastsDialogFragment(R.string.title_exercises,
-                exercise!!, internationalSystem,
+                exercise, internationalSystem,
                 {
                     val data = Intent()
                     data.putExtra("refresh", true)
                     setResult(RESULT_OK, data)
-                    runOnUiThread { adapter!!.notifyItemRangeChanged(0, listData.size) }
+                    runOnUiThread { adapter.notifyItemRangeChanged(0, listData.size) }
                 }
             )
 

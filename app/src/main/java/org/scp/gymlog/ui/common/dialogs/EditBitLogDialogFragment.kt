@@ -15,8 +15,12 @@ import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.model.Weight
 import org.scp.gymlog.ui.common.components.NumberModifierView
-import org.scp.gymlog.util.FormatUtils
+import org.scp.gymlog.util.FormatUtils.bigDecimal
+import org.scp.gymlog.util.FormatUtils.integer
+import org.scp.gymlog.util.FormatUtils.safeBigDecimal
 import org.scp.gymlog.util.WeightUtils
+import org.scp.gymlog.util.WeightUtils.toKilograms
+import org.scp.gymlog.util.WeightUtils.toPounds
 import java.math.BigDecimal
 import java.util.function.Consumer
 
@@ -58,12 +62,12 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
         val converted: TextView = view.findViewById(R.id.converted)
 
         val weight = getBigDecimalInitialWeight(internationalSystem)
-        editWeight.setText(FormatUtils.toString(weight))
+        editWeight.bigDecimal = weight
 
         if (initialValue.weight.internationalSystem != internationalSystem) {
             val savedWeight = getBigDecimalInitialWeight(
                 initialValue.weight.internationalSystem)
-            converted.text = FormatUtils.toString(savedWeight)
+            converted.bigDecimal = savedWeight
         } else {
             updateConvertedWeight(weight, converted)
         }
@@ -72,7 +76,7 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val newWeight = FormatUtils.toBigDecimal(s.toString())
+                val newWeight = s.toString().safeBigDecimal()
                 updateConvertedWeight(newWeight, converted)
             }
         })
@@ -81,7 +85,7 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
         modifier.setStep(exercise.step)
 
         val editReps: EditText = view.findViewById(R.id.editReps)
-        editReps.setText(java.lang.String.valueOf(initialValue.reps))
+        editReps.integer = initialValue.reps
 
         val instantSwitch: SwitchMaterial = view.findViewById(R.id.instantSwitch)
         if (enableInstantSwitch) {
@@ -96,13 +100,13 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
             .setView(view)
             .setPositiveButton(R.string.button_confirm) { _,_ ->
                 val totalWeight = WeightUtils.getTotalWeight(
-                    FormatUtils.toBigDecimal(editWeight.text.toString()),
+                    editWeight.bigDecimal,
                     exercise.weightSpec,
                     exercise.bar,
                     internationalSystem)
 
                 initialValue.weight = Weight(totalWeight, internationalSystem)
-                initialValue.reps = FormatUtils.toInt(editReps.text.toString())
+                initialValue.reps = editReps.integer
                 initialValue.note = editNotes.text.toString()
                 initialValue.instant = instantSwitch.isChecked
                 confirm.accept(initialValue)
@@ -114,11 +118,11 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
 
     private fun updateConvertedWeight(value: BigDecimal, label: TextView) {
         val convertedValue = if (internationalSystem)
-                WeightUtils.toPounds(value)
+                value.toPounds()
             else
-                WeightUtils.toKilograms(value)
+                value.toKilograms()
 
-        label.text = FormatUtils.toString(convertedValue)
+        label.bigDecimal = convertedValue
     }
 
     private fun getBigDecimalInitialWeight(internationalSystem: Boolean): BigDecimal {

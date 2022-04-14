@@ -12,8 +12,10 @@ import org.scp.gymlog.databinding.ListElementFragmentLogMoreButtonBinding
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.util.Constants
-import org.scp.gymlog.util.DateUtils
-import org.scp.gymlog.util.FormatUtils
+import org.scp.gymlog.util.DateUtils.diffYearsAndDays
+import org.scp.gymlog.util.DateUtils.getLetterFrom
+import org.scp.gymlog.util.FormatUtils.bigDecimal
+import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.WeightUtils
 import java.util.*
 import java.util.function.BiConsumer
@@ -76,7 +78,7 @@ class LogRecyclerViewAdapter(
             lastTrainingId = lastBit.trainingId
         }
 
-        if (bit!!.trainingId == currentTrainingId) {
+        if (bit.trainingId == currentTrainingId) {
             if (lastTrainingId == currentTrainingId) {
                 holder.mDay!!.setText(R.string.symbol_empty)
                 bit.set = if (bit.instant) lastSet else lastSet + 1
@@ -86,10 +88,10 @@ class LogRecyclerViewAdapter(
             }
 
         } else {
-            val lastDateDiff = DateUtils.yearsAndDaysDiff(lastDate, bit.timestamp)
+            val lastDateDiff = lastDate.diffYearsAndDays(bit.timestamp)
 
-            if (lastDateDiff[0] != 0 || lastDateDiff[1] != 0) {
-                val dayLabel = DateUtils.calculateTimeLetter(bit.timestamp, today)
+            if (lastDateDiff.years != 0 || lastDateDiff.days != 0) {
+                val dayLabel = today.getLetterFrom(bit.timestamp)
                 holder.mDay!!.text = dayLabel
                 bit.set = 1
             } else {
@@ -105,16 +107,16 @@ class LogRecyclerViewAdapter(
             exercise.bar,
             internationalSystem)
 
-        holder.mWeight!!.text = FormatUtils.toString(weight)
+        holder.mWeight!!.bigDecimal = weight
         if (bit.instant) {
             holder.mSet!!.setText(R.string.symbol_empty)
             setAlpha(holder, 0.4f)
         } else {
-            holder.mSet!!.text = java.lang.String.valueOf(bit.set)
+            holder.mSet!!.integer = bit.set
             setAlpha(holder, 1f)
         }
 
-        holder.mReps!!.text = java.lang.String.valueOf(bit.reps)
+        holder.mReps!!.integer = bit.reps
         holder.mNotes!!.text = bit.note
         holder.element!!.setPadding(0, 0, 0, 0)
     }
@@ -152,7 +154,7 @@ class LogRecyclerViewAdapter(
     }
 
     inner class ViewHolder : RecyclerView.ViewHolder {
-        var bit: Bit? = null
+        lateinit var bit: Bit
         var mDay: TextView? = null
         var mSet: TextView? = null
         var mWeight: TextView? = null
@@ -169,7 +171,7 @@ class LogRecyclerViewAdapter(
             mReps = binding.reps
             mNotes = binding.notes
             element = binding.element
-            itemView.setOnClickListener { onClickElementListener?.accept(itemView, bit!!) }
+            itemView.setOnClickListener { onClickElementListener?.accept(itemView, bit) }
         }
 
         constructor(binding: ListElementFragmentLogMoreButtonBinding) : super(binding.root) {

@@ -20,10 +20,11 @@ import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.FormatUtils
+import org.scp.gymlog.util.FormatUtils.bigDecimal
+import org.scp.gymlog.util.FormatUtils.toLocaleString
 import java.math.BigDecimal
-import java.util.*
 import java.util.function.Consumer
+
 
 class EditExercisesLastsDialogFragment(
     @StringRes title: Int,
@@ -33,21 +34,15 @@ class EditExercisesLastsDialogFragment(
     cancel: Runnable = Runnable {}
 ) : CustomDialogFragment<Exercise>(title, confirm, cancel) {
 
-    private var barUsed: TextView? = null
-    private var incompatibleBar: View? = null
-    private var weightSpecView: TextView? = null
-    private var weightSpecIcon: ImageView? = null
-    private var stepView: TextView? = null
+    private lateinit var barUsed: TextView
+    private lateinit var weightSpecView: TextView
+    private lateinit var weightSpecIcon: ImageView
+    private lateinit var incompatibleBar: View
+    private lateinit var stepView: TextView
     private var exerciseUpdate = false
-    private var step: BigDecimal
-    private var bar: Bar?
-    private var weightSpec: WeightSpecification
-
-    init {
-        bar = initialValue.bar
-        step = initialValue.step
-        weightSpec = initialValue.weightSpec
-    }
+    private var step: BigDecimal = initialValue.step
+    private var bar: Bar? = initialValue.bar
+    private var weightSpec: WeightSpecification = initialValue.weightSpec
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = requireActivity().layoutInflater
@@ -77,8 +72,7 @@ class EditExercisesLastsDialogFragment(
 
             Data.STEPS_KG.forEach { size: Int ->
                 menu.add(0, size, size,
-                    FormatUtils.toString(
-                        BigDecimal.valueOf(size.toLong()) .divide(Constants.ONE_HUNDRED)))
+                    BigDecimal.valueOf(size.toLong()).divide(Constants.ONE_HUNDRED).toLocaleString())
             }
 
             popup.setOnMenuItemClickListener { item: MenuItem ->
@@ -114,11 +108,11 @@ class EditExercisesLastsDialogFragment(
                         bar = null
                         exerciseUpdate = true
                         if (initialValue.requiresBar) {
-                            incompatibleBar!!.visibility = View.VISIBLE
+                            incompatibleBar.visibility = View.VISIBLE
                             Toast.makeText(context, R.string.validation_should_have_bar,
                                 Toast.LENGTH_LONG).show()
                         } else {
-                            incompatibleBar!!.visibility = View.INVISIBLE
+                            incompatibleBar.visibility = View.INVISIBLE
                         }
 
                         if (weightSpec === WeightSpecification.TOTAL_WEIGHT) {
@@ -135,9 +129,9 @@ class EditExercisesLastsDialogFragment(
                         this.bar = bar
                         exerciseUpdate = true
                         if (initialValue.requiresBar) {
-                            incompatibleBar!!.visibility = View.INVISIBLE
+                            incompatibleBar.visibility = View.INVISIBLE
                         } else {
-                            incompatibleBar!!.visibility = View.VISIBLE
+                            incompatibleBar.visibility = View.VISIBLE
                             Toast.makeText(context, R.string.validation_shouldnt_have_bar,
                                 Toast.LENGTH_LONG).show()
                         }
@@ -181,32 +175,32 @@ class EditExercisesLastsDialogFragment(
     }
 
     private fun updateStep() {
-        stepView!!.text = FormatUtils.toString(step)
+        stepView.bigDecimal = step
     }
 
     private fun updateSelectedBar() {
         if (bar == null) {
-            barUsed!!.setText(R.string.symbol_hyphen)
-            incompatibleBar!!.visibility =
+            barUsed.setText(R.string.symbol_hyphen)
+            incompatibleBar.visibility =
                 if (initialValue.requiresBar) View.VISIBLE else View.INVISIBLE
         } else {
-            barUsed!!.text = getWeightLabel(bar!!.weight)
-            incompatibleBar!!.visibility =
+            barUsed.text = getWeightLabel(bar!!.weight)
+            incompatibleBar.visibility =
                 if (initialValue.requiresBar) View.INVISIBLE else View.VISIBLE
         }
     }
 
     private fun updateWeightSpec() {
-        weightSpecView!!.setText(weightSpec.literal)
-        weightSpecIcon!!.setImageResource(weightSpec.icon)
+        weightSpecView.setText(weightSpec.literal)
+        weightSpecIcon.setImageResource(weightSpec.icon)
     }
 
     private fun getWeightLabel(weight: Weight): StringBuilder {
         return if (internationalSystem) {
-            StringBuilder(FormatUtils.toString(weight.toKg()))
+            StringBuilder(weight.toKg().toLocaleString())
                 .append(" kg")
         } else {
-            StringBuilder(FormatUtils.toString(weight.toLbs()))
+            StringBuilder(weight.toLbs().toLocaleString())
                 .append(" lbs")
         }
     }

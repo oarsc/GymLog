@@ -19,6 +19,7 @@ import java.io.IOException
 import java.math.BigDecimal
 
 class InitialDataService {
+
     fun persist(assets: AssetManager, db: AppDatabase) {
         persistMuscles(Data, db)
         createAndPersistBars(Data, db)

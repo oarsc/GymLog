@@ -49,13 +49,13 @@ class MusclesRecyclerViewAdapter(
 	inner class ViewHolder(binding: ListElementFragmentMuscleBinding) :
 		RecyclerView.ViewHolder(binding.root) {
 
-		var muscle: Muscle? = null
+		lateinit var muscle: Muscle
 		val mContentView: TextView = binding.content
 		val mImageView: ImageView = binding.image
 		val mIndicator: View = binding.indicator
 
 		init {
-			itemView.setOnClickListener { onClickElementListener.accept(muscle!!) }
+			itemView.setOnClickListener { onClickElementListener.accept(muscle) }
 		}
 
 		override fun toString(): String {

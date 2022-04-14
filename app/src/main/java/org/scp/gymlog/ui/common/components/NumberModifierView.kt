@@ -13,6 +13,8 @@ import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
 import org.scp.gymlog.R
 import org.scp.gymlog.util.FormatUtils
+import org.scp.gymlog.util.FormatUtils.bigDecimal
+import org.scp.gymlog.util.FormatUtils.toLocaleString
 import java.math.BigDecimal
 
 class NumberModifierView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
@@ -146,14 +148,14 @@ class NumberModifierView(context: Context, attrs: AttributeSet) : LinearLayout(c
     private fun onAction(addition: Boolean) {
         val editText: EditText? = rootView.findViewById(targetId)
         if (editText != null) {
-            var value = FormatUtils.toBigDecimal(editText.text.toString())
+            var value = editText.bigDecimal
             val step = if (addition) step else step.negate()
 
             value = value.add(step)
             if (!allowNegatives && value <= BigDecimal.ZERO)
                 value = BigDecimal.ZERO
 
-            editText.setText(FormatUtils.toString(value))
+            editText.bigDecimal = value
             editText.setSelection(editText.text.length)
         }
     }

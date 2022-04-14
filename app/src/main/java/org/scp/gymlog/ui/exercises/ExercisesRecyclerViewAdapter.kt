@@ -15,7 +15,7 @@ import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.model.Order
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.DateUtils
+import org.scp.gymlog.util.DateUtils.getLetterFrom
 import java.io.IOException
 import java.util.*
 import java.util.function.BiConsumer
@@ -90,13 +90,13 @@ class ExercisesRecyclerViewAdapter(
         val context = holder.itemView.context
 
         holder.exercise = exercises[orderedIndexes[position]]
-        holder.mContentView.text = holder.exercise!!.name
+        holder.mContentView.text = holder.exercise.name
 
-        val timeStr = DateUtils.calculateTimeLetter(holder.exercise!!.lastTrained, today)
+        val timeStr = today.getLetterFrom(holder.exercise.lastTrained)
         holder.mTime.visibility = if (timeStr.isEmpty()) View.GONE else View.VISIBLE
         holder.mTime.text = timeStr
 
-        val fileName = "previews/" + holder.exercise!!.image + ".png"
+        val fileName = "previews/" + holder.exercise.image + ".png"
         try {
             val ims = context.assets.open(fileName)
             val d = Drawable.createFromStream(ims, null)
@@ -114,16 +114,16 @@ class ExercisesRecyclerViewAdapter(
     inner class ViewHolder(binding: ListElementFragmentExerciseBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        var exercise: Exercise? = null
+        lateinit var exercise: Exercise
         val mImageView: ImageView = binding.image
         val mContentView: TextView = binding.content
         val mTime: TextView = binding.time
 
         init {
-            itemView.setOnClickListener { onClickListener?.accept(exercise!!) }
+            itemView.setOnClickListener { onClickListener?.accept(exercise) }
             itemView.setOnLongClickListener {
                 val dialog = MenuDialogFragment(R.menu.exercise_menu) { action ->
-                    menuOptionCallback.accept(exercise!!, action)
+                    menuOptionCallback.accept(exercise, action)
                 }
                 val activity = binding.content.context as FragmentActivity
                 dialog.show(activity.supportFragmentManager, null)

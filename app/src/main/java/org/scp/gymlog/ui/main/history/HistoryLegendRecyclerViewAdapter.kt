@@ -17,7 +17,7 @@ class HistoryLegendRecyclerViewAdapter :
 
 	private val muscles: MutableList<Muscle>
 	private var size: Int
-	private var context: Context? = null
+	private lateinit var ctx: Context
 	private var showingAll = false
 
 	init {
@@ -26,10 +26,10 @@ class HistoryLegendRecyclerViewAdapter :
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-		context = parent.context
+		ctx = parent.context
 		return ViewHolder(
 			ListElementFragmentLegendBinding.inflate(
-				LayoutInflater.from(context), parent, false
+				LayoutInflater.from(ctx), parent, false
 			)
 		)
 	}
@@ -72,10 +72,10 @@ class HistoryLegendRecyclerViewAdapter :
 	}
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-		val muscle = muscles[position]
+		val muscle = muscles[position].also { holder.muscle = it }
 		holder.mText.setText(muscle.text)
 		holder.mIndicator.setCardBackgroundColor(
-			ResourcesCompat.getColor(context!!.resources, muscle.color, null)
+			ResourcesCompat.getColor(ctx.resources, muscle.color, null)
 		)
 	}
 
@@ -86,7 +86,7 @@ class HistoryLegendRecyclerViewAdapter :
 	inner class ViewHolder(binding: ListElementFragmentLegendBinding) :
 		RecyclerView.ViewHolder(binding.root) {
 
-		var muscle: Muscle? = null
+		lateinit var muscle: Muscle
 		val mText: TextView = binding.text
 		val mIndicator: CardView = binding.indicator
 

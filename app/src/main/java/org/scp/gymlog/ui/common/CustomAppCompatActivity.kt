@@ -3,7 +3,6 @@ package org.scp.gymlog.ui.common
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import org.scp.gymlog.util.Constants.IntentReference

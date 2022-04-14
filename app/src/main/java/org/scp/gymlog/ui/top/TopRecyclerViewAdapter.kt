@@ -15,8 +15,10 @@ import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.ui.top.rows.ITopRow
 import org.scp.gymlog.ui.top.rows.TopBitRow
 import org.scp.gymlog.ui.top.rows.TopVariationRow
-import org.scp.gymlog.util.DateUtils
-import org.scp.gymlog.util.FormatUtils.toString
+import org.scp.gymlog.util.DateUtils.getDateString
+import org.scp.gymlog.util.DateUtils.getLetterFrom
+import org.scp.gymlog.util.FormatUtils.bigDecimal
+import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.WeightUtils.getWeightFromTotal
 import java.util.*
 import java.util.function.Consumer
@@ -66,33 +68,37 @@ class TopRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val row = rows[position]
 
-        if (row.type === ITopRow.Type.HEADER || row.type === ITopRow.Type.SPACE) {
-            return
+        when (row.type) {
+            ITopRow.Type.HEADER -> {
+
+            }
+            ITopRow.Type.SPACE -> {
+
+            }
+            ITopRow.Type.VARIATION -> {
+                val vRow = row as TopVariationRow
+                holder.mNote?.text = vRow.variation.name
+            }
+            ITopRow.Type.BIT -> {
+                val bRow = row as TopBitRow
+                holder.topBit = bRow.bit
+
+                val topBit = holder.topBit
+                val weight = getWeightFromTotal(
+                    topBit.weight,
+                    exercise.weightSpec,
+                    exercise.bar,
+                    internationalSystem
+                )
+
+                holder.mWeight?.bigDecimal = weight
+                holder.mReps?.integer = topBit.reps
+                holder.mTime?.text = topBit.timestamp.getDateString() + " (" +
+                        today.getLetterFrom(topBit.timestamp) + ")"
+
+                holder.mNote?.text = topBit.note
+            }
         }
-
-        if (row.type === ITopRow.Type.VARIATION) {
-            val vRow = row as TopVariationRow
-            holder.mNote!!.text = vRow.variation.name
-            return
-        }
-
-        val bRow = row as TopBitRow
-        holder.topBit = bRow.bit
-
-        val topBit = holder.topBit
-        val weight = getWeightFromTotal(
-            topBit!!.weight,
-            exercise.weightSpec,
-            exercise.bar,
-            internationalSystem
-        )
-
-        holder.mWeight!!.text = toString(weight)
-        holder.mReps!!.text = topBit.reps.toString()
-        holder.mTime!!.text = DateUtils.getDate(topBit.timestamp) + " (" +
-                DateUtils.calculateTimeLetter(topBit.timestamp, today) + ")"
-
-        holder.mNote!!.text = topBit.note
     }
 
     override fun getItemCount(): Int {
@@ -100,7 +106,7 @@ class TopRecyclerViewAdapter(
     }
 
     inner class ViewHolder : RecyclerView.ViewHolder {
-        var topBit: Bit? = null
+        lateinit var topBit: Bit
         val mWeight: TextView?
         val mReps: TextView?
         val mTime: TextView?
@@ -112,11 +118,11 @@ class TopRecyclerViewAdapter(
             mTime = binding.time
             mNote = binding.note
             itemView.setOnClickListener {
-                onClickListener?.accept(topBit!!)
+                onClickListener?.accept(topBit)
             }
 
             itemView.setOnLongClickListener {
-                onLongClickListener?.accept(topBit!!)
+                onLongClickListener?.accept(topBit)
                 true
             }
         }

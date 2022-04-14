@@ -18,14 +18,14 @@ import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.ui.common.components.HistoryCalendarView
 import org.scp.gymlog.ui.common.components.HistoryCalendarView.PieDataInfo
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.DateUtils
+import org.scp.gymlog.util.DateUtils.firstTimeOfDay
 import java.util.*
 
 class HistoryFragment : Fragment() {
 
-	private var calendarView: HistoryCalendarView? = null
-	private var historyAdapter: HistoryRecyclerViewAdapter? = null
-	private var legendAdapter: HistoryLegendRecyclerViewAdapter? = null
+	private lateinit var calendarView: HistoryCalendarView
+	private val historyAdapter by lazy { HistoryRecyclerViewAdapter() }
+	private val legendAdapter by lazy { HistoryLegendRecyclerViewAdapter() }
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -39,8 +39,7 @@ class HistoryFragment : Fragment() {
 		legendRecyclerView.layoutManager = object : GridLayoutManager(context, 2) {
 			override fun canScrollVertically(): Boolean { return false }
 		}
-		legendRecyclerView.adapter = HistoryLegendRecyclerViewAdapter()
-			.also { legendAdapter = it }
+		legendRecyclerView.adapter = legendAdapter
 
 		val showLegendIcon: ImageView = view.findViewById(R.id.showLegendIcon)
 		view.findViewById<View>(R.id.showLegend).setOnClickListener {
@@ -58,15 +57,14 @@ class HistoryFragment : Fragment() {
 		trainingRecyclerView.layoutManager = object : LinearLayoutManager(context) {
 			override fun canScrollVertically(): Boolean { return false }
 		}
-		trainingRecyclerView.adapter = HistoryRecyclerViewAdapter()
-			.also { historyAdapter = it }
+		trainingRecyclerView.adapter = historyAdapter
 
 		// CALENDAR
-		calendarView = view.findViewById(R.id.calendarView)
-		calendarView!!.setOnSelectDayListener { startDate, muscles ->
+		calendarView = view.findViewById(R.id.calendarView);
+		calendarView.setOnSelectDayListener { startDate, muscles ->
 			onDaySelected(startDate, muscles)
 		}
-		calendarView!!.setOnMonthChangeListener { first, end ->
+		calendarView.setOnMonthChangeListener { first, end ->
 			updateMonthData(first, end)
 		}
 
@@ -82,19 +80,19 @@ class HistoryFragment : Fragment() {
 		DBThread.run(requireContext()) { db ->
 			val trainings = db.trainingDao().getTrainingByStartDate(startDate, endDate)
 
-			val initialSize: Int = historyAdapter!!.size()
+			val initialSize: Int = historyAdapter.size()
 			val endSize = trainings.size
-			historyAdapter!!.clear()
+			historyAdapter.clear()
 
 			trainings.forEach { trainingEntity ->
 				val bits =db.bitDao().getHistoryByTrainingId(trainingEntity.trainingId)
 				val td = getTrainingData(trainingEntity, bits)
-				historyAdapter!!.add(td)
+				historyAdapter.add(td)
 			}
 
 			runOnUiThread {
-				legendAdapter!!.focusMuscles(muscles)
-				historyAdapter!!.notifyItemsChanged(initialSize, endSize)
+				legendAdapter.focusMuscles(muscles)
+				historyAdapter.notifyItemsChanged(initialSize, endSize)
 			}
 		}
 	}
@@ -112,7 +110,7 @@ class HistoryFragment : Fragment() {
 				while (i < bits.size) {
 					val bit = bits[i]
 
-					if (first.compareTo(DateUtils.getFirstTimeOfDay(bit.timestamp)) == 0) {
+					if (first.compareTo(bit.timestamp.firstTimeOfDay()) == 0) {
 						val exercise = Data.getExercise(bit.exerciseId)
 
 						val secondariesCount = exercise.secondaryMuscles.size
@@ -136,17 +134,17 @@ class HistoryFragment : Fragment() {
 
 				if (data.isNotEmpty()) {
 					val millis = first.timeInMillis
-					runOnUiThread { calendarView!!.setDayData(millis, data) }
+					runOnUiThread { calendarView.setDayData(millis, data) }
 				}
 
-				if (calendarView!!.isSelected(first) && data.isNotEmpty()) {
+				if (calendarView.isSelected(first) && data.isNotEmpty()) {
 					runOnUiThread {
-						legendAdapter!!.focusMuscles(data.map(PieDataInfo::muscle))
+						legendAdapter.focusMuscles(data.map(PieDataInfo::muscle))
 					}
 				}
 				first.add(Calendar.DAY_OF_YEAR, 1)
 			}
-			runOnUiThread { calendarView!!.isEnabled = true }
+			runOnUiThread { calendarView.isEnabled = true }
 		}
 	}
 

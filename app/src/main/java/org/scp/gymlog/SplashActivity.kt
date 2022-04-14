@@ -1,6 +1,5 @@
 package org.scp.gymlog
 
-import android.R
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -101,7 +100,7 @@ class SplashActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("loaded", true)
         startActivity(intent)
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()
     }
 }

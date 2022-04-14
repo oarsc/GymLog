@@ -1,7 +1,6 @@
 package org.scp.gymlog.util
 
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import org.scp.gymlog.model.WeightSpecification
 import org.scp.gymlog.room.Converters.fromDate
@@ -63,7 +62,7 @@ object JsonUtils {
         }
     }
 
-    fun <T : Any> objectify(json: JSONObject, cls: KClass<T>): T {
+    fun <T : Any> JSONObject.objectify(cls: KClass<T>): T {
         if (cls == Iterable::class || cls == MutableMap::class) throw RuntimeException("Object is a List or Map")
         try {
             val obj = cls.createInstance()
@@ -74,17 +73,17 @@ object JsonUtils {
                 .forEach { field ->
                     val type: KType = field.returnType
                     val fieldName = field.name
-                    if (json.has(fieldName)) {
+                    if (has(fieldName)) {
                         val fieldValue = when(type.classifier) {
-                            Int::class -> json.getInt(fieldName)
-                            Long::class -> json.getLong(fieldName)
-                            Boolean::class -> json.getBoolean(fieldName)
-                            Float::class -> json.getDouble(fieldName).toFloat()
-                            Double::class -> json.getDouble(fieldName)
-                            String::class -> json.getString(fieldName)
-                            Calendar::class -> toDate(json.getLong(fieldName))
+                            Int::class -> getInt(fieldName)
+                            Long::class -> getLong(fieldName)
+                            Boolean::class -> getBoolean(fieldName)
+                            Float::class -> getDouble(fieldName).toFloat()
+                            Double::class -> getDouble(fieldName)
+                            String::class -> getString(fieldName)
+                            Calendar::class -> toDate(getLong(fieldName))
                             WeightSpecification::class -> toWeightSpecification(
-                                json.getInt(fieldName).toShort())
+                                getInt(fieldName).toShort())
                             else -> null
                         }
                         if (fieldValue != null)
@@ -95,16 +94,6 @@ object JsonUtils {
         } catch (e: Exception) {
             throw RuntimeException("An exception occurred", e)
         }
-    }
-
-    fun interface JsonConsumer<T> {
-        @Throws(JSONException::class)
-        fun accept(t: T)
-    }
-
-    fun interface JsonFunction<R, T> {
-        @Throws(JSONException::class)
-        fun call(t: T): R
     }
 
     @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)

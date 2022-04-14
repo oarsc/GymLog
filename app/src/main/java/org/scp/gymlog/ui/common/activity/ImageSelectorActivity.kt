@@ -15,15 +15,13 @@ import org.scp.gymlog.util.TaskRunner
 import java.io.IOException
 
 class ImageSelectorActivity : CustomAppCompatActivity() {
-    private var layout: FlexboxLayout? = null
-    private var defaultLayoutParams: RelativeLayout.LayoutParams? = null
+
+    private val defaultLayoutParams by lazy { RelativeLayout.LayoutParams(175, 175) }
+    private val layout: FlexboxLayout by lazy { findViewById(R.id.imageSelectorLayout) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_selector)
-
-        layout = findViewById(R.id.imageSelectorLayout)
-        defaultLayoutParams = RelativeLayout.LayoutParams(175, 175)
 
         val title = intent.extras!!.getInt("title")
         if (title == IntentReference.CREATE_EXERCISE.ordinal) {
@@ -43,7 +41,7 @@ class ImageSelectorActivity : CustomAppCompatActivity() {
         for (asset in assets.list(folder)!!) {
             tr.executeAsync(
                 { getImageViewFromAsset("$folder/$asset") }
-            ) { view -> layout!!.addView(view, defaultLayoutParams) }
+            ) { view -> layout.addView(view, defaultLayoutParams) }
         }
     }
 

@@ -13,6 +13,7 @@ import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.JsonUtils
 import org.scp.gymlog.util.JsonUtils.map
+import org.scp.gymlog.util.JsonUtils.objectify
 import org.scp.gymlog.util.JsonUtils.toJsonArray
 import java.io.*
 import java.util.stream.Collectors.joining
@@ -273,6 +274,6 @@ class DataBaseDumperService {
     @Throws(JSONException::class)
     private fun <T : Any> convertToObject(list: JSONArray, cls: KClass<T>): List<T> {
         return list.map(JSONArray::getJSONObject)
-            .map { json -> JsonUtils.objectify(json, cls) }
+            .map { it.objectify(cls) }
     }
 }

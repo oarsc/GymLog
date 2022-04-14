@@ -4,15 +4,38 @@ import org.scp.gymlog.util.Constants.DATE_ZERO
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 object DateUtils {
 
-    fun yearsAndDaysDiff(d1: Calendar, d2: Calendar): IntArray {
-        val d1p = getFirstTimeOfDay(d1)
-        val d2p = getFirstTimeOfDay(d2)
+    fun Calendar.diff(other: Calendar = Calendar.getInstance()): Long {
+        return abs(this.timeInMillis - other.timeInMillis)
+    }
+
+    fun Calendar.diffSeconds(other: Calendar = Calendar.getInstance()): Int {
+        return (this.diff(other) / 1000.0).roundToInt()
+    }
+
+    val Calendar.isPast: Boolean
+        get() = this < Calendar.getInstance()
+
+    fun Calendar.firstTimeOfDay() : Calendar {
+        return (this.clone() as Calendar)
+            .also {
+                it[Calendar.HOUR_OF_DAY] = 0
+                it[Calendar.MINUTE] = 0
+                it[Calendar.SECOND] = 0
+                it[Calendar.MILLISECOND] = 0
+            }
+    }
+
+    class YearsAndDays (val years: Int, val days: Int)
+    fun Calendar.diffYearsAndDays(other: Calendar): YearsAndDays {
+        val d1p = this.firstTimeOfDay()
+        val d2p = other.firstTimeOfDay()
         var currentYear = d1p[Calendar.YEAR]
 
-        var diffDays = (abs(diff(d1p, d2p)) / 86400000L).toInt()
+        var diffDays = (d1p.diff(d2p) / 86400000.0).roundToInt()
         var diffYears = 0
 
         @Suppress("ControlFlowWithEmptyBody")
@@ -25,15 +48,7 @@ object DateUtils {
                 } else false
         });
 
-        return intArrayOf(diffYears, diffDays)
-    }
-
-    fun secondsDiff(earliest: Calendar, latest: Calendar): Int {
-        return (diff(earliest, latest) / 1000L).toInt()
-    }
-
-    fun diff(earliest: Calendar, latest: Calendar): Long {
-        return latest.timeInMillis - earliest.timeInMillis
+        return YearsAndDays(diffYears, diffDays)
     }
 
     private fun getYearDays(year: Int): Int {
@@ -44,36 +59,36 @@ object DateUtils {
         return year % 4 == 0 && year % 100 != 0 || year % 400 == 0
     }
 
-    fun getFirstTimeOfDay(date: Calendar): Calendar {
-        return (date.clone() as Calendar).also {
-            it[Calendar.HOUR_OF_DAY] = 0
-            it[Calendar.MINUTE] = 0
-            it[Calendar.SECOND] = 0
-            it[Calendar.MILLISECOND] = 0
-        }
+    fun Calendar.getTimeString(): String {
+        return parseCalendarToString(this, "HH:mm")
     }
 
-    fun getTime(cal: Calendar): String {
-        return SimpleDateFormat("HH:mm", Locale.getDefault()).format(cal.time)
+    fun Calendar.getDateTimeString(): String {
+        return parseCalendarToString(this, "yyyy-MM-dd HH:mm")
     }
 
-    fun getDateTime(cal: Calendar): String {
-        return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(cal.time)
+    fun Calendar.getDateString(): String {
+        return parseCalendarToString(this, "yyyy-MM-dd")
     }
 
-    fun getDate(cal: Calendar): String {
-        return SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(cal.time)
+
+    private fun parseCalendarToString(cal: Calendar, format: String): String {
+        return SimpleDateFormat(format, Locale.getDefault()).format(cal.time)
     }
 
-    fun calculateTimeLetter(date: Calendar?, today: Calendar): String {
+    fun Calendar.getLetterFrom(date: Calendar?): String {
         if (date == null || date.compareTo(DATE_ZERO) == 0) {
             return ""
         }
 
-        val todayDiff = yearsAndDaysDiff(date, today)
-        return if (todayDiff[0] == 0) {
-                if (todayDiff[1] == 0) "T"
-                else todayDiff[1].toString() + "D"
-            } else todayDiff[0].toString() + "Y" + todayDiff[1] + "D"
+        return date.diffYearsAndDays(this).let {
+            if (it.years == 0) {
+                if (it.days == 0) "T"
+                else "${it.days}D"
+            } else {
+                if (it.days == 0) "${it.years}Y"
+                else "${it.years}Y${it.days}D"
+            }
+        }
     }
 }

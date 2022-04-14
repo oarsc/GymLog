@@ -13,7 +13,8 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.constraintlayout.widget.ConstraintSet.*
 import org.scp.gymlog.R
 import org.scp.gymlog.ui.common.components.NumberModifierView
-import org.scp.gymlog.util.FormatUtils
+import org.scp.gymlog.util.FormatUtils.bigDecimal
+import org.scp.gymlog.util.FormatUtils.safeBigDecimal
 import java.math.BigDecimal
 import java.util.function.Consumer
 
@@ -24,7 +25,7 @@ class EditNumberDialogFragment @JvmOverloads constructor(
     cancel: Runnable = Runnable {}
 ) : CustomDialogFragment<BigDecimal>(title, confirm, cancel) {
 
-    override var initialValue: BigDecimal = FormatUtils.toBigDecimal(initialValueStr)
+    override var initialValue: BigDecimal = initialValueStr.safeBigDecimal()
     var allowNegatives = false
     var showButtons = true
 
@@ -33,7 +34,7 @@ class EditNumberDialogFragment @JvmOverloads constructor(
         val view = inflater.inflate(R.layout.dialog_edit_number, null)
         val input: EditText = view.findViewById(R.id.dialogText)
         val modifier: NumberModifierView = view.findViewById(R.id.modifier)
-        input.setText(FormatUtils.toString(initialValue))
+        input.bigDecimal = initialValue
 
         if (allowNegatives) {
             modifier.allowNegatives()
@@ -61,7 +62,7 @@ class EditNumberDialogFragment @JvmOverloads constructor(
             .setView(view)
             .setPositiveButton(R.string.button_confirm) { _,_ ->
                 val value = input.text.toString()
-                confirm.accept(FormatUtils.toBigDecimal(value))
+                confirm.accept(value.safeBigDecimal())
             }
             .setNegativeButton(R.string.button_cancel) { _,_ -> cancel.run() }
 

@@ -11,7 +11,8 @@ import org.scp.gymlog.util.Data
 import java.math.BigDecimal
 import java.util.*
 
-class Exercise() : EntityMappable<ExerciseEntity?> {
+class Exercise() : EntityMappable<ExerciseEntity> {
+
 	val primaryMuscles: MutableList<Muscle> = ArrayList()
 	val secondaryMuscles: MutableList<Muscle> = ArrayList()
 	val variations: MutableList<Variation> = ArrayList()
@@ -52,9 +53,7 @@ class Exercise() : EntityMappable<ExerciseEntity?> {
 		entity.requiresBar = requiresBar
 		entity.lastWeightSpec = weightSpec
 		entity.lastRestTime = restTime
-		if (bar != null) {
-			entity.lastBarId = bar!!.id
-		}
+		entity.lastBarId = bar?.id
 		return entity
 	}
 

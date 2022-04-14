@@ -34,24 +34,24 @@ class CreateExerciseFormRecyclerViewAdapter(
 
 	inner class ViewHolder(binding: ListElementFragmentFormBinding) :
 		RecyclerView.ViewHolder(binding.root) {
-		var formElement: FormElement? = null
+
+		lateinit var formElement: FormElement
 		val mTitleView: TextView = binding.title
 		private val mContentView: TextView = binding.content
 		private val mImageView: ImageView = binding.image
 
 		init {
-			itemView.setOnClickListener { view -> formElement?.onClick(view) }
+			itemView.setOnClickListener { view -> formElement.onClick(view) }
 		}
 
 		fun updateValue() {
-			mImageView.setImageDrawable(formElement!!.drawable)
+			mImageView.setImageDrawable(formElement.drawable)
 
-			if (formElement!!.valueStr.isNotEmpty())
-				mContentView.text = formElement!!.valueStr
-			else if (formElement!!.value == 0)
-				mContentView.text = "-"
-			else
-				mContentView.setText(formElement!!.value)
+			when {
+				formElement.valueStr.isNotEmpty() -> mContentView.text = formElement.valueStr
+				formElement.value == 0 -> mContentView.text = "-"
+				else -> mContentView.setText(formElement.value)
+			}
 		}
 
 		override fun toString(): String {

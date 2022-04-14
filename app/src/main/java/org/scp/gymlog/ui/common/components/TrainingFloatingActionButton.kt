@@ -17,7 +17,8 @@ import org.scp.gymlog.util.Data
 import java.util.*
 
 class TrainingFloatingActionButton : FloatingActionButton {
-    private var notificationService: NotificationService? = null
+
+    private lateinit var notificationService: NotificationService
 
     constructor(context: Context) : super(context) {
         onCreate(context)
@@ -43,7 +44,7 @@ class TrainingFloatingActionButton : FloatingActionButton {
                         R.string.dialog_confirm_training_text
                     ) { confirmed ->
                         if (confirmed) {
-                            notificationService!!.hideNotification()
+                            notificationService.hideNotification()
                             DBThread.run(context) { db: AppDatabase ->
                                 val trainingDao = db.trainingDao()
                                 val training = trainingDao.getTraining(trainingId)

@@ -12,7 +12,8 @@ import androidx.core.app.NotificationCompat
 import org.scp.gymlog.R
 import org.scp.gymlog.SplashActivity
 import org.scp.gymlog.service.NotificationService
-import org.scp.gymlog.util.DateUtils
+import org.scp.gymlog.util.DateUtils.diff
+import org.scp.gymlog.util.DateUtils.isPast
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -23,12 +24,11 @@ class NotificationLoggingService : Service() {
     }
 
     private val mBinder: IBinder = Binder()
-    private val end = false
     override fun onBind(intent: Intent): IBinder? {
         return mBinder
     }
 
-    private var countdownRemoteView: RemoteViews? = null
+    private lateinit var countdownRemoteView: RemoteViews
     private var notification: Notification? = null
     private var thread: Thread? = null
     private var startTime: Long = 0
@@ -59,18 +59,15 @@ class NotificationLoggingService : Service() {
         } else {
             startForeground(
                 NotificationService.NOTIFICATION_COUNTDOWN_ID,
-                generateCountdownNotification(seconds).also {
-                    notification = it
-                })
+                generateCountdownNotification(seconds).also { notification = it })
             thread = Thread {
                 var endedNaturally = false
                 try {
-                    var diff = DateUtils.diff(Calendar.getInstance(), endDate).toInt()
-                    do {
+                    while (!endDate.isPast) {
+                        val diff = endDate.diff().toInt()
                         updateNotification(diff)
                         Thread.sleep(500)
-                        diff = DateUtils.diff(Calendar.getInstance(), endDate).toInt()
-                    } while (diff > 0)
+                    }
                     endedNaturally = true
                 } catch (e: InterruptedException) {
                     // Interrupted
@@ -97,8 +94,8 @@ class NotificationLoggingService : Service() {
 
     private fun generateCountdownNotification(maxSeconds: Int): Notification {
         countdownRemoteView = RemoteViews(packageName, R.layout.notification_countdown)
-        countdownRemoteView!!.setInt(R.id.progressBar, "setMax", maxSeconds * 1000)
-        countdownRemoteView!!.setTextViewText(R.id.exerciseName, exerciseName)
+        countdownRemoteView.setInt(R.id.progressBar, "setMax", maxSeconds * 1000)
+        countdownRemoteView.setTextViewText(R.id.exerciseName, exerciseName)
         val builder = NotificationCompat.Builder(this, NotificationService.COUNTDOWN_CHANNEL)
             .setSmallIcon(R.drawable.ic_logo_24dp)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
@@ -120,11 +117,8 @@ class NotificationLoggingService : Service() {
     }
 
     private fun updateViewSeconds(remainingSeconds: Int) {
-        countdownRemoteView!!.setInt(R.id.progressBar, "setProgress", remainingSeconds)
-        countdownRemoteView!!.setTextViewText(
-            R.id.seconds,
-            (remainingSeconds / 1000.0).roundToInt().toString()
-        )
+        countdownRemoteView.setInt(R.id.progressBar, "setProgress", remainingSeconds)
+        countdownRemoteView.setTextViewText(R.id.seconds, (remainingSeconds/1000.0).roundToInt().toString())
     }
 
     private fun showReadyNotification() {
@@ -151,13 +145,13 @@ class NotificationLoggingService : Service() {
 
     private fun getStartAppIntent() : Intent {
         val startAppIntent = Intent(this, SplashActivity::class.java)
-        startAppIntent.action = Intent.ACTION_MAIN;
-        startAppIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        startAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        return startAppIntent;
+        startAppIntent.action = Intent.ACTION_MAIN
+        startAppIntent.addCategory(Intent.CATEGORY_LAUNCHER)
+        startAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        return startAppIntent
     }
 
     private fun getNotificationManager() : NotificationManager {
-        return getSystemService(NOTIFICATION_SERVICE) as NotificationManager;
+        return getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     }
 }

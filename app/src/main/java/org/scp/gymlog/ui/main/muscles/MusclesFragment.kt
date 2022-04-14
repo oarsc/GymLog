@@ -34,7 +34,7 @@ class MusclesFragment : CustomFragment() {
  * Mandatory empty constructor for the fragment manager to instantiate the
  * fragment (e.g. upon screen orientation changes).
  */
-	private val dataBaseDumperService = DataBaseDumperService()
+	private val dataBaseDumperService by lazy { DataBaseDumperService() }
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)

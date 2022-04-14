@@ -15,11 +15,12 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Muscle
-import org.scp.gymlog.util.DateUtils
+import org.scp.gymlog.util.DateUtils.firstTimeOfDay
 import java.util.*
 import java.util.function.BiConsumer
 
 class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+
     private val firstDayOfMonth: Calendar
     private var selectedDay: Calendar
     private val daysMap: MutableMap<Long, View> = HashMap()
@@ -30,7 +31,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
     init {
         inflate(getContext(), R.layout.view_calendar, this)
 
-        selectedDay = DateUtils.getFirstTimeOfDay(Calendar.getInstance())
+        selectedDay = Calendar.getInstance().firstTimeOfDay()
         firstDayOfMonth = selectedDay.clone() as Calendar
         firstDayOfMonth[Calendar.DAY_OF_MONTH] = 1
 

@@ -14,7 +14,6 @@ class FormElement(
 
 	var updateListener: Runnable? = null
 
-
 	fun onClick(view: View) {
 		onClickListener.accept(view)
 	}
