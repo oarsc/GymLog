@@ -20,14 +20,18 @@ class NotificationService(private val context: Context) {
             private set
     }
 
-    fun showNotification(endTime: Calendar, seconds: Int, exerciseName: String?) {
+    fun showNotification(endTime: Calendar, seconds: Int, exerciseName: String, restart: Boolean = true) {
         if (Calendar.getInstance() > endTime) return
         lastEndTime = endTime
         val intent = Intent(context, NotificationLoggingService::class.java)
         intent.putExtra("seconds", seconds)
         intent.putExtra("milliseconds", endTime.timeInMillis)
         intent.putExtra("name", exerciseName)
-        context.stopService(intent)
+        if (restart) {
+            context.stopService(intent)
+        } else {
+            intent.action = NotificationLoggingService.ACTION_REPLACE
+        }
         context.startService(intent)
     }
 

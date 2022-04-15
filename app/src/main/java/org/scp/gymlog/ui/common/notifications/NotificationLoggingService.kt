@@ -21,6 +21,7 @@ class NotificationLoggingService : Service() {
 
     companion object {
         const val ACTION_STOP = "stop"
+        const val ACTION_REPLACE = "replace"
     }
 
     private val mBinder: IBinder = Binder()
@@ -32,56 +33,83 @@ class NotificationLoggingService : Service() {
     private var notification: Notification? = null
     private var thread: Thread? = null
     private var startTime: Long = 0
+    private lateinit var endDate: Calendar
     private var exerciseName: String? = null
+    private var running = false
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        if (ACTION_STOP == intent.action) {
-            stopSelfResult(startId)
-            return START_NOT_STICKY
-        }
-        getNotificationManager().cancel(NotificationService.NOTIFICATION_READY_ID)
-        val endDate = Calendar.getInstance()
-        exerciseName = intent.getStringExtra("name")
-        val milliseconds = intent.getLongExtra("milliseconds", 0)
-        val seconds = intent.getIntExtra("seconds", 10)
-        if (milliseconds > 0) {
-            endDate.timeInMillis = milliseconds
-            val startDate = endDate.clone() as Calendar
-            startDate.add(Calendar.SECOND, -seconds)
-            startTime = startDate.timeInMillis
-        } else {
-            startTime = endDate.timeInMillis
-            endDate.add(Calendar.SECOND, seconds)
-        }
-        if (seconds <= 0) {
-            showReadyNotification()
-            stopSelf()
-        } else {
-            startForeground(
-                NotificationService.NOTIFICATION_COUNTDOWN_ID,
-                generateCountdownNotification(seconds).also { notification = it })
-            thread = Thread {
-                var endedNaturally = false
-                try {
-                    while (!endDate.isPast) {
-                        val diff = endDate.diff().toInt()
-                        updateNotification(diff)
-                        Thread.sleep(500)
-                    }
-                    endedNaturally = true
-                } catch (e: InterruptedException) {
-                    // Interrupted
-                } finally {
-                    stopForeground(true)
-                    if (endedNaturally) {
-                        showReadyNotification()
-                        stopSelf()
-                    }
-                }
+        return when {
+            intent.action == ACTION_STOP -> {
+                stopSelfResult(startId)
+                START_NOT_STICKY
             }
-            thread!!.start()
+            intent.action == ACTION_REPLACE && running -> {
+                val milliseconds = intent.getLongExtra("milliseconds", 0)
+                val seconds = intent.getIntExtra("seconds", 10)
+
+                if (milliseconds > 0) {
+                    endDate.timeInMillis = milliseconds
+                } else {
+                    endDate.timeInMillis = Calendar.getInstance().timeInMillis + seconds * 1000
+                }
+
+                if (!endDate.isPast) {
+                    val diff = endDate.diff().toInt()
+                    replaceView(diff, (endDate.timeInMillis-startTime).toInt());
+                }
+
+                super.onStartCommand(intent, flags, startId)
+            }
+            else -> {
+                getNotificationManager().cancel(NotificationService.NOTIFICATION_READY_ID)
+                endDate = Calendar.getInstance()
+                exerciseName = intent.getStringExtra("name")
+                val milliseconds = intent.getLongExtra("milliseconds", 0)
+                val seconds = intent.getIntExtra("seconds", 10)
+
+                if (milliseconds > 0) {
+                    endDate.timeInMillis = milliseconds
+                    val startDate = endDate.clone() as Calendar
+                    startDate.add(Calendar.SECOND, -seconds)
+                    startTime = startDate.timeInMillis
+                } else {
+                    startTime = endDate.timeInMillis
+                    endDate.add(Calendar.SECOND, seconds)
+                }
+                if (seconds <= 0) {
+                    showReadyNotification()
+                    stopSelf()
+                } else {
+                    startForeground(
+                        NotificationService.NOTIFICATION_COUNTDOWN_ID,
+                        generateCountdownNotification(seconds).also { notification = it })
+
+                    thread = Thread {
+                        running = true
+                        var endedNaturally = false
+                        try {
+                            while (!endDate.isPast) {
+                                val diff = endDate.diff().toInt()
+                                updateNotification(diff)
+                                Thread.sleep(500)
+                            }
+                            endedNaturally = true
+                        } catch (e: InterruptedException) {
+                            // Interrupted
+                        } finally {
+                            stopForeground(true)
+                            if (endedNaturally) {
+                                showReadyNotification()
+                                stopSelf()
+                            }
+                            running = false
+                        }
+                    }.also(Thread::start)
+                }
+
+                super.onStartCommand(intent, flags, startId)
+            }
         }
-        return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onDestroy() {
@@ -119,6 +147,12 @@ class NotificationLoggingService : Service() {
     private fun updateViewSeconds(remainingSeconds: Int) {
         countdownRemoteView.setInt(R.id.progressBar, "setProgress", remainingSeconds)
         countdownRemoteView.setTextViewText(R.id.seconds, (remainingSeconds/1000.0).roundToInt().toString())
+    }
+
+    private fun replaceView(remainingSeconds: Int, maxMilliseconds: Int) {
+        countdownRemoteView.setTextViewText(R.id.exerciseName, exerciseName)
+        countdownRemoteView.setInt(R.id.progressBar, "setMax", maxMilliseconds)
+        updateViewSeconds(remainingSeconds)
     }
 
     private fun showReadyNotification() {

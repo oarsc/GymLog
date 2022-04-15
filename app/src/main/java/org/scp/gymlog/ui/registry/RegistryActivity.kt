@@ -137,7 +137,7 @@ class RegistryActivity : DBAppCompatActivity() {
                 }
             }
             dialog.onPlayListener = BiConsumer { endDate, seconds ->
-                this.startTimer(endDate, seconds) }
+                this.startTimer(endDate, seconds, false) }
             dialog.onStopListener = Runnable { stopTimer() }
             dialog.show(supportFragmentManager, null)
         }
@@ -593,9 +593,9 @@ class RegistryActivity : DBAppCompatActivity() {
         startTimer(endDate, seconds)
     }
 
-    private fun startTimer(endDate: Calendar, seconds: Int) {
+    private fun startTimer(endDate: Calendar, seconds: Int, restart: Boolean = true) {
         if (seconds > 0) {
-            notificationService.showNotification(endDate, seconds, exercise.name)
+            notificationService.showNotification(endDate, seconds, exercise.name, restart)
             startTimer(endDate)
         }
     }
