@@ -39,6 +39,7 @@ import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.diffSeconds
+import org.scp.gymlog.util.DateUtils.isPast
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.FormatUtils.safeBigDecimal
@@ -48,7 +49,6 @@ import java.io.IOException
 import java.math.BigDecimal
 import java.util.*
 import java.util.function.BiConsumer
-import java.util.function.Supplier
 
 class RegistryActivity : DBAppCompatActivity() {
 
@@ -74,10 +74,9 @@ class RegistryActivity : DBAppCompatActivity() {
     private var notesLocked = false
     private var hiddenInstantSetButton = false
     private var sendRefreshList = false
-    private lateinit var notificationService: NotificationService
+    private val notificationService: NotificationService by lazy { NotificationService(this) }
     private var defaultTimer = 0
-    private var countdownThread: Thread? = null
-    private var activeCountdown: Calendar? = null
+    private var countdownThread: CountdownThread? = null
     private val defaultTimeColor by lazy { timer.textColors.defaultColor }
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
@@ -112,7 +111,6 @@ class RegistryActivity : DBAppCompatActivity() {
         setTitle(R.string.title_registry)
 
         prepareExerciseListToRefreshWhenFinish()
-        notificationService = NotificationService(this)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         internationalSystem = preferences.getBoolean("internationalSystem", true)
@@ -124,7 +122,7 @@ class RegistryActivity : DBAppCompatActivity() {
         val timerButton: View = findViewById(R.id.timerButton)
         timerButton.setOnClickListener {
             val dialog = EditTimerDialogFragment(this, R.string.text_notes,
-                exercise, activeCountdown) { result ->
+                exercise) { result ->
                 if (exercise.restTime != result) {
                     exercise.restTime = result
                     DBThread.run(this) { db -> db.exerciseDao().update(exercise.toEntity()) }
@@ -137,14 +135,17 @@ class RegistryActivity : DBAppCompatActivity() {
                 }
             }
             dialog.onPlayListener = BiConsumer { endDate, seconds ->
-                this.startTimer(endDate, seconds, false) }
+                if (lastEndTime.isPast)
+                    startTimer(endDate, seconds)
+                else
+                    editTimer(endDate, seconds)
+            }
             dialog.onStopListener = Runnable { stopTimer() }
             dialog.show(supportFragmentManager, null)
         }
 
-        val lastEndTime = lastEndTime
-        if (lastEndTime != Constants.DATE_ZERO && Calendar.getInstance() < lastEndTime) {
-            startTimer(lastEndTime)
+        if (!lastEndTime.isPast) {
+            updateTimer()
 
         } else {
             timer.setTextColor(defaultTimeColor)
@@ -593,51 +594,58 @@ class RegistryActivity : DBAppCompatActivity() {
         startTimer(endDate, seconds)
     }
 
-    private fun startTimer(endDate: Calendar, seconds: Int, restart: Boolean = true) {
+    private fun startTimer(endDate: Calendar, seconds: Int) {
         if (seconds > 0) {
-            notificationService.showNotification(endDate, seconds, exercise.name, restart)
-            startTimer(endDate)
+            notificationService.showNotification(endDate, seconds, exercise.name)
+            updateTimer()
         }
     }
 
-    private fun startTimer(endDate: Calendar) {
-        activeCountdown = endDate
+    private fun editTimer(endDate: Calendar, seconds: Int) {
+        if (!lastEndTime.isPast) {
+            notificationService.editNotification(endDate, seconds)
+            updateTimer()
+        }
+    }
+
+    private fun updateTimer() {
         if (countdownThread == null) {
             countdownThread = CountdownThread().also(Thread::start)
 
             val color = resources.getColor(R.color.orange_light, theme)
             timer.setTextColor(color)
             findViewById<TextView>(R.id.secondsText).setTextColor(color)
+        } else {
+            countdownThread!!.onTick()
         }
     }
 
     private fun stopTimer() {
-        activeCountdown = null
         notificationService.hideNotification()
         countdownThread?.interrupt()
     }
 
-    private inner class CountdownThread :
-        SecondTickThread(Supplier {
-            val seconds = activeCountdown!!.diffSeconds()
-            if (seconds > 0) {
-                runOnUiThread { timer.text = seconds.toString() }
-                true
-            } else false
-        }) {
+    private inner class CountdownThread : SecondTickThread() {
 
-        init {
-            onFinishListener = Runnable {
-                countdownThread = null
-                runOnUiThread {
-                    if (exercise.restTime < 0)
-                        timer.text = defaultTimer.toString()
-                    else
-                        timer.text = exercise.restTime.toString()
+        override fun onTick(): Boolean {
+            if (lastEndTime.isPast)
+                return false
 
-                    timer.setTextColor(defaultTimeColor)
-                    findViewById<TextView>(R.id.secondsText).setTextColor(defaultTimeColor)
-                }
+            val seconds = lastEndTime.diffSeconds()
+            runOnUiThread { timer.text = seconds.toString() }
+            return true
+        }
+
+        override fun onFinish() {
+            countdownThread = null
+            runOnUiThread {
+                if (exercise.restTime < 0)
+                    timer.text = defaultTimer.toString()
+                else
+                    timer.text = exercise.restTime.toString()
+
+                timer.setTextColor(defaultTimeColor)
+                findViewById<TextView>(R.id.secondsText).setTextColor(defaultTimeColor)
             }
         }
     }

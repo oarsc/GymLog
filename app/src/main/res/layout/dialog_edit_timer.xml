@@ -43,26 +43,65 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/stopButton"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="10dp"
-            android:src="@drawable/ic_stop_24dp" />
 
-        <ImageView
-            android:id="@+id/playButton"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="10dp"
-            android:src="@drawable/ic_play_24dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content">
+
+                <ImageView
+                    android:id="@+id/minusTenButton"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_substract_24dp" />
+
+                <ImageView
+                    android:id="@+id/plusTenButton"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_add_24dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content">
+
+                <ImageView
+                    android:id="@+id/stopButton"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_stop_24dp" />
+
+                <ImageView
+                    android:id="@+id/playButton"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_play_24dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

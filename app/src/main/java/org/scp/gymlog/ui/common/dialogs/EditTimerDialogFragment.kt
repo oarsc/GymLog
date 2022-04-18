@@ -16,19 +16,20 @@ import androidx.annotation.StringRes
 import androidx.preference.PreferenceManager
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Exercise
+import org.scp.gymlog.service.NotificationService.Companion.lastEndTime
+import org.scp.gymlog.util.Constants.DATE_ZERO
 import org.scp.gymlog.util.DateUtils.diffSeconds
+import org.scp.gymlog.util.DateUtils.isPast
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.SecondTickThread
 import java.util.*
 import java.util.function.BiConsumer
 import java.util.function.Consumer
-import java.util.function.Supplier
 
 class EditTimerDialogFragment(
     private val ctx: Context,
     @StringRes title: Int,
     exercise: Exercise,
-    private var endingCountdown: Calendar?,
     confirm: Consumer<Int>
 ) : CustomDialogFragment<Int>(title, confirm, Runnable {}) {
 
@@ -36,10 +37,12 @@ class EditTimerDialogFragment(
 
     var onStopListener: Runnable? = null
     var onPlayListener: BiConsumer<Calendar, Int>? = null
-    private var countdownThread: Thread? = null
+    private var countdownThread: CountdownThread? = null
     private lateinit var currentTimer: TextView
     private lateinit var secondLabel: TextView
     private lateinit var stopButton: ImageView
+    private lateinit var plusButton: ImageView
+    private lateinit var minusButton: ImageView
     private val defaultValue: Int
     private var isDefaultValue = false
 
@@ -64,8 +67,10 @@ class EditTimerDialogFragment(
         currentTimer = view.findViewById(R.id.currentTimer)
         secondLabel = view.findViewById(R.id.secondLabel)
         stopButton = view.findViewById(R.id.stopButton)
+        minusButton = view.findViewById(R.id.minusTenButton)
+        plusButton = view.findViewById(R.id.plusTenButton)
 
-        if (endingCountdown == null) {
+        if (lastEndTime.isPast) {
             uiStopCounter()
 
         } else {
@@ -87,7 +92,7 @@ class EditTimerDialogFragment(
         })
         if (isDefaultValue) setInputAlpha(view, 0.4f)
 
-        view.findViewById<View>(R.id.stopButton).setOnClickListener {
+        stopButton.setOnClickListener {
             countdownThread?.interrupt() ?: uiStopCounter()
             onStopListener?.run()
         }
@@ -97,15 +102,28 @@ class EditTimerDialogFragment(
             val endingCountdown = Calendar.getInstance()
 
             endingCountdown.add(Calendar.SECOND, seconds)
-            stopButton.visibility = View.VISIBLE
+            showCurrentCountdownButtons()
 
-            this.endingCountdown = endingCountdown
+            onPlayListener?.accept(endingCountdown, seconds)
+
             if (countdownThread == null) {
                 countdownThread = CountdownThread(activity as Activity)
                     .also(Thread::start)
             }
+        }
 
-            onPlayListener?.accept(endingCountdown, seconds)
+        minusButton.setOnClickListener {
+            if (countdownThread != null) {
+                onPlayListener?.accept(DATE_ZERO, -10)
+                countdownThread?.onTick()
+            }
+        }
+
+        plusButton.setOnClickListener {
+            if (countdownThread != null) {
+                onPlayListener?.accept(DATE_ZERO, 10)
+                countdownThread?.onTick()
+            }
         }
 
         val builder = AlertDialog.Builder(activity)
@@ -137,27 +155,33 @@ class EditTimerDialogFragment(
     }
 
     private fun uiStopCounter() {
-        stopButton.visibility = View.GONE
+        showCurrentCountdownButtons(false)
         secondLabel.visibility = View.GONE
         currentTimer.text = ctx.resources.getString(R.string.text_none).lowercase(Locale.getDefault())
     }
 
-    private inner class CountdownThread(activity: Activity) : SecondTickThread(Supplier {
-        val seconds = endingCountdown!!.diffSeconds()
-        if (seconds > 0) {
+    private fun showCurrentCountdownButtons(show: Boolean = true) {
+        listOf(stopButton, plusButton, minusButton)
+            .forEach { it.visibility = if (show) View.VISIBLE else View.GONE}
+    }
+
+    private inner class CountdownThread(val activity: Activity) : SecondTickThread() {
+
+        override fun onTick(): Boolean {
+            if (lastEndTime.isPast)
+                return false
+
+            val seconds = lastEndTime.diffSeconds()
             activity.runOnUiThread {
                 currentTimer.integer = seconds
                 secondLabel.visibility = View.VISIBLE
             }
-            true
-        } else false
-    }) {
+            return true
+        }
 
-        init {
-            onFinishListener = Runnable {
-                activity.runOnUiThread { uiStopCounter() }
-                countdownThread = null
-            }
+        override fun onFinish() {
+            activity.runOnUiThread { uiStopCounter() }
+            countdownThread = null
         }
     }
 }

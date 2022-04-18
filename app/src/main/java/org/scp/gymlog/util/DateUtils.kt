@@ -19,6 +19,9 @@ object DateUtils {
     val Calendar.isPast: Boolean
         get() = this < Calendar.getInstance()
 
+    val Calendar.isSet: Boolean
+        get() = this > DATE_ZERO
+
     fun Calendar.firstTimeOfDay() : Calendar {
         return (this.clone() as Calendar)
             .also {

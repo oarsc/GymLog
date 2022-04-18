@@ -1,18 +1,19 @@
 package org.scp.gymlog.util
 
-import java.util.function.Supplier
+abstract class SecondTickThread : Thread() {
 
-open class SecondTickThread(private val onTickListener: Supplier<Boolean>) : Thread() {
-
-    var onFinishListener: Runnable? = null
+    open fun onStart() {}
+    abstract fun onTick() : Boolean
+    open fun onFinish() {}
 
     override fun run() {
+        onStart()
         try {
-            while (onTickListener.get()) sleep(1000)
+            while (onTick()) sleep(1000)
         } catch (e: InterruptedException) {
             // Thread interrupted
         } finally {
-            onFinishListener?.run()
+            onFinish()
         }
     }
 }

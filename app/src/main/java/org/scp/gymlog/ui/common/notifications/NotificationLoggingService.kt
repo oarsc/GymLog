@@ -22,6 +22,7 @@ class NotificationLoggingService : Service() {
     companion object {
         const val ACTION_STOP = "stop"
         const val ACTION_REPLACE = "replace"
+        const val ACTION_START = "start"
     }
 
     private val mBinder: IBinder = Binder()
@@ -45,17 +46,14 @@ class NotificationLoggingService : Service() {
             }
             intent.action == ACTION_REPLACE && running -> {
                 val milliseconds = intent.getLongExtra("milliseconds", 0)
-                val seconds = intent.getIntExtra("seconds", 10)
 
                 if (milliseconds > 0) {
                     endDate.timeInMillis = milliseconds
-                } else {
-                    endDate.timeInMillis = Calendar.getInstance().timeInMillis + seconds * 1000
-                }
 
-                if (!endDate.isPast) {
-                    val diff = endDate.diff().toInt()
-                    replaceView(diff, (endDate.timeInMillis-startTime).toInt());
+                    if (!endDate.isPast) {
+                        val diff = endDate.diff().toInt()
+                        replaceView(diff, (endDate.timeInMillis-startTime).toInt());
+                    }
                 }
 
                 super.onStartCommand(intent, flags, startId)

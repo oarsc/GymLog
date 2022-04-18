@@ -7,6 +7,8 @@ import android.content.Intent
 import org.scp.gymlog.R
 import org.scp.gymlog.ui.common.notifications.NotificationLoggingService
 import org.scp.gymlog.util.Constants.DATE_ZERO
+import org.scp.gymlog.util.DateUtils.isPast
+import org.scp.gymlog.util.DateUtils.isSet
 import java.util.*
 
 class NotificationService(private val context: Context) {
@@ -20,18 +22,28 @@ class NotificationService(private val context: Context) {
             private set
     }
 
-    fun showNotification(endTime: Calendar, seconds: Int, exerciseName: String, restart: Boolean = true) {
-        if (Calendar.getInstance() > endTime) return
+    fun showNotification(endTime: Calendar, seconds: Int, exerciseName: String) {
+        if (endTime.isPast) return
         lastEndTime = endTime
         val intent = Intent(context, NotificationLoggingService::class.java)
         intent.putExtra("seconds", seconds)
         intent.putExtra("milliseconds", endTime.timeInMillis)
         intent.putExtra("name", exerciseName)
-        if (restart) {
-            context.stopService(intent)
+        context.stopService(intent)
+        intent.action = NotificationLoggingService.ACTION_START
+        context.startService(intent)
+    }
+
+    fun editNotification(endTime: Calendar, seconds: Int) {
+        if (endTime.isSet) {
+            lastEndTime = endTime
         } else {
-            intent.action = NotificationLoggingService.ACTION_REPLACE
+            lastEndTime.add(Calendar.SECOND, seconds);
         }
+
+        val intent = Intent(context, NotificationLoggingService::class.java)
+        intent.putExtra("milliseconds", lastEndTime.timeInMillis)
+        intent.action = NotificationLoggingService.ACTION_REPLACE
         context.startService(intent)
     }
 
