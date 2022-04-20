@@ -1,7 +1,10 @@
 package org.scp.gymlog.ui.main.muscles
 
+import android.content.ContentResolver
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -22,6 +25,7 @@ import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
 import org.scp.gymlog.ui.createexercise.CreateExerciseActivity
 import org.scp.gymlog.ui.exercises.ExercisesActivity
 import org.scp.gymlog.util.Constants.IntentReference
+import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
@@ -105,11 +109,13 @@ class MusclesFragment : CustomFragment() {
 			intentReference === IntentReference.SAVE_FILE -> {
 				DBThread.run(context) { db ->
 					try {
-						(context.contentResolver.openOutputStream(data.data!!) as FileOutputStream)
+						val uri: Uri = data.data!!
+						(context.contentResolver.openOutputStream(uri) as FileOutputStream)
 							.use { fileOutputStream ->
 								dataBaseDumperService.save(context, fileOutputStream, db)
 								requireActivity().runOnUiThread {
-									Toast.makeText(activity, "Saved", Toast.LENGTH_LONG).show()
+									Toast.makeText(activity, "Saved \"${getFileName(uri)}\"",
+										Toast.LENGTH_LONG).show()
 								}
 							}
 
@@ -137,6 +143,20 @@ class MusclesFragment : CustomFragment() {
 					}
 				}
 			}
+		}
+	}
+
+	fun getFileName(uri: Uri): String {
+		return when (uri.scheme) {
+			ContentResolver.SCHEME_CONTENT -> {
+				runCatching {
+					requireContext().contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+						cursor.moveToFirst()
+						cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME).let(cursor::getString)
+					} ?: ""
+				}.getOrDefault("")
+			}
+			else -> uri.path?.let(::File)?.name ?: ""
 		}
 	}
 }
