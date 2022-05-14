@@ -49,6 +49,7 @@ class NotificationService(private val context: Context) {
 
     fun hideNotification() {
         val intent = Intent(context, NotificationLoggingService::class.java)
+        context.stopService(intent)
         intent.action = NotificationLoggingService.ACTION_STOP
         context.startService(intent)
         lastEndTime = DATE_ZERO
