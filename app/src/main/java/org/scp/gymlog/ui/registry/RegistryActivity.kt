@@ -2,6 +2,7 @@ package org.scp.gymlog.ui.registry
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.InputFilter
@@ -59,7 +60,9 @@ class RegistryActivity : DBAppCompatActivity() {
     private lateinit var exercise: Exercise
     private var variation: Variation? = null
     private val weight: EditText by lazy { findViewById(R.id.editWeight) }
-    private val timer: TextView by lazy { findViewById(R.id.timerSeconds) }
+    private var defaultTimeColor = 0
+    private val timer: TextView by lazy { findViewById<TextView>(R.id.timerSeconds)
+        .also { defaultTimeColor = it.textColors.defaultColor } }
     private val reps: EditText by lazy { findViewById(R.id.editReps) }
     private val notes: EditText by lazy { findViewById(R.id.editNotes) }
     private val weightModifier: NumberModifierView by lazy { findViewById(R.id.weightModifier) }
@@ -77,7 +80,6 @@ class RegistryActivity : DBAppCompatActivity() {
     private val notificationService: NotificationService by lazy { NotificationService(this) }
     private var defaultTimer = 0
     private var countdownThread: CountdownThread? = null
-    private val defaultTimeColor by lazy { timer.textColors.defaultColor }
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
         db.trainingDao().getCurrentTraining()
