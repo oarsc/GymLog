@@ -39,10 +39,7 @@ class MusclesFragment : CustomFragment() {
  * fragment (e.g. upon screen orientation changes).
  */
 	private val dataBaseDumperService by lazy { DataBaseDumperService() }
-
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-	}
+	private var trainingFloatingButton: TrainingFloatingActionButton? = null
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -55,8 +52,7 @@ class MusclesFragment : CustomFragment() {
 		recyclerView.layoutManager = LinearLayoutManager(context)
 		recyclerView.adapter = MusclesRecyclerViewAdapter { muscle -> onMuscleClicked(muscle) }
 
-		view.findViewById<TrainingFloatingActionButton>(R.id.fabTraining)
-			.updateFloatingActionButton()
+		trainingFloatingButton = view.findViewById(R.id.fabTraining)
 
 		val toolbar: Toolbar = view.findViewById(R.id.toolbar)
 		toolbar.setOnMenuItemClickListener { item: MenuItem ->
@@ -158,5 +154,10 @@ class MusclesFragment : CustomFragment() {
 			}
 			else -> uri.path?.let(::File)?.name ?: ""
 		}
+	}
+
+	override fun onResume() {
+		super.onResume()
+		trainingFloatingButton?.updateFloatingActionButton()
 	}
 }
