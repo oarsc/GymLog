@@ -20,19 +20,22 @@ class EditNotesDialogFragment(
     confirm: Consumer<String>
 ) : CustomDialogFragment<String>(title, confirm, Runnable{}) {
 
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.dialog_edit_notes, null)
         val input: EditText = view.findViewById(R.id.dialogText)
         input.setText(initialValue)
 
-        DBThread.run(requireContext()) { db: AppDatabase ->
-            val notes = db.bitDao().getNotesHistory(exerciseId, 18)
+        view.findViewById<RecyclerView>(R.id.historicNotes).apply {
+            layoutManager = LinearLayoutManager(context)
 
-            val recyclerView: RecyclerView = view.findViewById(R.id.historicNotes)
-            recyclerView.layoutManager = LinearLayoutManager(context)
-            recyclerView.adapter = EditNotesRecyclerViewAdapter(notes) { text: String? ->
-                input.setText(text)
+            DBThread.run(requireContext()) { db ->
+                db.bitDao().getNotesHistory(exerciseId, 18).also { notes ->
+                    activity?.runOnUiThread {
+                        adapter = EditNotesRecyclerViewAdapter(notes) { input.setText(it) }
+                    }
+                }
             }
         }
 
