@@ -12,13 +12,16 @@ object DateUtils {
         return LocalDateTime.now(ZoneId.systemDefault())
     }
 
+    val LocalDate.timeInMillis : Long
+        get() = atStartOfDay().timeInMillis
+
     val LocalDateTime.timeInMillis : Long
         get() = atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
     val Long.toLocalDateTime : LocalDateTime
         get() = Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDateTime()
 
-    fun LocalDateTime.prevMonday() : LocalDateTime {
+    fun LocalDate.prevMonday() : LocalDate {
         if (dayOfWeek == DayOfWeek.MONDAY) {
             return this;
         }

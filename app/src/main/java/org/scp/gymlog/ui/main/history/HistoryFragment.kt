@@ -20,6 +20,7 @@ import org.scp.gymlog.ui.common.components.HistoryCalendarView.PieDataInfo
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.firstTimeOfDay
 import org.scp.gymlog.util.DateUtils.timeInMillis
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 class HistoryFragment : Fragment() {
@@ -75,10 +76,11 @@ class HistoryFragment : Fragment() {
 		return view
 	}
 
-	private fun onDaySelected(startDate: LocalDateTime, muscles: List<Muscle>?) {
-		val endDate = startDate.plusDays(1)
+	private fun onDaySelected(startDate: LocalDate, muscles: List<Muscle>?) {
+		val initDate = startDate.atStartOfDay()
+		val endDate = initDate.plusDays(1)
 		DBThread.run(requireContext()) { db ->
-			val trainings = db.trainingDao().getTrainingByStartDate(startDate, endDate)
+			val trainings = db.trainingDao().getTrainingByStartDate(initDate, endDate)
 
 			val initialSize: Int = historyAdapter.size()
 			val endSize = trainings.size
@@ -97,10 +99,10 @@ class HistoryFragment : Fragment() {
 		}
 	}
 
-	private fun updateMonthData(first: LocalDateTime, end: LocalDateTime) {
+	private fun updateMonthData(first: LocalDate, end: LocalDate) {
 		val allMuscles: List<Muscle> = Data.muscles
 		DBThread.run(requireContext()) { db ->
-			val bits = db.bitDao().getHistory(first, end)
+			val bits = db.bitDao().getHistory(first.atStartOfDay(), end.atStartOfDay())
 
 			var currentDay = first
 			var i = 0
@@ -111,7 +113,7 @@ class HistoryFragment : Fragment() {
 				while (i < bits.size) {
 					val bit = bits[i]
 
-					if (currentDay.compareTo(bit.timestamp.firstTimeOfDay()) == 0) {
+					if (currentDay == bit.timestamp.toLocalDate()) {
 						val exercise = Data.getExercise(bit.exerciseId)
 
 						val secondariesCount = exercise.secondaryMuscles.size

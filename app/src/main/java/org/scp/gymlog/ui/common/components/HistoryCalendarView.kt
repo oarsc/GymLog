@@ -24,17 +24,17 @@ import java.util.function.BiConsumer
 
 class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
 
-    private var firstDayOfMonth: LocalDateTime
-    private var selectedDay: LocalDateTime
+    private var firstDayOfMonth: LocalDate
+    private var selectedDay: LocalDate
     private val daysMap: MutableMap<Long, View> = HashMap()
     private val dayDataMap: MutableMap<Long, List<Muscle>> = HashMap()
-    private var onMonthChangeListener: BiConsumer<LocalDateTime, LocalDateTime>? = null
-    private var onSelectDayListener: BiConsumer<LocalDateTime, List<Muscle>?>? = null
+    private var onMonthChangeListener: BiConsumer<LocalDate, LocalDate>? = null
+    private var onSelectDayListener: BiConsumer<LocalDate, List<Muscle>?>? = null
 
     init {
         inflate(getContext(), R.layout.view_calendar, this)
 
-        selectedDay = LocalDate.now().atStartOfDay()
+        selectedDay = LocalDate.now()
         firstDayOfMonth = selectedDay.withDayOfMonth(1)
 
         findViewById<View>(R.id.prevButton).setOnClickListener { moveMonth(false) }
@@ -52,7 +52,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
         drawWeeks()
     }
 
-    fun isSelected(date: LocalDateTime): Boolean {
+    fun isSelected(date: LocalDate): Boolean {
         return selectedDay.compareTo(date) == 0
     }
 
@@ -124,7 +124,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
         onMonthChangeListener?.accept(firstDay, lastDay)
     }
 
-    private fun calculateFirstDay(): LocalDateTime {
+    private fun calculateFirstDay(): LocalDate {
         return firstDayOfMonth.withDayOfMonth(1).prevMonday()
     }
 
@@ -137,7 +137,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
         }
     }
 
-    private fun selectDay(selectDay: LocalDateTime) {
+    private fun selectDay(selectDay: LocalDate) {
         val day = daysMap[selectedDay.timeInMillis]
         if (day != null) {
             val number: TextView = day.findViewById(R.id.dayNumber)
@@ -200,7 +200,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
         chart.data = pieData
     }
 
-    fun setOnMonthChangeListener(onMonthChangeListener: BiConsumer<LocalDateTime, LocalDateTime>) {
+    fun setOnMonthChangeListener(onMonthChangeListener: BiConsumer<LocalDate, LocalDate>) {
         this.onMonthChangeListener = onMonthChangeListener
 
         // send current date
@@ -213,7 +213,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
         onMonthChangeListener.accept(firstDay, lastDay)
     }
 
-    fun setOnSelectDayListener(onSelectDayListener: BiConsumer<LocalDateTime, List<Muscle>?>) {
+    fun setOnSelectDayListener(onSelectDayListener: BiConsumer<LocalDate, List<Muscle>?>) {
         this.onSelectDayListener = onSelectDayListener
 
         // send current selected day
