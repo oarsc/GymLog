@@ -15,25 +15,27 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Muscle
-import org.scp.gymlog.util.DateUtils.firstTimeOfDay
-import java.util.*
+import org.scp.gymlog.util.DateUtils.timeInMillis
+import org.scp.gymlog.util.DateUtils.prevMonday
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.Month
 import java.util.function.BiConsumer
 
 class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
 
-    private val firstDayOfMonth: Calendar
-    private var selectedDay: Calendar
+    private var firstDayOfMonth: LocalDateTime
+    private var selectedDay: LocalDateTime
     private val daysMap: MutableMap<Long, View> = HashMap()
     private val dayDataMap: MutableMap<Long, List<Muscle>> = HashMap()
-    private var onMonthChangeListener: BiConsumer<Calendar, Calendar>? = null
-    private var onSelectDayListener: BiConsumer<Calendar, List<Muscle>?>? = null
+    private var onMonthChangeListener: BiConsumer<LocalDateTime, LocalDateTime>? = null
+    private var onSelectDayListener: BiConsumer<LocalDateTime, List<Muscle>?>? = null
 
     init {
         inflate(getContext(), R.layout.view_calendar, this)
 
-        selectedDay = Calendar.getInstance().firstTimeOfDay()
-        firstDayOfMonth = selectedDay.clone() as Calendar
-        firstDayOfMonth[Calendar.DAY_OF_MONTH] = 1
+        selectedDay = LocalDate.now().atStartOfDay()
+        firstDayOfMonth = selectedDay.withDayOfMonth(1)
 
         findViewById<View>(R.id.prevButton).setOnClickListener { moveMonth(false) }
         findViewById<View>(R.id.nextButton).setOnClickListener { moveMonth(true) }
@@ -45,13 +47,13 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
     private fun moveMonth(next: Boolean) {
         isEnabled = false
         dayDataMap.clear()
-        firstDayOfMonth.add(Calendar.MONTH, if (next) 1 else -1)
+        firstDayOfMonth = firstDayOfMonth.plusMonths(if (next) 1 else -1)
         updateHeader()
         drawWeeks()
     }
 
-    fun isSelected(calendar: Calendar): Boolean {
-        return selectedDay.compareTo(calendar) == 0
+    fun isSelected(date: LocalDateTime): Boolean {
+        return selectedDay.compareTo(date) == 0
     }
 
     fun isSelected(value: Long): Boolean {
@@ -60,8 +62,8 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
 
     private fun updateHeader() {
         val year:TextView = findViewById(R.id.year)
-        year.text = firstDayOfMonth[Calendar.YEAR].toString()
-        val monthRef = when (firstDayOfMonth[Calendar.MONTH]) {
+        year.text = firstDayOfMonth.year.toString()
+        val monthRef = when (firstDayOfMonth.month.ordinal) {
             1 -> R.string.month_february
             2 -> R.string.month_march
             3 -> R.string.month_april
@@ -85,9 +87,9 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
         weeks.removeAllViewsInLayout()
         daysMap.clear()
 
-        val month = firstDayOfMonth[Calendar.MONTH]
+        val month = firstDayOfMonth.month
         val firstDay = calculateFirstDay()
-        val lastDay = firstDay.clone() as Calendar
+        var lastDay = firstDay
         var j = 0
         do {
             inflate(context, R.layout.view_calendar_week, weeks)
@@ -96,16 +98,16 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
             for (i in 0..6) {
                 inflate(context, R.layout.view_calendar_day, week)
                 val day = week.getChildAt(i)
-                if (lastDay[Calendar.MONTH] != month) {
+                if (lastDay.month != month) {
                     day.alpha = 0.35f
                 }
 
-                val actualDay = lastDay.clone() as Calendar
-                day.setOnClickListener { selectDay(actualDay.clone() as Calendar) }
+                val currentDay = lastDay
+                day.setOnClickListener { selectDay(currentDay) }
 
                 daysMap[lastDay.timeInMillis] = day
                 val number: TextView = day.findViewById(R.id.dayNumber)
-                number.text = lastDay[Calendar.DAY_OF_MONTH].toString()
+                number.text = lastDay.dayOfMonth.toString()
 
                 val chart: PieChart = day.findViewById(R.id.chart1)
                 chart.isDrawHoleEnabled = false
@@ -113,25 +115,17 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
                 chart.legend.isEnabled = false
                 chart.isRotationEnabled = false
                 chart.setTouchEnabled(false)
-                lastDay.add(Calendar.DAY_OF_YEAR, 1)
+                lastDay = lastDay.plusDays(1)
             }
-        } while (lastDay[Calendar.MONTH] == month)
+        } while (lastDay.month == month)
 
         updateSelectedDay()
 
         onMonthChangeListener?.accept(firstDay, lastDay)
     }
 
-    private fun calculateFirstDay(): Calendar {
-        val firstDay = firstDayOfMonth.clone() as Calendar
-
-        firstDay[Calendar.DAY_OF_MONTH] = 1
-        if (firstDay[Calendar.DAY_OF_WEEK] != Calendar.MONDAY) {
-            firstDay.add(Calendar.DAY_OF_YEAR, -1)
-            firstDay[Calendar.DAY_OF_WEEK] = Calendar.MONDAY
-        }
-
-        return firstDay
+    private fun calculateFirstDay(): LocalDateTime {
+        return firstDayOfMonth.withDayOfMonth(1).prevMonday()
     }
 
     private fun updateSelectedDay() {
@@ -143,7 +137,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
         }
     }
 
-    private fun selectDay(selectDay: Calendar) {
+    private fun selectDay(selectDay: LocalDateTime) {
         val day = daysMap[selectedDay.timeInMillis]
         if (day != null) {
             val number: TextView = day.findViewById(R.id.dayNumber)
@@ -152,12 +146,12 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
         }
         selectedDay = selectDay
         onSelectDayListener?.accept(selectedDay, dayDataMap[selectDay.timeInMillis])
-        val currentMonth = firstDayOfMonth[Calendar.MONTH]
-        val selectedMonth = selectDay[Calendar.MONTH]
+        val currentMonth = firstDayOfMonth.month
+        val selectedMonth = selectDay.month
         if (currentMonth != selectedMonth) {
-            if (currentMonth == 11 && selectedMonth == 0) {
+            if (currentMonth == Month.DECEMBER && selectedMonth == Month.JANUARY) {
                 moveMonth(true)
-            } else if (currentMonth == 0 && selectedMonth == 11) {
+            } else if (currentMonth == Month.JANUARY && selectedMonth == Month.DECEMBER) {
                 moveMonth(false)
             } else {
                 moveMonth(selectedMonth > currentMonth)
@@ -206,22 +200,20 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
         chart.data = pieData
     }
 
-    fun setOnMonthChangeListener(onMonthChangeListener: BiConsumer<Calendar, Calendar>) {
+    fun setOnMonthChangeListener(onMonthChangeListener: BiConsumer<LocalDateTime, LocalDateTime>) {
         this.onMonthChangeListener = onMonthChangeListener
 
-        // send current calendar
-        val month = firstDayOfMonth[Calendar.MONTH]
+        // send current date
+        val month = firstDayOfMonth.month
         val firstDay = calculateFirstDay()
-        val lastDay = firstDay.clone() as Calendar
+        var lastDay = firstDay
         do {
-            for (i in 0..6) {
-                lastDay.add(Calendar.DAY_OF_YEAR, 1)
-            }
-        } while (lastDay[Calendar.MONTH] == month)
+            lastDay = lastDay.plusWeeks(1)
+        } while (lastDay.month == month)
         onMonthChangeListener.accept(firstDay, lastDay)
     }
 
-    fun setOnSelectDayListener(onSelectDayListener: BiConsumer<Calendar, List<Muscle>?>) {
+    fun setOnSelectDayListener(onSelectDayListener: BiConsumer<LocalDateTime, List<Muscle>?>) {
         this.onSelectDayListener = onSelectDayListener
 
         // send current selected day

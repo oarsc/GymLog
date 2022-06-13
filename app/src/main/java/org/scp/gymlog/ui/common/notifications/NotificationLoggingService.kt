@@ -14,7 +14,10 @@ import org.scp.gymlog.SplashActivity
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.util.DateUtils.diff
 import org.scp.gymlog.util.DateUtils.isPast
-import java.util.*
+import org.scp.gymlog.util.DateUtils.currentDateTime
+import org.scp.gymlog.util.DateUtils.timeInMillis
+import org.scp.gymlog.util.DateUtils.toLocalDateTime
+import java.time.LocalDateTime
 import kotlin.math.roundToInt
 
 class NotificationLoggingService : Service() {
@@ -34,7 +37,7 @@ class NotificationLoggingService : Service() {
     private var notification: Notification? = null
     private var thread: Thread? = null
     private var startTime: Long = 0
-    private lateinit var endDate: Calendar
+    private lateinit var endDate: LocalDateTime
     private var exerciseName: String? = null
     private var running = false
 
@@ -48,11 +51,11 @@ class NotificationLoggingService : Service() {
                 val milliseconds = intent.getLongExtra("milliseconds", 0)
 
                 if (milliseconds > 0) {
-                    endDate.timeInMillis = milliseconds
+                    endDate = milliseconds.toLocalDateTime
 
                     if (!endDate.isPast) {
                         val diff = endDate.diff().toInt()
-                        replaceView(diff, (endDate.timeInMillis-startTime).toInt());
+                        replaceView(diff, (endDate.timeInMillis - startTime).toInt());
                     }
                 }
 
@@ -60,19 +63,20 @@ class NotificationLoggingService : Service() {
             }
             else -> {
                 getNotificationManager().cancel(NotificationService.NOTIFICATION_READY_ID)
-                endDate = Calendar.getInstance()
                 exerciseName = intent.getStringExtra("name")
                 val milliseconds = intent.getLongExtra("milliseconds", 0)
                 val seconds = intent.getIntExtra("seconds", 10)
 
                 if (milliseconds > 0) {
-                    endDate.timeInMillis = milliseconds
-                    val startDate = endDate.clone() as Calendar
-                    startDate.add(Calendar.SECOND, -seconds)
-                    startTime = startDate.timeInMillis
+                    endDate = milliseconds.toLocalDateTime
+                    startTime = endDate
+                        .minusSeconds(seconds.toLong())
+                        .timeInMillis
                 } else {
-                    startTime = endDate.timeInMillis
-                    endDate.add(Calendar.SECOND, seconds)
+                    currentDateTime().apply {
+                        startTime = timeInMillis
+                        endDate = plusSeconds(seconds.toLong())
+                    }
                 }
                 if (seconds <= 0) {
                     showReadyNotification()

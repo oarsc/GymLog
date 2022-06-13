@@ -7,6 +7,7 @@ import org.scp.gymlog.room.Converters.fromDate
 import org.scp.gymlog.room.Converters.fromWeightSpecification
 import org.scp.gymlog.room.Converters.toDate
 import org.scp.gymlog.room.Converters.toWeightSpecification
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
@@ -48,7 +49,7 @@ object JsonUtils {
                         Float::class -> json.put(fieldName, value as Float)
                         Double::class -> json.put(fieldName, value as Double)
                         String::class -> json.put(fieldName, value as String)
-                        Calendar::class -> json.put(fieldName, fromDate(value as Calendar))
+                        LocalDateTime::class -> json.put(fieldName, fromDate(value as LocalDateTime))
                         WeightSpecification::class ->
                             json.put(fieldName, fromWeightSpecification((value as WeightSpecification)).toInt())
 
@@ -81,7 +82,7 @@ object JsonUtils {
                             Float::class -> getDouble(fieldName).toFloat()
                             Double::class -> getDouble(fieldName)
                             String::class -> getString(fieldName)
-                            Calendar::class -> toDate(getLong(fieldName))
+                            LocalDateTime::class -> toDate(getLong(fieldName))
                             WeightSpecification::class -> toWeightSpecification(
                                 getInt(fieldName).toShort())
                             else -> null

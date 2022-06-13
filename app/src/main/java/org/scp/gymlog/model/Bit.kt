@@ -3,8 +3,9 @@ package org.scp.gymlog.model
 import org.scp.gymlog.room.EntityMappable
 import org.scp.gymlog.room.entities.BitEntity
 import org.scp.gymlog.util.Constants
+import org.scp.gymlog.util.DateUtils.currentDateTime
 import java.math.BigDecimal
-import java.util.*
+import java.time.LocalDateTime
 
 class Bit(val exerciseId: Int, val variationId: Int): EntityMappable<BitEntity> {
 
@@ -13,7 +14,7 @@ class Bit(val exerciseId: Int, val variationId: Int): EntityMappable<BitEntity> 
 	var reps = 0
 	var weight = Weight.INVALID
 	var note: String = ""
-	var timestamp: Calendar = Calendar.getInstance()
+	var timestamp: LocalDateTime = currentDateTime()
 	var instant = false
 	var set = 0 // used in logRecyclerViewAdapter
 

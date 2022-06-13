@@ -2,7 +2,6 @@ package org.scp.gymlog.ui.registry
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.InputFilter
@@ -41,6 +40,7 @@ import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.diffSeconds
 import org.scp.gymlog.util.DateUtils.isPast
+import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.FormatUtils.safeBigDecimal
@@ -48,7 +48,7 @@ import org.scp.gymlog.util.SecondTickThread
 import org.scp.gymlog.util.WeightUtils
 import java.io.IOException
 import java.math.BigDecimal
-import java.util.*
+import java.time.LocalDateTime
 import java.util.function.BiConsumer
 
 class RegistryActivity : DBAppCompatActivity() {
@@ -456,7 +456,7 @@ class RegistryActivity : DBAppCompatActivity() {
             bit.trainingId = trainingId
             bit.instant = instant
 
-            exercise.lastTrained = Calendar.getInstance()
+            exercise.lastTrained = currentDateTime()
 
             // SAVE TO DB:
             bit.id = db.bitDao().insert(bit.toEntity()).toInt()
@@ -591,19 +591,18 @@ class RegistryActivity : DBAppCompatActivity() {
 
     private fun startTimer() {
         val seconds = if (exercise.restTime < 0) defaultTimer else exercise.restTime
-        val endDate = Calendar.getInstance()
-        endDate.add(Calendar.SECOND, seconds)
+        val endDate = currentDateTime().plusSeconds(seconds.toLong())
         startTimer(endDate, seconds)
     }
 
-    private fun startTimer(endDate: Calendar, seconds: Int) {
+    private fun startTimer(endDate: LocalDateTime, seconds: Int) {
         if (seconds > 0) {
             notificationService.showNotification(endDate, seconds, exercise.name)
             updateTimer()
         }
     }
 
-    private fun editTimer(endDate: Calendar, seconds: Int) {
+    private fun editTimer(endDate: LocalDateTime, seconds: Int) {
         if (!lastEndTime.isPast) {
             notificationService.editNotification(endDate, seconds)
             updateTimer()

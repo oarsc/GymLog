@@ -9,7 +9,7 @@ import org.scp.gymlog.room.entities.VariationEntity
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import java.math.BigDecimal
-import java.util.*
+import java.time.LocalDateTime
 
 class Exercise() : EntityMappable<ExerciseEntity> {
 
@@ -19,7 +19,7 @@ class Exercise() : EntityMappable<ExerciseEntity> {
 	var id = 0
 	var name: String = ""
 	var image: String = ""
-	var lastTrained: Calendar = Constants.DATE_ZERO
+	var lastTrained: LocalDateTime = Constants.DATE_ZERO
 	var step: BigDecimal = Constants.FIVE
 	var requiresBar = false
 	var bar: Bar? = null

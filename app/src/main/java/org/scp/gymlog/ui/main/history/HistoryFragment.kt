@@ -19,7 +19,8 @@ import org.scp.gymlog.ui.common.components.HistoryCalendarView
 import org.scp.gymlog.ui.common.components.HistoryCalendarView.PieDataInfo
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.firstTimeOfDay
-import java.util.*
+import org.scp.gymlog.util.DateUtils.timeInMillis
+import java.time.LocalDateTime
 
 class HistoryFragment : Fragment() {
 
@@ -59,7 +60,7 @@ class HistoryFragment : Fragment() {
 		}
 		trainingRecyclerView.adapter = historyAdapter
 
-		// CALENDAR
+		// CALENDAR VIEW
 		calendarView = view.findViewById(R.id.calendarView);
 		calendarView.setOnSelectDayListener { startDate, muscles ->
 			onDaySelected(startDate, muscles)
@@ -74,9 +75,8 @@ class HistoryFragment : Fragment() {
 		return view
 	}
 
-	private fun onDaySelected(startDate: Calendar, muscles: List<Muscle>?) {
-		val endDate = startDate.clone() as Calendar
-		endDate.add(Calendar.DAY_OF_YEAR, 1)
+	private fun onDaySelected(startDate: LocalDateTime, muscles: List<Muscle>?) {
+		val endDate = startDate.plusDays(1)
 		DBThread.run(requireContext()) { db ->
 			val trainings = db.trainingDao().getTrainingByStartDate(startDate, endDate)
 
@@ -97,20 +97,21 @@ class HistoryFragment : Fragment() {
 		}
 	}
 
-	private fun updateMonthData(first: Calendar, end: Calendar) {
+	private fun updateMonthData(first: LocalDateTime, end: LocalDateTime) {
 		val allMuscles: List<Muscle> = Data.muscles
 		DBThread.run(requireContext()) { db ->
 			val bits = db.bitDao().getHistory(first, end)
 
+			var currentDay = first
 			var i = 0
-			while (first < end) {
+			while (currentDay < end) {
 				val summary: Map<Muscle, FloatArray> = allMuscles
 					.fold(HashMap()) { acc, muscle -> acc.apply { acc[muscle] = floatArrayOf(0f) } }
 
 				while (i < bits.size) {
 					val bit = bits[i]
 
-					if (first.compareTo(bit.timestamp.firstTimeOfDay()) == 0) {
+					if (currentDay.compareTo(bit.timestamp.firstTimeOfDay()) == 0) {
 						val exercise = Data.getExercise(bit.exerciseId)
 
 						val secondariesCount = exercise.secondaryMuscles.size
@@ -133,16 +134,16 @@ class HistoryFragment : Fragment() {
 					.map { (key, value) -> PieDataInfo(value[0], key) }
 
 				if (data.isNotEmpty()) {
-					val millis = first.timeInMillis
+					val millis = currentDay.timeInMillis
 					runOnUiThread { calendarView.setDayData(millis, data) }
 				}
 
-				if (calendarView.isSelected(first) && data.isNotEmpty()) {
+				if (calendarView.isSelected(currentDay) && data.isNotEmpty()) {
 					runOnUiThread {
 						legendAdapter.focusMuscles(data.map(PieDataInfo::muscle))
 					}
 				}
-				first.add(Calendar.DAY_OF_YEAR, 1)
+				currentDay = currentDay.plusDays(1)
 			}
 			runOnUiThread { calendarView.isEnabled = true }
 		}

@@ -16,7 +16,9 @@ import org.scp.gymlog.model.Order
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.getLetterFrom
+import org.scp.gymlog.util.DateUtils.currentDateTime
 import java.io.IOException
+import java.time.LocalDateTime
 import java.util.*
 import java.util.function.BiConsumer
 import java.util.function.Consumer
@@ -30,7 +32,7 @@ class ExercisesRecyclerViewAdapter(
     private val exercises: MutableList<Exercise> = exercisesList
         .map { id -> Data.getExercise(id) } as MutableList<Exercise>
     private val orderedIndexes: MutableList<Int> = (0 until exercises.size).toMutableList()
-    private val today: Calendar = Calendar.getInstance()
+    private val today: LocalDateTime = currentDateTime()
     var onClickListener: Consumer<Exercise>? = null
 
     init {

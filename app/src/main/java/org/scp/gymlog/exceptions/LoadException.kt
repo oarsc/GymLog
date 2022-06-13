@@ -1,4 +1,4 @@
-package org.scp.gymlog.exceptions;
+package org.scp.gymlog.exceptions
 
 class LoadException : RuntimeException {
     constructor(message: String) : super(message)

@@ -9,7 +9,8 @@ import org.scp.gymlog.ui.common.notifications.NotificationLoggingService
 import org.scp.gymlog.util.Constants.DATE_ZERO
 import org.scp.gymlog.util.DateUtils.isPast
 import org.scp.gymlog.util.DateUtils.isSet
-import java.util.*
+import org.scp.gymlog.util.DateUtils.timeInMillis
+import java.time.LocalDateTime
 
 class NotificationService(private val context: Context) {
 
@@ -18,11 +19,11 @@ class NotificationService(private val context: Context) {
         const val READY_CHANNEL = "ready"
         const val NOTIFICATION_COUNTDOWN_ID = 1
         const val NOTIFICATION_READY_ID = 2
-        var lastEndTime: Calendar = DATE_ZERO
+        var lastEndTime: LocalDateTime = DATE_ZERO
             private set
     }
 
-    fun showNotification(endTime: Calendar, seconds: Int, exerciseName: String) {
+    fun showNotification(endTime: LocalDateTime, seconds: Int, exerciseName: String) {
         if (endTime.isPast) return
         lastEndTime = endTime
         val intent = Intent(context, NotificationLoggingService::class.java)
@@ -34,12 +35,11 @@ class NotificationService(private val context: Context) {
         context.startService(intent)
     }
 
-    fun editNotification(endTime: Calendar, seconds: Int) {
-        if (endTime.isSet) {
-            lastEndTime = endTime
-        } else {
-            lastEndTime.add(Calendar.SECOND, seconds);
-        }
+    fun editNotification(endTime: LocalDateTime, seconds: Int) {
+        lastEndTime = if (endTime.isSet)
+                endTime
+            else
+                lastEndTime.plusSeconds(seconds.toLong())
 
         val intent = Intent(context, NotificationLoggingService::class.java)
         intent.putExtra("milliseconds", lastEndTime.timeInMillis)

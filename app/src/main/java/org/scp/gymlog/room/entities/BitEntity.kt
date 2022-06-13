@@ -3,7 +3,7 @@ package org.scp.gymlog.room.entities
 import androidx.room.*
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.JsonUtils.NoJsonify
-import java.util.*
+import java.time.LocalDateTime
 
 @Entity(
     tableName = "bit",
@@ -42,7 +42,7 @@ class BitEntity {
     var kilos = false
     var instant = false
     var note: String = ""
-    var timestamp: Calendar = Constants.DATE_ZERO
+    var timestamp: LocalDateTime = Constants.DATE_ZERO
 
     class WithBar {
         @Embedded

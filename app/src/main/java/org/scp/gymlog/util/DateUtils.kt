@@ -1,42 +1,80 @@
 package org.scp.gymlog.util
 
 import org.scp.gymlog.util.Constants.DATE_ZERO
-import java.text.SimpleDateFormat
-import java.util.*
+import java.time.*
+import java.time.format.DateTimeFormatter
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
 object DateUtils {
 
-    fun Calendar.diff(other: Calendar = Calendar.getInstance()): Long {
-        return abs(this.timeInMillis - other.timeInMillis)
+    fun currentDateTime() : LocalDateTime {
+        return LocalDateTime.now(ZoneId.systemDefault())
     }
 
-    fun Calendar.diffSeconds(other: Calendar = Calendar.getInstance()): Int {
+    val LocalDateTime.timeInMillis : Long
+        get() = atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+    val Long.toLocalDateTime : LocalDateTime
+        get() = Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDateTime()
+
+    fun LocalDateTime.prevMonday() : LocalDateTime {
+        if (dayOfWeek == DayOfWeek.MONDAY) {
+            return this;
+        }
+        return plusDays((DayOfWeek.MONDAY.ordinal - dayOfWeek.ordinal).toLong())
+    }
+
+    val LocalDateTime.isPast: Boolean
+        get() = this < currentDateTime()
+
+    val LocalDateTime.isSet: Boolean
+        get() = this > DATE_ZERO
+
+    fun LocalDateTime.getTimeString(): String {
+        return parseDateToString(this, "HH:mm")
+    }
+
+    fun LocalDateTime.getDateTimeString(): String {
+        return parseDateToString(this, "yyyy-MM-dd HH:mm")
+    }
+
+    fun LocalDateTime.getDateString(): String {
+        return parseDateToString(this, "yyyy-MM-dd")
+    }
+
+    private fun parseDateToString(date: LocalDateTime, format: String): String {
+        return date.format(DateTimeFormatter.ofPattern(format))
+    }
+
+
+    private fun getYearDays(year: Int): Int {
+        return if (isLeapYear(year)) 366 else 365;
+    }
+
+    private fun isLeapYear(year: Int): Boolean {
+        return year % 4 == 0 && year % 100 != 0 || year % 400 == 0
+    }
+
+    fun LocalDateTime.firstTimeOfDay() : LocalDateTime {
+        return this.toLocalDate().atStartOfDay()
+    }
+
+    fun LocalDateTime.diff(other: LocalDateTime = currentDateTime()): Long {
+        val duration = Duration.between(this, other)
+        return abs(duration.toMillis())
+    }
+
+    fun LocalDateTime.diffSeconds(other: LocalDateTime = currentDateTime()): Int {
         return (this.diff(other) / 1000.0).roundToInt()
     }
 
-    val Calendar.isPast: Boolean
-        get() = this < Calendar.getInstance()
-
-    val Calendar.isSet: Boolean
-        get() = this > DATE_ZERO
-
-    fun Calendar.firstTimeOfDay() : Calendar {
-        return (this.clone() as Calendar)
-            .also {
-                it[Calendar.HOUR_OF_DAY] = 0
-                it[Calendar.MINUTE] = 0
-                it[Calendar.SECOND] = 0
-                it[Calendar.MILLISECOND] = 0
-            }
-    }
 
     class YearsAndDays (val years: Int, val days: Int)
-    fun Calendar.diffYearsAndDays(other: Calendar): YearsAndDays {
+    fun LocalDateTime.diffYearsAndDays(other: LocalDateTime): YearsAndDays {
         val d1p = this.firstTimeOfDay()
         val d2p = other.firstTimeOfDay()
-        var currentYear = d1p[Calendar.YEAR]
+        var currentYear = d1p.year
 
         var diffDays = (d1p.diff(d2p) / 86400000.0).roundToInt()
         var diffYears = 0
@@ -49,37 +87,12 @@ object DateUtils {
                     currentYear++
                     true
                 } else false
-        });
+            });
 
         return YearsAndDays(diffYears, diffDays)
     }
 
-    private fun getYearDays(year: Int): Int {
-        return if (isLeapYear(year)) 366 else 365;
-    }
-
-    private fun isLeapYear(year: Int): Boolean {
-        return year % 4 == 0 && year % 100 != 0 || year % 400 == 0
-    }
-
-    fun Calendar.getTimeString(): String {
-        return parseCalendarToString(this, "HH:mm")
-    }
-
-    fun Calendar.getDateTimeString(): String {
-        return parseCalendarToString(this, "yyyy-MM-dd HH:mm")
-    }
-
-    fun Calendar.getDateString(): String {
-        return parseCalendarToString(this, "yyyy-MM-dd")
-    }
-
-
-    private fun parseCalendarToString(cal: Calendar, format: String): String {
-        return SimpleDateFormat(format, Locale.getDefault()).format(cal.time)
-    }
-
-    fun Calendar.getLetterFrom(date: Calendar?): String {
+    fun LocalDateTime.getLetterFrom(date: LocalDateTime?): String {
         if (date == null || date.compareTo(DATE_ZERO) == 0) {
             return ""
         }

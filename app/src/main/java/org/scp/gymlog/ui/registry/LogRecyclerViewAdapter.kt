@@ -14,10 +14,10 @@ import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.DateUtils.diffYearsAndDays
 import org.scp.gymlog.util.DateUtils.getLetterFrom
+import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.WeightUtils
-import java.util.*
 import java.util.function.BiConsumer
 
 class LogRecyclerViewAdapter(
@@ -27,7 +27,7 @@ class LogRecyclerViewAdapter(
     private val internationalSystem: Boolean
 ) : RecyclerView.Adapter<LogRecyclerViewAdapter.ViewHolder>() {
 
-    private val today: Calendar = Calendar.getInstance()
+    private val today = currentDateTime()
     var onClickElementListener: BiConsumer<View, Bit>? = null
     var onLoadMoreListener: Runnable? = null
     private var fullyLoaded = false

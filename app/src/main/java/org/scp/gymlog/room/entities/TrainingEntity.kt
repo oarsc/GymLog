@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import org.scp.gymlog.util.Constants
-import java.util.*
+import java.time.LocalDateTime
 
 @Entity(
     tableName = "training",
@@ -15,6 +15,6 @@ import java.util.*
 class TrainingEntity {
     @PrimaryKey(autoGenerate = true)
     var trainingId = 0
-    var start: Calendar = Constants.DATE_ZERO
-    var end: Calendar? = null
+    var start: LocalDateTime = Constants.DATE_ZERO
+    var end: LocalDateTime? = null
 }

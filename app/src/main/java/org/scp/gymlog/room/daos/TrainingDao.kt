@@ -2,6 +2,7 @@ package org.scp.gymlog.room.daos
 
 import androidx.room.*
 import org.scp.gymlog.room.entities.TrainingEntity
+import java.time.LocalDateTime
 import java.util.*
 
 @Dao
@@ -16,7 +17,7 @@ interface TrainingDao {
     fun getTraining(trainingId: Int): Optional<TrainingEntity>
 
     @Query("SELECT * FROM training WHERE :startDate <= start AND start < :endDate")
-    fun getTrainingByStartDate(startDate: Calendar, endDate: Calendar): List<TrainingEntity>
+    fun getTrainingByStartDate(startDate: LocalDateTime, endDate: LocalDateTime): List<TrainingEntity>
 
     @Update
     fun update(training: TrainingEntity)

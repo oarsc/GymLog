@@ -14,7 +14,7 @@ import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment
 import org.scp.gymlog.util.Data
-import java.util.*
+import org.scp.gymlog.util.DateUtils.currentDateTime
 
 class TrainingFloatingActionButton : FloatingActionButton {
 
@@ -75,7 +75,7 @@ class TrainingFloatingActionButton : FloatingActionButton {
             } else {
                 DBThread.run(context) { db: AppDatabase ->
                     val training = TrainingEntity()
-                    training.start = Calendar.getInstance()
+                    training.start = currentDateTime()
                     training.trainingId = db.trainingDao().insert(training).toInt()
                     Data.trainingId = training.trainingId
                     updateFloatingActionButton()

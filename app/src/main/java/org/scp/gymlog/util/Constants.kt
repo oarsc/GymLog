@@ -1,6 +1,8 @@
 package org.scp.gymlog.util
 
+import org.scp.gymlog.util.DateUtils.toLocalDateTime
 import java.math.BigDecimal
+import java.time.LocalDateTime
 import java.util.*
 
 object Constants {
@@ -9,11 +11,7 @@ object Constants {
     val ONE_THOUSAND = BigDecimal("1000")
     val ONE_HUNDRED = BigDecimal("100")
     val LBS_RATIO = BigDecimal("2.2046226218488")
-    val DATE_ZERO: Calendar = Calendar.getInstance()
-
-    init {
-        DATE_ZERO.timeInMillis = 0L
-    }
+    val DATE_ZERO: LocalDateTime = 0L.toLocalDateTime
 
     enum class IntentReference {
         NONE,

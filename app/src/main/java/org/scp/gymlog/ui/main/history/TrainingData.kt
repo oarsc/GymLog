@@ -1,10 +1,10 @@
 package org.scp.gymlog.ui.main.history
 
 import org.scp.gymlog.model.Muscle
-import java.util.*
+import java.time.LocalDateTime
 
 class TrainingData(
     val id: Int,
-    val startDate: Calendar,
+    val startDate: LocalDateTime,
     val mostUsedMuscles: List<Muscle>
 )

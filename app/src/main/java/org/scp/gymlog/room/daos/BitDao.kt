@@ -2,6 +2,7 @@ package org.scp.gymlog.room.daos
 
 import androidx.room.*
 import org.scp.gymlog.room.entities.BitEntity
+import java.time.LocalDateTime
 import java.util.*
 
 @Dao
@@ -20,24 +21,24 @@ interface BitDao {
     @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND variationId IS NULL AND " +
                 "(trainingId = :trainingId AND timestamp > :date OR trainingId < :trainingId) " +
                 "ORDER BY trainingId DESC, timestamp LIMIT :limit")
-    fun getHistory(exerciseId: Int, trainingId: Int, date: Calendar, limit: Int): List<BitEntity>
+    fun getHistory(exerciseId: Int, trainingId: Int, date: LocalDateTime, limit: Int): List<BitEntity>
 
     @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND variationId = :variationId AND " +
                 "(trainingId = :trainingId AND timestamp > :date OR trainingId < :trainingId) " +
                 "ORDER BY trainingId DESC, timestamp LIMIT :limit")
-    fun getHistory(exerciseId: Int, variationId: Int, trainingId: Int, date: Calendar, limit: Int): List<BitEntity>
+    fun getHistory(exerciseId: Int, variationId: Int, trainingId: Int, date: LocalDateTime, limit: Int): List<BitEntity>
 
     @Query("SELECT * FROM bit WHERE :dateStart <= timestamp AND timestamp < :dateEnd ORDER BY timestamp")
-    fun getHistory(dateStart: Calendar, dateEnd: Calendar): List<BitEntity>
+    fun getHistory(dateStart: LocalDateTime, dateEnd: LocalDateTime): List<BitEntity>
 
     @Query("SELECT * FROM bit WHERE trainingId = :trainingId ORDER BY timestamp")
     fun getHistoryByTrainingId(trainingId: Int): List<BitEntity>
 
     @Query("SELECT timestamp FROM bit WHERE trainingId = :trainingId ORDER BY timestamp DESC LIMIT 1")
-    fun getMostRecentTimestampByTrainingId(trainingId: Int): Optional<Calendar>
+    fun getMostRecentTimestampByTrainingId(trainingId: Int): Optional<LocalDateTime>
 
     @Query("SELECT timestamp FROM bit WHERE trainingId = :trainingId ORDER BY timestamp ASC LIMIT 1")
-    fun getFirstTimestampByTrainingId(trainingId: Int): Optional<Calendar>
+    fun getFirstTimestampByTrainingId(trainingId: Int): Optional<LocalDateTime>
 
     @Query("SELECT DISTINCT note FROM bit WHERE exerciseId = :exerciseId AND note <> '' " +
                 "ORDER BY timestamp DESC LIMIT :limit")

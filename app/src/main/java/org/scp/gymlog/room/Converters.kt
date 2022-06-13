@@ -2,22 +2,19 @@ package org.scp.gymlog.room
 
 import androidx.room.TypeConverter
 import org.scp.gymlog.model.WeightSpecification
-import java.util.*
+import org.scp.gymlog.util.DateUtils.timeInMillis
+import org.scp.gymlog.util.DateUtils.toLocalDateTime
+import java.time.LocalDateTime
 
 object Converters {
     @TypeConverter
-    fun toDate(dateLong: Long?): Calendar? {
-        if (dateLong == null) {
-            return null
-        }
-        val cal = Calendar.getInstance()
-        cal.timeInMillis = dateLong
-        return cal
+    fun toDate(millis: Long?): LocalDateTime? {
+        return millis?.toLocalDateTime
     }
 
     @TypeConverter
-    fun fromDate(cal: Calendar?): Long? {
-        return cal?.timeInMillis
+    fun fromDate(localDate: LocalDateTime?): Long? {
+        return localDate?.timeInMillis
     }
 
     @TypeConverter

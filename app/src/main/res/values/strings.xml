@@ -104,7 +104,7 @@
     <string name="validation_shouldnt_have_bar">This exercise is not set to have a bar</string>
     <string name="validation_training_not_started">A training session must be started first</string>
 
-    <!-- Calendar -->
+    <!-- Date -->
     <string name="day_monday_short">Mon</string>
     <string name="day_tuesday_short">Tue</string>
     <string name="day_wednesday_short">Wed</string>

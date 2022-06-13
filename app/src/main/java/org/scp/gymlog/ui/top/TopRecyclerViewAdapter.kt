@@ -17,10 +17,10 @@ import org.scp.gymlog.ui.top.rows.TopBitRow
 import org.scp.gymlog.ui.top.rows.TopVariationRow
 import org.scp.gymlog.util.DateUtils.getDateString
 import org.scp.gymlog.util.DateUtils.getLetterFrom
+import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.WeightUtils.getWeightFromTotal
-import java.util.*
 import java.util.function.Consumer
 
 class TopRecyclerViewAdapter(
@@ -29,7 +29,7 @@ class TopRecyclerViewAdapter(
     private val internationalSystem: Boolean
 ) : RecyclerView.Adapter<TopRecyclerViewAdapter.ViewHolder>() {
 
-    private val today: Calendar = Calendar.getInstance()
+    private val today = currentDateTime()
     var onClickListener: Consumer<Bit>? = null
     var onLongClickListener: Consumer<Bit>? = null
 

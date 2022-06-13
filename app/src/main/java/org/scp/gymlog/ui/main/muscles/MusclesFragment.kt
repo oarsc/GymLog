@@ -25,10 +25,10 @@ import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
 import org.scp.gymlog.ui.createexercise.CreateExerciseActivity
 import org.scp.gymlog.ui.exercises.ExercisesActivity
 import org.scp.gymlog.util.Constants.IntentReference
+import org.scp.gymlog.util.DateUtils.currentDateTime
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
 
 /**
  * A fragment representing a list of Items.
@@ -79,11 +79,10 @@ class MusclesFragment : CustomFragment() {
 					startActivityForResult(intent, IntentReference.LOAD_FILE)
 				}
 				R.id.testButton -> {
-					val seconds = 10
-					val cal = Calendar.getInstance()
-					cal.add(Calendar.SECOND, seconds)
+					val seconds = 2
+					val date = currentDateTime().plusSeconds(seconds.toLong())
 					NotificationService(requireContext())
-						.showNotification(cal, seconds, "Test notification")
+						.showNotification(date, seconds, "Test notification")
 				}
 			}
 			false

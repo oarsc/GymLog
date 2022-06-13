@@ -3,6 +3,7 @@ package org.scp.gymlog.ui.top
 import android.os.Bundle
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.room.AppDatabase
+import org.scp.gymlog.util.DateUtils.timeInMillis
 
 class TopSpecificActivity : TopActivity() {
 

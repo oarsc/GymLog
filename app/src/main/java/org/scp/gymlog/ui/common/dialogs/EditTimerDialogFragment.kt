@@ -20,8 +20,10 @@ import org.scp.gymlog.service.NotificationService.Companion.lastEndTime
 import org.scp.gymlog.util.Constants.DATE_ZERO
 import org.scp.gymlog.util.DateUtils.diffSeconds
 import org.scp.gymlog.util.DateUtils.isPast
+import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.SecondTickThread
+import java.time.LocalDateTime
 import java.util.*
 import java.util.function.BiConsumer
 import java.util.function.Consumer
@@ -36,7 +38,7 @@ class EditTimerDialogFragment(
     override var initialValue: Int = 60
 
     var onStopListener: Runnable? = null
-    var onPlayListener: BiConsumer<Calendar, Int>? = null
+    var onPlayListener: BiConsumer<LocalDateTime, Int>? = null
     private var countdownThread: CountdownThread? = null
     private lateinit var currentTimer: TextView
     private lateinit var secondLabel: TextView
@@ -99,9 +101,7 @@ class EditTimerDialogFragment(
 
         view.findViewById<View>(R.id.playButton).setOnClickListener {
             val seconds = editNotes.integer
-            val endingCountdown = Calendar.getInstance()
-
-            endingCountdown.add(Calendar.SECOND, seconds)
+            val endingCountdown = currentDateTime().plusSeconds(seconds.toLong())
             showCurrentCountdownButtons()
 
             onPlayListener?.accept(endingCountdown, seconds)
