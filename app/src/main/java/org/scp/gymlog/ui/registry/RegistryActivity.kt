@@ -46,6 +46,8 @@ import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.FormatUtils.safeBigDecimal
 import org.scp.gymlog.util.SecondTickThread
 import org.scp.gymlog.util.WeightUtils
+import org.scp.gymlog.util.WeightUtils.calculate
+import org.scp.gymlog.util.WeightUtils.calculateTotal
 import java.io.IOException
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -399,13 +401,11 @@ class RegistryActivity : DBAppCompatActivity() {
             val bit = log[0]
             reps.integer = bit.reps
 
-            val partialWeight = WeightUtils.getWeightFromTotal(
-                bit.weight,
+            val partialWeight = bit.weight.calculate(
                 exercise.weightSpec,
-                exercise.bar,
-                internationalSystem)
+                exercise.bar)
 
-            weight.bigDecimal = partialWeight
+            weight.bigDecimal = partialWeight.getValue(internationalSystem)
         } else {
             reps.setText("10")
         }
@@ -444,13 +444,11 @@ class RegistryActivity : DBAppCompatActivity() {
         DBThread.run(this) { db ->
             val bit = Bit(exercise.id, if (variation == null) 0 else variation!!.id)
 
-            val totalWeight = WeightUtils.getTotalWeight(
-                weight.bigDecimal,
+            val totalWeight = Weight(weight.bigDecimal, internationalSystem).calculateTotal(
                 exercise.weightSpec,
-                exercise.bar,
-                internationalSystem)
+                exercise.bar)
 
-            bit.weight = Weight(totalWeight, internationalSystem)
+            bit.weight = totalWeight
             bit.note = notes.text.toString()
             bit.reps = reps.integer
             bit.trainingId = trainingId

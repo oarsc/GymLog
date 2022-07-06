@@ -19,6 +19,9 @@ import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.FormatUtils.safeBigDecimal
 import org.scp.gymlog.util.WeightUtils
+import org.scp.gymlog.util.WeightUtils.calculate
+import org.scp.gymlog.util.WeightUtils.calculateTotal
+import org.scp.gymlog.util.WeightUtils.defaultScaled
 import org.scp.gymlog.util.WeightUtils.toKilograms
 import org.scp.gymlog.util.WeightUtils.toPounds
 import java.math.BigDecimal
@@ -99,13 +102,11 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
         builder.setMessage(title)
             .setView(view)
             .setPositiveButton(R.string.button_confirm) { _,_ ->
-                val totalWeight = WeightUtils.getTotalWeight(
-                    editWeight.bigDecimal,
+                val totalWeight = Weight(editWeight.bigDecimal, internationalSystem).calculateTotal(
                     exercise.weightSpec,
-                    exercise.bar,
-                    internationalSystem)
+                    exercise.bar)
 
-                initialValue.weight = Weight(totalWeight, internationalSystem)
+                initialValue.weight = totalWeight
                 initialValue.reps = editReps.integer
                 initialValue.note = editNotes.text.toString()
                 initialValue.instant = instantSwitch.isChecked
@@ -126,10 +127,8 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
     }
 
     private fun getBigDecimalInitialWeight(internationalSystem: Boolean): BigDecimal {
-        return WeightUtils.getWeightFromTotalDefaultScaled(
-            initialValue.weight,
+        return initialValue.weight.calculate(
             exercise.weightSpec,
-            exercise.bar,
-            internationalSystem)
+            exercise.bar).defaultScaled(internationalSystem)
     }
 }

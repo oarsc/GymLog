@@ -10,6 +10,7 @@ class Weight(val value: BigDecimal, val internationalSystem: Boolean) : Comparab
 
     companion object {
         val INVALID = Weight(BigDecimal(-1), true)
+        val ZERO = Weight(BigDecimal(0), true)
     }
 
     val valid: Boolean get() = value < BigDecimal.ZERO

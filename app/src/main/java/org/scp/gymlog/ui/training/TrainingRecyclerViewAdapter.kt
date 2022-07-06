@@ -14,7 +14,7 @@ import org.scp.gymlog.ui.training.rows.TrainingBitRow
 import org.scp.gymlog.ui.training.rows.TrainingVariationRow
 import org.scp.gymlog.util.DateUtils.getTimeString
 import org.scp.gymlog.util.FormatUtils.bigDecimal
-import org.scp.gymlog.util.WeightUtils.getWeightFromTotal
+import org.scp.gymlog.util.WeightUtils.calculate
 import java.util.function.BiConsumer
 
 
@@ -73,14 +73,11 @@ class TrainingRecyclerViewAdapter(
                 holder.bitRow = row as TrainingBitRow
                 val bit = holder.bitRow!!.bit
 
-                val weight = getWeightFromTotal(
-                    bit.weight,
+                val weight = bit.weight.calculate(
                     rows.exercise.weightSpec,
-                    rows.exercise.bar,
-                    internationalSystem
-                )
+                    rows.exercise.bar)
 
-                holder.mWeight!!.bigDecimal = weight
+                holder.mWeight!!.bigDecimal = weight.getValue(internationalSystem)
                 holder.mReps!!.text = bit.reps.toString()
                 holder.mNote!!.text = bit.note
 

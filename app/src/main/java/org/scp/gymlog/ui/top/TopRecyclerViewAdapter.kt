@@ -20,7 +20,7 @@ import org.scp.gymlog.util.DateUtils.getLetterFrom
 import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
-import org.scp.gymlog.util.WeightUtils.getWeightFromTotal
+import org.scp.gymlog.util.WeightUtils.calculate
 import java.util.function.Consumer
 
 class TopRecyclerViewAdapter(
@@ -84,14 +84,11 @@ class TopRecyclerViewAdapter(
                 holder.topBit = bRow.bit
 
                 val topBit = holder.topBit
-                val weight = getWeightFromTotal(
-                    topBit.weight,
+                val weight = topBit.weight.calculate(
                     exercise.weightSpec,
-                    exercise.bar,
-                    internationalSystem
-                )
+                    exercise.bar)
 
-                holder.mWeight?.bigDecimal = weight
+                holder.mWeight?.bigDecimal = weight.getValue(internationalSystem)
                 holder.mReps?.integer = topBit.reps
                 holder.mTime?.text = topBit.timestamp.getDateString() + " (" +
                         today.getLetterFrom(topBit.timestamp) + ")"

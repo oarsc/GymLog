@@ -74,75 +74,55 @@ object WeightUtils {
             .multiply(conversionStep)
     }
 
-    fun getTotalWeight(
-        value: BigDecimal,
-        weightSpec: WeightSpecification?,
+    fun Weight.calculateTotal(
+        weightSpec: WeightSpecification,
         bar: Bar?,
-        internationalSystem: Boolean
-    ): BigDecimal {
-        return when (weightSpec) {
-            WeightSpecification.NO_BAR_WEIGHT ->
-                if (bar == null)
-                    value
-                else
-                    value.add(bar.weight.getValue(internationalSystem))
+    ): Weight {
+        if (weightSpec == WeightSpecification.TOTAL_WEIGHT) {
+            return this
+        }
 
-            WeightSpecification.ONE_SIDE_WEIGHT ->
-                if (bar == null)
-                    value.add(value)
-                else
-                    value.add(value).add(bar.weight.getValue(internationalSystem))
+        val barWeight = bar?.weight
+            ?.getValue(this.internationalSystem)
+            ?: BigDecimal.ZERO
 
-            else -> value
+        return this.op { it
+            .multiply(weightSpec.weightAffectation)
+            .add(barWeight)
         }
     }
 
-    fun getWeightFromTotal(
-        weight: Weight,
-        weightSpec: WeightSpecification,
-        bar: Bar?,
-        internationalSystem: Boolean
-    ): BigDecimal {
-        return getRawWeight(weight, weightSpec, bar).getValue(internationalSystem)
-    }
-
-    fun getWeightFromTotalDefaultScaled(
-        weight: Weight,
-        weightSpec: WeightSpecification,
-        bar: Bar?,
-        internationalSystem: Boolean
-    ): BigDecimal {
-        return getRawWeight(weight, weightSpec, bar)
-            .getValue(internationalSystem, WeightFormatter.TWO_DECS_FORMATTER)
-    }
-
-    private fun getRawWeight(weight: Weight, weightSpec: WeightSpecification, bar: Bar?): Weight {
-        return when (weightSpec) {
-            WeightSpecification.ONE_SIDE_WEIGHT -> {
-                if (bar != null) {
-                    val barWeight = bar.weight.getValue(
-                        weight.internationalSystem,
-                        WeightFormatter.EXACT_FORMATTER
-                    )
-                    weight.op { v -> v.subtract(barWeight)
-                        .divide(Constants.TWO, 2, RoundingMode.HALF_UP)
-                    }
-                } else {
-                    weight.op { v -> v.divide(Constants.TWO,2, RoundingMode.HALF_UP) }
-                }
-            }
-            WeightSpecification.NO_BAR_WEIGHT -> {
-                if (bar != null) {
-                    val barWeight = bar.weight.getValue(
-                        weight.internationalSystem,
-                        WeightFormatter.EXACT_FORMATTER
-                    )
-                    weight.op { v -> v.subtract(barWeight) }
-                } else {
-                    weight
-                }
-            }
-            else -> weight
+    /**
+     * Converts totalWeight into the specific WeightSpecification and Bar
+     */
+    fun Weight.calculate(weightSpec: WeightSpecification, bar: Bar?): Weight {
+        if (weightSpec == WeightSpecification.TOTAL_WEIGHT) {
+            return this
         }
+
+        val barWeight = bar?.weight
+            ?.getValue(this.internationalSystem, WeightFormatter.EXACT_FORMATTER)
+            ?: BigDecimal.ZERO
+
+        return this.op { it
+            .subtract(barWeight)
+            .divide(weightSpec.weightAffectation, 2, RoundingMode.HALF_UP)
+        }
+    }
+
+    fun Weight.defaultScaled(internationalSystem: Boolean): BigDecimal {
+        return this.getValue(internationalSystem, WeightFormatter.TWO_DECS_FORMATTER)
+    }
+
+    fun convertWeight(
+        weight: Weight,
+        iWeightSpec: WeightSpecification,
+        iBar: Bar?,
+        fWeightSpec: WeightSpecification,
+        fBar: Bar?): Weight {
+
+        return weight
+            .calculateTotal(iWeightSpec, iBar)
+            .calculate(fWeightSpec, fBar)
     }
 }

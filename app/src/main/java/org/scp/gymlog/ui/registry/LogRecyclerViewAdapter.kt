@@ -18,6 +18,7 @@ import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.WeightUtils
+import org.scp.gymlog.util.WeightUtils.calculate
 import java.util.function.BiConsumer
 
 class LogRecyclerViewAdapter(
@@ -101,13 +102,11 @@ class LogRecyclerViewAdapter(
             }
         }
 
-        val weight = WeightUtils.getWeightFromTotal(
-            bit.weight,
+        val weight = bit.weight.calculate(
             exercise.weightSpec,
-            exercise.bar,
-            internationalSystem)
+            exercise.bar)
 
-        holder.mWeight!!.bigDecimal = weight
+        holder.mWeight!!.bigDecimal = weight.getValue(internationalSystem)
         if (bit.instant) {
             holder.mSet!!.setText(R.string.symbol_empty)
             setAlpha(holder, 0.4f)

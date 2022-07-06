@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.*
 import androidx.annotation.StringRes
 import org.scp.gymlog.R
+import org.scp.gymlog.model.Bar
 import org.scp.gymlog.model.Weight
 import org.scp.gymlog.model.WeightSpecification
 import org.scp.gymlog.ui.common.components.NumberModifierView
@@ -22,6 +23,8 @@ import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.safeBigDecimal
 import org.scp.gymlog.util.FormatUtils.toLocaleString
 import org.scp.gymlog.util.WeightUtils
+import org.scp.gymlog.util.WeightUtils.calculateTotal
+import org.scp.gymlog.util.WeightUtils.convertWeight
 import org.scp.gymlog.util.WeightUtils.toKilograms
 import org.scp.gymlog.util.WeightUtils.toPounds
 import java.math.BigDecimal
@@ -141,8 +144,9 @@ class EditWeightFormDialogFragment(
 
             popup.setOnMenuItemClickListener { item: MenuItem ->
                 val id = item.itemId
+                val lastBar = initialValue.bar
                 if (id < 0) {
-                    if (initialValue.bar != null) {
+                    if (lastBar != null) {
                         initialValue.bar = null
                         initialValue.exerciseUpdated = true
                         if (initialValue.requiresBar) {
@@ -155,14 +159,17 @@ class EditWeightFormDialogFragment(
 
                         if (initialValue.weightSpec === WeightSpecification.TOTAL_WEIGHT) {
                             initialValue.weightSpec = WeightSpecification.NO_BAR_WEIGHT
-                            updateWeightSpec()
+
+                            updateConfig(WeightSpecification.TOTAL_WEIGHT, lastBar)
+                        } else {
+                            updateConfig(lastBar = lastBar)
                         }
 
-                        updateSelectedBar()
+                        //updateSelectedBar(lastBar)
                     }
                 } else {
                     val bar = Data.getBar(id)
-                    if (initialValue.bar != bar) {
+                    if (lastBar != bar) {
                         initialValue.bar = bar
                         initialValue.exerciseUpdated = true
                         if (initialValue.requiresBar) {
@@ -172,14 +179,13 @@ class EditWeightFormDialogFragment(
                             Toast.makeText(context, R.string.validation_shouldnt_have_bar,
                                 Toast.LENGTH_LONG).show()
                         }
-                        updateSelectedBar()
+                        updateConfig(lastBar = lastBar)
                     }
                 }
                 true
             }
             popup.show()
         }
-        updateSelectedBar()
 
         val layoutWeightSpec: View = view.findViewById(R.id.weightsConfigBox)
         layoutWeightSpec.setOnClickListener {
@@ -193,9 +199,10 @@ class EditWeightFormDialogFragment(
                 }
 
                 if (newWeightSpec !== initialValue.weightSpec) {
+                    val lastWeightSpec = initialValue.weightSpec
                     initialValue.weightSpec = newWeightSpec
                     initialValue.exerciseUpdated = true
-                    updateWeightSpec()
+                    updateConfig(lastWeightSpec)
                 }
                 true
             }
@@ -207,7 +214,8 @@ class EditWeightFormDialogFragment(
 
             popup.show()
         }
-        updateWeightSpec()
+
+        updateConfig()
     }
 
     private fun updateStep() {
@@ -215,7 +223,11 @@ class EditWeightFormDialogFragment(
         step.bigDecimal = initialValue.step!!
     }
 
-    private fun updateSelectedBar() {
+    private fun updateConfig(
+        lastWeightSpecification: WeightSpecification = initialValue.weightSpec,
+        lastBar: Bar? = initialValue.bar) {
+
+        // Bar
         val bar = initialValue.bar
         if (bar == null) {
             barUsed.setText(R.string.symbol_hyphen)
@@ -226,14 +238,22 @@ class EditWeightFormDialogFragment(
             incompatibleBar.visibility =
                 if (initialValue.requiresBar) View.INVISIBLE else View.VISIBLE
         }
-        updateTotalWeight(null)
-    }
 
-    private fun updateWeightSpec() {
+        // Weight
         val weightSpecification = initialValue.weightSpec
-        weightSpec.setText(weightSpecification!!.literal)
+        weightSpec.setText(weightSpecification.literal)
         weightSpecIcon.setImageResource(weightSpecification.icon)
-        updateTotalWeight(null)
+
+        // Recalcs
+        input.bigDecimal = convertWeight(
+            Weight(input.bigDecimal, true),
+            lastWeightSpecification,
+            lastBar,
+            weightSpecification,
+            bar
+        ).getValue(true)
+
+        updateTotalWeight()
     }
 
     private fun getWeightLabel(weight: Weight): StringBuilder {
@@ -252,21 +272,13 @@ class EditWeightFormDialogFragment(
         convertValue.bigDecimal = convertedValue
     }
 
-    private fun updateTotalWeight(totalValue: BigDecimal?) {
-        val value = totalValue ?: input.bigDecimal
-
-        val totalWeight = WeightUtils.getTotalWeight(value,
+    private fun updateTotalWeight(totalValue: BigDecimal = input.bigDecimal) {
+        val totalWeight = Weight(totalValue, weight.internationalSystem).calculateTotal(
             initialValue.weightSpec,
-            initialValue.bar,
-            weight.internationalSystem)
+            initialValue.bar)
 
-        this.totalValue.bigDecimal = totalWeight
-
-        if (weight.internationalSystem) {
-            totalConvertValue.bigDecimal = totalWeight.toPounds()
-        } else {
-            totalConvertValue.bigDecimal = totalWeight.toKilograms()
-        }
+        this.totalValue.bigDecimal = totalWeight.getValue(weight.internationalSystem)
+        this.totalConvertValue.bigDecimal = totalWeight.getValue(!weight.internationalSystem)
     }
 
     private fun confirmData(): WeightFormData {

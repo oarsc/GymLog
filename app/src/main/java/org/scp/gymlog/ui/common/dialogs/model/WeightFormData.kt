@@ -11,5 +11,5 @@ class WeightFormData {
     var step: BigDecimal? = null
     var bar: Bar? = null
     var requiresBar = false
-    var weightSpec: WeightSpecification? = null
+    var weightSpec: WeightSpecification = WeightSpecification.TOTAL_WEIGHT
 }
