@@ -69,7 +69,7 @@ open class TopActivity : DBAppCompatActivity() {
     }
 
     protected open fun order(): Comparator<in Bit> {
-        return Comparator.comparing { bit -> bit.weight.value.negate() }
+        return Comparator.comparing { bit -> bit.weight.getValue(internationalSystem).negate() }
     }
 
     private fun transformBitsToRows(bits: MutableList<Bit>) {
