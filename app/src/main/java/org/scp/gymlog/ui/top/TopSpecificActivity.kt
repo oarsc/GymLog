@@ -3,7 +3,9 @@ package org.scp.gymlog.ui.top
 import android.os.Bundle
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.room.AppDatabase
+import org.scp.gymlog.room.entities.BitEntity
 import org.scp.gymlog.util.DateUtils.timeInMillis
+import java.time.LocalDate
 
 class TopSpecificActivity : TopActivity() {
 
@@ -17,14 +19,32 @@ class TopSpecificActivity : TopActivity() {
     }
 
     override fun getBits(db: AppDatabase, exerciseId: Int): MutableList<Bit> {
-        return if (variationId == 0)
-                db.bitDao().findAllByExerciseAndWeight(exerciseId, weight)
-                    .map { bitEntity -> Bit(bitEntity) }
-                    .toMutableList()
-            else
-                db.bitDao().findAllByExerciseAndWeight(exerciseId, variationId, weight)
-                    .map { bitEntity -> Bit(bitEntity) }
-                    .toMutableList()
+        val bits = if (variationId == 0)
+            db.bitDao().findAllByExerciseAndWeight(exerciseId, weight)
+        else
+            db.bitDao().findAllByExerciseAndWeight(exerciseId, variationId, weight)
+
+        return mutableMapOf<LocalDate, BitEntity>()
+            .apply {
+                bits.forEach { bit ->
+                    val day = bit.timestamp.toLocalDate()
+
+                    if (containsKey(day)) {
+                        val max = this[day]!!
+
+                        if (max.reps < bit.reps)
+                            this[day] = bit
+
+                        else if (max.reps == bit.reps && max.note.isBlank())
+                            this[day] = bit
+
+                    } else {
+                        this[day] = bit
+                    }
+                }
+            }.values
+            .map { bitEntity -> Bit(bitEntity) }
+            .toMutableList()
     }
 
     override fun order(): Comparator<in Bit> {
