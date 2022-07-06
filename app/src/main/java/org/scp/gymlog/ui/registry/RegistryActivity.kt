@@ -266,7 +266,7 @@ class RegistryActivity : DBAppCompatActivity() {
             warningIcon.visibility = View.INVISIBLE
         }
 
-        loadHistory()
+        precalculateWeight()
     }
 
     private fun setHeaderInfo() {
@@ -396,9 +396,34 @@ class RegistryActivity : DBAppCompatActivity() {
         }
     }
 
-    private fun loadHistory() {
+    private fun precalculateWeight() {
         if (log.isNotEmpty()) {
-            val bit = log[0]
+            var currentSet = 1
+            var lastTraining = -1
+            var lastSet = 0
+            var bit: Bit = log[0]
+
+            for (b in log) {
+                if (b.trainingId == trainingId) {
+                    if (!b.instant) {
+                        bit = b
+                        currentSet++
+                    }
+
+                } else if (lastTraining < 0 || lastTraining == b.trainingId){
+                    lastTraining = b.trainingId
+                    if (!b.instant) {
+                        lastSet++
+                        if (lastSet == currentSet) {
+                            bit = b
+                            break
+                        }
+                    }
+                } else {
+                    break
+                }
+            }
+
             reps.integer = bit.reps
 
             val partialWeight = bit.weight.calculate(
@@ -491,6 +516,7 @@ class RegistryActivity : DBAppCompatActivity() {
                     confirmInstantButton.startAnimation(anim)
                 }
                 startTimer()
+                precalculateWeight()
             }
         }
     }
