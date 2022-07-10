@@ -76,7 +76,7 @@ class RegistryActivity : DBAppCompatActivity() {
     private var internationalSystem = false
     private val log: MutableList<Bit> = ArrayList()
     private var trainingId = 0
-    private var notesLocked = false
+    private var locked = false
     private var hiddenInstantSetButton = false
     private var sendRefreshList = false
     private val notificationService: NotificationService by lazy { NotificationService(this) }
@@ -217,24 +217,17 @@ class RegistryActivity : DBAppCompatActivity() {
         }
 
         val clearNote: ImageView = findViewById(R.id.clearNote)
-        val lockNote: ImageView = findViewById(R.id.lockNote)
+        val lockView: ImageView = findViewById(R.id.lock)
         clearNote.setOnClickListener {
             notes.text.clear()
-            if (notesLocked) {
-                notesLocked = false
-                lockNote.setImageResource(R.drawable.ic_unlock_24dp)
-            }
         }
 
-        lockNote.setOnClickListener {
-            if (notes.text.toString().isNotEmpty()) {
-                notesLocked = !notesLocked
-                if (notesLocked) {
-                    lockNote.setImageResource(R.drawable.ic_lock_24dp)
-                } else {
-                    lockNote.setImageResource(R.drawable.ic_unlock_24dp)
-                }
-            }
+        lockView.setOnClickListener {
+            locked = !locked
+            if (locked)
+                lockView.setImageResource(R.drawable.ic_lock_24dp)
+            else
+                lockView.setImageResource(R.drawable.ic_unlock_24dp)
         }
 
         // Weight and Reps Input fields:
@@ -506,7 +499,7 @@ class RegistryActivity : DBAppCompatActivity() {
                     recyclerViewAdapter.notifyItemInserted(log.size - 1)
                 }
 
-                if (!notesLocked) {
+                if (!locked) {
                     notes.setText(R.string.symbol_empty)
                 }
 
@@ -516,7 +509,8 @@ class RegistryActivity : DBAppCompatActivity() {
                     confirmInstantButton.startAnimation(anim)
                 }
                 startTimer()
-                precalculateWeight()
+                if (!locked)
+                    precalculateWeight()
             }
         }
     }
