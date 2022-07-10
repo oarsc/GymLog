@@ -55,6 +55,15 @@
     <string name="text_variations">Variations</string>
     <string name="text_weight">Weight</string>
 
+    <string name="type_none">None</string>
+    <string name="type_dumbbell">Dumbbell</string>
+    <string name="type_barbell">Barbell</string>
+    <string name="type_plate">Plate</string>
+    <string name="type_pulley">Pulley Machine</string>
+    <string name="type_smith">Smith Machine</string>
+    <string name="type_machine">Machine</string>
+    <string name="type_cardio">Cardio</string>
+
     <string name="sort_alphabetically">Sort alphabetically</string>
     <string name="sort_last_used">Sort by last used</string>
 
@@ -91,6 +100,7 @@
     <string name="form_edit_variations">Edit Variations</string>
     <string name="form_image">Image</string>
     <string name="form_name">Name</string>
+    <string name="form_type">Type</string>
     <string name="form_primary_muscles">Primary Muscular Groups</string>
     <string name="form_secondary_muscles">Secondary Muscular Groups</string>
     <string name="form_requires_bar">Requires Bar</string>

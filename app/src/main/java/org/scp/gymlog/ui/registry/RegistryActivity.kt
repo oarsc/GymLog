@@ -19,10 +19,7 @@ import com.google.android.material.snackbar.Snackbar
 import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.InternalException
 import org.scp.gymlog.exceptions.LoadException
-import org.scp.gymlog.model.Bit
-import org.scp.gymlog.model.Exercise
-import org.scp.gymlog.model.Variation
-import org.scp.gymlog.model.Weight
+import org.scp.gymlog.model.*
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.room.entities.BitEntity
@@ -253,7 +250,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
         weightSpecIcon.setImageResource(exercise.weightSpec.icon)
 
-        if (exercise.requiresBar == (exercise.bar == null)) {
+        if ((exercise.type === ExerciseType.BARBELL) == (exercise.bar == null)) {
             warningIcon.visibility = View.VISIBLE
         } else {
             warningIcon.visibility = View.INVISIBLE
@@ -360,7 +357,7 @@ class RegistryActivity : DBAppCompatActivity() {
         weightFormData.weight = weight
         weightFormData.step = exercise.step
         weightFormData.bar = exercise.bar
-        weightFormData.requiresBar = exercise.requiresBar
+        weightFormData.type = exercise.type
         weightFormData.weightSpec = exercise.weightSpec
 
         val dialog = EditWeightFormDialogFragment(weightFormData, R.string.text_weight, { result: WeightFormData ->
@@ -368,7 +365,7 @@ class RegistryActivity : DBAppCompatActivity() {
                 if (result.exerciseUpdated) {
                     exercise.bar = result.bar
                     exercise.step = result.step!!
-                    exercise.weightSpec = result.weightSpec!!
+                    exercise.weightSpec = result.weightSpec
                     recyclerViewAdapter.notifyItemRangeChanged(0, log.size)
 
                     updateForms()
@@ -382,7 +379,7 @@ class RegistryActivity : DBAppCompatActivity() {
     private fun updateForms() {
         weightModifier.setStep(exercise.step)
         weightSpecIcon.setImageResource(exercise.weightSpec.icon)
-        if (exercise.requiresBar == (exercise.bar == null)) {
+        if ((exercise.type === ExerciseType.BARBELL) == (exercise.bar == null)) {
             warningIcon.visibility = View.VISIBLE
         } else {
             warningIcon.visibility = View.INVISIBLE

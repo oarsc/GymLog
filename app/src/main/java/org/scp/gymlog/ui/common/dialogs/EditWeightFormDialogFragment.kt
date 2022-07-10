@@ -13,6 +13,7 @@ import android.widget.*
 import androidx.annotation.StringRes
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Bar
+import org.scp.gymlog.model.ExerciseType
 import org.scp.gymlog.model.Weight
 import org.scp.gymlog.model.WeightSpecification
 import org.scp.gymlog.ui.common.components.NumberModifierView
@@ -149,7 +150,7 @@ class EditWeightFormDialogFragment(
                     if (lastBar != null) {
                         initialValue.bar = null
                         initialValue.exerciseUpdated = true
-                        if (initialValue.requiresBar) {
+                        if (initialValue.type == ExerciseType.BARBELL) {
                             incompatibleBar.visibility = View.VISIBLE
                             Toast.makeText(context, R.string.validation_should_have_bar,
                                 Toast.LENGTH_LONG).show()
@@ -172,7 +173,7 @@ class EditWeightFormDialogFragment(
                     if (lastBar != bar) {
                         initialValue.bar = bar
                         initialValue.exerciseUpdated = true
-                        if (initialValue.requiresBar) {
+                        if (initialValue.type == ExerciseType.BARBELL) {
                             incompatibleBar.visibility = View.INVISIBLE
                         } else {
                             incompatibleBar.visibility = View.VISIBLE
@@ -232,11 +233,11 @@ class EditWeightFormDialogFragment(
         if (bar == null) {
             barUsed.setText(R.string.symbol_hyphen)
             incompatibleBar.visibility =
-                if (initialValue.requiresBar) View.VISIBLE else View.INVISIBLE
+                if (initialValue.type == ExerciseType.BARBELL) View.VISIBLE else View.INVISIBLE
         } else {
             barUsed.text = getWeightLabel(bar.weight)
             incompatibleBar.visibility =
-                if (initialValue.requiresBar) View.INVISIBLE else View.VISIBLE
+                if (initialValue.type == ExerciseType.BARBELL) View.INVISIBLE else View.VISIBLE
         }
 
         // Weight

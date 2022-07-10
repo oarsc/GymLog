@@ -2,10 +2,13 @@ package org.scp.gymlog.util
 
 import org.json.JSONArray
 import org.json.JSONObject
+import org.scp.gymlog.model.ExerciseType
 import org.scp.gymlog.model.WeightSpecification
 import org.scp.gymlog.room.Converters.fromDate
+import org.scp.gymlog.room.Converters.fromExerciseType
 import org.scp.gymlog.room.Converters.fromWeightSpecification
 import org.scp.gymlog.room.Converters.toDate
+import org.scp.gymlog.room.Converters.toExerciseType
 import org.scp.gymlog.room.Converters.toWeightSpecification
 import java.time.LocalDateTime
 import java.util.*
@@ -52,6 +55,8 @@ object JsonUtils {
                         LocalDateTime::class -> json.put(fieldName, fromDate(value as LocalDateTime))
                         WeightSpecification::class ->
                             json.put(fieldName, fromWeightSpecification((value as WeightSpecification)).toInt())
+                        ExerciseType::class ->
+                            json.put(fieldName, fromExerciseType((value as ExerciseType)).toInt())
 
                         else -> {}
                     }
@@ -84,6 +89,8 @@ object JsonUtils {
                             String::class -> getString(fieldName)
                             LocalDateTime::class -> toDate(getLong(fieldName))
                             WeightSpecification::class -> toWeightSpecification(
+                                getInt(fieldName).toShort())
+                            ExerciseType::class -> toExerciseType(
                                 getInt(fieldName).toShort())
                             else -> null
                         }

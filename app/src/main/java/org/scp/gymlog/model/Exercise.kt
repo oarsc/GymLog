@@ -19,9 +19,9 @@ class Exercise() : EntityMappable<ExerciseEntity> {
 	var id = 0
 	var name: String = ""
 	var image: String = ""
+	var type: ExerciseType = ExerciseType.BARBELL
 	var lastTrained: LocalDateTime = Constants.DATE_ZERO
 	var step: BigDecimal = Constants.FIVE
-	var requiresBar = false
 	var bar: Bar? = null
 	var weightSpec = WeightSpecification.NO_BAR_WEIGHT
 	var restTime: Int = -1
@@ -30,9 +30,9 @@ class Exercise() : EntityMappable<ExerciseEntity> {
 		id = entity.exerciseId
 		name = entity.name
 		image = entity.image
+		type = entity.type
 		lastTrained = entity.lastTrained
 		step = BigDecimal.valueOf(entity.lastStep.toLong()).divide(Constants.ONE_HUNDRED)
-		requiresBar = entity.requiresBar
 		weightSpec = entity.lastWeightSpec
 		restTime = entity.lastRestTime
 		if (entity.lastBarId != null) {
@@ -48,9 +48,9 @@ class Exercise() : EntityMappable<ExerciseEntity> {
 		entity.exerciseId = id
 		entity.name = name
 		entity.image = image
+		entity.type = type
 		entity.lastTrained = lastTrained
 		entity.lastStep = step.multiply(Constants.ONE_HUNDRED).toInt()
-		entity.requiresBar = requiresBar
 		entity.lastWeightSpec = weightSpec
 		entity.lastRestTime = restTime
 		entity.lastBarId = bar?.id

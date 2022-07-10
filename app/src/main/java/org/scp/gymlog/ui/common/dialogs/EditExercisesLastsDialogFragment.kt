@@ -12,10 +12,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
-import org.scp.gymlog.model.Bar
-import org.scp.gymlog.model.Exercise
-import org.scp.gymlog.model.Weight
-import org.scp.gymlog.model.WeightSpecification
+import org.scp.gymlog.model.*
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.util.Constants
@@ -107,7 +104,7 @@ class EditExercisesLastsDialogFragment(
                     if (bar != null) {
                         bar = null
                         exerciseUpdate = true
-                        if (initialValue.requiresBar) {
+                        if (initialValue.type === ExerciseType.BARBELL) {
                             incompatibleBar.visibility = View.VISIBLE
                             Toast.makeText(context, R.string.validation_should_have_bar,
                                 Toast.LENGTH_LONG).show()
@@ -128,7 +125,7 @@ class EditExercisesLastsDialogFragment(
                     if (this.bar != bar) {
                         this.bar = bar
                         exerciseUpdate = true
-                        if (initialValue.requiresBar) {
+                        if (initialValue.type === ExerciseType.BARBELL) {
                             incompatibleBar.visibility = View.INVISIBLE
                         } else {
                             incompatibleBar.visibility = View.VISIBLE
@@ -182,11 +179,11 @@ class EditExercisesLastsDialogFragment(
         if (bar == null) {
             barUsed.setText(R.string.symbol_hyphen)
             incompatibleBar.visibility =
-                if (initialValue.requiresBar) View.VISIBLE else View.INVISIBLE
+                if (initialValue.type === ExerciseType.BARBELL) View.VISIBLE else View.INVISIBLE
         } else {
             barUsed.text = getWeightLabel(bar!!.weight)
             incompatibleBar.visibility =
-                if (initialValue.requiresBar) View.INVISIBLE else View.VISIBLE
+                if (initialValue.type === ExerciseType.BARBELL) View.INVISIBLE else View.VISIBLE
         }
     }
 

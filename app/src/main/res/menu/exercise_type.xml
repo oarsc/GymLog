@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/optionNone"
+        android:title="@string/type_none"/>
+
+    <item
+        android:id="@+id/optionDumbbell"
+        android:title="@string/type_dumbbell"/>
+
+    <item
+        android:id="@+id/optionBarbell"
+        android:icon="@drawable/ic_barbell_24dp"
+        android:title="@string/type_barbell"/>
+
+    <item
+        android:id="@+id/optionPlate"
+        android:title="@string/type_plate"/>
+
+    <item
+        android:id="@+id/optionPulley"
+        android:title="@string/type_pulley"/>
+
+    <item
+        android:id="@+id/optionSmith"
+        android:title="@string/type_smith"/>
+
+    <item
+        android:id="@+id/optionMachine"
+        android:title="@string/type_machine"/>
+
+    <item
+        android:id="@+id/optionCardio"
+        android:title="@string/type_cardio"/>
+</menu>

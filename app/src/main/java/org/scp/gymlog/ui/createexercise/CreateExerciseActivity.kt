@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Exercise
+import org.scp.gymlog.model.ExerciseType
 import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.room.DBThread
@@ -22,6 +23,8 @@ import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.activity.ImageSelectorActivity
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment
 import org.scp.gymlog.ui.common.dialogs.EditVariationsDialogFragment
+import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment
+import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment.Companion.DIALOG_CLOSED
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
 import java.io.IOException
@@ -31,16 +34,16 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 
 	private var editingExercise: Exercise? = null
 	private var name: String = ""
+	private var type: ExerciseType = ExerciseType.NONE
 	private var imageName: String = ""
-	private var requiresBar = false
 	private val muscles: MutableList<Muscle> = ArrayList()
 	private val musclesSecondary: MutableList<Muscle> = ArrayList()
 	private val variations: MutableList<Variation> = ArrayList()
 	private lateinit var iconOption: FormElement
 	private lateinit var nameOption: FormElement
+	private lateinit var typeOption: FormElement
 	private lateinit var musclesOption: FormElement
 	private lateinit var musclesSecondaryOption: FormElement
-	private lateinit var requiresBarOption: FormElement
 	private val caller: IntentReference by lazy { getIntentCall() }
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +54,8 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 		if (caller === IntentReference.EDIT_EXERCISE) {
 			editingExercise = Data.getExercise(intent.extras!!.getInt("exerciseId"))
 			name = editingExercise!!.name
+			type = editingExercise!!.type
 			imageName = editingExercise!!.image
-			requiresBar = editingExercise!!.requiresBar
 			muscles.addAll(editingExercise!!.primaryMuscles)
 			musclesSecondary.addAll(editingExercise!!.secondaryMuscles)
 			variations.addAll(editingExercise!!.variations)
@@ -97,8 +100,8 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 			if (caller === IntentReference.EDIT_EXERCISE) {
 				data.putExtra("exerciseId", editingExercise!!.id)
 
-				editingExercise!!.requiresBar = requiresBar
 				editingExercise!!.name = name
+				editingExercise!!.type = type
 				editingExercise!!.image = imageName
 				editingExercise!!.primaryMuscles.clear()
 				editingExercise!!.primaryMuscles.addAll(muscles)
@@ -148,8 +151,8 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 
 			} else {
 				val exercise = Exercise()
-				exercise.requiresBar = requiresBar
 				exercise.name = name
+				exercise.type = type
 				exercise.image = imageName
 				exercise.primaryMuscles.addAll(muscles)
 				exercise.secondaryMuscles.addAll(musclesSecondary)
@@ -200,6 +203,13 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 			onClickListener = { showExerciseNameDialog(nameOption) }
 		).also(form::add)
 
+		typeOption = FormElement(
+			title = R.string.form_type,
+			value = type.literal,
+			drawable = if (type.icon == 0) null else ResourcesCompat.getDrawable(resources, type.icon, null),
+			onClickListener = { showExerciseTypeDialog(typeOption) }
+		).also(form::add)
+
 		musclesOption = FormElement(
 			title = R.string.form_primary_muscles,
 			valueStr = getMusclesLabelText(muscles),
@@ -212,15 +222,6 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 			valueStr = getMusclesLabelText(musclesSecondary),
 			drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_body_black_24dp, null),
 			onClickListener = { showMuscleSelector(musclesSecondaryOption, false) }
-		).also(form::add)
-
-		requiresBarOption = FormElement(
-			title = R.string.form_requires_bar,
-			value = if (requiresBar) R.string.form_bar_value else R.string.form_no_bar_value,
-			drawable = ResourcesCompat.getDrawable(resources,
-				if (requiresBar) R.drawable.ic_bar_enable_24dp else R.drawable.ic_bar_disable_24dp,
-				null),
-			onClickListener = { switchEnableBar(requiresBarOption) }
 		).also(form::add)
 
 		FormElement(
@@ -270,6 +271,28 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 		dialog.show(supportFragmentManager, null)
 	}
 
+	private fun showExerciseTypeDialog(option: FormElement) {
+		val dialog = MenuDialogFragment(R.menu.exercise_type) { result ->
+			if (result != DIALOG_CLOSED) {
+				type = when(result) {
+					R.id.optionDumbbell -> ExerciseType.DUMBBELL
+					R.id.optionBarbell -> ExerciseType.BARBELL
+					R.id.optionPlate -> ExerciseType.PLATE
+					R.id.optionPulley -> ExerciseType.PULLEY_MACHINE
+					R.id.optionSmith -> ExerciseType.SMITH_MACHINE
+					R.id.optionMachine -> ExerciseType.MACHINE
+					R.id.optionCardio -> ExerciseType.CARDIO
+					else -> ExerciseType.NONE
+				}
+				option.value = type.literal
+				option.drawable = if (type.icon == 0) null else
+					ResourcesCompat.getDrawable(resources, type.icon, null)
+				option.update()
+			}
+		}
+		dialog.show(supportFragmentManager, null)
+	}
+
 	private fun showMuscleSelector(option: FormElement, primary: Boolean) {
 		val resources = resources
 		val allMuscles: List<Muscle> = Data.muscles
@@ -300,16 +323,6 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 			option.update()
 		}
 		builder.show()
-	}
-
-	private fun switchEnableBar(option: FormElement) {
-		requiresBar = !requiresBar
-		val drawable = ContextCompat.getDrawable(this,
-			if (requiresBar) R.drawable.ic_bar_enable_24dp else R.drawable.ic_bar_disable_24dp)
-
-		option.drawable = drawable
-		option.value = if (requiresBar) R.string.form_bar_value else R.string.form_no_bar_value
-		option.update()
 	}
 
 	private fun editVariations() {

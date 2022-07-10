@@ -6,6 +6,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Bar
+import org.scp.gymlog.model.ExerciseType
 import org.scp.gymlog.model.Weight
 import org.scp.gymlog.model.WeightSpecification
 import org.scp.gymlog.room.AppDatabase
@@ -58,8 +59,8 @@ class InitialDataService {
                     val ex = ExerciseEntity()
                     ex.image = exerciseObj.getString("tag")
                     ex.name = exerciseObj.getString("name")
-                    ex.requiresBar = exerciseObj.getBoolean("bar")
-                    if (ex.requiresBar) {
+                    ex.type = parseExerciseType(exerciseObj.getString("type"))
+                    if (ex.type === ExerciseType.BARBELL) {
                         ex.lastBarId = 4 // 20kg
                     }
                     ex.lastTrained = Constants.DATE_ZERO
@@ -100,6 +101,19 @@ class InitialDataService {
                 throw LoadException("Unable to load file $fileName")
             } catch (e: IOException) {
                 throw LoadException("Unable to load file $fileName")
+            }
+        }
+
+        private fun parseExerciseType(strValue: String): ExerciseType {
+            return when(strValue) {
+                "dumbbell" -> ExerciseType.DUMBBELL
+                "barbell" -> ExerciseType.BARBELL
+                "plate" -> ExerciseType.PLATE
+                "pulley" -> ExerciseType.PULLEY_MACHINE
+                "smith" -> ExerciseType.SMITH_MACHINE
+                "machine" -> ExerciseType.MACHINE
+                "cardio" -> ExerciseType.CARDIO
+                else -> ExerciseType.NONE
             }
         }
     }
