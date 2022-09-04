@@ -19,8 +19,9 @@ app.use(lessMiddleware(path.join(__dirname, 'private'), {
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/',     require('./src/routes/index'));
-app.use('/read', require('./src/routes/reader'));
+app.use('/',        require('./src/routes/index'));
+app.use('/read',    require('./src/routes/reader'));
+app.use('/convert', require('./src/routes/converter'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

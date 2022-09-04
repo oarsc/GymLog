@@ -2,7 +2,7 @@ export function processCommand(command, data, activeFilters) {
 	const keywords = command.toLowerCase().split(' ');
 	let instruction = keywords.splice(0,1)[0];
 
-	// remove note [if difícil]
+	// remove note [if note difícil]
 	if (instruction == 'remove') {
 		return remove(keywords, data, activeFilters);
 
@@ -15,10 +15,10 @@ export function processCommand(command, data, activeFilters) {
 	}
 }
 
-function remove([fieldName, condIf, value], data, activeFilters) {
+function remove([fieldName, condIf, condFieldName, condFieldValue], data, activeFilters) {
 	let filter;
 	if (condIf == 'if') {
-		filter = bit => bit[fieldName] == value;
+		filter = bit => bit[condFieldName] == condFieldValue;
 	} else {
 		filter = () => true;
 	}

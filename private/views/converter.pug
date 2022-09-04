@@ -1,0 +1,12 @@
+extends layout
+
+block content
+
+	button#original(disabled="disabled") Download Original
+	br
+	button#work(disabled="disabled") Download Work Version
+	br
+	input#input(type='file', accept=".json", disabled="disabled")
+	button#convert(disabled="disabled") Convert to original Format
+
+	script(type='text/javascript', src='./js/convert.min.js')
