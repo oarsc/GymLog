@@ -27,7 +27,7 @@ class EditVariationsDialogFragment(
     private lateinit var adapter: EditVariationsRecyclerViewAdapter
 
     private val variations: MutableList<Variation> = variations
-        .map { variation -> variation.clone() }
+        //.map { variation -> variation.clone() }
         .toMutableList()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -60,9 +60,9 @@ class EditVariationsDialogFragment(
 
         val addButton: ImageView = view.findViewById(R.id.addButton)
         addButton.setOnClickListener {
-            val variation = Variation("New " + variations.size)
-            variations.add(variation)
-            adapter.notifyItemInserted(variations.size - 1)
+            //val variation = Variation("New " + variations.size)
+            //variations.add(variation)
+            //adapter.notifyItemInserted(variations.size - 1)
         }
 
         val builder = AlertDialog.Builder(activity)

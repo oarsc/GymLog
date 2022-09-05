@@ -107,38 +107,58 @@ class SplashActivity : AppCompatActivity() {
             .forEach { e: Bar -> Data.bars.add(e) }
 
         Data.exercises.clear()
+
+        var defaultVariationId = Int.MAX_VALUE
+
         db.exerciseDao().getAllWithMusclesAndVariations()
             .map { x: WithMusclesAndVariations ->
                 val exercise = Exercise(x.exercise!!)
                 x.primaryMuscles!!
                     .map(MuscleEntity::muscleId)
-                    .map { id: Int ->
+                    .map { muscleId ->
                         Data.muscles
-                            .filter { group: Muscle -> group.id == id }
+                            .filter { group: Muscle -> group.id == muscleId }
                             .getOrElse(0) {
-                                throw LoadException("Muscle $id not found in local structure") }
+                                throw LoadException("Muscle $muscleId not found in local structure") }
                     }
-                    .forEach { muscle -> exercise.primaryMuscles.add(muscle) }
+                    .also { exercise.primaryMuscles.addAll(it) }
 
                 x.secondaryMuscles!!
                     .map(MuscleEntity::muscleId)
-                    .map { id: Int ->
+                    .map { muscleId ->
                         Data.muscles
-                            .filter { group: Muscle -> group.id == id }
+                            .filter { group: Muscle -> group.id == muscleId }
                             .getOrElse(0) {
-                                throw LoadException("Muscle $id not found in local structure") }
+                                throw LoadException("Muscle $muscleId not found in local structure") }
                     }
-                    .forEach { muscle -> exercise.secondaryMuscles.add(muscle) }
+                    .also { exercise.secondaryMuscles.addAll(it) }
 
                 x.variations!!
-                    .map { variationEntity -> Variation(variationEntity) }
-                    .forEach { variation -> exercise.variations.add(variation) }
+                    .map { variationEntity -> Variation(variationEntity, exercise) }
+                    .sortedWith { a,b -> if (a.default) 1 else if (b.default) -1 else 0 }
+                    .also { exercise.variations.addAll(it) }
+
+                val defaultVariation = Variation(exercise)
+                defaultVariation.default = true
+                defaultVariation.name = ""
+                defaultVariation.id = defaultVariationId--
+                exercise.variations.add(0, defaultVariation)
+
+                exercise.variations.forEach {
+                    it.type = exercise.type
+                    it.step = exercise.step
+                    it.bar = exercise.bar
+                    it.weightSpec = exercise.weightSpec
+                    it.restTime = exercise.restTime
+                }
+
                 exercise
             }
-            .forEach { exercise -> Data.exercises.add(exercise) }
+            .also { Data.exercises.addAll(it) }
 
-        db.trainingDao().getCurrentTraining()
-            .ifPresent { training: TrainingEntity -> Data.trainingId = training.trainingId }
+        db.trainingDao().getCurrentTraining()?.apply {
+            Data.trainingId = trainingId
+        }
     }
 
     private fun getFileName(uri: Uri): String {

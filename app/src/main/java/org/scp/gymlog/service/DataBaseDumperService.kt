@@ -145,8 +145,8 @@ class DataBaseDumperService {
                     }
             )
 
-            val trainingOrig: MutableList<Int> = ArrayList()
-            val trainingsIdMap: MutableMap<Int, Int> = HashMap()
+            val trainingOrig = mutableListOf<Int>()
+            val trainingsIdMap = mutableMapOf<Int, Int>()
             val trainings = trainings(obj.getJSONArray("trainings"))
             for (trainingEntity in trainings) {
                 trainingOrig.add(trainingEntity.trainingId)
@@ -156,8 +156,7 @@ class DataBaseDumperService {
             for (i in newTrIds.indices) {
                 trainingsIdMap[trainingOrig[i]] = newTrIds[i].toInt()
             }
-            val variations: MutableMap<String, VariationEntity> =
-                HashMap()
+            val variations = mutableMapOf<String, VariationEntity>()
             val bits = bits(obj.getJSONArray("bits"), exercises, variations)
             database.variationDao()
                 .insertAll(ArrayList(variations.values))

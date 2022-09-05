@@ -11,7 +11,7 @@ interface TrainingDao {
     fun getAll(): List<TrainingEntity>
 
     @Query("SELECT * FROM training WHERE `end` IS NULL")
-    fun getCurrentTraining(): Optional<TrainingEntity>
+    fun getCurrentTraining(): TrainingEntity?
 
     @Query("SELECT * FROM training WHERE trainingId = :trainingId")
     fun getTraining(trainingId: Int): Optional<TrainingEntity>

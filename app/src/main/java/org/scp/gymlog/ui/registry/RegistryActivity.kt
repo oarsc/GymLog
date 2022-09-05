@@ -81,8 +81,9 @@ class RegistryActivity : DBAppCompatActivity() {
     private var countdownThread: CountdownThread? = null
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
-        db.trainingDao().getCurrentTraining()
-            .ifPresent { trainingEntity -> trainingId = trainingEntity.trainingId }
+        db.trainingDao().getCurrentTraining()?.also {
+            trainingId = it.trainingId
+        }
 
         val exerciseId = intent.extras!!.getInt("exerciseId")
         val variationId = intent.extras!!.getInt("variationId", 0)
