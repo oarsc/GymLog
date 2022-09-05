@@ -37,7 +37,7 @@ class VariationEntity {
     var name = ""
     var exerciseId = 0
     var type = ExerciseType.BARBELL
-    var default = false
+    var def = false
 
     // Last configs
     var lastWeightSpec = WeightSpecification.NO_BAR_WEIGHT

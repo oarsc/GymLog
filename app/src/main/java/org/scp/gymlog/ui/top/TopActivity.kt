@@ -102,10 +102,7 @@ open class TopActivity : DBAppCompatActivity() {
         val intent = Intent(this, TopSpecificActivity::class.java)
         intent.putExtra("exerciseId", topBit.variation.exercise.id)
         intent.putExtra("weight", topBit.weight.value.multiply(Constants.ONE_HUNDRED).toInt())
-        if (topBit.variation.default)
-            intent.putExtra("variationId", 0)
-        else
-            intent.putExtra("variationId", topBit.variation.id)
+        intent.putExtra("variationId", topBit.variation.id)
         startActivityForResult(intent, IntentReference.TOP_RECORDS)
     }
 

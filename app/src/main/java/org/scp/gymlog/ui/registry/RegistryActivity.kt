@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import org.scp.gymlog.R
-import org.scp.gymlog.exceptions.InternalException
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.*
 import org.scp.gymlog.room.AppDatabase
@@ -35,9 +34,9 @@ import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
+import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.DateUtils.diffSeconds
 import org.scp.gymlog.util.DateUtils.isPast
-import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.FormatUtils.safeBigDecimal
@@ -89,17 +88,13 @@ class RegistryActivity : DBAppCompatActivity() {
         val variationId = intent.extras!!.getInt("variationId", 0)
 
         exercise = Data.getExercise(exerciseId)
-
         variation = if (variationId > 0) {
             Data.getVariation(exercise, variationId)
         } else {
             exercise.defaultVariation
         }
 
-        val log: List<BitEntity> = if (variationId > 0)
-                db.bitDao().getHistory(exerciseId, variationId, LOG_PAGES_SIZE)
-            else
-                db.bitDao().getHistory(exerciseId, LOG_PAGES_SIZE)
+        val log = db.bitDao().getHistory(exerciseId, variation.id, LOG_PAGES_SIZE)
 
         log.map { bitEntity: BitEntity -> Bit(bitEntity) }
             .forEach { bit -> this.log.add(bit) }
@@ -305,7 +300,7 @@ class RegistryActivity : DBAppCompatActivity() {
                 }
                 IntentReference.TRAINING -> {
                     DBThread.run(this) { db ->
-                        val log = db.bitDao().getHistory(exercise.id, LOG_PAGES_SIZE)
+                        val log = db.bitDao().getHistory(exercise.id, variation.id, LOG_PAGES_SIZE)
                         this.log.clear()
                         log.map { entity: BitEntity -> Bit(entity) }
                             .forEach { e -> this.log.add(e) }
@@ -324,13 +319,12 @@ class RegistryActivity : DBAppCompatActivity() {
             val log: List<BitEntity>
             val exerciseId = exercise.id
 
-            if (variationId == 0) {
-                log = db.bitDao().getHistory(exerciseId, LOG_PAGES_SIZE)
-                variation = exercise.defaultVariation
-            } else {
-                log = db.bitDao().getHistory(exerciseId, variationId, LOG_PAGES_SIZE)
-                variation = Data.getVariation(exercise, variationId)
-            }
+            variation = if (variationId == 0)
+                exercise.defaultVariation
+            else
+                Data.getVariation(exercise, variationId)
+
+            log = db.bitDao().getHistory(exerciseId, variation.id, LOG_PAGES_SIZE)
 
             this.log.clear()
             log.map { bitEntity -> Bit(bitEntity) }
@@ -435,12 +429,7 @@ class RegistryActivity : DBAppCompatActivity() {
         DBThread.run(this) { db ->
             val bit = log[initialSize - 1]
             val date = bit.timestamp
-            val log: List<BitEntity> = if (variation.default)
-                    db.bitDao().getHistory(exercise.id, bit.trainingId,
-                        date, LOG_PAGES_SIZE)
-                else
-                    db.bitDao().getHistory(exercise.id, variation.id, bit.trainingId,
-                        date, LOG_PAGES_SIZE)
+            val log = db.bitDao().getHistory(exercise.id, variation.id, bit.trainingId, date, LOG_PAGES_SIZE)
 
             log.map { bitEntity -> Bit(bitEntity) }
                 .forEach { b -> this.log.add(b) }

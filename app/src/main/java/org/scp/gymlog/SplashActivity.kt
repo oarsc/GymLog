@@ -110,29 +110,11 @@ class SplashActivity : AppCompatActivity() {
 
         Data.exercises.clear()
 
-        var defaultVariationId = Int.MAX_VALUE
         val defaultVariationName = resources.getString(R.string.text_default)
 
         db.exerciseDao().getAllWithMusclesAndVariations()
             .map { x: WithMusclesAndVariations ->
                 val exercise = Exercise(x.exercise!!)
-
-                val defaultVariation = Variation(exercise)
-                defaultVariation.default = true
-                defaultVariation.name = defaultVariationName
-                defaultVariation.id = defaultVariationId--
-
-                x.exercise?.apply {
-                    defaultVariation.type = type
-                    defaultVariation.step = BigDecimal.valueOf(lastStep.toLong()).divide(Constants.ONE_HUNDRED)
-                    defaultVariation.weightSpec = lastWeightSpec
-                    defaultVariation.restTime = lastRestTime
-                    if (lastBarId != null) {
-                        defaultVariation.bar = Data.getBar(lastBarId!!)
-                    }
-                }
-
-                exercise.variations.add(defaultVariation)
 
                 x.primaryMuscles!!
                     .map(MuscleEntity::muscleId)
@@ -156,7 +138,8 @@ class SplashActivity : AppCompatActivity() {
 
                 x.variations!!
                     .map { variationEntity -> Variation(variationEntity, exercise) }
-                    .sortedWith { a,b -> if (a.default) 1 else if (b.default) -1 else 0 }
+                    .onEach { variation -> if (variation.default) variation.name = defaultVariationName}
+                    .sortedWith { a,b -> if (a.default) -1 else if (b.default) 1 else 0 }
                     .also { exercise.variations.addAll(it) }
 
                 exercise

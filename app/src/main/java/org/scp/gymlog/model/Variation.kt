@@ -24,6 +24,7 @@ class Variation(
 	constructor(entity: VariationEntity, exercise: Exercise) : this(exercise) {
 		this.id = entity.variationId
 		this.name = entity.name
+		this.default = entity.def
 
 		this.type = entity.type
 		this.step = BigDecimal.valueOf(entity.lastStep.toLong()).divide(Constants.ONE_HUNDRED)
@@ -38,7 +39,7 @@ class Variation(
 		val entity = VariationEntity()
 		entity.variationId = id
 		entity.name = if (default) "" else name
-		entity.default = default
+		entity.def = default
 		entity.exerciseId = exercise.id
 		entity.type = type
 		entity.lastStep = step.multiply(Constants.ONE_HUNDRED).toInt()

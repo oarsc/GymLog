@@ -10,18 +10,9 @@ interface BitDao {
     @Query("SELECT * FROM bit")
     fun getAll(): List<BitEntity>
 
-    @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND variationId IS NULL " +
-                "ORDER BY trainingId DESC, timestamp LIMIT :limit")
-    fun getHistory(exerciseId: Int, limit: Int): List<BitEntity>
-
     @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND variationId = :variationId " +
                 "ORDER BY trainingId DESC, timestamp LIMIT :limit")
     fun getHistory(exerciseId: Int, variationId: Int, limit: Int): List<BitEntity>
-
-    @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND variationId IS NULL AND " +
-                "(trainingId = :trainingId AND timestamp > :date OR trainingId < :trainingId) " +
-                "ORDER BY trainingId DESC, timestamp LIMIT :limit")
-    fun getHistory(exerciseId: Int, trainingId: Int, date: LocalDateTime, limit: Int): List<BitEntity>
 
     @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND variationId = :variationId AND " +
                 "(trainingId = :trainingId AND timestamp > :date OR trainingId < :trainingId) " +
@@ -47,9 +38,6 @@ interface BitDao {
     @Query("SELECT MAX(reps) AS reps, * FROM bit " +
                 "WHERE exerciseId = :exerciseId GROUP BY totalWeight, variationId ORDER BY timestamp")
     fun findTops(exerciseId: Int): List<BitEntity>
-
-    @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND variationId IS NULL AND totalWeight = :weight ORDER BY timestamp DESC")
-    fun findAllByExerciseAndWeight(exerciseId: Int, weight: Int): List<BitEntity>
 
     @Query("SELECT * FROM bit WHERE exerciseId = :exerciseId AND variationId = :variationId AND totalWeight = :weight ORDER BY timestamp DESC")
     fun findAllByExerciseAndWeight(exerciseId: Int, variationId: Int, weight: Int ): List<BitEntity>

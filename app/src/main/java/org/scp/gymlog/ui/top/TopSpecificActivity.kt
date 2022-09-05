@@ -14,15 +14,12 @@ class TopSpecificActivity : TopActivity() {
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
         weight = intent.extras!!.getInt("weight")
-        variationId = intent.extras?.getInt("variationId") ?: 0
+        variationId = intent.extras!!.getInt("variationId")
         return super.onLoad(savedInstanceState, db)
     }
 
     override fun getBits(db: AppDatabase, exerciseId: Int): MutableList<Bit> {
-        val bits = if (variationId == 0)
-            db.bitDao().findAllByExerciseAndWeight(exerciseId, weight)
-        else
-            db.bitDao().findAllByExerciseAndWeight(exerciseId, variationId, weight)
+        val bits = db.bitDao().findAllByExerciseAndWeight(exerciseId, variationId, weight)
 
         return mutableMapOf<LocalDate, BitEntity>()
             .apply {

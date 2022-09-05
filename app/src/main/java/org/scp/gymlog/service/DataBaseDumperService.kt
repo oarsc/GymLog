@@ -6,7 +6,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.scp.gymlog.exceptions.LoadException
-import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.entities.*
 import org.scp.gymlog.util.Constants
@@ -69,13 +68,14 @@ class DataBaseDumperService {
         val bits = convertToJSONArray(database.bitDao().getAll())
         try {
             bits.map(JSONArray::getJSONObject).forEach { bit: JSONObject ->
-                val id = bit.getInt("exerciseId")
-                val exercise = Data.getExercise(id)
+                //val id = bit.getInt("exerciseId")
+                //val exercise = Data.getExercise(id)
+                //bit.remove("exerciseId")
+                //bit.put("exerciseName", exercise.name)
                 bit.remove("exerciseId")
-                bit.put("exerciseName", exercise.name)
                 if (bit.getBoolean("kilos")) bit.remove("kilos")
                 if (bit.getString("note").isEmpty()) bit.remove("note")
-                if (bit.has("variationId")) {
+                /*if (bit.has("variationId")) {
                     val varId = bit.getInt("variationId")
                     bit.remove("variationId")
 
@@ -83,7 +83,7 @@ class DataBaseDumperService {
                         ?: throw LoadException("Can't find variation")
 
                     bit.put("variation", variation.name)
-                }
+                }*/
             }
         } catch (e: JSONException) {
             throw LoadException("", e)
@@ -108,47 +108,69 @@ class DataBaseDumperService {
 
             // EXERCISES:
             val exercises = exercises(obj.getJSONArray("exercises"))
-            val exercisesIdMap: MutableMap<Int, Int> = HashMap()
-            val currentExercises = Data.exercises
-            val addedIds: MutableList<Int> = ArrayList()
-            var newIds = currentExercises.size
-            for (ent in exercises) {
-                val matchingEx = currentExercises.find { ex: Exercise ->
-                        ex.name.equals(ent.name, ignoreCase = true )
+            val exercisesIdMap = mutableMapOf<Int, Int>()
+            val addedExercisesIds = mutableListOf<Int>()
+            var newIds = Data.exercises.size
+
+            exercises.forEach { exercise ->
+                val matchingEx = Data.exercises.find {
+                        it.name.equals(exercise.name, ignoreCase = true )
                     }
                 if (matchingEx != null) {
-                    exercisesIdMap[ent.exerciseId] = matchingEx.id
-                    ent.exerciseId = matchingEx.id
-                    database.exerciseDao().update(ent)
+                    exercisesIdMap[exercise.exerciseId] = matchingEx.id
+                    exercise.exerciseId = matchingEx.id
+                    database.exerciseDao().update(exercise)
                 } else {
-                    exercisesIdMap[ent.exerciseId] = ++newIds
-                    ent.exerciseId = newIds
-                    addedIds.add(newIds)
-                    database.exerciseDao().insert(ent)
+                    exercisesIdMap[exercise.exerciseId] = ++newIds
+                    exercise.exerciseId = newIds
+                    addedExercisesIds.add(newIds)
+                    database.exerciseDao().insert(exercise)
                 }
             }
-            val primaryMuscles = primaryMuscles(obj.getJSONArray("primaries"))
-            for (primaryMuscle in primaryMuscles) {
-                primaryMuscle.exerciseId = exercisesIdMap[primaryMuscle.exerciseId]!!
-            }
-            database.exerciseMuscleCrossRefDao().insertAll(
-                primaryMuscles
-                    .filter { entity: ExerciseMuscleCrossRef ->
-                        addedIds.contains(entity.exerciseId)
-                    }
-            )
 
-            val secondaryMuscles = secondaryMuscles(obj.getJSONArray("secondaries"))
-            for (secondaryMuscle in secondaryMuscles) {
-                secondaryMuscle.exerciseId = exercisesIdMap[secondaryMuscle.exerciseId]!!
-            }
-            database.exerciseMuscleCrossRefDao().insertAllSecondaries(
-                secondaryMuscles
-                    .filter { entity: SecondaryExerciseMuscleCrossRef ->
-                        addedIds.contains(entity.exerciseId)
-                    }
-            )
+            // PRIMARY AND SECONDARY MUSCLES
+            primaryMuscles(obj.getJSONArray("primaries"))
+                .onEach { it.exerciseId = exercisesIdMap[it.exerciseId]!! }
+                .filter { addedExercisesIds.contains(it.exerciseId) }
+                .also { database.exerciseMuscleCrossRefDao().insertAll(it) }
 
+            secondaryMuscles(obj.getJSONArray("primaries"))
+                .onEach { it.exerciseId = exercisesIdMap[it.exerciseId]!! }
+                .filter { addedExercisesIds.contains(it.exerciseId) }
+                .also { database.exerciseMuscleCrossRefDao().insertAllSecondaries(it) }
+
+            // VARIATION
+            val variationsIdMap = mutableMapOf<Int, Int>()
+            val variationsXExerciseIdMap = mutableMapOf<Int, Int>()
+            newIds = Data.exercises.flatMap { it.variations }.count()
+
+            variations(obj.getJSONArray("variations"))
+                .forEach { variation ->
+                    val exerciseId = exercisesIdMap[variation.exerciseId]!!
+                    val matchingEx = Data.exercises.find { it.id == exerciseId }
+                    val matchingVa = matchingEx?.variations?.find {
+                        it.default && variation.def ||
+                        it.name.equals(variation.name, ignoreCase = true )
+                    }
+
+                    if (matchingVa != null) {
+                        variationsIdMap[variation.variationId] = matchingVa.id
+                        variationsXExerciseIdMap[matchingVa.id] = exerciseId
+                        variation.variationId = matchingVa.id
+                        variation.exerciseId = exerciseId
+
+                        database.variationDao().update(variation)
+                    } else {
+                        variationsIdMap[variation.variationId] = ++newIds
+                        variationsXExerciseIdMap[newIds] = exerciseId
+                        variation.variationId = newIds
+                        variation.exerciseId = exerciseId
+
+                        database.variationDao().insert(variation)
+                    }
+                }
+
+            // TRAININGS
             val trainingOrig = mutableListOf<Int>()
             val trainingsIdMap = mutableMapOf<Int, Int>()
             val trainings = trainings(obj.getJSONArray("trainings"))
@@ -160,24 +182,22 @@ class DataBaseDumperService {
             for (i in newTrIds.indices) {
                 trainingsIdMap[trainingOrig[i]] = newTrIds[i].toInt()
             }
-            val variations = mutableMapOf<String, VariationEntity>()
-            val bits = bits(obj.getJSONArray("bits"), exercises, variations)
-            database.variationDao()
-                .insertAll(ArrayList(variations.values))
 
-            for (bit in bits) {
-                bit.trainingId = trainingsIdMap[bit.trainingId]!!
-            }
-            database.bitDao().insertAll(bits)
+            // BITS
+            val bits = bits(obj.getJSONArray("bits"), variationsIdMap, variationsXExerciseIdMap)
+            bits.onEach { it.trainingId = trainingsIdMap[it.trainingId]!! }
+                .also { database.bitDao().insertAll(it) }
 
             // Update most recent bit to exercises
             //*
             database.exerciseDao().getAll()
-                .filter { ex -> bits.any { bit: BitEntity -> bit.exerciseId == ex.exerciseId } }
+                .filter { ex ->
+                    bits.any { bit -> variationsXExerciseIdMap[bit.variationId] == ex.exerciseId }
+                }
                 .onEach { exerciseEntity ->
                     exerciseEntity.lastTrained = bits
-                        .filter { bitEntity -> bitEntity.exerciseId == exerciseEntity.exerciseId }
-                        .map { bitEntity -> bitEntity.timestamp }
+                        .filter { bit -> variationsXExerciseIdMap[bit.variationId] == exerciseEntity.exerciseId }
+                        .map { bit -> bit.timestamp }
                         .fold(Constants.DATE_ZERO) { acc, value -> if (value > acc) value else acc }
                 }
                 .filter { exerciseEntity -> exerciseEntity.lastTrained > Constants.DATE_ZERO }
@@ -229,51 +249,18 @@ class DataBaseDumperService {
     @Throws(JSONException::class)
     private fun bits(
             list: JSONArray,
-            exercises: List<ExerciseEntity>,
-            variations: MutableMap<String, VariationEntity>): List<BitEntity> {
+            variationsIdMap: MutableMap<Int, Int>,
+            variationsXExerciseIdMap: MutableMap<Int, Int>): List<BitEntity> {
 
         list.map(JSONArray::getJSONObject).forEach { bit: JSONObject ->
-            val name = bit.getString("exerciseName")
-            /*
-            val id = Data.getInstance().exercises
-                .filter { e -> e.name == name }
-                .map { e -> e.id }
-                .getOrElse(0) { throw LoadException("Couldn't find exercise: $name") }
-            */
+            val variationId = variationsIdMap[bit.get("variationId")]
+            bit.put("variationId", variationId)
+            bit.put("exerciseId", variationsXExerciseIdMap[variationId]!!)
 
-            val id = exercises
-                .filter { e -> e.name == name }
-                .map { e -> e.exerciseId }
-                .getOrElse(0) { throw LoadException("Couldn't find exercise: $name") }
-
-            bit.put("exerciseId", id)
             if (!bit.has("kilos")) bit.put("kilos", true)
             if (!bit.has("note")) bit.put("note", "")
-            val variation = extractEntity(bit, variations)
-            if (variation != null) {
-                bit.put("variationId", variation.variationId)
-            }
         }
         return convertToObject(list, BitEntity::class)
-    }
-
-    @Throws(JSONException::class)
-    private fun extractEntity(
-        bit: JSONObject,
-        variations: MutableMap<String, VariationEntity>
-    ): VariationEntity? {
-        if (!bit.has("variation")) {
-            return null
-        }
-        val key = bit.getInt("exerciseId").toString() + bit.getString("variation")
-        if (!variations.containsKey(key)) {
-            val variation = VariationEntity()
-            variation.exerciseId = bit.getInt("exerciseId")
-            variation.name = bit.getString("variation")
-            variation.variationId = variations.size + 1
-            variations[key] = variation
-        }
-        return variations[key]
     }
 
     @Throws(JSONException::class)

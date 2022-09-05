@@ -88,7 +88,7 @@ class InitialDataService {
                     exXmuscleDao.insertAllSecondaries(muscle2Links)
 
                     val defaultVariation = VariationEntity()
-                    defaultVariation.default = true
+                    defaultVariation.def = true
                     defaultVariation.exerciseId = ex.exerciseId
                     defaultVariation.type = parseExerciseType(exerciseObj.getString("type"))
                     if (defaultVariation.type === ExerciseType.BARBELL) {
@@ -97,7 +97,7 @@ class InitialDataService {
                     } else {
                         defaultVariation.lastWeightSpec = WeightSpecification.TOTAL_WEIGHT
                     }
-                    //variationDao.insert(defaultVariation)
+                    variationDao.insert(defaultVariation)
                 }
             } catch (e: JSONException) {
                 throw LoadException("Unable to load initial exercises")

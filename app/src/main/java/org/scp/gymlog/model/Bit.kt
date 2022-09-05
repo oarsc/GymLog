@@ -49,9 +49,7 @@ class Bit : EntityMappable<BitEntity> {
 		val entity = BitEntity()
 		entity.bitId = id
 		entity.exerciseId = variation.exercise.id
-		if (!variation.default) {
-			entity.variationId = variation.id
-		}
+		entity.variationId = variation.id
 		entity.trainingId = trainingId
 		entity.note = note
 		entity.timestamp = timestamp
