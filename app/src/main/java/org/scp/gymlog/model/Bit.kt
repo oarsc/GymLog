@@ -3,22 +3,36 @@ package org.scp.gymlog.model
 import org.scp.gymlog.room.EntityMappable
 import org.scp.gymlog.room.entities.BitEntity
 import org.scp.gymlog.util.Constants
+import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.currentDateTime
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-class Bit(val exerciseId: Int, val variationId: Int): EntityMappable<BitEntity> {
+class Bit : EntityMappable<BitEntity> {
+
+	val variation: Variation
 
 	var id = 0
 	var trainingId = 0
 	var reps = 0
 	var weight = Weight.INVALID
 	var note: String = ""
-	var timestamp: LocalDateTime = currentDateTime()
+	var timestamp: LocalDateTime
 	var instant = false
 	var set = 0 // used in logRecyclerViewAdapter
 
-	constructor(entity: BitEntity) : this(entity.exerciseId, entity.variationId ?: 0) {
+	init {
+		this.timestamp = currentDateTime()
+	}
+
+	constructor(variation: Variation) {
+		this.variation = variation
+	}
+
+	constructor(entity: BitEntity) {
+		val ex = Data.getExercise(entity.exerciseId)
+		variation = Data.getVariation(ex, entity.variationId ?: 0)
+
 		id = entity.bitId
 		trainingId = entity.trainingId
 		note = entity.note
@@ -34,9 +48,9 @@ class Bit(val exerciseId: Int, val variationId: Int): EntityMappable<BitEntity> 
 	override fun toEntity(): BitEntity {
 		val entity = BitEntity()
 		entity.bitId = id
-		entity.exerciseId = exerciseId
-		if (variationId > 0) {
-			entity.variationId = variationId
+		entity.exerciseId = variation.exercise.id
+		if (!variation.default) {
+			entity.variationId = variation.id
 		}
 		entity.trainingId = trainingId
 		entity.note = note

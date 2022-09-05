@@ -57,7 +57,7 @@ class RegistryActivity : DBAppCompatActivity() {
     }
 
     private lateinit var exercise: Exercise
-    private var variation: Variation? = null
+    private lateinit var variation: Variation
     private val weight: EditText by lazy { findViewById(R.id.editWeight) }
     private var defaultTimeColor = 0
     private val timer: TextView by lazy { findViewById<TextView>(R.id.timerSeconds)
@@ -92,10 +92,14 @@ class RegistryActivity : DBAppCompatActivity() {
             .filter { ex: Exercise -> ex.id == exerciseId }
             .getOrElse(0) { throw InternalException("Exercise id not found: $exerciseId") }
 
-        if (variationId > 0) {
-            variation = exercise.variations
-                .filter { v: Variation -> v.id == variationId }
+        variation = if (variationId > 0) {
+            exercise.variations
+                .filter { it.id == variationId }
                 .getOrElse(0) { throw InternalException("Filter not found: $exerciseId-$variationId") }
+        } else {
+            exercise.variations
+                .filter { it.default }
+                .getOrElse(0) { throw InternalException("Default variation not found for: $exerciseId") }
         }
 
         val log: List<BitEntity> = if (variationId > 0)
@@ -158,22 +162,25 @@ class RegistryActivity : DBAppCompatActivity() {
         }
 
         // Variations
-        if (exercise.variations.isEmpty()) {
+        if (exercise.variations.size == 1) {
             findViewById<View>(R.id.variationBox).visibility = View.GONE
-        } else if (variation != null) {
+        } else {
             val text: TextView = findViewById(R.id.variationText)
-            text.text = variation!!.name
+            if (variation.default)
+                text.setText(R.string.text_default)
+            else
+                text.text = variation.name
         }
         findViewById<View>(R.id.variationBox).setOnClickListener {
-            val names = exercise.variations.map(Variation::name).toMutableList()
-            names.add(0, resources.getString(R.string.text_default))
+            val names = exercise.variations
+                .map { if (it.default) resources.getString(R.string.text_default) else it.name}
 
             val dialog = TextSelectDialogFragment(names) { idx,_ ->
                 if (idx != TextSelectDialogFragment.DIALOG_CLOSED) {
                     if (idx == 0) {
                         switchVariation(0)
                     } else {
-                        val id = exercise.variations[idx - 1].id
+                        val id = exercise.variations[idx].id
                         switchVariation(id)
                     }
                 }
@@ -326,11 +333,13 @@ class RegistryActivity : DBAppCompatActivity() {
 
             if (variationId == 0) {
                 log = db.bitDao().getHistory(exerciseId, LOG_PAGES_SIZE)
-                variation = null
+                variation = exercise.variations
+                    .filter { it.default }
+                    .getOrElse(0) { throw InternalException("Default variation not found for: $exerciseId") }
             } else {
                 log = db.bitDao().getHistory(exerciseId, variationId, LOG_PAGES_SIZE)
                 variation = exercise.variations
-                    .filter { v: Variation -> v.id == variationId }
+                    .filter { it.id == variationId }
                     .getOrElse(0) { throw InternalException("Variation not found: $exerciseId-$variationId") }
             }
 
@@ -343,10 +352,10 @@ class RegistryActivity : DBAppCompatActivity() {
                 recyclerViewAdapter.setFullyLoaded(log.size < LOG_PAGES_SIZE - 1)
 
                 val text: TextView = findViewById(R.id.variationText)
-                if (variation == null)
+                if (variation.default)
                     text.setText(R.string.text_default)
                 else
-                    text.text = variation!!.name
+                    text.text = variation.name
             }
         }
     }
@@ -458,7 +467,7 @@ class RegistryActivity : DBAppCompatActivity() {
             return
         }
         DBThread.run(this) { db ->
-            val bit = Bit(exercise.id, if (variation == null) 0 else variation!!.id)
+            val bit = Bit(variation)
 
             val totalWeight = Weight(weight.bigDecimal, internationalSystem).calculateTotal(
                 exercise.weightSpec,

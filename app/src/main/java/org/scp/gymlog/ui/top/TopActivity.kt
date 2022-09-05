@@ -62,25 +62,26 @@ open class TopActivity : DBAppCompatActivity() {
         adapter.onLongClickListener = Consumer { topBit -> onElementLongClicked(topBit) }
     }
 
-    protected open fun getBits(db: AppDatabase, exerciseId: Int): MutableList<Bit> {
+    protected open fun getBits(db: AppDatabase, exerciseId: Int): List<Bit> {
         return db.bitDao().findTops(exerciseId)
             .map { bitEntity -> Bit(bitEntity) }
-            .toMutableList()
     }
 
     protected open fun order(): Comparator<in Bit> {
         return Comparator.comparing { bit -> bit.weight.getValue(internationalSystem).negate() }
     }
 
-    private fun transformBitsToRows(bits: MutableList<Bit>) {
+    private fun transformBitsToRows(bits: List<Bit>) {
         val variations: MutableSet<Int> = HashSet()
         listData.clear()
-        bits.sortWith(Comparator.comparingInt(Bit::variationId).thenComparing(order()))
-        bits.forEach { bit ->
-                val variationId = bit.variationId
+        bits.sortedWith (order())
+            .sortedWith(compareBy { b -> b.variation.id })
+            .sortedWith(compareBy { b -> !b.variation.default })
+            .forEach { bit ->
+                val variationId = bit.variation.id
                 if (!variations.contains(variationId)) {
                     variations.add(variationId)
-                    if (variationId != 0) {
+                    if (!bit.variation.default) {
                         val variation = Data.getVariation(exercise, variationId)
                         listData.add(TopVariationRow(variation))
                     }
@@ -100,9 +101,9 @@ open class TopActivity : DBAppCompatActivity() {
 
     protected open fun onElementLongClicked(topBit: Bit) {
         val intent = Intent(this, TopSpecificActivity::class.java)
-        intent.putExtra("exerciseId", topBit.exerciseId)
+        intent.putExtra("exerciseId", topBit.variation.exercise.id)
         intent.putExtra("weight", topBit.weight.value.multiply(Constants.ONE_HUNDRED).toInt())
-        intent.putExtra("variationId", topBit.variationId)
+        intent.putExtra("variationId", topBit.variation.id)
         startActivityForResult(intent, IntentReference.TOP_RECORDS)
     }
 

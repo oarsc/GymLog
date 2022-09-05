@@ -57,8 +57,8 @@ object Data {
 
 	fun getVariation(exercise: Exercise, variationId: Int): Variation {
 		return exercise.variations
-			.filter { variation: Variation -> variation.id == variationId }
-			.getOrElse(0) { throw
-				LoadException("NO VARIATION $variationId FOUND FOR EXERCISE: ${exercise.id}") }
+			.filter { it.id == variationId }
+			//.getOrElse(0) { throw LoadException("NO VARIATION $variationId FOUND FOR EXERCISE: ${exercise.id}") }
+			.getOrElse(0) { exercise.variations.find { it.default }!! }
 	}
 }
