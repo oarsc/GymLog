@@ -159,14 +159,6 @@ class SplashActivity : AppCompatActivity() {
                     .sortedWith { a,b -> if (a.default) 1 else if (b.default) -1 else 0 }
                     .also { exercise.variations.addAll(it) }
 
-                exercise.variations.forEach {
-                    it.type = defaultVariation.type
-                    it.step = defaultVariation.step
-                    it.bar = defaultVariation.bar
-                    it.weightSpec = defaultVariation.weightSpec
-                    it.restTime = defaultVariation.restTime
-                }
-
                 exercise
             }
             .also { Data.exercises.addAll(it) }

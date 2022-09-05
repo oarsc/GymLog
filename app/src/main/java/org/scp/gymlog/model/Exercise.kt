@@ -77,10 +77,6 @@ class Exercise() : EntityMappable<ExerciseEntity> {
 
 	fun toVariationListEntities(): List<VariationEntity> {
 		return variations
-			.map { v: Variation ->
-				val variation = v.toEntity()
-				variation.exerciseId = id
-				variation
-			}
+			.map { it.toEntity().apply { exerciseId = this@Exercise.id } }
 	}
 }

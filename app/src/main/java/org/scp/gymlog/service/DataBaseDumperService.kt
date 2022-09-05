@@ -30,6 +30,7 @@ class DataBaseDumperService {
         val obj = JSONObject()
         obj.put("prefs", prefs(context))
         obj.put("exercises", exercises(database))
+        obj.put("variations", variations(database))
         obj.put("primaries", primaryMuscles(database))
         obj.put("secondaries", secondaryMuscles(database))
         obj.put("trainings", trainings(database))
@@ -46,6 +47,10 @@ class DataBaseDumperService {
 
     private fun exercises(database: AppDatabase): JSONArray {
         return convertToJSONArray(database.exerciseDao().getAll())
+    }
+
+    private fun variations(database: AppDatabase): JSONArray {
+        return convertToJSONArray(database.variationDao().getAll())
     }
 
     private fun primaryMuscles(database: AppDatabase): JSONArray {
@@ -159,6 +164,7 @@ class DataBaseDumperService {
             val bits = bits(obj.getJSONArray("bits"), exercises, variations)
             database.variationDao()
                 .insertAll(ArrayList(variations.values))
+
             for (bit in bits) {
                 bit.trainingId = trainingsIdMap[bit.trainingId]!!
             }

@@ -373,6 +373,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
                     updateForms()
                     DBThread.run(this) { db -> db.exerciseDao().update(exercise.toEntity()) }
+                    DBThread.run(this) { db -> db.variationDao().update(variation.toEntity()) }
                 }
             }
         )

@@ -13,6 +13,7 @@ import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.entities.ExerciseEntity
 import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef
 import org.scp.gymlog.room.entities.SecondaryExerciseMuscleCrossRef
+import org.scp.gymlog.room.entities.VariationEntity
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.JsonUtils.map
@@ -54,6 +55,7 @@ class InitialDataService {
             val exercisesArray = assetJsonArrayFile(assets, "initialData.json")
             val exerciseDao = db.exerciseDao()
             val exXmuscleDao = db.exerciseMuscleCrossRefDao()
+            val variationDao = db.variationDao()
             try {
                 exercisesArray.map(JSONArray::getJSONObject).forEach { exerciseObj: JSONObject ->
                     val ex = ExerciseEntity()
@@ -84,6 +86,18 @@ class InitialDataService {
                             exXmuscle
                         }
                     exXmuscleDao.insertAllSecondaries(muscle2Links)
+
+                    val defaultVariation = VariationEntity()
+                    defaultVariation.default = true
+                    defaultVariation.exerciseId = ex.exerciseId
+                    defaultVariation.type = parseExerciseType(exerciseObj.getString("type"))
+                    if (defaultVariation.type === ExerciseType.BARBELL) {
+                        defaultVariation.lastBarId = 4 // 20kg
+                        defaultVariation.lastWeightSpec = WeightSpecification.NO_BAR_WEIGHT
+                    } else {
+                        defaultVariation.lastWeightSpec = WeightSpecification.TOTAL_WEIGHT
+                    }
+                    //variationDao.insert(defaultVariation)
                 }
             } catch (e: JSONException) {
                 throw LoadException("Unable to load initial exercises")

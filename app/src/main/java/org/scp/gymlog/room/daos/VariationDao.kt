@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import org.scp.gymlog.room.entities.VariationEntity
-import java.util.*
 
 @Dao
 interface VariationDao {
@@ -19,7 +18,10 @@ interface VariationDao {
     fun getVariationByExerciseId(exerciseId: Int): List<VariationEntity>
 
     @Update
-    fun updateAll(variation: List<VariationEntity>)
+    fun update(vararg variations: VariationEntity)
+
+    @Update
+    fun updateAll(variations: List<VariationEntity>)
 
     @Insert
     fun insert(variation: VariationEntity): Long
