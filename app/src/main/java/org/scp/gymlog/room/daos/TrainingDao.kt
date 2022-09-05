@@ -14,7 +14,7 @@ interface TrainingDao {
     fun getCurrentTraining(): TrainingEntity?
 
     @Query("SELECT * FROM training WHERE trainingId = :trainingId")
-    fun getTraining(trainingId: Int): Optional<TrainingEntity>
+    fun getTraining(trainingId: Int): TrainingEntity?
 
     @Query("SELECT * FROM training WHERE :startDate <= start AND start < :endDate")
     fun getTrainingByStartDate(startDate: LocalDateTime, endDate: LocalDateTime): List<TrainingEntity>

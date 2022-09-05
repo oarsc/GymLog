@@ -13,7 +13,7 @@ interface VariationDao {
     fun getAll(): List<VariationEntity>
 
     @Query("SELECT * FROM variation WHERE variationId = :variationId")
-    fun getVariation(variationId: Int): Optional<VariationEntity>
+    fun getVariation(variationId: Int): VariationEntity?
 
     @Query("SELECT * FROM variation WHERE exerciseId = :exerciseId")
     fun getVariationByExerciseId(exerciseId: Int): List<VariationEntity>

@@ -114,7 +114,6 @@ class DataBaseDumperService {
                 if (matchingEx != null) {
                     exercisesIdMap[ent.exerciseId] = matchingEx.id
                     ent.exerciseId = matchingEx.id
-                    ent.type = matchingEx.type // TODO: load type from load file
                     database.exerciseDao().update(ent)
                 } else {
                     exercisesIdMap[ent.exerciseId] = ++newIds

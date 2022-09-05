@@ -25,10 +25,12 @@ import org.scp.gymlog.service.DataBaseDumperService
 import org.scp.gymlog.service.InitialDataService
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.main.MainActivity
+import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.WeightUtils
 import java.io.File
 import java.io.FileOutputStream
+import java.math.BigDecimal
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -109,10 +111,29 @@ class SplashActivity : AppCompatActivity() {
         Data.exercises.clear()
 
         var defaultVariationId = Int.MAX_VALUE
+        val defaultVariationName = resources.getString(R.string.text_default)
 
         db.exerciseDao().getAllWithMusclesAndVariations()
             .map { x: WithMusclesAndVariations ->
                 val exercise = Exercise(x.exercise!!)
+
+                val defaultVariation = Variation(exercise)
+                defaultVariation.default = true
+                defaultVariation.name = defaultVariationName
+                defaultVariation.id = defaultVariationId--
+
+                x.exercise?.apply {
+                    defaultVariation.type = type
+                    defaultVariation.step = BigDecimal.valueOf(lastStep.toLong()).divide(Constants.ONE_HUNDRED)
+                    defaultVariation.weightSpec = lastWeightSpec
+                    defaultVariation.restTime = lastRestTime
+                    if (lastBarId != null) {
+                        defaultVariation.bar = Data.getBar(lastBarId!!)
+                    }
+                }
+
+                exercise.variations.add(defaultVariation)
+
                 x.primaryMuscles!!
                     .map(MuscleEntity::muscleId)
                     .map { muscleId ->
@@ -138,18 +159,12 @@ class SplashActivity : AppCompatActivity() {
                     .sortedWith { a,b -> if (a.default) 1 else if (b.default) -1 else 0 }
                     .also { exercise.variations.addAll(it) }
 
-                val defaultVariation = Variation(exercise)
-                defaultVariation.default = true
-                defaultVariation.name = ""
-                defaultVariation.id = defaultVariationId--
-                exercise.variations.add(0, defaultVariation)
-
                 exercise.variations.forEach {
-                    it.type = exercise.type
-                    it.step = exercise.step
-                    it.bar = exercise.bar
-                    it.weightSpec = exercise.weightSpec
-                    it.restTime = exercise.restTime
+                    it.type = defaultVariation.type
+                    it.step = defaultVariation.step
+                    it.bar = defaultVariation.bar
+                    it.weightSpec = defaultVariation.weightSpec
+                    it.restTime = defaultVariation.restTime
                 }
 
                 exercise

@@ -39,26 +39,35 @@ object Data {
 
 	fun getBar(barId: Int): Bar {
 		return bars
-			.filter { bar: Bar -> bar.id == barId }
+			.filter { it.id == barId }
 			.getOrElse(0) { throw LoadException("NO BAR FOUND id:$barId") }
 	}
 
 	fun getExercise(exerciseId: Int): Exercise {
 		return exercises
-			.filter { exercise: Exercise -> exercise.id == exerciseId }
+			.filter { it.id == exerciseId }
 			.getOrElse(0) { throw LoadException("NO EXERCISE FOUND id:$exerciseId") }
 	}
 
 	fun getMuscle(muscleId: Int): Muscle {
 		return muscles
-			.filter { muscle: Muscle -> muscle.id == muscleId }
+			.filter { it.id == muscleId }
 			.getOrElse(0) { throw LoadException("NO MUSCLE FOUND id:$muscleId") }
 	}
 
 	fun getVariation(exercise: Exercise, variationId: Int): Variation {
+		if (variationId == 0)
+			return exercise.variations.find { it.default }!!
+
 		return exercise.variations
 			.filter { it.id == variationId }
-			//.getOrElse(0) { throw LoadException("NO VARIATION $variationId FOUND FOR EXERCISE: ${exercise.id}") }
-			.getOrElse(0) { exercise.variations.find { it.default }!! }
+			.getOrElse(0) { throw LoadException("NO VARIATION $variationId FOUND FOR EXERCISE: ${exercise.id}") }
+	}
+
+	fun getVariation(variationId: Int): Variation {
+		return exercises
+			.flatMap { it.variations }
+			.filter { it.id == variationId }
+			.getOrElse(0) { throw LoadException("NO VARIATION $variationId FOUND") }
 	}
 }

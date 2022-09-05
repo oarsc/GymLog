@@ -88,18 +88,12 @@ class RegistryActivity : DBAppCompatActivity() {
         val exerciseId = intent.extras!!.getInt("exerciseId")
         val variationId = intent.extras!!.getInt("variationId", 0)
 
-        exercise = Data.exercises
-            .filter { ex: Exercise -> ex.id == exerciseId }
-            .getOrElse(0) { throw InternalException("Exercise id not found: $exerciseId") }
+        exercise = Data.getExercise(exerciseId)
 
         variation = if (variationId > 0) {
-            exercise.variations
-                .filter { it.id == variationId }
-                .getOrElse(0) { throw InternalException("Filter not found: $exerciseId-$variationId") }
+            Data.getVariation(exercise, variationId)
         } else {
-            exercise.variations
-                .filter { it.default }
-                .getOrElse(0) { throw InternalException("Default variation not found for: $exerciseId") }
+            exercise.defaultVariation
         }
 
         val log: List<BitEntity> = if (variationId > 0)
@@ -127,10 +121,9 @@ class RegistryActivity : DBAppCompatActivity() {
         // Timer button:
         val timerButton: View = findViewById(R.id.timerButton)
         timerButton.setOnClickListener {
-            val dialog = EditTimerDialogFragment(this, R.string.text_notes,
-                exercise) { result ->
-                if (exercise.restTime != result) {
-                    exercise.restTime = result
+            val dialog = EditTimerDialogFragment(this, R.string.text_notes, variation) { result ->
+                if (variation.restTime != result) {
+                    variation.restTime = result
                     DBThread.run(this) { db -> db.exerciseDao().update(exercise.toEntity()) }
                 }
                 if (countdownThread == null) {
@@ -155,10 +148,10 @@ class RegistryActivity : DBAppCompatActivity() {
 
         } else {
             timer.setTextColor(defaultTimeColor)
-            if (exercise.restTime < 0)
+            if (variation.restTime < 0)
                 timer.text = defaultTimer.toString()
             else
-                timer.text = exercise.restTime.toString()
+                timer.text = variation.restTime.toString()
         }
 
         // Variations
@@ -190,7 +183,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
         // Logs:
         recyclerViewLayout = LinearLayoutManager(this)
-        recyclerViewAdapter = LogRecyclerViewAdapter(log, exercise, trainingId, internationalSystem)
+        recyclerViewAdapter = LogRecyclerViewAdapter(log, trainingId, internationalSystem)
 
         recyclerViewAdapter.onClickElementListener = BiConsumer { view, bit -> onClickBit(view, bit) }
         recyclerViewAdapter.onLoadMoreListener = Runnable { loadMoreHistory() }
@@ -254,11 +247,11 @@ class RegistryActivity : DBAppCompatActivity() {
         val unitTextView: TextView = findViewById(R.id.unit)
         unitTextView.setText(WeightUtils.unit(internationalSystem))
 
-        weightModifier.setStep(exercise.step)
+        weightModifier.setStep(variation.step)
 
-        weightSpecIcon.setImageResource(exercise.weightSpec.icon)
+        weightSpecIcon.setImageResource(variation.weightSpec.icon)
 
-        if ((exercise.type === ExerciseType.BARBELL) == (exercise.bar == null)) {
+        if ((variation.type === ExerciseType.BARBELL) == (variation.bar == null)) {
             warningIcon.visibility = View.VISIBLE
         } else {
             warningIcon.visibility = View.INVISIBLE
@@ -333,14 +326,10 @@ class RegistryActivity : DBAppCompatActivity() {
 
             if (variationId == 0) {
                 log = db.bitDao().getHistory(exerciseId, LOG_PAGES_SIZE)
-                variation = exercise.variations
-                    .filter { it.default }
-                    .getOrElse(0) { throw InternalException("Default variation not found for: $exerciseId") }
+                variation = exercise.defaultVariation
             } else {
                 log = db.bitDao().getHistory(exerciseId, variationId, LOG_PAGES_SIZE)
-                variation = exercise.variations
-                    .filter { it.id == variationId }
-                    .getOrElse(0) { throw InternalException("Variation not found: $exerciseId-$variationId") }
+                variation = Data.getVariation(exercise, variationId)
             }
 
             this.log.clear()
@@ -356,6 +345,10 @@ class RegistryActivity : DBAppCompatActivity() {
                     text.setText(R.string.text_default)
                 else
                     text.text = variation.name
+
+                updateForms()
+                if (!locked)
+                    precalculateWeight()
             }
         }
     }
@@ -365,17 +358,17 @@ class RegistryActivity : DBAppCompatActivity() {
 
         val weight = Weight(weightEditText!!.bigDecimal, internationalSystem)
         weightFormData.weight = weight
-        weightFormData.step = exercise.step
-        weightFormData.bar = exercise.bar
-        weightFormData.type = exercise.type
-        weightFormData.weightSpec = exercise.weightSpec
+        weightFormData.step = variation.step
+        weightFormData.bar = variation.bar
+        weightFormData.type = variation.type
+        weightFormData.weightSpec = variation.weightSpec
 
         val dialog = EditWeightFormDialogFragment(weightFormData, R.string.text_weight, { result: WeightFormData ->
                 weightEditText.bigDecimal = result.weight!!.value
                 if (result.exerciseUpdated) {
-                    exercise.bar = result.bar
-                    exercise.step = result.step!!
-                    exercise.weightSpec = result.weightSpec
+                    variation.bar = result.bar
+                    variation.step = result.step!!
+                    variation.weightSpec = result.weightSpec
                     recyclerViewAdapter.notifyItemRangeChanged(0, log.size)
 
                     updateForms()
@@ -387,9 +380,9 @@ class RegistryActivity : DBAppCompatActivity() {
     }
 
     private fun updateForms() {
-        weightModifier.setStep(exercise.step)
-        weightSpecIcon.setImageResource(exercise.weightSpec.icon)
-        if ((exercise.type === ExerciseType.BARBELL) == (exercise.bar == null)) {
+        weightModifier.setStep(variation.step)
+        weightSpecIcon.setImageResource(variation.weightSpec.icon)
+        if ((variation.type === ExerciseType.BARBELL) == (variation.bar == null)) {
             warningIcon.visibility = View.VISIBLE
         } else {
             warningIcon.visibility = View.INVISIBLE
@@ -427,8 +420,8 @@ class RegistryActivity : DBAppCompatActivity() {
             reps.integer = bit.reps
 
             val partialWeight = bit.weight.calculate(
-                exercise.weightSpec,
-                exercise.bar)
+                variation.weightSpec,
+                variation.bar)
 
             weight.bigDecimal = partialWeight.getValue(internationalSystem)
         } else {
@@ -441,11 +434,11 @@ class RegistryActivity : DBAppCompatActivity() {
         DBThread.run(this) { db ->
             val bit = log[initialSize - 1]
             val date = bit.timestamp
-            val log: List<BitEntity> = if (variation == null)
+            val log: List<BitEntity> = if (variation.default)
                     db.bitDao().getHistory(exercise.id, bit.trainingId,
                         date, LOG_PAGES_SIZE)
                 else
-                    db.bitDao().getHistory(exercise.id, variation!!.id, bit.trainingId,
+                    db.bitDao().getHistory(exercise.id, variation.id, bit.trainingId,
                         date, LOG_PAGES_SIZE)
 
             log.map { bitEntity -> Bit(bitEntity) }
@@ -470,8 +463,8 @@ class RegistryActivity : DBAppCompatActivity() {
             val bit = Bit(variation)
 
             val totalWeight = Weight(weight.bigDecimal, internationalSystem).calculateTotal(
-                exercise.weightSpec,
-                exercise.bar)
+                variation.weightSpec,
+                variation.bar)
 
             bit.weight = totalWeight
             bit.note = notes.text.toString()
@@ -589,7 +582,6 @@ class RegistryActivity : DBAppCompatActivity() {
 
                     val editDialog = EditBitLogDialogFragment(
                         R.string.title_registry,
-                        exercise,
                         enableInstantSwitch,
                         internationalSystem,
                         bit,
@@ -615,7 +607,7 @@ class RegistryActivity : DBAppCompatActivity() {
     }
 
     private fun startTimer() {
-        val seconds = if (exercise.restTime < 0) defaultTimer else exercise.restTime
+        val seconds = if (variation.restTime < 0) defaultTimer else variation.restTime
         val endDate = currentDateTime().plusSeconds(seconds.toLong())
         startTimer(endDate, seconds)
     }
@@ -665,10 +657,10 @@ class RegistryActivity : DBAppCompatActivity() {
         override fun onFinish() {
             countdownThread = null
             runOnUiThread {
-                if (exercise.restTime < 0)
+                if (variation.restTime < 0)
                     timer.text = defaultTimer.toString()
                 else
-                    timer.text = exercise.restTime.toString()
+                    timer.text = variation.restTime.toString()
 
                 timer.setTextColor(defaultTimeColor)
                 findViewById<TextView>(R.id.secondsText).setTextColor(defaultTimeColor)

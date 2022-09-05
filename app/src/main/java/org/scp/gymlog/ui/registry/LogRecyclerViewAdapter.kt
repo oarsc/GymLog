@@ -23,7 +23,6 @@ import java.util.function.BiConsumer
 
 class LogRecyclerViewAdapter(
     private val log: List<Bit>,
-    private val exercise: Exercise,
     private val currentTrainingId: Int,
     private val internationalSystem: Boolean
 ) : RecyclerView.Adapter<LogRecyclerViewAdapter.ViewHolder>() {
@@ -103,8 +102,8 @@ class LogRecyclerViewAdapter(
         }
 
         val weight = bit.weight.calculate(
-            exercise.weightSpec,
-            exercise.bar)
+            bit.variation.weightSpec,
+            bit.variation.bar)
 
         holder.mWeight!!.bigDecimal = weight.getValue(internationalSystem)
         if (bit.instant) {

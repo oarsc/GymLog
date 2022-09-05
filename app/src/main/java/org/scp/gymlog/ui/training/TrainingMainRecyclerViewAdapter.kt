@@ -88,7 +88,6 @@ class TrainingMainRecyclerViewAdapter(
         adapter.onClickListener = BiConsumer { bit: Bit?, index: Int ->
             val editDialog = EditBitLogDialogFragment(
                 R.string.title_registry,
-                exercise,
                 exerciseRow[index - 1] is TrainingBitRow,
                 internationalSystem, bit!!,
                 { b: Bit -> DBThread.run(context) { db ->

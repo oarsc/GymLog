@@ -28,7 +28,7 @@ class Variation(
 	override fun toEntity(): VariationEntity {
 		val entity = VariationEntity()
 		entity.variationId = id
-		entity.name = name
+		entity.name = if (default) "" else name
 		return entity
 	}
 }

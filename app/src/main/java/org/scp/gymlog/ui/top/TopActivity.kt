@@ -17,7 +17,6 @@ import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.ui.common.DBAppCompatActivity
-import org.scp.gymlog.ui.common.dialogs.EditExercisesLastsDialogFragment
 import org.scp.gymlog.ui.top.rows.*
 import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.Constants
@@ -55,7 +54,7 @@ open class TopActivity : DBAppCompatActivity() {
         val historyRecyclerView: RecyclerView = findViewById(R.id.variantTopList)
         historyRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = TopRecyclerViewAdapter(listData, exercise, internationalSystem)
+        adapter = TopRecyclerViewAdapter(listData, internationalSystem)
         historyRecyclerView.adapter = adapter
 
         adapter.onClickListener = Consumer { topBit -> onElementClicked(topBit) }
@@ -103,7 +102,10 @@ open class TopActivity : DBAppCompatActivity() {
         val intent = Intent(this, TopSpecificActivity::class.java)
         intent.putExtra("exerciseId", topBit.variation.exercise.id)
         intent.putExtra("weight", topBit.weight.value.multiply(Constants.ONE_HUNDRED).toInt())
-        intent.putExtra("variationId", topBit.variation.id)
+        if (topBit.variation.default)
+            intent.putExtra("variationId", 0)
+        else
+            intent.putExtra("variationId", topBit.variation.id)
         startActivityForResult(intent, IntentReference.TOP_RECORDS)
     }
 
@@ -122,7 +124,6 @@ open class TopActivity : DBAppCompatActivity() {
     }
 
     private fun setHeaderInfo() {
-        val fragment: View = findViewById(R.id.fragmentExercise)
         val image: ImageView = findViewById(R.id.image)
         val time: TextView = findViewById(R.id.time)
         val title: TextView = findViewById(R.id.content)
@@ -136,20 +137,6 @@ open class TopActivity : DBAppCompatActivity() {
             image.setImageDrawable(d)
         } catch (e: IOException) {
             throw LoadException("Could not read \"$fileName\"", e)
-        }
-
-        fragment.setOnClickListener {
-            val dialog = EditExercisesLastsDialogFragment(R.string.title_exercises,
-                exercise, internationalSystem,
-                {
-                    val data = Intent()
-                    data.putExtra("refresh", true)
-                    setResult(RESULT_OK, data)
-                    runOnUiThread { adapter.notifyItemRangeChanged(0, listData.size) }
-                }
-            )
-
-            dialog.show(supportFragmentManager, null)
         }
     }
 }

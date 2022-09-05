@@ -16,6 +16,7 @@ import androidx.annotation.StringRes
 import androidx.preference.PreferenceManager
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Exercise
+import org.scp.gymlog.model.Variation
 import org.scp.gymlog.service.NotificationService.Companion.lastEndTime
 import org.scp.gymlog.util.Constants.DATE_ZERO
 import org.scp.gymlog.util.DateUtils.diffSeconds
@@ -31,7 +32,7 @@ import java.util.function.Consumer
 class EditTimerDialogFragment(
     private val ctx: Context,
     @StringRes title: Int,
-    exercise: Exercise,
+    variation: Variation,
     confirm: Consumer<Int>
 ) : CustomDialogFragment<Int>(title, confirm, Runnable {}) {
 
@@ -52,7 +53,7 @@ class EditTimerDialogFragment(
         val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
         defaultValue = preferences.getString("restTime", "90")!!.toInt()
 
-        val restTime = exercise.restTime
+        val restTime = variation.restTime
         if (restTime < 0) {
             isDefaultValue = true
             initialValue = defaultValue

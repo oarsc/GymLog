@@ -29,7 +29,6 @@ import java.util.function.Consumer
 
 class EditBitLogDialogFragment @JvmOverloads constructor(
     @StringRes title: Int,
-    private val exercise: Exercise,
     private val enableInstantSwitch: Boolean,
     private val internationalSystem: Boolean,
     override var initialValue: Bit,
@@ -52,7 +51,7 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
         editNotes.setOnClickListener {
             val dialog = EditNotesDialogFragment(
                 R.string.text_notes,
-                exercise.id,
+                initialValue.variation.exercise.id,
                 editNotes.text.toString())
                 { text -> editNotes.setText(text) }
 
@@ -85,7 +84,7 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
         })
 
         val modifier: NumberModifierView = view.findViewById(R.id.weightModifier)
-        modifier.setStep(exercise.step)
+        modifier.setStep(initialValue.variation.step)
 
         val editReps: EditText = view.findViewById(R.id.editReps)
         editReps.integer = initialValue.reps
@@ -103,8 +102,8 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
             .setView(view)
             .setPositiveButton(R.string.button_confirm) { _,_ ->
                 val totalWeight = Weight(editWeight.bigDecimal, internationalSystem).calculateTotal(
-                    exercise.weightSpec,
-                    exercise.bar)
+                    initialValue.variation.weightSpec,
+                    initialValue.variation.bar)
 
                 initialValue.weight = totalWeight
                 initialValue.reps = editReps.integer
@@ -128,7 +127,7 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
 
     private fun getBigDecimalInitialWeight(internationalSystem: Boolean): BigDecimal {
         return initialValue.weight.calculate(
-            exercise.weightSpec,
-            exercise.bar).defaultScaled(internationalSystem)
+            initialValue.variation.weightSpec,
+            initialValue.variation.bar).defaultScaled(internationalSystem)
     }
 }

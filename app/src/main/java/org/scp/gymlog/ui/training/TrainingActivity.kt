@@ -16,7 +16,6 @@ import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.ui.common.DBAppCompatActivity
-import org.scp.gymlog.ui.common.dialogs.EditExercisesLastsDialogFragment
 import org.scp.gymlog.ui.main.history.HistoryFragment.Companion.getTrainingData
 import org.scp.gymlog.ui.main.history.TrainingData
 import org.scp.gymlog.ui.training.rows.ITrainingRow
@@ -37,7 +36,7 @@ class TrainingActivity : DBAppCompatActivity() {
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
         val trainingId = intent.extras!!.getInt("trainingId")
         val training = db.trainingDao().getTraining(trainingId)
-            .orElseThrow { LoadException("Cannot find trainingId: $trainingId") }
+            ?: throw LoadException("Cannot find trainingId: $trainingId")
         val bits = db.bitDao().getHistoryByTrainingId(trainingId)
         trainingData = getTrainingData(training, bits)
 
@@ -98,19 +97,6 @@ class TrainingActivity : DBAppCompatActivity() {
 
         if (focusElement >= 0) {
             linearLayout.scrollToPositionWithOffset(focusElement, 60)
-        }
-
-        adapter.onLongClickListener = Consumer { exerciseRow ->
-            val dialog = EditExercisesLastsDialogFragment(R.string.title_exercises,
-                exerciseRow.exercise, internationalSystem,
-                {
-                    val data = Intent()
-                    data.putExtra("refresh", true)
-                    setResult(RESULT_OK, data)
-                    val index = exerciseRows.indexOf(exerciseRow)
-                    runOnUiThread { adapter.notifyItemChanged(index) }
-                })
-            dialog.show(supportFragmentManager, null)
         }
 
         adapter.onBitChangedListener = Consumer {

@@ -74,8 +74,8 @@ class TrainingRecyclerViewAdapter(
                 val bit = holder.bitRow!!.bit
 
                 val weight = bit.weight.calculate(
-                    rows.exercise.weightSpec,
-                    rows.exercise.bar)
+                    bit.variation.weightSpec,
+                    bit.variation.bar)
 
                 holder.mWeight!!.bigDecimal = weight.getValue(internationalSystem)
                 holder.mReps!!.text = bit.reps.toString()

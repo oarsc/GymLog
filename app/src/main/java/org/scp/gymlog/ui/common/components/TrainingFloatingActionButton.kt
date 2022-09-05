@@ -48,7 +48,7 @@ class TrainingFloatingActionButton : FloatingActionButton {
                             DBThread.run(context) { db: AppDatabase ->
                                 val trainingDao = db.trainingDao()
                                 val training = trainingDao.getTraining(trainingId)
-                                    .orElseThrow { LoadException("Can't find trainingId $trainingId") }
+                                    ?: throw  LoadException("Can't find trainingId $trainingId")
 
                                 if (training.end != null) {
                                     throw LoadException("TrainingId $trainingId already ended")
@@ -56,11 +56,11 @@ class TrainingFloatingActionButton : FloatingActionButton {
                                 val endDate = db.bitDao()
                                     .getMostRecentTimestampByTrainingId(trainingId)
 
-                                if (endDate.isPresent) {
+                                if (endDate != null) {
                                     val startDate =db.bitDao()
                                         .getFirstTimestampByTrainingId(trainingId)
-                                    training.start = startDate.get()
-                                    training.end = endDate.get()
+                                    training.start = startDate!!
+                                    training.end = endDate
                                     trainingDao.update(training)
                                 } else {
                                     trainingDao.delete(training)

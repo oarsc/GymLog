@@ -25,7 +25,6 @@ import java.util.function.Consumer
 
 class TopRecyclerViewAdapter(
     private val rows: List<ITopRow>,
-    private val exercise: Exercise,
     private val internationalSystem: Boolean
 ) : RecyclerView.Adapter<TopRecyclerViewAdapter.ViewHolder>() {
 
@@ -85,8 +84,8 @@ class TopRecyclerViewAdapter(
 
                 val topBit = holder.topBit
                 val weight = topBit.weight.calculate(
-                    exercise.weightSpec,
-                    exercise.bar)
+                    bRow.bit.variation.weightSpec,
+                    bRow.bit.variation.bar)
 
                 holder.mWeight?.bigDecimal = weight.getValue(internationalSystem)
                 holder.mReps?.integer = topBit.reps

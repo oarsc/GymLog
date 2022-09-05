@@ -18,6 +18,7 @@ import org.scp.gymlog.model.ExerciseType
 import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.room.DBThread
+import org.scp.gymlog.room.entities.ExerciseEntity
 import org.scp.gymlog.room.entities.VariationEntity
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.activity.ImageSelectorActivity
@@ -54,7 +55,7 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 		if (caller === IntentReference.EDIT_EXERCISE) {
 			editingExercise = Data.getExercise(intent.extras!!.getInt("exerciseId"))
 			name = editingExercise!!.name
-			type = editingExercise!!.type
+			type = editingExercise!!.defaultVariation.type
 			imageName = editingExercise!!.image
 			muscles.addAll(editingExercise!!.primaryMuscles)
 			musclesSecondary.addAll(editingExercise!!.secondaryMuscles)
@@ -101,7 +102,7 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 				data.putExtra("exerciseId", editingExercise!!.id)
 
 				editingExercise!!.name = name
-				editingExercise!!.type = type
+				editingExercise!!.defaultVariation.type = type
 				editingExercise!!.image = imageName
 				editingExercise!!.primaryMuscles.clear()
 				editingExercise!!.primaryMuscles.addAll(muscles)
@@ -125,19 +126,14 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 
 					// Variations
 					db.variationDao().updateAll(
-						editingExercise!!.toVariationListEntities()
-							.filter { v: VariationEntity -> v.variationId > 0 }
+						editingExercise!!.toVariationListEntities().filter { it.variationId > 0 }
 					)
 					val newVariations = variations
-						.filter { variation -> variation.id == 0 }
+						.filter { it.id == 0 }
 
-					val ids = db.variationDao().insertAll(
-						newVariations
-							.map { variation ->
-								val entity = variation.toEntity()
-								entity.exerciseId = editingExercise!!.id
-								entity
-							})
+					val ids = newVariations
+						.map { it.toEntity().apply { exerciseId = editingExercise!!.id } }
+						.let { db.variationDao().insertAll(it) }
 
 					newVariations.withIndex().forEach { (index, variation) ->
 						variation.id = ids[index].toInt()
@@ -151,8 +147,14 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 
 			} else {
 				val exercise = Exercise()
+				val defaultVariation = Variation(exercise)
+
+				defaultVariation.default = true
+				defaultVariation.name = resources.getString(R.string.text_default)
+				defaultVariation.type = type
+				exercise.variations.add(defaultVariation)
+
 				exercise.name = name
-				exercise.type = type
 				exercise.image = imageName
 				exercise.primaryMuscles.addAll(muscles)
 				exercise.secondaryMuscles.addAll(musclesSecondary)
