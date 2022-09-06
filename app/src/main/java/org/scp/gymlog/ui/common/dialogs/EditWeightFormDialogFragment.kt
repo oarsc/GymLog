@@ -83,12 +83,12 @@ class EditWeightFormDialogFragment(
         val unitResString = WeightUtils.unit(weight.internationalSystem)
         listOf(R.id.unit, R.id.totalUnit)
             .map { id -> view.findViewById<TextView>(id) }
-            .forEach { textView -> textView.setText(unitResString) }
+            .forEach { it.setText(unitResString) }
 
         val unitResConvertString = WeightUtils.unit(!weight.internationalSystem)
         listOf(R.id.convertUnit, R.id.convertTotalUnit)
             .map { id -> view.findViewById<TextView>(id) }
-            .forEach { textView -> textView.setText(unitResConvertString) }
+            .forEach { it.setText(unitResConvertString) }
 
         input.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
         input.filters = arrayOf(InputFilter { source, _, _, dest, _, _ ->

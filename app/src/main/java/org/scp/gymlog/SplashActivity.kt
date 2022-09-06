@@ -106,7 +106,7 @@ class SplashActivity : AppCompatActivity() {
         Data.bars.clear()
         db.barDao().getAll()
             .map { entity: BarEntity? -> Bar(entity!!) }
-            .forEach { e: Bar -> Data.bars.add(e) }
+            .also { Data.bars.addAll(it) }
 
         Data.exercises.clear()
 

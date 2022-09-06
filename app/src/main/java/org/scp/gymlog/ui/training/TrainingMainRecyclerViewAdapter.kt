@@ -105,13 +105,13 @@ class TrainingMainRecyclerViewAdapter(
     }
 
     fun expandAll() {
-        exerciseRows.indices.forEach(expandedElements::add)
-        holders.forEach { viewHolder -> viewHolder.toggleBits(true) }
+        expandedElements.addAll(exerciseRows.indices)
+        holders.forEach { it.toggleBits(true) }
     }
 
     fun collapseAll() {
         expandedElements.clear()
-        holders.forEach { viewHolder -> viewHolder.toggleBits(false) }
+        holders.forEach { it.toggleBits(false) }
     }
 
     override fun getItemCount(): Int {

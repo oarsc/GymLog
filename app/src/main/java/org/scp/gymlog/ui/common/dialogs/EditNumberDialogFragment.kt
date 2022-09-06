@@ -51,9 +51,8 @@ class EditNumberDialogFragment @JvmOverloads constructor(
             constraintSet.clone(constraintLayout)
 
             listOf(RIGHT, LEFT, TOP, BOTTOM)
-                .forEach { pos ->
-                    constraintSet.connect(R.id.dialogText, pos, R.id.parentLayout, pos, 0)
-                }
+                .forEach { constraintSet.connect(R.id.dialogText, it, R.id.parentLayout, it, 0) }
+
             constraintSet.applyTo(constraintLayout)
         }
 

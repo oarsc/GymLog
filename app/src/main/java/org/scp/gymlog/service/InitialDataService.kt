@@ -45,10 +45,11 @@ class InitialDataService {
                 Bar(++barId, Weight(BigDecimal("15"), true)),
                 Bar(++barId, Weight(BigDecimal("20"), true)),
                 Bar(++barId, Weight(BigDecimal("25"), true)),
-            ).forEach { b: Bar -> bars.add(b) }
+            ).also { bars.addAll(it) }
 
-            db.barDao().insertAll(
-                data.bars.map { bar -> bar.toEntity() })
+            data.bars
+                .map { it.toEntity() }
+                .also { db.barDao().insertAll(it) }
         }
 
         private fun loadExercises(assets: AssetManager, db: AppDatabase) {

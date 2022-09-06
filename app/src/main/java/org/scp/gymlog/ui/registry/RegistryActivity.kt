@@ -96,8 +96,8 @@ class RegistryActivity : DBAppCompatActivity() {
 
         val log = db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
 
-        log.map { bitEntity: BitEntity -> Bit(bitEntity) }
-            .forEach { bit -> this.log.add(bit) }
+        log.map { Bit(it) }
+            .also { this.log.addAll(it) }
         return CONTINUE
     }
 
@@ -119,7 +119,7 @@ class RegistryActivity : DBAppCompatActivity() {
             val dialog = EditTimerDialogFragment(this, R.string.text_notes, variation) { result ->
                 if (variation.restTime != result) {
                     variation.restTime = result
-                    DBThread.run(this) { db -> db.exerciseDao().update(exercise.toEntity()) }
+                    DBThread.run(this) { db -> db.variationDao().update(variation.toEntity()) }
                 }
                 if (countdownThread == null) {
                     if (result < 0)
@@ -302,8 +302,8 @@ class RegistryActivity : DBAppCompatActivity() {
                     DBThread.run(this) { db ->
                         val log = db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
                         this.log.clear()
-                        log.map { entity: BitEntity -> Bit(entity) }
-                            .forEach { e -> this.log.add(e) }
+                        log.map { Bit(it) }
+                            .also { this.log.addAll(it) }
                         runOnUiThread { recyclerViewAdapter.notifyDataSetChanged() }
                     }
                     updateForms()
@@ -324,8 +324,8 @@ class RegistryActivity : DBAppCompatActivity() {
             val log: List<BitEntity> = db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
 
             this.log.clear()
-            log.map { bitEntity -> Bit(bitEntity) }
-                .forEach { e -> this.log.add(e) }
+            log.map { Bit(it) }
+                .also { this.log.addAll(it) }
 
             runOnUiThread {
                 recyclerViewAdapter.notifyDataSetChanged()
@@ -344,10 +344,10 @@ class RegistryActivity : DBAppCompatActivity() {
         }
     }
 
-    private fun showWeightDialog(weightEditText: EditText?) {
+    private fun showWeightDialog(weightEditText: EditText) {
         val weightFormData = WeightFormData()
 
-        val weight = Weight(weightEditText!!.bigDecimal, internationalSystem)
+        val weight = Weight(weightEditText.bigDecimal, internationalSystem)
         weightFormData.weight = weight
         weightFormData.step = variation.step
         weightFormData.bar = variation.bar
@@ -363,7 +363,6 @@ class RegistryActivity : DBAppCompatActivity() {
                     recyclerViewAdapter.notifyItemRangeChanged(0, log.size)
 
                     updateForms()
-                    DBThread.run(this) { db -> db.exerciseDao().update(exercise.toEntity()) }
                     DBThread.run(this) { db -> db.variationDao().update(variation.toEntity()) }
                 }
             }
@@ -428,8 +427,8 @@ class RegistryActivity : DBAppCompatActivity() {
             val date = bit.timestamp
             val log = db.bitDao().getHistory(variation.id, bit.trainingId, date, LOG_PAGES_SIZE)
 
-            log.map { bitEntity -> Bit(bitEntity) }
-                .forEach { b -> this.log.add(b) }
+            log.map { Bit(it) }
+                .also { this.log.addAll(it) }
 
             runOnUiThread {
                 recyclerViewAdapter.notifyItemRangeInserted(initialSize, log.size)

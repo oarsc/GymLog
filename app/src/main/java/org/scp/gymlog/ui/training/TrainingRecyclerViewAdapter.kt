@@ -62,12 +62,7 @@ class TrainingRecyclerViewAdapter(
             }
             ITrainingRow.Type.VARIATION -> {
                 val vRow = row as TrainingVariationRow
-                val variation = vRow.variation
-                if (variation == null) {
-                    holder.mNote!!.setText(R.string.text_default)
-                } else {
-                    holder.mNote!!.text = vRow.variation.name
-                }
+                holder.mNote!!.text = vRow.variation.name
             }
             ITrainingRow.Type.BIT -> {
                 holder.bitRow = row as TrainingBitRow

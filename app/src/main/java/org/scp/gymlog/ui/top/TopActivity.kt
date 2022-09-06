@@ -74,8 +74,8 @@ open class TopActivity : DBAppCompatActivity() {
         val variations: MutableSet<Int> = HashSet()
         listData.clear()
         bits.sortedWith (order())
-            .sortedWith(compareBy { b -> b.variation.id })
-            .sortedWith(compareBy { b -> !b.variation.default })
+            .sortedWith(compareBy { it.variation.id })
+            .sortedWith(compareBy { !it.variation.default })
             .forEach { bit ->
                 val variationId = bit.variation.id
                 if (!variations.contains(variationId)) {

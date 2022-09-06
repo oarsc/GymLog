@@ -28,7 +28,7 @@ import java.util.function.Consumer
 
 class TrainingActivity : DBAppCompatActivity() {
 
-    private val exerciseRows: MutableList<ExerciseRows> = ArrayList()
+    private val exerciseRows = mutableListOf<ExerciseRows>()
     private lateinit var trainingData: TrainingData
     private lateinit var adapter: TrainingMainRecyclerViewAdapter
     private lateinit var linearLayout: LinearLayoutManager
@@ -57,7 +57,7 @@ class TrainingActivity : DBAppCompatActivity() {
                 if (!variation.default) {
                     exerciseRow.add(TrainingVariationRow(variation))
                     exerciseRow.add(TrainingHeaderRow())
-                } else if (lastVariationId != -1) {
+                } else if (lastVariationId > 0) {
                     exerciseRow.add(TrainingVariationRow(variation))
                     exerciseRow.add(TrainingHeaderRow())
                 } else if (exerciseRow.isEmpty()) {
@@ -112,21 +112,11 @@ class TrainingActivity : DBAppCompatActivity() {
 
 
     private fun getLastVar(exerciseRow: ExerciseRows): Int {
-        if (exerciseRow.isEmpty()) return -1
-        
-        var i = exerciseRow.size
-        var found: Boolean
-        var row: ITrainingRow
-        do {
-            row = exerciseRow[--i]
-            found = row is TrainingVariationRow
-        } while (!found && i > 0)
-
-        if (found) {
-            val vRow = row as TrainingVariationRow
-            return vRow.variation.id
-        }
-        return -1
+        return exerciseRow
+            .reversed()
+            .filterIsInstance<TrainingVariationRow>()
+            .map { it.variation.id }
+            .getOrElse(0) { 0 }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

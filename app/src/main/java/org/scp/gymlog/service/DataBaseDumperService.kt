@@ -68,22 +68,8 @@ class DataBaseDumperService {
         val bits = convertToJSONArray(database.bitDao().getAll())
         try {
             bits.map(JSONArray::getJSONObject).forEach { bit: JSONObject ->
-                //val id = bit.getInt("exerciseId")
-                //val exercise = Data.getExercise(id)
-                //bit.remove("exerciseId")
-                //bit.put("exerciseName", exercise.name)
-                bit.remove("exerciseId")
                 if (bit.getBoolean("kilos")) bit.remove("kilos")
                 if (bit.getString("note").isEmpty()) bit.remove("note")
-                /*if (bit.has("variationId")) {
-                    val varId = bit.getInt("variationId")
-                    bit.remove("variationId")
-
-                    val variation = exercise.variations.find { variation -> variation.id == varId }
-                        ?: throw LoadException("Can't find variation")
-
-                    bit.put("variation", variation.name)
-                }*/
             }
         } catch (e: JSONException) {
             throw LoadException("", e)
@@ -201,7 +187,7 @@ class DataBaseDumperService {
                         .fold(Constants.DATE_ZERO) { acc, value -> if (value > acc) value else acc }
                 }
                 .filter { exerciseEntity -> exerciseEntity.lastTrained > Constants.DATE_ZERO }
-                .forEach { ex -> database.exerciseDao().update(ex) }
+                .also { database.exerciseDao().update(*it.toTypedArray()) }
         }
     }
 
