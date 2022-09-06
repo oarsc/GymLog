@@ -8,16 +8,7 @@ import org.scp.gymlog.util.JsonUtils.NoJsonify
 
 @Entity(
     tableName = "exercise",
-    foreignKeys = [
-        ForeignKey(
-            entity = BarEntity::class,
-            parentColumns = ["barId"],
-            childColumns = ["lastBarId"],
-            onDelete = ForeignKey.SET_NULL,
-            onUpdate = ForeignKey.CASCADE),
-    ],
     indices = [
-        Index("lastBarId"),
         Index("exerciseId", "lastTrained"),
     ]
 )
@@ -26,15 +17,10 @@ class ExerciseEntity {
     var exerciseId = 0
     var name = ""
     var image = ""
-    var type = ExerciseType.BARBELL
 
     // Last configs
     @NoJsonify
     var lastTrained = Constants.DATE_ZERO
-    var lastWeightSpec = WeightSpecification.NO_BAR_WEIGHT
-    var lastStep = 500
-    var lastRestTime = -1
-    var lastBarId: Int? = null
 
     class WithMusclesAndVariations {
         @Embedded

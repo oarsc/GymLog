@@ -61,12 +61,7 @@ class InitialDataService {
                     val ex = ExerciseEntity()
                     ex.image = exerciseObj.getString("tag")
                     ex.name = exerciseObj.getString("name")
-                    ex.type = parseExerciseType(exerciseObj.getString("type"))
-                    if (ex.type === ExerciseType.BARBELL) {
-                        ex.lastBarId = 4 // 20kg
-                    }
                     ex.lastTrained = Constants.DATE_ZERO
-                    ex.lastWeightSpec = WeightSpecification.NO_BAR_WEIGHT
                     ex.exerciseId = exerciseDao.insert(ex).toInt()
 
                     val muscle1Links = exerciseObj.getJSONArray("primary").map(JSONArray::getInt)

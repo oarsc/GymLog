@@ -42,14 +42,6 @@ class Exercise() : EntityMappable<ExerciseEntity> {
 		entity.name = name
 		entity.image = image
 		entity.lastTrained = lastTrained
-
-		defaultVariation.apply {
-			entity.type = type
-			entity.lastStep = step.multiply(Constants.ONE_HUNDRED).toInt()
-			entity.lastWeightSpec = weightSpec
-			entity.lastRestTime = restTime
-			entity.lastBarId = bar?.id
-		}
 		return entity
 	}
 

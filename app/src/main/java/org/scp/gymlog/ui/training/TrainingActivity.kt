@@ -41,7 +41,8 @@ class TrainingActivity : DBAppCompatActivity() {
         trainingData = getTrainingData(training, bits)
 
         for (bit in bits) {
-            val exercise = Data.getVariation(bit.variationId).exercise
+            val variation = Data.getVariation(bit.variationId)
+            val exercise = variation.exercise
 
             val exerciseRow = exerciseRows
                 .filter { it.exercise === exercise }
@@ -51,16 +52,17 @@ class TrainingActivity : DBAppCompatActivity() {
                 }
 
             val lastVariationId = getLastVar(exerciseRow)
-            val variationId = bit.variationId ?: 0
 
-            if (variationId != lastVariationId) {
-                if (variationId > 0) {
-                    val variation = Data.getVariation(exerciseRow.exercise, variationId)
+            if (variation.id != lastVariationId) {
+                if (!variation.default) {
                     exerciseRow.add(TrainingVariationRow(variation))
+                    exerciseRow.add(TrainingHeaderRow())
                 } else if (lastVariationId != -1) {
-                    exerciseRow.add(TrainingVariationRow(null))
+                    exerciseRow.add(TrainingVariationRow(variation))
+                    exerciseRow.add(TrainingHeaderRow())
+                } else if (exerciseRow.isEmpty()) {
+                    exerciseRow.add(TrainingHeaderRow())
                 }
-                exerciseRow.add(TrainingHeaderRow())
             }
             exerciseRow.add(TrainingBitRow(Bit(bit)))
         }
@@ -111,7 +113,7 @@ class TrainingActivity : DBAppCompatActivity() {
 
     private fun getLastVar(exerciseRow: ExerciseRows): Int {
         if (exerciseRow.isEmpty()) return -1
-
+        
         var i = exerciseRow.size
         var found: Boolean
         var row: ITrainingRow
@@ -122,9 +124,9 @@ class TrainingActivity : DBAppCompatActivity() {
 
         if (found) {
             val vRow = row as TrainingVariationRow
-            return vRow.variation?.id ?: 0
+            return vRow.variation.id
         }
-        return 0
+        return -1
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
