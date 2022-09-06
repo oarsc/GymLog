@@ -30,8 +30,7 @@ class Bit : EntityMappable<BitEntity> {
 	}
 
 	constructor(entity: BitEntity) {
-		val ex = Data.getExercise(entity.exerciseId)
-		variation = Data.getVariation(ex, entity.variationId ?: 0)
+		variation = Data.getVariation(entity.variationId)
 
 		id = entity.bitId
 		trainingId = entity.trainingId
@@ -48,7 +47,6 @@ class Bit : EntityMappable<BitEntity> {
 	override fun toEntity(): BitEntity {
 		val entity = BitEntity()
 		entity.bitId = id
-		entity.exerciseId = variation.exercise.id
 		entity.variationId = variation.id
 		entity.trainingId = trainingId
 		entity.note = note

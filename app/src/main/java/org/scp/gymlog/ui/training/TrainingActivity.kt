@@ -41,10 +41,12 @@ class TrainingActivity : DBAppCompatActivity() {
         trainingData = getTrainingData(training, bits)
 
         for (bit in bits) {
+            val exercise = Data.getVariation(bit.variationId).exercise
+
             val exerciseRow = exerciseRows
-                .filter { eb: ExerciseRows -> eb.exercise.id == bit.exerciseId }
+                .filter { it.exercise === exercise }
                 .getOrElse(0) {
-                    ExerciseRows(Data.getExercise(bit.exerciseId))
+                    ExerciseRows(exercise)
                         .also { exerciseRows.add(it) }
                 }
 

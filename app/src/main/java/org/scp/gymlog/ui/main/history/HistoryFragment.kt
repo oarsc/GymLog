@@ -114,7 +114,7 @@ class HistoryFragment : Fragment() {
 					val bit = bits[i]
 
 					if (currentDay == bit.timestamp.toLocalDate()) {
-						val exercise = Data.getExercise(bit.exerciseId)
+						val exercise = Data.getVariation(bit.variationId).exercise
 
 						val secondariesCount = exercise.secondaryMuscles.size
 						val primaryShare = if (secondariesCount > 0) 7f else 9f
@@ -155,8 +155,7 @@ class HistoryFragment : Fragment() {
 		fun getTrainingData(training: TrainingEntity, bits: List<BitEntity>): TrainingData {
 			val musclesCount: MutableList<MuscleCount> = ArrayList()
 
-			bits.map { bitEntity -> bitEntity.exerciseId }
-				.map { exerciseId -> Data.getExercise(exerciseId) }
+			bits.map { Data.getVariation(it.variationId).exercise }
 				.flatMap { exercise -> exercise.primaryMuscles }
 				.forEach { muscle ->
 					val m = musclesCount

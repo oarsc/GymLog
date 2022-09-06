@@ -9,9 +9,9 @@ import java.time.LocalDateTime
     tableName = "bit",
     foreignKeys = [
         ForeignKey(
-            entity = ExerciseEntity::class,
-            parentColumns = ["exerciseId"],
-            childColumns = ["exerciseId"],
+            entity = VariationEntity::class,
+            parentColumns = ["variationId"],
+            childColumns = ["variationId"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE),
         ForeignKey(
@@ -22,20 +22,17 @@ import java.time.LocalDateTime
             onUpdate = ForeignKey.CASCADE),
     ],
     indices = [
-        Index("exerciseId"),
+        Index("variationId"),
         Index("trainingId"),
-        Index("exerciseId", "timestamp"),
-        Index("exerciseId", "variationId", "timestamp"),
-        Index("exerciseId", "trainingId", "timestamp"),
-        Index("exerciseId", "variationId", "trainingId", "timestamp")
+        Index("variationId", "timestamp"),
+        Index("variationId", "trainingId", "timestamp"),
     ]
 )
 class BitEntity {
     @NoJsonify
     @PrimaryKey(autoGenerate = true)
     var bitId = 0
-    var exerciseId = 0
-    var variationId: Int? = null
+    var variationId = 0
     var trainingId = 0
     var reps = 0
     var totalWeight = 0

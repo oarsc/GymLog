@@ -19,7 +19,7 @@ class TopSpecificActivity : TopActivity() {
     }
 
     override fun getBits(db: AppDatabase, exerciseId: Int): MutableList<Bit> {
-        val bits = db.bitDao().findAllByExerciseAndWeight(exerciseId, variationId, weight)
+        val bits = db.bitDao().findAllByExerciseAndWeight(variationId, weight)
 
         return mutableMapOf<LocalDate, BitEntity>()
             .apply {

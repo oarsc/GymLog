@@ -15,7 +15,7 @@ import java.util.function.Consumer
 
 class EditNotesDialogFragment(
     @StringRes title: Int,
-    private val exerciseId: Int,
+    private val variationId: Int,
     override var initialValue: String,
     confirm: Consumer<String>
 ) : CustomDialogFragment<String>(title, confirm, Runnable{}) {
@@ -31,7 +31,7 @@ class EditNotesDialogFragment(
             layoutManager = LinearLayoutManager(context)
 
             DBThread.run(requireContext()) { db ->
-                db.bitDao().getNotesHistory(exerciseId, 18).also { notes ->
+                db.bitDao().getNotesHistory(variationId, 18).also { notes ->
                     activity?.runOnUiThread {
                         adapter = EditNotesRecyclerViewAdapter(notes) { input.setText(it) }
                     }

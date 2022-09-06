@@ -138,7 +138,7 @@ class SplashActivity : AppCompatActivity() {
 
                 x.variations!!
                     .map { variationEntity -> Variation(variationEntity, exercise) }
-                    .onEach { variation -> if (variation.default) variation.name = defaultVariationName}
+                    .onEach { variation -> if (variation.default) variation.name = defaultVariationName }
                     .sortedWith { a,b -> if (a.default) -1 else if (b.default) 1 else 0 }
                     .also { exercise.variations.addAll(it) }
 

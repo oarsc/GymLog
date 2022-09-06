@@ -56,9 +56,6 @@ object Data {
 	}
 
 	fun getVariation(exercise: Exercise, variationId: Int): Variation {
-		if (variationId == 0)
-			return exercise.variations.find { it.default }!!
-
 		return exercise.variations
 			.filter { it.id == variationId }
 			.getOrElse(0) { throw LoadException("NO VARIATION $variationId FOUND FOR EXERCISE: ${exercise.id}") }

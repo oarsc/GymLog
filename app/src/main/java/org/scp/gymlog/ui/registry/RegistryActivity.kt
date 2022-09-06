@@ -94,7 +94,7 @@ class RegistryActivity : DBAppCompatActivity() {
             exercise.defaultVariation
         }
 
-        val log = db.bitDao().getHistory(exerciseId, variation.id, LOG_PAGES_SIZE)
+        val log = db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
 
         log.map { bitEntity: BitEntity -> Bit(bitEntity) }
             .forEach { bit -> this.log.add(bit) }
@@ -204,7 +204,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
         // Notes
         notes.setOnClickListener {
-            val dialog = EditNotesDialogFragment(R.string.text_notes, exercise.id, notes.text.toString())
+            val dialog = EditNotesDialogFragment(R.string.text_notes, variation.id, notes.text.toString())
                 { result: String -> notes.setText(result) }
             dialog.show(supportFragmentManager, null)
         }
@@ -300,7 +300,7 @@ class RegistryActivity : DBAppCompatActivity() {
                 }
                 IntentReference.TRAINING -> {
                     DBThread.run(this) { db ->
-                        val log = db.bitDao().getHistory(exercise.id, variation.id, LOG_PAGES_SIZE)
+                        val log = db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
                         this.log.clear()
                         log.map { entity: BitEntity -> Bit(entity) }
                             .forEach { e -> this.log.add(e) }
@@ -316,15 +316,12 @@ class RegistryActivity : DBAppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     private fun switchVariation(variationId: Int) {
         DBThread.run(this) { db ->
-            val log: List<BitEntity>
-            val exerciseId = exercise.id
-
             variation = if (variationId == 0)
                 exercise.defaultVariation
             else
                 Data.getVariation(exercise, variationId)
 
-            log = db.bitDao().getHistory(exerciseId, variation.id, LOG_PAGES_SIZE)
+            val log: List<BitEntity> = db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
 
             this.log.clear()
             log.map { bitEntity -> Bit(bitEntity) }
@@ -429,7 +426,7 @@ class RegistryActivity : DBAppCompatActivity() {
         DBThread.run(this) { db ->
             val bit = log[initialSize - 1]
             val date = bit.timestamp
-            val log = db.bitDao().getHistory(exercise.id, variation.id, bit.trainingId, date, LOG_PAGES_SIZE)
+            val log = db.bitDao().getHistory(variation.id, bit.trainingId, date, LOG_PAGES_SIZE)
 
             log.map { bitEntity -> Bit(bitEntity) }
                 .forEach { b -> this.log.add(b) }
