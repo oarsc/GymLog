@@ -121,12 +121,9 @@ class RegistryActivity : DBAppCompatActivity() {
                     variation.restTime = result
                     DBThread.run(this) { db -> db.variationDao().update(variation.toEntity()) }
                 }
-                if (countdownThread == null) {
-                    if (result < 0)
-                        timer.text = defaultTimer.toString()
-                    else
-                        timer.text = result.toString()
-                }
+                //if (countdownThread == null) {
+                    updateTimer(result)
+                //}
             }
             dialog.onPlayListener = BiConsumer { endDate, seconds ->
                 if (lastEndTime.isPast)
@@ -139,14 +136,11 @@ class RegistryActivity : DBAppCompatActivity() {
         }
 
         if (!lastEndTime.isPast) {
-            updateTimer()
+            updateRunningTimer()
 
         } else {
             timer.setTextColor(defaultTimeColor)
-            if (variation.restTime < 0)
-                timer.text = defaultTimer.toString()
-            else
-                timer.text = variation.restTime.toString()
+            updateTimer()
         }
 
         // Variations
@@ -338,6 +332,7 @@ class RegistryActivity : DBAppCompatActivity() {
                     text.text = variation.name
 
                 updateForms()
+                updateTimer()
                 if (!locked)
                     precalculateWeight()
             }
@@ -377,6 +372,15 @@ class RegistryActivity : DBAppCompatActivity() {
             warningIcon.visibility = View.VISIBLE
         } else {
             warningIcon.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun updateTimer(value: Int = variation.restTime) {
+        if (lastEndTime.isPast) {
+            timer.text = if (value < 0)
+                defaultTimer.toString()
+            else
+                value.toString()
         }
     }
 
@@ -601,26 +605,24 @@ class RegistryActivity : DBAppCompatActivity() {
     private fun startTimer(endDate: LocalDateTime, seconds: Int) {
         if (seconds > 0) {
             notificationService.showNotification(endDate, seconds, exercise.name)
-            updateTimer()
+            updateRunningTimer()
         }
     }
 
     private fun editTimer(endDate: LocalDateTime, seconds: Int) {
         if (!lastEndTime.isPast) {
             notificationService.editNotification(endDate, seconds)
-            updateTimer()
+            updateRunningTimer()
         }
     }
 
-    private fun updateTimer() {
-        if (countdownThread == null) {
+    private fun updateRunningTimer() {
+        countdownThread?.onTick() ?: run {
             countdownThread = CountdownThread().also(Thread::start)
 
             val color = resources.getColor(R.color.orange_light, theme)
             timer.setTextColor(color)
             findViewById<TextView>(R.id.secondsText).setTextColor(color)
-        } else {
-            countdownThread!!.onTick()
         }
     }
 
@@ -643,11 +645,7 @@ class RegistryActivity : DBAppCompatActivity() {
         override fun onFinish() {
             countdownThread = null
             runOnUiThread {
-                if (variation.restTime < 0)
-                    timer.text = defaultTimer.toString()
-                else
-                    timer.text = variation.restTime.toString()
-
+                updateTimer()
                 timer.setTextColor(defaultTimeColor)
                 findViewById<TextView>(R.id.secondsText).setTextColor(defaultTimeColor)
             }
