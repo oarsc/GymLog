@@ -16,7 +16,7 @@ import org.scp.gymlog.service.DataBaseDumperService
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.common.CustomFragment
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
-import org.scp.gymlog.ui.createexercise.CreateExerciseActivity
+import org.scp.gymlog.ui.create.CreateExerciseActivity
 import org.scp.gymlog.ui.exercises.ExercisesActivity
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.DateUtils.currentDateTime

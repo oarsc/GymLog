@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.createexercise.CreateExerciseActivity">
+    tools:context=".ui.create.CreateExerciseActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/createExerciseFormList"
+        android:id="@+id/createFormList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.createexercise.CreateExerciseActivity"
+        tools:context=".ui.create.CreateExerciseActivity"
         tools:listitem="@layout/list_element_fragment_form" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

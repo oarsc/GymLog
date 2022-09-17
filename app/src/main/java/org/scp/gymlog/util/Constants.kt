@@ -20,6 +20,8 @@ object Constants {
         CREATE_EXERCISE,
         CREATE_EXERCISE_FROM_MUSCLE,
         EDIT_EXERCISE,
+        EDIT_VARIATION,
+        CREATE_VARIATION,
         IMAGE_SELECTOR,
         TRAINING,
         TOP_RECORDS,

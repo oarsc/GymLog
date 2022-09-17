@@ -21,6 +21,18 @@ class Variation(
 	var weightSpec = WeightSpecification.NO_BAR_WEIGHT
 	var restTime: Int = -1
 
+	constructor(variation: Variation, exercise: Exercise) : this(exercise) {
+		name = variation.name
+		id = variation.id
+		default = variation.default
+
+		type = variation.type
+		step = variation.step
+		bar = variation.bar
+		weightSpec = variation.weightSpec
+		restTime = variation.restTime
+	}
+
 	constructor(entity: VariationEntity, exercise: Exercise) : this(exercise) {
 		this.id = entity.variationId
 		this.name = entity.name

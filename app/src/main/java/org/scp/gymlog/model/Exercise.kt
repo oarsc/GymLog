@@ -14,9 +14,9 @@ import java.time.LocalDateTime
 
 class Exercise() : EntityMappable<ExerciseEntity> {
 
-	val primaryMuscles: MutableList<Muscle> = ArrayList()
-	val secondaryMuscles: MutableList<Muscle> = ArrayList()
-	val variations: MutableList<Variation> = ArrayList()
+	val primaryMuscles = mutableListOf<Muscle>()
+	val secondaryMuscles = mutableListOf<Muscle>()
+	val variations = mutableListOf<Variation>()
 	var id = 0
 	var name: String = ""
 	var image: String = ""
@@ -31,6 +31,20 @@ class Exercise() : EntityMappable<ExerciseEntity> {
 		name = entity.name
 		image = entity.image
 		lastTrained = entity.lastTrained
+	}
+
+	constructor(exercise: Exercise) : this() {
+		primaryMuscles.addAll(exercise.primaryMuscles)
+		secondaryMuscles.addAll(exercise.secondaryMuscles)
+
+		exercise.variations
+			.map { Variation(it, this) }
+			.also { variations.addAll(it) }
+
+		id = exercise.id
+		name = exercise.name
+		image = exercise.image
+		lastTrained = exercise.lastTrained
 	}
 
 	override fun toEntity(): ExerciseEntity {

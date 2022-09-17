@@ -35,7 +35,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.createexercise.CreateExerciseActivity"
+            android:name=".ui.create.CreateExerciseActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.create.CreateVariationActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

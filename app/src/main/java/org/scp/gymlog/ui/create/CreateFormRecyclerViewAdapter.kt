@@ -1,4 +1,4 @@
-package org.scp.gymlog.ui.createexercise
+package org.scp.gymlog.ui.create
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,9 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.databinding.ListElementFragmentFormBinding
 
-class CreateExerciseFormRecyclerViewAdapter(
-	private val formElements: List<FormElement>
-) :	RecyclerView.Adapter<CreateExerciseFormRecyclerViewAdapter.ViewHolder>() {
+class CreateFormRecyclerViewAdapter(
+	private val formElements: List<CreateFormElement>
+) :	RecyclerView.Adapter<CreateFormRecyclerViewAdapter.ViewHolder>() {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 		return ViewHolder(
@@ -35,7 +35,7 @@ class CreateExerciseFormRecyclerViewAdapter(
 	inner class ViewHolder(binding: ListElementFragmentFormBinding) :
 		RecyclerView.ViewHolder(binding.root) {
 
-		lateinit var formElement: FormElement
+		lateinit var formElement: CreateFormElement
 		val mTitleView: TextView = binding.title
 		private val mContentView: TextView = binding.content
 		private val mImageView: ImageView = binding.image

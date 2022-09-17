@@ -2,6 +2,7 @@
     <string name="app_name">GymLog</string>
 
     <string name="title_create_exercise">Create exercise</string>
+    <string name="title_create_variation">Create variation</string>
     <string name="title_exercises">Exercises</string>
     <string name="title_history">History</string>
     <string name="title_registry">Registry</string>
@@ -98,6 +99,7 @@
     <string name="button_cancel">Cancel</string>
 
     <string name="form_edit_variations">Edit Variations</string>
+    <string name="form_create_variation">Create variation</string>
     <string name="form_image">Image</string>
     <string name="form_name">Name</string>
     <string name="form_type">Type</string>

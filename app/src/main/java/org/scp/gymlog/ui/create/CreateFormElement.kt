@@ -1,10 +1,10 @@
-package org.scp.gymlog.ui.createexercise
+package org.scp.gymlog.ui.create
 
 import android.graphics.drawable.Drawable
 import android.view.View
 import java.util.function.Consumer
 
-class FormElement(
+class CreateFormElement(
 	var title: Int,
 	var value: Int = 0,
 	var valueStr: String = "",

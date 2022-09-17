@@ -18,7 +18,7 @@ import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment
-import org.scp.gymlog.ui.createexercise.CreateExerciseActivity
+import org.scp.gymlog.ui.create.CreateExerciseActivity
 import org.scp.gymlog.ui.registry.RegistryActivity
 import org.scp.gymlog.ui.top.TopActivity
 import org.scp.gymlog.util.Constants.IntentReference
