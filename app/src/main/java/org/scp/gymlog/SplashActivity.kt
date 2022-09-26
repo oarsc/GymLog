@@ -20,17 +20,14 @@ import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.room.entities.BarEntity
 import org.scp.gymlog.room.entities.ExerciseEntity.WithMusclesAndVariations
 import org.scp.gymlog.room.entities.MuscleEntity
-import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.service.DataBaseDumperService
 import org.scp.gymlog.service.InitialDataService
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.main.MainActivity
-import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.WeightUtils
 import java.io.File
 import java.io.FileOutputStream
-import java.math.BigDecimal
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {

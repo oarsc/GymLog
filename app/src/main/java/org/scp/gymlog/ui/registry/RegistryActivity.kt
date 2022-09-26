@@ -1,6 +1,5 @@
 package org.scp.gymlog.ui.registry
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -21,7 +20,6 @@ import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.*
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.DBThread
-import org.scp.gymlog.room.entities.BitEntity
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.service.NotificationService.Companion.lastEndTime
 import org.scp.gymlog.ui.common.DBAppCompatActivity

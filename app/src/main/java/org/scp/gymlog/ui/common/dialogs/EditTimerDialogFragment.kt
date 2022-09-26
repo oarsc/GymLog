@@ -15,7 +15,6 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.preference.PreferenceManager
 import org.scp.gymlog.R
-import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.service.NotificationService.Companion.lastEndTime
 import org.scp.gymlog.util.Constants.DATE_ZERO

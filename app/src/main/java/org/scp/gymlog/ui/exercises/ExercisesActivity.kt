@@ -145,7 +145,7 @@ class ExercisesActivity : DBAppCompatActivity() {
                 val exercise = Data.getExercise(exerciseId)
                 val hasMuscle = exercise.primaryMuscles
                     .map(Muscle::id)
-                    .any { id -> id == muscleId }
+                    .any { it == muscleId }
 
                 if (hasMuscle) {
                     recyclerAdapter.updateNotify(exercise)

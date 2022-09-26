@@ -42,25 +42,28 @@ class TopRecyclerViewAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        if (viewType == R.layout.list_element_fragment_top_bit) return ViewHolder(
-            ListElementFragmentTopBitBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false
+        return when(viewType) {
+            R.layout.list_element_fragment_top_bit -> ViewHolder(
+                ListElementFragmentTopBitBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
             )
-        )
-        if (viewType == R.layout.list_element_fragment_top_variation) return ViewHolder(
-            ListElementFragmentTopVariationBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false
+            R.layout.list_element_fragment_top_variation -> ViewHolder(
+                ListElementFragmentTopVariationBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
             )
-        )
-        return if (viewType == R.layout.list_element_fragment_top_headers) ViewHolder(
-            ListElementFragmentTopHeadersBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false
+            R.layout.list_element_fragment_top_headers -> ViewHolder(
+                ListElementFragmentTopHeadersBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
             )
-        ) else ViewHolder(
-            ListElementFragmentTopSpaceBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false
+            else -> ViewHolder(
+                ListElementFragmentTopSpaceBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
             )
-        )
+        }
     }
 
     @SuppressLint("SetTextI18n")

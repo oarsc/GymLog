@@ -47,14 +47,13 @@ class LogRecyclerViewAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return if (viewType == R.layout.list_element_fragment_log_more_button) {
-            ViewHolder(
+        return when(viewType) {
+            R.layout.list_element_fragment_log_more_button -> ViewHolder(
                 ListElementFragmentLogMoreButtonBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
-        } else {
-            ViewHolder(
+            else -> ViewHolder(
                 ListElementFragmentLogBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )

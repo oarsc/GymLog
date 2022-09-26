@@ -5,7 +5,6 @@ import org.scp.gymlog.room.entities.VariationEntity
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import java.math.BigDecimal
-import java.time.LocalDateTime
 
 class Variation(
 	val exercise: Exercise
