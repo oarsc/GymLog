@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.InternalException
-import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.model.Order
 import org.scp.gymlog.model.Order.Companion.getByCode
+import org.scp.gymlog.model.Variation
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.ui.common.DBAppCompatActivity
@@ -51,14 +51,15 @@ class ExercisesActivity : DBAppCompatActivity() {
 
         setTitle(muscle.text)
 
-        recyclerAdapter = ExercisesRecyclerViewAdapter(exercisesId, order) { exercise, action ->
-            onExerciseItemMenuSelected(exercise, action) }
+        recyclerAdapter = ExercisesRecyclerViewAdapter(exercisesId, order) { variation, action ->
+            onExerciseItemMenuSelected(variation, action) }
 
-        recyclerAdapter.onClickListener = (Consumer { exercise ->
+        recyclerAdapter.onClickListener = Consumer { variation ->
             val intent = Intent(this, RegistryActivity::class.java)
-            intent.putExtra("exerciseId", exercise.id)
+            intent.putExtra("exerciseId", variation.exercise.id)
+            intent.putExtra("variationId", variation.id)
             startActivityForResult(intent, IntentReference.REGISTRY)
-        })
+        }
 
         exercisesRecyclerView = findViewById<RecyclerView>(R.id.exercisesList).apply {
             layoutManager = LinearLayoutManager(this@ExercisesActivity)
@@ -104,7 +105,8 @@ class ExercisesActivity : DBAppCompatActivity() {
         return false
     }
 
-    private fun onExerciseItemMenuSelected(exercise: Exercise, action: Int) {
+    private fun onExerciseItemMenuSelected(variation: Variation, action: Int) {
+        val exercise = variation.exercise
         when (action) {
             R.id.topRanking -> {
                 val intent = Intent(this, TopActivity::class.java)
@@ -127,8 +129,8 @@ class ExercisesActivity : DBAppCompatActivity() {
                                 runOnUiThread { recyclerAdapter.removeExercise(exercise) }
                                 db.trainingDao().deleteEmptyTraining()
 
-                                exercisesId.remove(exercise.id)
-                                Data.exercises.removeIf { ex -> ex === exercise }
+                                exercisesId.remove(variation.id)
+                                Data.exercises.removeIf { it === exercise }
                             }
                         }
                     }

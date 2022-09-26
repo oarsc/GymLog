@@ -1,0 +1,14 @@
+package org.scp.gymlog.ui.exercises
+
+import org.scp.gymlog.model.Variation
+
+class ExpandableExercisesModel(
+    val variation: Variation,
+    val parent: ExpandableExercisesModel? = null
+){
+    val exercise = variation.exercise
+    val canExpand = variation.exercise.variations.size > 1
+    val isChild: Boolean
+        get() = parent != null
+    var expanded = false
+}

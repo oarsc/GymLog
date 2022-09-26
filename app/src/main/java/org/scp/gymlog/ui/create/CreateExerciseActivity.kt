@@ -138,10 +138,14 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 						addAll(exercise.secondaryMuscles)
 					}
 
-					original.variations.apply {
-						clear()
-						addAll(exercise.variations)
-					}
+					exercise.variations
+						.map { Variation(it, original) } // update exercise references
+						.also {
+							original.variations.apply {
+								clear()
+								addAll(it)
+							}
+						}
 
 					runOnUiThread {
 						setResult(RESULT_OK, data)
