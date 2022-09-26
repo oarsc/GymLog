@@ -142,30 +142,12 @@ class RegistryActivity : DBAppCompatActivity() {
         }
 
         // Variations
-        if (exercise.variations.size == 1) {
+        if (variation.default) {
             findViewById<View>(R.id.variationBox).visibility = View.GONE
         } else {
-            val text: TextView = findViewById(R.id.variationText)
-            if (variation.default)
-                text.setText(R.string.text_default)
-            else
-                text.text = variation.name
-        }
-        findViewById<View>(R.id.variationBox).setOnClickListener {
-            val names = exercise.variations
-                .map { if (it.default) resources.getString(R.string.text_default) else it.name}
-
-            val dialog = TextSelectDialogFragment(names) { idx,_ ->
-                if (idx != TextSelectDialogFragment.DIALOG_CLOSED) {
-                    if (idx == 0) {
-                        switchVariation(0)
-                    } else {
-                        val id = exercise.variations[idx].id
-                        switchVariation(id)
-                    }
-                }
+            findViewById<TextView>(R.id.variationText).apply {
+                text = variation.name
             }
-            dialog.show(supportFragmentManager, null)
         }
 
         // Logs:
@@ -301,38 +283,6 @@ class RegistryActivity : DBAppCompatActivity() {
                     updateForms()
                 }
                 else -> {}
-            }
-        }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun switchVariation(variationId: Int) {
-        DBThread.run(this) { db ->
-            variation = if (variationId == 0)
-                exercise.defaultVariation
-            else
-                Data.getVariation(exercise, variationId)
-
-            val log: List<BitEntity> = db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
-
-            this.log.clear()
-            log.map { Bit(it) }
-                .also { this.log.addAll(it) }
-
-            runOnUiThread {
-                recyclerViewAdapter.notifyDataSetChanged()
-                recyclerViewAdapter.setFullyLoaded(log.size < LOG_PAGES_SIZE - 1)
-
-                val text: TextView = findViewById(R.id.variationText)
-                if (variation.default)
-                    text.setText(R.string.text_default)
-                else
-                    text.text = variation.name
-
-                updateForms()
-                updateTimer()
-                if (!locked)
-                    precalculateWeight()
             }
         }
     }
