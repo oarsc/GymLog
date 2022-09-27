@@ -24,7 +24,7 @@ object Constants {
         TRAINING,
         TOP_RECORDS,
 
-        SAVE_FILE,
-        LOAD_FILE
+        EXPORT_FILE,
+        IMPORT_FILE
     }
 }

@@ -1,23 +1,17 @@
 package org.scp.gymlog.ui.main.muscles
 
-import android.content.ContentResolver
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import org.json.JSONException
 import org.scp.gymlog.R
 import org.scp.gymlog.SplashActivity
 import org.scp.gymlog.model.Muscle
-import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.service.DataBaseDumperService
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.common.CustomFragment
@@ -26,9 +20,6 @@ import org.scp.gymlog.ui.createexercise.CreateExerciseActivity
 import org.scp.gymlog.ui.exercises.ExercisesActivity
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.DateUtils.currentDateTime
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 /**
  * A fragment representing a list of Items.
@@ -64,19 +55,19 @@ class MusclesFragment : CustomFragment() {
 				}
 				R.id.searchButton -> {
 				}
-				R.id.saveButton -> {
+				R.id.exportButton -> {
 					val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
 					intent.addCategory(Intent.CATEGORY_OPENABLE)
 					intent.type = "application/json"
 					intent.putExtra(Intent.EXTRA_TITLE, DataBaseDumperService.OUTPUT)
-					startActivityForResult(intent, IntentReference.SAVE_FILE)
+					startActivityForResult(intent, IntentReference.EXPORT_FILE)
 				}
-				R.id.loadButton -> {
+				R.id.importButton -> {
 					val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
 					intent.addCategory(Intent.CATEGORY_OPENABLE)
 					intent.type = "application/json"
 					intent.putExtra(Intent.EXTRA_TITLE, DataBaseDumperService.OUTPUT)
-					startActivityForResult(intent, IntentReference.LOAD_FILE)
+					startActivityForResult(intent, IntentReference.IMPORT_FILE)
 				}
 				R.id.testButton -> {
 					val seconds = 2
@@ -97,61 +88,23 @@ class MusclesFragment : CustomFragment() {
 	}
 
 	override fun onActivityResult(intentReference: IntentReference, data: Intent) {
-		val context = requireContext()
 		when {
-			intentReference === IntentReference.EXERCISE_LIST -> {
-			}
-			intentReference === IntentReference.SAVE_FILE -> {
-				DBThread.run(context) { db ->
-					try {
-						val uri: Uri = data.data!!
-						(context.contentResolver.openOutputStream(uri) as FileOutputStream)
-							.use { fileOutputStream ->
-								dataBaseDumperService.save(context, fileOutputStream, db)
-								requireActivity().runOnUiThread {
-									Toast.makeText(activity, "Saved \"${getFileName(uri)}\"",
-										Toast.LENGTH_LONG).show()
-								}
-							}
-
-					} catch (e: JSONException) {
-						throw RuntimeException(e)
-					} catch (e: IOException) {
-						throw RuntimeException(e)
-					}
+			intentReference === IntentReference.EXERCISE_LIST -> {}
+			intentReference === IntentReference.EXPORT_FILE ->
+				requireActivity().apply {
+					val intent = Intent(this, SplashActivity::class.java)
+					intent.putExtra("export", data.data!!)
+					startActivity(intent)
+					finish()
 				}
-			}
-			intentReference === IntentReference.LOAD_FILE -> {
-				DBThread.run(context) { db ->
-					try {
-						context.contentResolver.openInputStream(data.data!!)
-							.use { inputStream ->
-								dataBaseDumperService.load(context, inputStream!!, db)
-								val intent = Intent(activity, SplashActivity::class.java)
-								startActivity(intent)
-								requireActivity().finish()
-							}
-					} catch (e: JSONException) {
-						throw RuntimeException(e)
-					} catch (e: IOException) {
-						throw RuntimeException(e)
-					}
-				}
-			}
-		}
-	}
 
-	fun getFileName(uri: Uri): String {
-		return when (uri.scheme) {
-			ContentResolver.SCHEME_CONTENT -> {
-				runCatching {
-					requireContext().contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-						cursor.moveToFirst()
-						cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME).let(cursor::getString)
-					} ?: ""
-				}.getOrDefault("")
-			}
-			else -> uri.path?.let(::File)?.name ?: ""
+			intentReference === IntentReference.IMPORT_FILE ->
+				requireActivity().apply {
+					val intent = Intent(this, SplashActivity::class.java)
+					intent.putExtra("import", data.data!!)
+					startActivity(intent)
+					finish()
+				}
 		}
 	}
 

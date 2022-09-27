@@ -4,8 +4,10 @@ import android.content.Context
 import java.util.function.Consumer
 
 object DBThread {
-    fun run(context: Context, process: Consumer<AppDatabase>) {
+    fun run(context: Context, process: Consumer<AppDatabase>): Thread {
         val database = Connection[context]
-        Thread { process.accept(database) }.start()
+        return Thread { process.accept(database) }.apply {
+            start()
+        }
     }
 }

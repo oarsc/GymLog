@@ -1,8 +1,12 @@
 package org.scp.gymlog
 
 import android.annotation.SuppressLint
+import android.content.ContentResolver
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
@@ -17,15 +21,19 @@ import org.scp.gymlog.room.entities.BarEntity
 import org.scp.gymlog.room.entities.ExerciseEntity.WithMusclesAndVariations
 import org.scp.gymlog.room.entities.MuscleEntity
 import org.scp.gymlog.room.entities.TrainingEntity
+import org.scp.gymlog.service.DataBaseDumperService
 import org.scp.gymlog.service.InitialDataService
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.main.MainActivity
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.WeightUtils
+import java.io.File
+import java.io.FileOutputStream
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
 
+    private val dataBaseDumperService by lazy { DataBaseDumperService() }
     private val initialDataService = InitialDataService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +45,7 @@ class SplashActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             recreate()
 
-        } else {
+        } else if (!importData() && !exportData()) {
             WeightUtils.setConvertParameters(
                 preferences.getBoolean("conversionExactValue", false),
                 preferences.getString("conversionStep", "1")!!)
@@ -53,6 +61,43 @@ class SplashActivity : AppCompatActivity() {
                 goMain()
             }
         }
+    }
+
+    private fun importData() : Boolean {
+        val importUri = intent.extras?.getParcelable<Uri>("import")
+        if (importUri != null) {
+            intent.removeExtra("import")
+
+            DBThread.run(this) { db ->
+                contentResolver.openInputStream(importUri).use { inputStream ->
+                    dataBaseDumperService.load(this, inputStream!!, db)
+                    runOnUiThread { recreate() }
+                }
+            }
+            return true
+        }
+        return false
+    }
+
+    private fun exportData() : Boolean {
+        val exportUri = intent.extras?.getParcelable<Uri>("export")
+        if (exportUri != null) {
+            intent.removeExtra("export")
+            val fileName = getFileName(exportUri)
+
+            DBThread.run(this) { db ->
+                (contentResolver.openOutputStream(exportUri) as FileOutputStream)
+                    .use { fileOutputStream ->
+                        dataBaseDumperService.save(this, fileOutputStream, db)
+                        runOnUiThread {
+                            Toast.makeText(this, "Saved \"$fileName\"", Toast.LENGTH_LONG).show()
+                            goMain()
+                        }
+                    }
+            }
+            return true
+        }
+        return false
     }
 
     private fun loadData(db: AppDatabase) {
@@ -94,6 +139,19 @@ class SplashActivity : AppCompatActivity() {
 
         db.trainingDao().getCurrentTraining()
             .ifPresent { training: TrainingEntity -> Data.trainingId = training.trainingId }
+    }
+
+    private fun getFileName(uri: Uri): String {
+        return when (uri.scheme) {
+            ContentResolver.SCHEME_CONTENT ->
+                runCatching {
+                    contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                        cursor.moveToFirst()
+                        cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME).let(cursor::getString)
+                    } ?: ""
+                }.getOrDefault("")
+            else -> uri.path?.let(::File)?.name ?: ""
+        }
     }
 
     private fun goMain() {

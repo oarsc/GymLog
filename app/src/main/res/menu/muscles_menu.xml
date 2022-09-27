@@ -16,15 +16,15 @@
 
 
     <item
-        android:id="@+id/saveButton"
+        android:id="@+id/exportButton"
         android:icon="@drawable/ic_dot_24dp"
-        android:title="@string/text_save"
+        android:title="@string/text_export"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/loadButton"
+        android:id="@+id/importButton"
         android:icon="@drawable/ic_dot_24dp"
-        android:title="@string/text_load"
+        android:title="@string/text_import"
         app:showAsAction="never"/>
 
     <item
