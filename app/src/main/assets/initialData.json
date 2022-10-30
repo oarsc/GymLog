@@ -1448,6 +1448,13 @@
 	"secondary": []
 },
 {
+	"tag": "quads_machine_abduction_press_standing",
+	"name": "Machine Abduction Press (standing)",
+	"type": "machine",
+	"primary": [9, 12],
+	"secondary": []
+},
+{
 	"tag": "quads_machine_adduction_press_seated",
 	"name": "Machine Adduction Press (seated)",
 	"type": "machine",
