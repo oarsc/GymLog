@@ -11,8 +11,6 @@ import org.scp.gymlog.room.Converters.toDate
 import org.scp.gymlog.room.Converters.toExerciseType
 import org.scp.gymlog.room.Converters.toWeightSpecification
 import java.time.LocalDateTime
-import java.util.*
-import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KType
@@ -25,11 +23,11 @@ object JsonUtils {
     val <T : Any> List<T>.toJsonArray: JSONArray
         get() = JSONArray().also { this.forEach { obj -> it.put(obj) } }
 
-    fun <T> JSONArray.map(function: KCallable<T>): List<T> {
-        return ArrayList<T>().also { list ->
+    fun <T> JSONArray.map(function: (JSONArray, Int) -> T): List<T> {
+        return mutableListOf<T>().also { list ->
             val length = this.length()
             for (i in 0 until length) {
-                list.add(function.call(this, i))
+                list.add(function(this, i))
             }
         }
     }

@@ -7,8 +7,9 @@ class ExpandableExercisesModel(
     val parent: ExpandableExercisesModel? = null
 ){
     val exercise = variation.exercise
-    val canExpand = variation.exercise.variations.size > 1
+    var expanded = false
+    val canExpand
+        get() = exercise.variations.size > 1
     val isChild: Boolean
         get() = parent != null
-    var expanded = false
 }

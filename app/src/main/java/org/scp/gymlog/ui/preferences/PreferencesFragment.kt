@@ -58,12 +58,12 @@ class PreferencesFragment : PreferenceFragmentCompat(), OnSharedPreferenceChange
 
 	override fun onResume() {
 		super.onResume()
-		preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+		preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
 	}
 
 	override fun onPause() {
 		super.onPause()
-		preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+		preferenceManager.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
 	}
 
 	override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {

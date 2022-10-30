@@ -18,10 +18,8 @@ import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.ui.common.components.HistoryCalendarView
 import org.scp.gymlog.ui.common.components.HistoryCalendarView.PieDataInfo
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.DateUtils.firstTimeOfDay
 import org.scp.gymlog.util.DateUtils.timeInMillis
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 class HistoryFragment : Fragment() {
 
@@ -86,10 +84,12 @@ class HistoryFragment : Fragment() {
 			val endSize = trainings.size
 			historyAdapter.clear()
 
-			trainings.forEach { trainingEntity ->
-				val bits =db.bitDao().getHistoryByTrainingId(trainingEntity.trainingId)
-				val td = getTrainingData(trainingEntity, bits)
-				historyAdapter.add(td)
+			trainings.forEach {
+				val bits = db.bitDao().getHistoryByTrainingId(it.trainingId)
+				if (bits.isNotEmpty()) {
+					val td = getTrainingData(it, bits)
+					historyAdapter.add(td)
+				}
 			}
 
 			runOnUiThread {
@@ -153,7 +153,7 @@ class HistoryFragment : Fragment() {
 
 	companion object {
 		fun getTrainingData(training: TrainingEntity, bits: List<BitEntity>): TrainingData {
-			val musclesCount: MutableList<MuscleCount> = ArrayList()
+			val musclesCount = mutableListOf<MuscleCount>()
 
 			bits.map { Data.getVariation(it.variationId).exercise }
 				.flatMap { exercise -> exercise.primaryMuscles }
@@ -175,8 +175,8 @@ class HistoryFragment : Fragment() {
 			val limit = (musclesCount[0].count / total.toFloat() - 7.5f).toInt()
 
 			val mostUsedMuscles = musclesCount
-				.filter { muscleCount -> muscleCount.count / total > limit }
-				.map { muscleCount -> muscleCount.muscle }
+				.filter { it.count / total > limit }
+				.map { it.muscle }
 
 			return TrainingData(
 				training.trainingId,

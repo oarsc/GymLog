@@ -175,7 +175,8 @@ class ExercisesActivity : DBAppCompatActivity() {
                         val ex = Data.getExercise(id)
                         recyclerAdapter.updateNotify(ex)
                     } else {
-                        exercisesRecyclerView.scrollToPosition(0)
+//                        if (modified)
+//                            exercisesRecyclerView.scrollToPosition(0)
                         recyclerAdapter.switchOrder(order)
                     }
                 }

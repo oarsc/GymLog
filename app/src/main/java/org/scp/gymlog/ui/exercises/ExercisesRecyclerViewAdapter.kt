@@ -1,5 +1,6 @@
 package org.scp.gymlog.ui.exercises
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
@@ -104,8 +105,10 @@ class ExercisesRecyclerViewAdapter(
             .filter { !it.default }
             .forEach { variationChanged ->
                 val index = variations.map { it.variation.id }.indexOf(variationChanged.id)
-                val oldModel = variations[index]
-                variations[index] = ExpandableExercisesModel(variationChanged, oldModel.parent)
+                if (index >= 0) {
+                    val oldModel = variations[index]
+                    variations[index] = ExpandableExercisesModel(variationChanged, oldModel.parent)
+                }
             }
 
         val min = indexes.minOf { it }
@@ -129,10 +132,11 @@ class ExercisesRecyclerViewAdapter(
         switchOrder(order)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun switchOrder(order: Order) {
         this.order = order
         updateOrder()
-        notifyItemRangeChanged(0, variations.size)
+        notifyDataSetChanged()
     }
 
     private fun updateOrder() {
