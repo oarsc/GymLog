@@ -5,22 +5,16 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.scp.gymlog.exceptions.LoadException
-import org.scp.gymlog.model.Bar
-import org.scp.gymlog.model.ExerciseType
-import org.scp.gymlog.model.Weight
-import org.scp.gymlog.model.WeightSpecification
+import org.scp.gymlog.model.*
 import org.scp.gymlog.room.AppDatabase
-import org.scp.gymlog.room.entities.ExerciseEntity
-import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef
-import org.scp.gymlog.room.entities.SecondaryExerciseMuscleCrossRef
-import org.scp.gymlog.room.entities.VariationEntity
+import org.scp.gymlog.room.entities.*
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.JsonUtils.map
 import java.io.IOException
 import java.math.BigDecimal
 
-class InitialDataService {
+object InitialDataService {
 
     fun persist(assets: AssetManager, db: AppDatabase) {
         persistMuscles(Data, db)
@@ -28,103 +22,104 @@ class InitialDataService {
         loadExercises(assets, db)
     }
 
-    companion object {
-        private fun persistMuscles(data: Data, db: AppDatabase) {
-            db.muscleDao().insertAll(
-                data.muscles.map { muscle -> muscle.toEntity() })
-        }
+    private fun persistMuscles(data: Data, db: AppDatabase) {
+        db.muscleDao().insertAll(
+            data.muscles.map { muscle -> muscle.toEntity() })
+    }
 
-        private fun createAndPersistBars(data: Data, db: AppDatabase) {
-            val bars = data.bars
-            bars.clear()
-            var barId = 0
-            listOf(
-                Bar(++barId, Weight(BigDecimal("7.5"), true)),
-                Bar(++barId, Weight(BigDecimal("10"), true)),
-                Bar(++barId, Weight(BigDecimal("12"), true)),
-                Bar(++barId, Weight(BigDecimal("15"), true)),
-                Bar(++barId, Weight(BigDecimal("20"), true)),
-                Bar(++barId, Weight(BigDecimal("25"), true)),
-            ).also { bars.addAll(it) }
+    private fun createAndPersistBars(data: Data, db: AppDatabase) {
+        val bars = data.bars
+        bars.clear()
+        var barId = 0
+        listOf(
+            Bar(++barId, Weight(BigDecimal("7.5"), true)),
+            Bar(++barId, Weight(BigDecimal("10"), true)),
+            Bar(++barId, Weight(BigDecimal("12"), true)),
+            Bar(++barId, Weight(BigDecimal("15"), true)),
+            Bar(++barId, Weight(BigDecimal("20"), true)),
+            Bar(++barId, Weight(BigDecimal("25"), true)),
+        ).also { bars.addAll(it) }
 
-            data.bars
-                .map { it.toEntity() }
-                .also { db.barDao().insertAll(it) }
-        }
+        data.bars
+            .map { it.toEntity() }
+            .also { db.barDao().insertAll(it) }
+    }
 
-        private fun loadExercises(assets: AssetManager, db: AppDatabase) {
-            val exercisesArray = assetJsonArrayFile(assets, "initialData.json")
-            val exerciseDao = db.exerciseDao()
-            val exXmuscleDao = db.exerciseMuscleCrossRefDao()
-            val variationDao = db.variationDao()
-            try {
-                exercisesArray.map(JSONArray::getJSONObject).forEach { exerciseObj: JSONObject ->
-                    val ex = ExerciseEntity()
-                    ex.image = exerciseObj.getString("tag")
-                    ex.name = exerciseObj.getString("name")
-                    ex.lastTrained = Constants.DATE_ZERO
-                    ex.exerciseId = exerciseDao.insert(ex).toInt()
+    private fun loadExercises(assets: AssetManager, db: AppDatabase) {
+        val exercisesArray = assetJsonArrayFile(assets, "initialData.json")
+        val exerciseDao = db.exerciseDao()
+        val exXmuscleDao = db.exerciseMuscleCrossRefDao()
+        val variationDao = db.variationDao()
+        try {
+            exercisesArray.map(JSONArray::getJSONObject).forEach { exerciseObj: JSONObject ->
+                val ex = ExerciseEntity()
+                ex.image = exerciseObj.getString("tag")
+                ex.name = exerciseObj.getString("name")
+                ex.lastTrained = Constants.DATE_ZERO
+                ex.exerciseId = exerciseDao.insert(ex).toInt()
 
-                    val muscle1Links = exerciseObj.getJSONArray("primary").map(JSONArray::getInt)
-                        .map { muscleId: Int ->
-                            val exXmuscle = ExerciseMuscleCrossRef()
-                            exXmuscle.exerciseId = ex.exerciseId
-                            exXmuscle.muscleId = muscleId
-                            exXmuscle
-                        }
-                    exXmuscleDao.insertAll(muscle1Links)
-
-                    val muscle2Links = exerciseObj.getJSONArray("secondary").map(JSONArray::getInt)
-                        .map { muscleId: Int ->
-                            val exXmuscle = SecondaryExerciseMuscleCrossRef()
-                            exXmuscle.exerciseId = ex.exerciseId
-                            exXmuscle.muscleId = muscleId
-                            exXmuscle
-                        }
-                    exXmuscleDao.insertAllSecondaries(muscle2Links)
-
-                    val defaultVariation = VariationEntity()
-                    defaultVariation.def = true
-                    defaultVariation.exerciseId = ex.exerciseId
-                    defaultVariation.type = parseExerciseType(exerciseObj.getString("type"))
-                    if (defaultVariation.type === ExerciseType.BARBELL) {
-                        defaultVariation.lastBarId = 4 // 20kg
-                        defaultVariation.lastWeightSpec = WeightSpecification.NO_BAR_WEIGHT
-                    } else {
-                        defaultVariation.lastWeightSpec = WeightSpecification.TOTAL_WEIGHT
+                val muscle1Links = exerciseObj.getJSONArray("primary").map(JSONArray::getInt)
+                    .map { muscleId: Int ->
+                        val exXmuscle = ExerciseMuscleCrossRef()
+                        exXmuscle.exerciseId = ex.exerciseId
+                        exXmuscle.muscleId = muscleId
+                        exXmuscle
                     }
-                    variationDao.insert(defaultVariation)
+                exXmuscleDao.insertAll(muscle1Links)
+
+                val muscle2Links = exerciseObj.getJSONArray("secondary").map(JSONArray::getInt)
+                    .map { muscleId: Int ->
+                        val exXmuscle = SecondaryExerciseMuscleCrossRef()
+                        exXmuscle.exerciseId = ex.exerciseId
+                        exXmuscle.muscleId = muscleId
+                        exXmuscle
+                    }
+                exXmuscleDao.insertAllSecondaries(muscle2Links)
+
+                val defaultVariation = VariationEntity()
+                defaultVariation.def = true
+                defaultVariation.exerciseId = ex.exerciseId
+                defaultVariation.type = parseExerciseType(exerciseObj.getString("type"))
+                defaultVariation.gymRelation = if (exerciseObj.getBoolean("general"))
+                    GymRelation.NO_RELATION else GymRelation.INDIVIDUAL_RELATION
+
+                if (defaultVariation.type === ExerciseType.BARBELL) {
+                    defaultVariation.lastBarId = 4 // 20kg
+                    defaultVariation.lastWeightSpec = WeightSpecification.NO_BAR_WEIGHT
+                } else {
+                    defaultVariation.lastWeightSpec = WeightSpecification.TOTAL_WEIGHT
                 }
-            } catch (e: JSONException) {
-                throw LoadException("Unable to load initial exercises")
+                variationDao.insert(defaultVariation)
             }
+        } catch (e: JSONException) {
+            throw LoadException("Unable to load initial exercises", e)
         }
+    }
 
-        private fun assetJsonArrayFile(assets: AssetManager, fileName: String): JSONArray {
-            return try {
-                val file = assets.open(fileName)
-                val formArray = ByteArray(file.available())
-                file.read(formArray)
-                file.close()
-                JSONArray(String(formArray))
-            } catch (e: JSONException) {
-                throw LoadException("Unable to load file $fileName")
-            } catch (e: IOException) {
-                throw LoadException("Unable to load file $fileName")
-            }
+    private fun assetJsonArrayFile(assets: AssetManager, fileName: String): JSONArray {
+        return try {
+            val file = assets.open(fileName)
+            val formArray = ByteArray(file.available())
+            file.read(formArray)
+            file.close()
+            JSONArray(String(formArray))
+        } catch (e: JSONException) {
+            throw LoadException("Unable to load file $fileName")
+        } catch (e: IOException) {
+            throw LoadException("Unable to load file $fileName")
         }
+    }
 
-        private fun parseExerciseType(strValue: String): ExerciseType {
-            return when(strValue) {
-                "dumbbell" -> ExerciseType.DUMBBELL
-                "barbell" -> ExerciseType.BARBELL
-                "plate" -> ExerciseType.PLATE
-                "pulley" -> ExerciseType.PULLEY_MACHINE
-                "smith" -> ExerciseType.SMITH_MACHINE
-                "machine" -> ExerciseType.MACHINE
-                "cardio" -> ExerciseType.CARDIO
-                else -> ExerciseType.NONE
-            }
+    private fun parseExerciseType(strValue: String): ExerciseType {
+        return when(strValue) {
+            "dumbbell" -> ExerciseType.DUMBBELL
+            "barbell" -> ExerciseType.BARBELL
+            "plate" -> ExerciseType.PLATE
+            "pulley" -> ExerciseType.PULLEY_MACHINE
+            "smith" -> ExerciseType.SMITH_MACHINE
+            "machine" -> ExerciseType.MACHINE
+            "cardio" -> ExerciseType.CARDIO
+            else -> ExerciseType.NONE
         }
     }
 }

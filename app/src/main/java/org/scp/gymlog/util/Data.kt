@@ -10,10 +10,11 @@ import org.scp.gymlog.model.Variation
 object Data {
 	val STEPS_KG = intArrayOf(50, 100, 125, 200, 250, 500, 1000, 1500, 2000, 2500)
 
-	val exercises: MutableList<Exercise> = ArrayList()
-	val muscles: MutableList<Muscle> = ArrayList()
-	val bars: MutableList<Bar> = ArrayList()
+	val exercises =  mutableListOf<Exercise>()
+	val muscles = mutableListOf<Muscle>()
+	val bars = mutableListOf<Bar>()
 	var trainingId = -1
+	var currentGym = 0
 
 	init {
 		var muscleId = 0

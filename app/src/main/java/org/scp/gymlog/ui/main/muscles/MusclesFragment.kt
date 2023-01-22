@@ -12,14 +12,22 @@ import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
 import org.scp.gymlog.SplashActivity
 import org.scp.gymlog.model.Muscle
+import org.scp.gymlog.room.DBThread
+import org.scp.gymlog.room.entities.GymEntity
 import org.scp.gymlog.service.DataBaseDumperService
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.common.CustomFragment
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
+import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment
+import org.scp.gymlog.ui.common.dialogs.TextSelectDialogFragment
 import org.scp.gymlog.ui.create.CreateExerciseActivity
 import org.scp.gymlog.ui.exercises.ExercisesActivity
 import org.scp.gymlog.util.Constants.IntentReference
+import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.currentDateTime
+import org.scp.gymlog.util.PreferencesUtils.save
+import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment.Companion.DIALOG_CLOSED
+
 
 /**
  * A fragment representing a list of Items.
@@ -54,6 +62,50 @@ class MusclesFragment : CustomFragment() {
 					return@setOnMenuItemClickListener true
 				}
 				R.id.searchButton -> {
+				}
+				R.id.gymSelectButton -> {
+					val context = requireContext()
+
+					DBThread.run(context) { db ->
+						val gyms = db.gymDao().getAll()
+						val labels = gyms
+							.map(GymEntity::name)
+							.toMutableList()
+							.apply { add("Add new gym") }
+						val dialog = TextSelectDialogFragment(labels, Data.currentGym - 1) { idx, _ ->
+							if (idx != DIALOG_CLOSED) {
+								if (idx == gyms.size) {
+									val dialog = EditTextDialogFragment(R.string.dialog_write_new_gym, confirm = {
+										DBThread.run(context) { db ->
+											db.gymDao().insert(GymEntity(name = it))
+											val gymId = idx + 1;
+											context.save("gym", gymId)
+											Data.currentGym = gymId
+
+											requireActivity().apply {
+												val intent = Intent(this, SplashActivity::class.java)
+												startActivity(intent)
+												finish()
+											}
+										}
+									})
+									dialog.show(requireActivity().supportFragmentManager, null)
+
+								} else {
+									val gymId = idx + 1;
+									context.save("gym", gymId)
+									Data.currentGym = gymId
+
+									requireActivity().apply {
+										val intent = Intent(this, SplashActivity::class.java)
+										startActivity(intent)
+										finish()
+									}
+								}
+							}
+						}
+						dialog.show(requireActivity().supportFragmentManager, null)
+					}
 				}
 				R.id.exportButton -> {
 					val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)

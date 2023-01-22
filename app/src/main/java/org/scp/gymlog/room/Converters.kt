@@ -2,6 +2,7 @@ package org.scp.gymlog.room
 
 import androidx.room.TypeConverter
 import org.scp.gymlog.model.ExerciseType
+import org.scp.gymlog.model.GymRelation
 import org.scp.gymlog.model.WeightSpecification
 import org.scp.gymlog.util.DateUtils.timeInMillis
 import org.scp.gymlog.util.DateUtils.toLocalDateTime
@@ -36,5 +37,15 @@ object Converters {
     @TypeConverter
     fun toExerciseType(exerciseType: Short): ExerciseType {
         return ExerciseType.values()[exerciseType.toInt()]
+    }
+
+    @TypeConverter
+    fun fromGymRelation(gymRelation: GymRelation): Short {
+        return gymRelation.ordinal.toShort()
+    }
+
+    @TypeConverter
+    fun toGymRelation(gymRelation: Short): GymRelation {
+        return GymRelation.values()[gymRelation.toInt()]
     }
 }

@@ -15,6 +15,8 @@ class Variation(
 	var default = false
 
 	var type: ExerciseType = ExerciseType.BARBELL
+	var gymId: Int? = null
+	var gymRelation = GymRelation.NO_RELATION
 	var step: BigDecimal = Constants.FIVE
 	var bar: Bar? = null
 	var weightSpec = WeightSpecification.NO_BAR_WEIGHT
@@ -26,6 +28,8 @@ class Variation(
 		default = variation.default
 
 		type = variation.type
+		gymId = variation.gymId
+		gymRelation = variation.gymRelation
 		step = variation.step
 		bar = variation.bar
 		weightSpec = variation.weightSpec
@@ -38,6 +42,8 @@ class Variation(
 		this.default = entity.def
 
 		this.type = entity.type
+		this.gymId = entity.gymId
+		this.gymRelation = entity.gymRelation
 		this.step = BigDecimal.valueOf(entity.lastStep.toLong()).divide(Constants.ONE_HUNDRED)
 		this.weightSpec = entity.lastWeightSpec
 		this.restTime = entity.lastRestTime
@@ -53,6 +59,8 @@ class Variation(
 		entity.def = default
 		entity.exerciseId = exercise.id
 		entity.type = type
+		entity.gymId = gymId
+		entity.gymRelation = gymRelation
 		entity.lastStep = step.multiply(Constants.ONE_HUNDRED).toInt()
 		entity.lastWeightSpec = weightSpec
 		entity.lastRestTime = restTime

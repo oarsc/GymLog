@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import org.scp.gymlog.model.ExerciseType
+import org.scp.gymlog.model.GymRelation
 import org.scp.gymlog.model.WeightSpecification
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.JsonUtils
@@ -24,6 +25,12 @@ import org.scp.gymlog.util.JsonUtils
             childColumns = ["lastBarId"],
             onDelete = ForeignKey.SET_NULL,
             onUpdate = ForeignKey.CASCADE),
+        ForeignKey(
+            entity = GymEntity::class,
+            parentColumns = ["gymId"],
+            childColumns = ["gymId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE),
     ],
     indices = [
         Index("lastBarId"),
@@ -37,6 +44,8 @@ class VariationEntity {
     var name = ""
     var exerciseId = 0
     var type = ExerciseType.BARBELL
+    var gymId: Int? = null
+    var gymRelation = GymRelation.NO_RELATION
     var def = false
 
     // Last configs

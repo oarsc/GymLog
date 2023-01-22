@@ -3,12 +3,15 @@ package org.scp.gymlog.util
 import org.json.JSONArray
 import org.json.JSONObject
 import org.scp.gymlog.model.ExerciseType
+import org.scp.gymlog.model.GymRelation
 import org.scp.gymlog.model.WeightSpecification
 import org.scp.gymlog.room.Converters.fromDate
 import org.scp.gymlog.room.Converters.fromExerciseType
+import org.scp.gymlog.room.Converters.fromGymRelation
 import org.scp.gymlog.room.Converters.fromWeightSpecification
 import org.scp.gymlog.room.Converters.toDate
 import org.scp.gymlog.room.Converters.toExerciseType
+import org.scp.gymlog.room.Converters.toGymRelation
 import org.scp.gymlog.room.Converters.toWeightSpecification
 import java.time.LocalDateTime
 import kotlin.reflect.KClass
@@ -55,6 +58,8 @@ object JsonUtils {
                             json.put(fieldName, fromWeightSpecification((value as WeightSpecification)).toInt())
                         ExerciseType::class ->
                             json.put(fieldName, fromExerciseType((value as ExerciseType)).toInt())
+                        GymRelation::class ->
+                            json.put(fieldName, fromGymRelation((value as GymRelation)).toInt())
 
                         else -> {}
                     }
@@ -89,6 +94,8 @@ object JsonUtils {
                             WeightSpecification::class -> toWeightSpecification(
                                 getInt(fieldName).toShort())
                             ExerciseType::class -> toExerciseType(
+                                getInt(fieldName).toShort())
+                            GymRelation::class -> toGymRelation(
                                 getInt(fieldName).toShort())
                             else -> null
                         }

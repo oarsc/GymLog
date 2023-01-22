@@ -9,6 +9,7 @@ import org.scp.gymlog.room.entities.*
 @TypeConverters(Converters::class)
 @Database(
     entities = [
+        GymEntity::class,
         ExerciseEntity::class,
         VariationEntity::class,
         MuscleEntity::class,
@@ -22,6 +23,7 @@ import org.scp.gymlog.room.entities.*
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
+    abstract fun gymDao(): GymDao
     abstract fun exerciseDao(): ExerciseDao
     abstract fun muscleDao(): MuscleDao
     abstract fun exerciseMuscleCrossRefDao(): ExerciseMuscleCrossRefDao

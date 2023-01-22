@@ -8,6 +8,7 @@ import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef
 import org.scp.gymlog.room.entities.SecondaryExerciseMuscleCrossRef
 import org.scp.gymlog.room.entities.VariationEntity
 import org.scp.gymlog.util.Constants
+import org.scp.gymlog.util.Data
 import java.time.LocalDateTime
 
 class Exercise() : EntityMappable<ExerciseEntity> {
@@ -15,6 +16,10 @@ class Exercise() : EntityMappable<ExerciseEntity> {
 	val primaryMuscles = mutableListOf<Muscle>()
 	val secondaryMuscles = mutableListOf<Muscle>()
 	val variations = mutableListOf<Variation>()
+	val gymVariations
+		get() = variations.filter {
+			it.gymRelation != GymRelation.STRICT_RELATION || it.gymId == Data.currentGym
+		}
 	var id = 0
 	var name: String = ""
 	var image: String = ""

@@ -46,7 +46,7 @@ class ExercisesActivity : DBAppCompatActivity() {
             preferences.getString("exercisesSortLastUsed", Order.ALPHABETICALLY.code)!!)
 
         val muscle = Data.muscles
-            .filter { gr: Muscle -> gr.id == muscleId }
+            .filter { it.id == muscleId }
             .getOrElse(0) { throw InternalException("Muscle id not found") }
 
         setTitle(muscle.text)

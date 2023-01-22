@@ -101,7 +101,7 @@ class ExercisesRecyclerViewAdapter(
             .map { variations.indexOf(it) }
             .map { orderedIndexes.indexOf(it) }
 
-        exercise.variations
+        exercise.gymVariations
             .filter { !it.default }
             .forEach { variationChanged ->
                 val index = variations.map { it.variation.id }.indexOf(variationChanged.id)
@@ -117,14 +117,14 @@ class ExercisesRecyclerViewAdapter(
     }
 
     fun addExercise(exercise: Exercise) {
-        exercise.variations
+        exercise.gymVariations
             .map { ExpandableExercisesModel(it) }
             .also { variations.addAll(it) }
 
         val index = orderedIndexes.size
-        val added = exercise.variations.size
+        val added = exercise.gymVariations.size
 
-        repeat(exercise.variations.size) {
+        repeat(added) {
             orderedIndexes.add(orderedIndexes.size)
         }
 
@@ -187,7 +187,7 @@ class ExercisesRecyclerViewAdapter(
         if (!model.expanded) {
             model.expanded = true
 
-            val newModels = model.exercise.variations
+            val newModels = model.exercise.gymVariations
                 //.filter { !it.default }
                 .map { ExpandableExercisesModel(it, model) }
                 .also { variations.addAll(it) }

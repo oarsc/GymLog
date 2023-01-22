@@ -11,7 +11,7 @@ import java.util.function.Consumer
 
 class EditTextDialogFragment constructor(
     @StringRes title: Int,
-    override var initialValue: String,
+    override var initialValue: String = "",
     confirm: Consumer<String>,
     cancel: Runnable = Runnable {}
 ) : CustomDialogFragment<String>(title, confirm, cancel) {

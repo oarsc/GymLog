@@ -28,6 +28,7 @@ class DataBaseDumperService {
     fun save(context: Context, fos: FileOutputStream, database: AppDatabase) {
         val obj = JSONObject()
         obj.put("prefs", prefs(context))
+        obj.put("gyms", gyms(database))
         obj.put("exercises", exercises(database))
         obj.put("variations", variations(database))
         obj.put("primaries", primaryMuscles(database))
@@ -44,12 +45,16 @@ class DataBaseDumperService {
         return JSONObject(preferences.all)
     }
 
+    private fun gyms(database: AppDatabase): JSONArray {
+        return database.gymDao().getAll().map { it.name }.toJsonArray
+    }
+
     private fun exercises(database: AppDatabase): JSONArray {
         return convertToJSONArray(database.exerciseDao().getAll())
     }
 
     private fun variations(database: AppDatabase): JSONArray {
-        return convertToJSONArray(database.variationDao().getAll())
+        return convertToJSONArray(database.variationDao().getAllFromAllGyms())
     }
 
     private fun primaryMuscles(database: AppDatabase): JSONArray {
@@ -65,9 +70,9 @@ class DataBaseDumperService {
     }
 
     private fun bits(database: AppDatabase): JSONArray {
-        val bits = convertToJSONArray(database.bitDao().getAll())
+        val bits = convertToJSONArray(database.bitDao().getAllFromAllGyms())
         try {
-            bits.map(JSONArray::getJSONObject).forEach { bit: JSONObject ->
+            bits.map(JSONArray::getJSONObject).forEach { bit ->
                 if (bit.getBoolean("kilos")) bit.remove("kilos")
                 if (bit.getString("note").isEmpty()) bit.remove("note")
             }
@@ -79,7 +84,7 @@ class DataBaseDumperService {
 
     private fun convertToJSONArray(list: List<Any>): JSONArray {
         return list
-            .map { obj: Any -> JsonUtils.jsonify(obj) }
+            .map { JsonUtils.jsonify(it) }
             .toJsonArray
     }
 
@@ -91,6 +96,12 @@ class DataBaseDumperService {
 
             // PREFS
             prefs(context, obj.getJSONObject("prefs"))
+
+            // GYMS
+            database.gymDao().clear()
+            obj.getJSONArray("gyms").map(JSONArray::getString)
+                .map { GymEntity(name = it) }
+                .also { database.gymDao().insertAll(it) }
 
             // EXERCISES:
             val exercises = exercises(obj.getJSONArray("exercises"))
@@ -170,8 +181,16 @@ class DataBaseDumperService {
             }
 
             // BITS
+            //val allVariations = database.variationDao().getAllFromAllGyms()
+            //    .associateBy { it.variationId }
+
             val bits = bits(obj.getJSONArray("bits"), variationsIdMap, variationsXExerciseIdMap)
-            bits.onEach { it.trainingId = trainingsIdMap[it.trainingId]!! }
+            bits.onEach {
+                    //val variation = allVariations[it.variationId]!!
+                    //if (if (variation.gymGlobal) it.gymId != null else it.gymId == null)
+                    //    throw LoadException("Bit ${it.bitId} gymGlobal flag is incorrect")
+                }
+                .onEach { it.trainingId = trainingsIdMap[it.trainingId]!! }
                 .also { database.bitDao().insertAll(it) }
 
             // Update most recent bit to exercises

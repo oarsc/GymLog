@@ -20,12 +20,18 @@ import java.time.LocalDateTime
             childColumns = ["trainingId"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE),
+        ForeignKey(
+            entity = GymEntity::class,
+            parentColumns = ["gymId"],
+            childColumns = ["gymId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE),
     ],
     indices = [
-        Index("variationId"),
         Index("trainingId"),
-        Index("variationId", "timestamp"),
-        Index("variationId", "trainingId", "timestamp"),
+        Index("variationId", "gymId"),
+        Index("variationId", "timestamp", "gymId"),
+        Index("variationId", "trainingId", "timestamp", "gymId"),
     ]
 )
 class BitEntity {
@@ -34,6 +40,7 @@ class BitEntity {
     var bitId = 0
     var variationId = 0
     var trainingId = 0
+    var gymId = 0
     var reps = 0
     var totalWeight = 0
     var kilos = false

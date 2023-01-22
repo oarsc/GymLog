@@ -6,30 +6,33 @@
         android:id="@+id/createButton"
         android:icon="@drawable/ic_add_24dp"
         android:title="@string/title_create_exercise"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/searchButton"
         android:icon="@drawable/ic_search_24dp"
         android:title="@string/title_search"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/gymSelectButton"
+        android:icon="@drawable/ic_gym_building_24dp"
+        android:title="@string/title_select_gym"
+        app:showAsAction="always"/>
 
 
     <item
         android:id="@+id/exportButton"
-        android:icon="@drawable/ic_dot_24dp"
         android:title="@string/text_export"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/importButton"
-        android:icon="@drawable/ic_dot_24dp"
         android:title="@string/text_import"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/testButton"
-        android:icon="@drawable/ic_dot_24dp"
         android:title="@string/text_test"
         app:showAsAction="never"/>
 

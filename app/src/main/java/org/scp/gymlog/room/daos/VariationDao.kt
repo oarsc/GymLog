@@ -9,13 +9,7 @@ import org.scp.gymlog.room.entities.VariationEntity
 @Dao
 interface VariationDao {
     @Query("SELECT * FROM variation")
-    fun getAll(): List<VariationEntity>
-
-    @Query("SELECT * FROM variation WHERE variationId = :variationId")
-    fun getVariation(variationId: Int): VariationEntity?
-
-    @Query("SELECT * FROM variation WHERE exerciseId = :exerciseId")
-    fun getVariationByExerciseId(exerciseId: Int): List<VariationEntity>
+    fun getAllFromAllGyms(): List<VariationEntity>
 
     @Update
     fun update(vararg variations: VariationEntity)

@@ -92,7 +92,10 @@ class RegistryActivity : DBAppCompatActivity() {
             exercise.defaultVariation
         }
 
-        val log = db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
+        val log = if (variation.gymRelation == GymRelation.NO_RELATION)
+                db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
+            else
+                db.bitDao().getHistory(Data.currentGym, variation.id, LOG_PAGES_SIZE)
 
         log.map { Bit(it) }
             .also { this.log.addAll(it) }
@@ -178,7 +181,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
         // Notes
         notes.setOnClickListener {
-            val dialog = EditNotesDialogFragment(R.string.text_notes, variation.id, notes.text.toString())
+            val dialog = EditNotesDialogFragment(R.string.text_notes, variation, notes.text.toString())
                 { result: String -> notes.setText(result) }
             dialog.show(supportFragmentManager, null)
         }
@@ -274,7 +277,11 @@ class RegistryActivity : DBAppCompatActivity() {
                 }
                 IntentReference.TRAINING -> {
                     DBThread.run(this) { db ->
-                        val log = db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
+                        val log = if (variation.gymRelation == GymRelation.NO_RELATION)
+                            db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
+                        else
+                            db.bitDao().getHistory(Data.currentGym, variation.id, LOG_PAGES_SIZE)
+
                         this.log.clear()
                         log.map { Bit(it) }
                             .also { this.log.addAll(it) }
@@ -377,7 +384,11 @@ class RegistryActivity : DBAppCompatActivity() {
         DBThread.run(this) { db ->
             val bit = log[initialSize - 1]
             val date = bit.timestamp
-            val log = db.bitDao().getHistory(variation.id, bit.trainingId, date, LOG_PAGES_SIZE)
+
+            val log = if (variation.gymRelation == GymRelation.NO_RELATION)
+                db.bitDao().getHistory(variation.id, bit.trainingId, date, LOG_PAGES_SIZE)
+            else
+                db.bitDao().getHistory(Data.currentGym, variation.id, bit.trainingId, date, LOG_PAGES_SIZE)
 
             log.map { Bit(it) }
                 .also { this.log.addAll(it) }
@@ -409,6 +420,7 @@ class RegistryActivity : DBAppCompatActivity() {
             bit.reps = reps.integer
             bit.trainingId = trainingId
             bit.instant = instant
+            bit.gymId = Data.currentGym
 
             exercise.lastTrained = currentDateTime()
 

@@ -9,13 +9,15 @@ import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
-import org.scp.gymlog.room.AppDatabase
+import org.scp.gymlog.model.GymRelation
+import org.scp.gymlog.model.Variation
 import org.scp.gymlog.room.DBThread
+import org.scp.gymlog.util.Data
 import java.util.function.Consumer
 
 class EditNotesDialogFragment(
     @StringRes title: Int,
-    private val variationId: Int,
+    private val variation: Variation,
     override var initialValue: String,
     confirm: Consumer<String>
 ) : CustomDialogFragment<String>(title, confirm, Runnable{}) {
@@ -31,10 +33,13 @@ class EditNotesDialogFragment(
             layoutManager = LinearLayoutManager(context)
 
             DBThread.run(requireContext()) { db ->
-                db.bitDao().getNotesHistory(variationId, 18).also { notes ->
-                    activity?.runOnUiThread {
-                        adapter = EditNotesRecyclerViewAdapter(notes) { input.setText(it) }
-                    }
+                val notes = if (variation.gymRelation == GymRelation.NO_RELATION)
+                        db.bitDao().getNotesHistory(variation.id, 18)
+                    else
+                        db.bitDao().getNotesHistory(Data.currentGym, variation.id, 18)
+
+                activity?.runOnUiThread {
+                    adapter = EditNotesRecyclerViewAdapter(notes) { input.setText(it) }
                 }
             }
         }

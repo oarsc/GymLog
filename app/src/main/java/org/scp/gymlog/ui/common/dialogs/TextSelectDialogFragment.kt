@@ -12,7 +12,8 @@ import java.util.function.BiConsumer
 
 class TextSelectDialogFragment(
     private val texts: List<String>,
-    private val callback: BiConsumer<Int, String>
+    private val selectedOption: Int = -1,
+    private val callback: BiConsumer<Int, String>,
 ) : DialogFragment() {
 
     companion object {
@@ -27,8 +28,8 @@ class TextSelectDialogFragment(
         val recyclerView: RecyclerView = view.findViewById(R.id.parentLayout)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = TextSelectRecyclerViewAdapter(texts) { index: Int, text: String ->
-            onMenuElementClicked(index, text)
+        recyclerView.adapter = TextSelectRecyclerViewAdapter(texts, selectedOption) { idx, text ->
+            onMenuElementClicked(idx, text)
         }
 
         val builder = AlertDialog.Builder(activity).setView(view)

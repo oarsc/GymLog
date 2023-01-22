@@ -19,6 +19,7 @@ class Bit : EntityMappable<BitEntity> {
 	var note: String = ""
 	var timestamp: LocalDateTime
 	var instant = false
+	var gymId = 0
 	var set = 0 // used in logRecyclerViewAdapter
 
 	init {
@@ -38,6 +39,7 @@ class Bit : EntityMappable<BitEntity> {
 		reps = entity.reps
 		timestamp = entity.timestamp
 		instant = entity.instant
+		gymId = entity.gymId
 		weight = Weight(
 			BigDecimal.valueOf(entity.totalWeight.toLong()).divide(Constants.ONE_HUNDRED),
 			entity.kilos
@@ -53,6 +55,7 @@ class Bit : EntityMappable<BitEntity> {
 		entity.timestamp = timestamp
 		entity.reps = reps
 		entity.instant = instant
+		entity.gymId = gymId
 		entity.totalWeight = weight.value.multiply(Constants.ONE_HUNDRED)?.toInt() ?: 0
 		entity.kilos = weight.internationalSystem
 		return entity

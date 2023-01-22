@@ -2,10 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/optionNone"
+        android:icon="@drawable/ic_man_24dp"
         android:title="@string/type_none"/>
 
     <item
         android:id="@+id/optionDumbbell"
+        android:icon="@drawable/ic_dumbbell_24dp"
         android:title="@string/type_dumbbell"/>
 
     <item
@@ -31,5 +33,6 @@
 
     <item
         android:id="@+id/optionCardio"
+        android:icon="@drawable/ic_person_running_24dp"
         android:title="@string/type_cardio"/>
 </menu>

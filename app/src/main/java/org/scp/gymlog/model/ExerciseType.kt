@@ -11,13 +11,13 @@ enum class ExerciseType(
     val defaultIndex: Int
 ) {
     NONE(
-        0,
+        R.drawable.ic_man_24dp,
         R.string.type_none,
         WeightSpecification.TOTAL_WEIGHT,
         defaultIndex = 0),
 
     DUMBBELL(
-        0,
+        R.drawable.ic_dumbbell_24dp,
         R.string.type_dumbbell,
         WeightSpecification.TOTAL_WEIGHT,
         defaultIndex = 0),
@@ -59,7 +59,7 @@ enum class ExerciseType(
         defaultIndex = 0),
 
     CARDIO(
-        0,
+        R.drawable.ic_person_running_24dp,
         R.string.type_cardio,
         WeightSpecification.TOTAL_WEIGHT,
         defaultIndex = 0);

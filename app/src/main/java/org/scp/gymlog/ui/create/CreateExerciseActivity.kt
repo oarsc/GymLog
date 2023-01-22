@@ -12,10 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
-import org.scp.gymlog.model.Exercise
-import org.scp.gymlog.model.ExerciseType
-import org.scp.gymlog.model.Muscle
-import org.scp.gymlog.model.Variation
+import org.scp.gymlog.model.*
+import org.scp.gymlog.room.Converters
 import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.activity.ImageSelectorActivity
@@ -35,6 +33,7 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 	private lateinit var iconOption: CreateFormElement
 	private lateinit var nameOption: CreateFormElement
 	private lateinit var typeOption: CreateFormElement
+	private lateinit var gymGlobalOption: CreateFormElement
 	private lateinit var musclesOption: CreateFormElement
 	private lateinit var musclesSecondaryOption: CreateFormElement
 	private val caller: IntentReference by lazy { getIntentCall() }
@@ -208,6 +207,13 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 			onClickListener = { showExerciseTypeDialog(typeOption) }
 		).also(form::add)
 
+		gymGlobalOption = CreateFormElement(
+			title = R.string.form_gym_independent,
+			value = if (exercise.defaultVariation.gymRelation == GymRelation.NO_RELATION) R.string.text_yes else R.string.text_no,
+			drawable = null,
+			onClickListener = { toggleGymGlobal(gymGlobalOption) }
+		).also(form::add)
+
 		musclesOption = CreateFormElement(
 			title = R.string.form_primary_muscles,
 			valueStr = getMusclesLabelText(exercise.primaryMuscles),
@@ -247,12 +253,22 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 					val variation = exercise.variations.firstOrNull { it.id == variationId }!!
 					variation.name = data.getStringExtra("name")!!
 					variation.type = ExerciseType.valueOf(data.getStringExtra("type")!!)
+					val relation = data.getIntExtra("gymRelation", 0)
+					variation.gymRelation = Converters.toGymRelation(relation.toShort())
+					if (variation.gymRelation == GymRelation.STRICT_RELATION) {
+						variation.gymId = Data.currentGym
+					}
 				}
 			}
 			IntentReference.CREATE_VARIATION -> {
 				val variation = Variation(exercise)
 				variation.name = data.getStringExtra("name")!!
 				variation.type = ExerciseType.valueOf(data.getStringExtra("type")!!)
+				val relation = data.getIntExtra("gymRelation", 0)
+				variation.gymRelation = Converters.toGymRelation(relation.toShort())
+				if (variation.gymRelation == GymRelation.STRICT_RELATION) {
+					variation.gymId = Data.currentGym
+				}
 				exercise.variations.add(variation)
 			}
 			IntentReference.IMAGE_SELECTOR -> {
@@ -307,6 +323,16 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 		dialog.show(supportFragmentManager, null)
 	}
 
+	private fun toggleGymGlobal(option: CreateFormElement) {
+		val newValue = if (exercise.defaultVariation.gymRelation == GymRelation.NO_RELATION)
+			GymRelation.INDIVIDUAL_RELATION else GymRelation.NO_RELATION
+
+		exercise.defaultVariation.gymRelation = newValue
+
+		option.value = if (newValue == GymRelation.NO_RELATION) R.string.text_yes else R.string.text_no
+		option.update()
+	}
+
 	private fun showMuscleSelector(option: CreateFormElement, primary: Boolean) {
 		val resources = resources
 		val allMuscles: List<Muscle> = Data.muscles
@@ -340,7 +366,7 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 	}
 
 	private fun editVariations() {
-		val options = exercise.variations
+		val options = exercise.gymVariations
 			.filter { !it.default }
 			.map { it.name }
 			.toMutableList()
@@ -351,6 +377,7 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 				if (idx == options.size-1) {
 					val intent = Intent(this, CreateVariationActivity::class.java)
 					intent.putExtra("type", exercise.defaultVariation.type.name)
+					intent.putExtra("gymRelation", exercise.defaultVariation.gymRelation.ordinal)
 					startActivityForResult(intent, IntentReference.CREATE_VARIATION)
 
 				} else {
@@ -361,6 +388,7 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 							intent.putExtra("variationId", it.id)
 							intent.putExtra("name", it.name)
 							intent.putExtra("type", it.type.name)
+							intent.putExtra("gymRelation", it.gymRelation.ordinal)
 							startActivityForResult(intent, IntentReference.EDIT_VARIATION)
 						}
 				}

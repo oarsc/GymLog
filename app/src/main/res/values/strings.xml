@@ -6,6 +6,7 @@
     <string name="title_exercises">Exercises</string>
     <string name="title_history">History</string>
     <string name="title_registry">Registry</string>
+    <string name="title_select_gym">Select Current Gym</string>
     <string name="title_search">Search</string>
     <string name="title_settings">Settings</string>
     <string name="title_workout">Workout</string>
@@ -35,10 +36,12 @@
     <string name="text_exercise">Exercise</string>
     <string name="text_expand_all">Expand all</string>
     <string name="text_export">Export</string>
+    <string name="text_find_top_records">Find top records</string>
     <string name="text_import">Import</string>
     <string name="text_instantly">Instantly</string>
     <string name="text_kg">kg</string>
     <string name="text_lb">lbs</string>
+    <string name="text_no">No</string>
     <string name="text_no_bar">No bar</string>
     <string name="text_none">None</string>
     <string name="text_notes">Notes</string>
@@ -52,9 +55,9 @@
     <string name="text_time">Time</string>
     <string name="text_title">Title</string>
     <string name="text_training">Training</string>
-    <string name="text_find_top_records">Find top records</string>
     <string name="text_variations">Variations</string>
     <string name="text_weight">Weight</string>
+    <string name="text_yes">Yes</string>
 
     <string name="type_none">None</string>
     <string name="type_dumbbell">Dumbbell</string>
@@ -72,12 +75,21 @@
     <string name="dialog_confirm_training_text">Are you sure you finished your current training?</string>
     <string name="dialog_edit_log">Edit log</string>
     <string name="dialog_edit_exercise">Edit exercise</string>
+    <string name="dialog_write_new_gym">Write the name of the new Gym</string>
     <string name="dialog_remove_log">Remove log</string>
     <string name="dialog_remove_exercise">Remove exercise</string>
     <string name="dialog_confirm_remove_exercise_title">Removing exercise</string>
     <string name="dialog_confirm_remove_exercise_text">This process wil remove this exercise.
     All its history will be removed as well. Do you want to proceed?</string>
     <string name="dialog_show_bit_training">Show complete training</string>
+
+    <string name="dialog_gym_no_relation">No related to any specific gym and registry is shared</string>
+    <string name="dialog_gym_individual_relation">No related to any specific gym but registry is not shared</string>
+    <string name="dialog_gym_strict_relation">Only available for the current selected gym</string>
+
+    <string name="form_gym_no_relation">No related to any specific gym</string>
+    <string name="form_gym_individual_relation">Not shared between gyms</string>
+    <string name="form_gym_strict_relation">Related to current gym</string>
 
     <string name="symbol_3_middle_points">···</string>
     <string name="symbol_bar">/</string>
@@ -101,6 +113,7 @@
     <string name="form_edit_variations">Edit Variations</string>
     <string name="form_create_variation">Create variation</string>
     <string name="form_image">Image</string>
+    <string name="form_gym_independent">Share registry with all gyms?</string>
     <string name="form_name">Name</string>
     <string name="form_type">Type</string>
     <string name="form_primary_muscles">Primary Muscular Groups</string>

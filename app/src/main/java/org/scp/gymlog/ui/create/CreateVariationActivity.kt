@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import org.scp.gymlog.R
 import org.scp.gymlog.model.ExerciseType
+import org.scp.gymlog.model.GymRelation
+import org.scp.gymlog.room.Converters
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment
@@ -21,9 +23,11 @@ class CreateVariationActivity : CustomAppCompatActivity() {
 	private var variationId = 0
 	private var name = ""
 	private var type = ExerciseType.NONE
+	private var gymRelation = GymRelation.NO_RELATION
 
 	private lateinit var nameOption: CreateFormElement
 	private lateinit var typeOption: CreateFormElement
+	private lateinit var gymGlobalOption: CreateFormElement
 
 	private val caller: IntentReference by lazy { getIntentCall() }
 
@@ -39,6 +43,7 @@ class CreateVariationActivity : CustomAppCompatActivity() {
 
 			getString("name")?.also { name = it }
 			getString("type")?.also { type = ExerciseType.valueOf(it) }
+			gymRelation = Converters.toGymRelation(getInt("gymRelation", 0).toShort())
 		}
 
 		val recyclerView: RecyclerView = findViewById(R.id.createFormList)
@@ -69,6 +74,7 @@ class CreateVariationActivity : CustomAppCompatActivity() {
 
 			data.putExtra("name", name)
 			data.putExtra("type", type.name)
+			data.putExtra("gymRelation", gymRelation.ordinal)
 
 			setResult(RESULT_OK, data)
 			finish()
@@ -91,6 +97,13 @@ class CreateVariationActivity : CustomAppCompatActivity() {
 			value = type.literal,
 			drawable = if (type.icon == 0) null else ResourcesCompat.getDrawable(resources, type.icon, null),
 			onClickListener = { showExerciseTypeDialog(typeOption) }
+		).also(form::add)
+
+		gymGlobalOption = CreateFormElement(
+			title = R.string.form_gym_independent,
+			value = gymRelation.literal,
+			drawable = null,
+			onClickListener = { showGymRelationDialog(gymGlobalOption) }
 		).also(form::add)
 
 		return form
@@ -126,4 +139,27 @@ class CreateVariationActivity : CustomAppCompatActivity() {
 		}
 		dialog.show(supportFragmentManager, null)
 	}
+
+	private fun showGymRelationDialog(option: CreateFormElement) {
+		val dialog = MenuDialogFragment(R.menu.gym_relation) { result ->
+			if (result != DIALOG_CLOSED) {
+				gymRelation = when(result) {
+					R.id.noRelation -> GymRelation.NO_RELATION
+					R.id.individualRelation -> GymRelation.INDIVIDUAL_RELATION
+					R.id.strictRelation -> GymRelation.STRICT_RELATION
+					else -> GymRelation.NO_RELATION
+				}
+				option.value = gymRelation.literal
+				option.update()
+			}
+		}
+		dialog.show(supportFragmentManager, null)
+	}
+
+	private val GymRelation.literal: Int
+		get() = when(this) {
+			GymRelation.NO_RELATION -> R.string.form_gym_no_relation
+			GymRelation.INDIVIDUAL_RELATION -> R.string.form_gym_individual_relation
+			GymRelation.STRICT_RELATION -> R.string.form_gym_strict_relation
+		}
 }

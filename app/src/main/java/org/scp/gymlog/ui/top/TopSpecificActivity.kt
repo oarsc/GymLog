@@ -2,24 +2,31 @@ package org.scp.gymlog.ui.top
 
 import android.os.Bundle
 import org.scp.gymlog.model.Bit
+import org.scp.gymlog.model.GymRelation
+import org.scp.gymlog.model.Variation
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.entities.BitEntity
+import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.timeInMillis
 import java.time.LocalDate
 
 class TopSpecificActivity : TopActivity() {
 
     private var weight = 0
-    private var variationId = 0
+    private lateinit var variation: Variation
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
         weight = intent.extras!!.getInt("weight")
-        variationId = intent.extras!!.getInt("variationId")
+        val variationId = intent.extras!!.getInt("variationId")
+        variation = Data.getVariation(variationId)
         return super.onLoad(savedInstanceState, db)
     }
 
     override fun getBits(db: AppDatabase, exerciseId: Int): MutableList<Bit> {
-        val bits = db.bitDao().findAllByExerciseAndWeight(variationId, weight)
+        val bits = if (variation.gymRelation == GymRelation.NO_RELATION)
+                db.bitDao().findAllByExerciseAndWeight(variation.id, weight)
+            else
+                db.bitDao().findAllByExerciseAndWeight(Data.currentGym, variation.id, weight)
 
         return mutableMapOf<LocalDate, BitEntity>()
             .apply {

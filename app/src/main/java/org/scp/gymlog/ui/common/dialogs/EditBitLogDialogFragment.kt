@@ -51,7 +51,7 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
         editNotes.setOnClickListener {
             val dialog = EditNotesDialogFragment(
                 R.string.text_notes,
-                initialValue.variation.id,
+                initialValue.variation,
                 editNotes.text.toString())
                 { text -> editNotes.setText(text) }
 

@@ -102,7 +102,7 @@ class HistoryFragment : Fragment() {
 	private fun updateMonthData(first: LocalDate, end: LocalDate) {
 		val allMuscles: List<Muscle> = Data.muscles
 		DBThread.run(requireContext()) { db ->
-			val bits = db.bitDao().getHistory(first.atStartOfDay(), end.atStartOfDay())
+			val bits = db.bitDao().getCalendarHistory(first.atStartOfDay(), end.atStartOfDay())
 
 			var currentDay = first
 			var i = 0
