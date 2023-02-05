@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/",                                 /* Specify an output folder for all emitted files. */
+    "allowJs": true,                                     /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
+    // "checkJs": true,                                  /* Enable error reporting in type-checked JavaScript files. */
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "**/*.test.ts", "private"],
+}

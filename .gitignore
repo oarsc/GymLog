@@ -63,3 +63,4 @@ typings/
 # ignore generated files
 public/css
 public/js
+dist
