@@ -1,0 +1,31 @@
+#gyms-container {
+  position: absolute;
+  right: 60px;
+  text-align: right;
+
+  img {
+    right: 25px;
+    top: 0;
+    height: 25px;
+    width: 25px;
+    cursor: pointer;
+  }
+
+  table {
+    top: 25px;
+    right: 0;
+    z-index: 2;
+
+    background-color: white;
+    padding: 10px 20px;
+    border: 1px solid black;
+
+    th {
+      text-align: center;
+    }
+
+    td {
+      text-align: left;
+    }
+  }
+}

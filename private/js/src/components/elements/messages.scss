@@ -1,0 +1,21 @@
+#notification-area {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 400px;
+  z-index: 3001;
+  pointer-events: none;
+  color: white;
+
+  .notification {
+    margin: 5px;
+    padding: 20px;
+    background-color: #555;
+    border: 1px solid black;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 5px;
+    pointer-events: initial;
+  }
+}

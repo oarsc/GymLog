@@ -1,0 +1,41 @@
+.accordioned {  
+  &.collapsed .arrow {
+    transform: rotate(0deg) !important;
+  }
+
+  > .accordion-header {
+    padding: 20px 0;
+    background-color: #e7e7e7;
+    margin: 2px 0;
+    cursor: pointer;
+    user-select: none;
+
+    > * {
+      vertical-align: middle;
+    }
+
+    .arrow {
+      margin: 0 20px;
+      width: 20px;
+      height: 20px;
+      display: inline-table;
+      transition: transform .2s;
+      transform: rotate(90deg);
+      text-align: center;
+      
+      span {
+        display: table-cell;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .acc-content {
+    transition: height .5s;
+    overflow: hidden;
+  }
+
+  .inflexible {
+    display: inline-block
+  }
+}

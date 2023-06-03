@@ -1,0 +1,76 @@
+.exercise {
+  .header {
+    cursor: pointer;
+    padding: 5px;
+
+    img {
+      height: 56px;
+      vertical-align: middle;
+      margin-right: 20px;
+    }
+  }
+}
+
+#exercise-filter > * {
+  margin-right: 10px;
+}
+
+.exercise-details {
+  padding: 20px;
+  border: 1px solid black;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+
+  input.name {
+    width: 350px;
+  }
+
+  .title {
+    width: 0;
+    white-space: nowrap;
+  }
+
+  .actions {
+    margin-top: 15px;
+    text-align: right;
+  }
+
+  .muscles {
+    vertical-align: top;
+    width: 100%;
+  }
+}
+
+.variation {
+  .header {
+    cursor: pointer;
+    padding: 5px;
+
+    img {
+      height: 56px;
+      vertical-align: middle;
+      margin-right: 20px;
+    }
+
+    .variation-name {
+      color: #55b2ff;
+      font-weight: bold;
+    }
+  }
+}
+
+#variation-filter > * {
+  margin-right: 10px;
+}
+
+.variation-details {
+  padding: 20px;
+  border: 1px solid black;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+
+  .actions {
+    margin-top: 15px;
+    text-align: right;
+  }
+}

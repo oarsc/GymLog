@@ -1,0 +1,38 @@
+.image-selector {
+  display: inline-block;
+
+  .selected {
+    display: inline-block;
+    cursor: pointer;
+
+    img {
+      height: 56px;
+    }
+  }
+
+  .panel {
+    position: absolute;
+    border: 1px solid black;
+    background-color: white;
+    height: 400px;
+    width: 550px;
+    z-index: 1;
+    overflow-y: auto;
+
+    img {
+      //height: 56px;
+      height: 100px;
+      margin: 2px;
+      border: 2px solid transparent;
+      cursor: pointer;
+
+      &:hover {
+        border-color: #84b6e4;
+      }
+
+      &.select {
+        background-color: #bee0ff;
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+input, select {
+  padding: 5px;
+}
+
+button {
+  padding: 5px 10px;
+  background-color: #7fc1ff;
+  border-radius: 5px;
+  border: 2px solid #55adff;
+  margin: 1px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #aad6ff;
+  }
+  &:active {
+    background-color: #55adff;
+  }
+
+
+  &.green {
+    background-color: #b2ff7f;
+    border-color: #9ce769;
+
+    &:hover {
+      background-color: #ccfdac;
+    }
+    &:active {
+      background-color: #9ce769;
+    }
+  }
+  &.red {
+    background-color: #ff7f7f;
+    border-color: #e76969;
+
+    &:hover {
+      background-color: #fdacac;
+    }
+    &:active {
+      background-color: #e76969;
+    }
+  }
+
+  &.transparent {
+    background-color: #0000;
+    border-color: #0000;
+    opacity: 0.65;
+
+    &:hover {
+      background-color: #d6d6d6;
+      opacity: 0.9;
+    }
+    &:active {
+      background-color: #d0d0d0;
+      opacity: 1;
+    }
+  }
+
+  &.gray {
+    background-color: #e9e9ed;
+    border-color: #8f8f9d;
+    border-width: 1px;
+
+    &:hover {
+      background-color: #d0d0d7;
+      border-color: #676774;
+    }
+    &:active {
+      background-color: #e9e9ed;
+      border-color: #8f8f9d;
+    }
+  }
+}
+
+#footer-page-space {
+  height: 90vh;
+}

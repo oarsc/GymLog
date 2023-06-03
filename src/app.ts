@@ -11,6 +11,7 @@ import logger from 'morgan';
 
 // routers
 import { router as indexRouter } from './routes/index';
+import { router as oldIndexRouter } from './routes/old-index';
 import { router as readerRouter } from './routes/reader';
 import { router as converterRouter } from './routes/converter';
 
@@ -24,7 +25,7 @@ app.set('views', path.join(rootDir, 'private/views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(lessMiddleware(path.join(rootDir, 'private'), {
@@ -33,6 +34,7 @@ app.use(lessMiddleware(path.join(rootDir, 'private'), {
 app.use(express.static(path.join(rootDir, 'public')));
 
 app.use('/',        indexRouter);
+app.use('/old',     oldIndexRouter);
 app.use('/read',    readerRouter);
 app.use('/convert', converterRouter);
 

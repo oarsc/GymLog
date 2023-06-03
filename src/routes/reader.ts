@@ -13,3 +13,9 @@ router.get('/', (req, res, next) => {
     });
   });
 });
+
+router.get('/images', (req, res, next) => {
+  fs.readdir('../GymLog/app/src/main/assets/previews/', (err, files) => {
+    res.json(files.map(f => f.replace(/\.\w{3}$/, '')));
+  })
+});

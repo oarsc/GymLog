@@ -1,0 +1,58 @@
+#bits-frame {
+  position:relative;
+  height: calc(100vh - 180px);
+  width: calc(100vw - 100px);
+  overflow-y: auto;
+}
+
+#bits {
+  position: absolute;
+  top:0; right: 0; bottom: 0; left: 0;
+}
+
+.bit-variation-name {
+  color: rgb(0, 119, 255);
+}
+
+.bit-training {
+  > p {
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+  .bit-variations {
+    margin-left: 5px;
+  }
+}
+
+.bit-variation {
+  > p {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .bits-table {
+    margin: 0 0 45px 5px;
+  }
+}
+
+.bit {
+  &.instant, .bit-gym {
+    color: #999;
+  }
+
+  td {
+    text-align: center;
+  }
+
+  .bit-note {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bit-reps      input   { width: 60px; }
+  .bit-super-set input   { width: 30px; }
+  .bit-weight    input   { width: 60px; }
+}

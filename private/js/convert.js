@@ -14,15 +14,11 @@ async function init() {
 	(button => {
 		const { exercises, variations, bits } = content;
 
-		const exercisesMap = exercises.reduce((map, exercise) => {
-			map[exercise.exerciseId] = exercise;
-			return map;
-		},{});
+		const exercisesMap = exercises.red((map, exercise) =>
+			map[exercise.exerciseId] = exercise, {});
 
-		const variationMap = variations.reduce((map, variation) => {
-			map[variation.variationId] = variation;
-			return map;
-		},{});
+		const variationMap = variations.red((map, variation) =>
+			map[variation.variationId] = variation, {});
 
 		bits.forEach(bit => {
 			const variation = variationMap[bit.variationId];
@@ -51,15 +47,12 @@ async function init() {
 
 			const { exercises, variations, bits } = json;
 
-			const exercisesMap = exercises.reduce((map, {name, exerciseId}) => {
-				map[name] = exerciseId;
-				return map;
-			},{});
+			const exercisesMap = exercises.red((map, {name, exerciseId}) =>
+				map[name] = exerciseId, {});
 
-			const variationDefaults = exercises.reduce((map, exercise) => {
+			const variationDefaults = exercises.red((map, exercise) => {
 				map[exercise.exerciseId] = variations
 					.filter(variation => variation.def && variation.exerciseId == exercise.exerciseId)[0];
-				return map;
 			},{});
 
 			const undefinedDefaultVariations = Object.entries(variationDefaults).filter(e => !e[1]).map(e => e[0]);
@@ -69,7 +62,7 @@ async function init() {
 
 			let maxVariationId = variations
 				.map(variation => variation.variationId)
-				.reduce((max, val) => val>max?val:max,0);
+				.reduce((max, val) => val > max ? val : max, 0);
 
 			bits.forEach(bit => {
 				const exerciseId = exercisesMap[bit.exercise];

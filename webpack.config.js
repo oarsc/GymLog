@@ -27,11 +27,11 @@ const jsFilesConfiguration = [
 const tsFilesConfiguration = [
   ...fs.readdirSync('private/js', { withFileTypes:true })
     .filter(element => element.isFile())
-    .filter(file => file.name.endsWith('.ts'))
-    .map(file => file.name.replace(/\.ts$/, ''))
+    .filter(file => file.name.endsWith('.ts') || file.name.endsWith('.tsx'))
+    .map(file => file.name)
     .map(file => ({
-      in: `./private/js/${file}.ts`,
-      out: `${file}.min.js`
+      in: `./private/js/${file}`,
+      out: `${file.replace(/\.tsx?$/, '')}.min.js`
     }))
 ];
 
@@ -74,7 +74,7 @@ module.exports = jsFilesConfiguration.map(entry => ({
             {
               loader: 'babel-loader',
               options: {
-                presets: ['@babel/preset-env']
+                presets: ['@babel/preset-env', '@babel/react']
               }
             },
             {
@@ -82,8 +82,13 @@ module.exports = jsFilesConfiguration.map(entry => ({
               options: {
                 configFile: 'tsconfig.webpack.json'
               }
-            },
+            }
           ]
+        },
+        {
+          test: /\.scss$/,
+          exclude: /node_modules/,
+          use: [ 'style-loader', 'css-loader', 'sass-loader' ]
         }
       ],
     },

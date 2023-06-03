@@ -85,7 +85,7 @@ const outputJson = JSON.parse(fs.readFileSync('../bak/output.json', 'utf-8')) as
   const defaultVariation = variations.find(variation => variation.def)!;
 
   const initialMaxVariationId = outputJson.variations
-  .reduce((max, variation) => variation.variationId > max? variation.variationId : max, 0);
+    .reduce((max, variation) => variation.variationId > max ? variation.variationId : max, 0);
   let maxVariationId = initialMaxVariationId;
 
   const newVariationsMap = newVariations.reduce((map, newVar) => {

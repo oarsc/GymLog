@@ -1,0 +1,140 @@
+#!node
+
+const INPUT_FILE = '../bak/output.json';
+
+const fs = require('fs');
+const readline = require('readline').createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+fs.readFile(INPUT_FILE, 'UTF-8', async (err, data) => {
+	const json = JSON.parse(data);
+
+	const absVariations = json.primaries
+		.filter(rel => rel.muscleId === 13)
+		.map(rel => rel.exerciseId)
+		.flatMap(exId => json.variations.filter(va => va.exerciseId === exId))
+		.map(va => {
+			const newVa = { ...va }
+			if (va.def) {
+				const exercise = json.exercises.find(ex => ex.exerciseId === va.exerciseId);
+				newVa.name = exercise.name
+			}
+			return newVa;
+		});
+
+	const absVariationIds = absVariations.map(va => va.variationId);
+
+	const bits = json.bits
+		.filter(bit => absVariationIds.indexOf(bit.variationId) >= 0)
+		.filter(bit => !bit.superSet)
+		.map(bit => {
+			bit.timestamp = new Date(bit.timestamp)
+
+			const variation = absVariations.find(va => va.variationId === bit.variationId);
+			bit.name = variation.name;
+			return bit;
+		});
+
+	const bitsByTrainigs = bits
+		.map(bit => bit.trainingId)
+		.filter((value, index, array) => array.indexOf(value) === index)
+		.map(trainingId => ({
+			trainingId,
+			bits: bits.filter(bit => bit.trainingId === trainingId)
+		}))
+		.filter(bundle =>
+			bundle.bits
+				.map(bit => bit.variationId)
+				.filter((value, index, array) => array.indexOf(value) === index)
+				.length > 1
+		)
+		.filter(bundle => {
+
+			const toRemove = bundle.bits
+				.map(bit => bit.variationId)
+				.filter((value, index, array) => array.indexOf(value) === index)
+				.filter(variationId => {
+					const allVariationIndexes = bundle.bits
+						.map((bit, idx) => bit.variationId === variationId? idx : -1)
+						.filter(idx => idx >= 0);
+
+					return allVariationIndexes
+						.every((idx, arrayIdx, arr) => (idx - arr[0]) === arrayIdx)
+				});
+
+			bundle.bits = bundle.bits
+				.filter(bit => toRemove.indexOf(bit.variationId) < 0);
+
+			return bundle.bits.length > 0;
+		})
+
+
+		function askUser() {
+			return new Promise(resolve => {
+				readline.question('Accept? y/n ', response => {
+					resolve(response)
+				})
+			})
+		}
+
+		function sortObjectKeys(object) {
+			const objectKeys = Object.keys(object);
+	
+			return objectKeys
+				.sort()
+				.reduce((obj, key) => {
+					obj[key] = object[key]
+					return obj;
+				}, {});
+		}
+
+
+		const total = bitsByTrainigs.length;
+		var idx = 0;
+		for (bundle of bitsByTrainigs) {
+			console.log(`${idx++}/${total}`, bundle.trainingId);
+			bundle.bits.forEach(bit => {
+				console.log('\t', bit.timestamp, bit.name)
+			})
+		
+			const response = await askUser();
+
+			if (response === 'q') {
+				break;
+			}
+			if (response === 'n') {
+				continue;
+			}
+			if (response === 'y') {
+				const currentSuperSet = 1 + json.bits
+					.filter(bit => bit.trainingId === bundle.trainingId)
+					.map(bit => bit.superSet)
+					.filter(Boolean)
+					.reduce((superSet, max) => superSet > max? superSet : max, 0);
+
+				bundle.bits
+					.forEach(bit => bit.superSet = currentSuperSet);
+			}
+		}
+		readline.close();
+
+
+		json.bits
+			.filter(bit => typeof bit.timestamp.getMonth === 'function')
+			.forEach(bit => {
+				delete bit.name;
+				bit.timestamp = bit.timestamp.getTime();
+			});
+
+		json.bits = json.bits.map(sortObjectKeys);
+
+		fs.writeFile(INPUT_FILE, JSON.stringify(json, null, 1), err => {
+			if (err) console.log(err);
+		});
+});
+
+
+
+
