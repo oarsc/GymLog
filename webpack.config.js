@@ -1,36 +1,39 @@
 const path = require('path');
 const fs = require('fs');
 
-const filesConfiguration = [
-// POLYFILLS
-{
-  in: [
-    'core-js',
-    './private/js/custom-front-js-mods/dom-modifications.js',
-    'regenerator-runtime/runtime',
-  ],
-  out: "polyfill.min.js"
-},
+const jsFilesConfiguration = [
+  // POLYFILLS
+  {
+    in: [
+      'core-js',
+      './private/js/_dom/dom-modifications.js',
+      'regenerator-runtime/runtime',
+    ],
+    out: "polyfill.min.js"
+  },
 
-...fs.readdirSync('private/js', { withFileTypes:true })
-  .filter(element => element.isFile())
-  .map(file => file.name.replace(/\.js$/, ''))
-  .map(file => ({
-    in: `./private/js/${file}.js`,
-    out: `${file}.min.js`
+  ...fs.readdirSync('private/js', { withFileTypes:true })
+    .filter(element => element.isFile())
+    .filter(file => file.name.endsWith('.js'))
+    .map(file => file.name.replace(/\.js$/, ''))
+    .map(file => ({
+      in: `./private/js/${file}.js`,
+      out: `${file}.min.js`
   }))
+
 ];
+
 
 const tsFilesConfiguration = [
   ...fs.readdirSync('private/js', { withFileTypes:true })
     .filter(element => element.isFile())
+    .filter(file => file.name.endsWith('.ts'))
     .map(file => file.name.replace(/\.ts$/, ''))
     .map(file => ({
       in: `./private/js/${file}.ts`,
       out: `${file}.min.js`
     }))
 ];
-
 
 module.exports = jsFilesConfiguration.map(entry => ({
   entry: entry.in,

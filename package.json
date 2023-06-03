@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "prod": "NODE_ENV=production node ./bin/www",
+    "start": "tsc -p tsconfig.server.json && node ./dist/bin/www.js",
+    "prod": "NODE_ENV=production node ./dist/bin/www.js",
     "build": "webpack --mode production",
     "build:back": "tsc -p tsconfig.server.json",
     "dev": "webpack --mode development -w",
@@ -20,21 +20,21 @@
     "pug": "^3.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.12",
-    "@babel/preset-env": "^7.20.2",
+    "@babel/core": "^7.22.1",
+    "@babel/preset-env": "^7.22.4",
     "@types/cookie-parser": "^1.4.3",
-    "@types/debug": "^4.1.7",
-    "@types/express": "^4.17.16",
+    "@types/debug": "^4.1.8",
+    "@types/express": "^4.17.17",
     "@types/http-errors": "^2.0.1",
     "@types/less-middleware": "^2.0.33",
     "@types/morgan": "^1.9.4",
-    "@types/node": "^18.11.18",
+    "@types/node": "^20.2.5",
     "babel-loader": "^9.1.2",
-    "core-js": "^3.27.2",
-    "ts-loader": "^9.4.2",
+    "core-js": "^3.30.2",
+    "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.4",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1"
+    "typescript": "^5.1.3",
+    "webpack": "^5.85.0",
+    "webpack-cli": "^5.1.1"
   }
 }

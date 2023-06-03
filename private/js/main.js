@@ -1,4 +1,4 @@
-import { ajax, getElementById, createElement } from './custom-front-js-mods/dom-utils';
+import { ajax, getElementById, createElement } from './_dom/dom-utils';
 import { processCommand } from './src/commands';
 
 const MAX_RESULTS = 500;

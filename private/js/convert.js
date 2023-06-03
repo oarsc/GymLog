@@ -1,4 +1,4 @@
-import { ajax, getElementById, querySelectorAll } from './custom-front-js-mods/dom-utils';
+import { ajax, getElementById, querySelectorAll } from './_dom/dom-utils';
 
 async function init() {
 	const content = await ajax('./read').then(res => res.json());
