@@ -220,7 +220,7 @@ class EditWeightFormDialogFragment(
     }
 
     private fun updateStep() {
-        modifier.setStep(initialValue.step!!)
+        modifier.setStep(initialValue.step!!.divide(Constants.TWO))
         step.bigDecimal = initialValue.step!!
     }
 
