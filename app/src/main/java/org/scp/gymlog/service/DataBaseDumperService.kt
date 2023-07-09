@@ -74,7 +74,8 @@ class DataBaseDumperService {
         try {
             bits.map(JSONArray::getJSONObject).forEach { bit ->
                 if (bit.getBoolean("kilos")) bit.remove("kilos")
-                if (bit.getString("note").isEmpty()) bit.remove("note")
+                if (bit.getString("note").trim().isEmpty()) bit.remove("note")
+                if (!bit.getBoolean("instant")) bit.remove("instant")
             }
         } catch (e: JSONException) {
             throw LoadException("", e)
@@ -264,6 +265,7 @@ class DataBaseDumperService {
 
             if (!bit.has("kilos")) bit.put("kilos", true)
             if (!bit.has("note")) bit.put("note", "")
+            if (!bit.has("instant")) bit.put("instant", false)
         }
         return convertToObject(list, BitEntity::class)
     }
