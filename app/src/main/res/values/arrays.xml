@@ -9,4 +9,15 @@
         <item>alphabetically</item>
         <item>last_used</item>
     </string-array>
+
+    <!-- Training bits sorting Preference -->
+    <string-array name="training_bit_sort_entries">
+        <item>@string/training_bits_chronologically</item>
+        <item>@string/training_bits_group_exercises</item>
+    </string-array>
+
+    <string-array name="training_bit_sort_values">
+        <item>chronologically</item>
+        <item>group_exercises</item>
+    </string-array>
 </resources>

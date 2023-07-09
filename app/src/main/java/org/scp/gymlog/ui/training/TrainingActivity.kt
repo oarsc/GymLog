@@ -14,6 +14,8 @@ import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Muscle
+import org.scp.gymlog.model.Order
+import org.scp.gymlog.model.TrainingOrder
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.main.history.HistoryFragment.Companion.getTrainingData
@@ -40,15 +42,26 @@ class TrainingActivity : DBAppCompatActivity() {
         val bits = db.bitDao().getHistoryByTrainingId(trainingId)
         trainingData = getTrainingData(training, bits)
 
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val order = TrainingOrder.getByCode(
+            preferences.getString("trainingBitsSort", TrainingOrder.CHRONOLOGICALLY.code)!!)
+
         for (bit in bits) {
             val variation = Data.getVariation(bit.variationId)
             val exercise = variation.exercise
 
-            val exerciseRow = exerciseRows
-                .filter { it.exercise === exercise }
-                .getOrElse(0) {
-                    ExerciseRows(exercise)
-                        .also { exerciseRows.add(it) }
+            val exerciseRow =
+                if (order == TrainingOrder.CHRONOLOGICALLY) {
+                    exerciseRows.lastOrNull()
+                        ?.let { if (it.exercise === exercise) it else null }
+                        ?: ExerciseRows(exercise).also { exerciseRows.add(it) }
+
+                } else {
+                    exerciseRows
+                        .filter { it.exercise === exercise }
+                        .getOrElse(0) {
+                            ExerciseRows(exercise).also { exerciseRows.add(it) }
+                        }
                 }
 
             val lastVariationId = getLastVar(exerciseRow)
@@ -79,19 +92,15 @@ class TrainingActivity : DBAppCompatActivity() {
         setHeaderInfo()
 
         val focusBit = intent.extras!!.getInt("focusBit", -1)
-        val focusElement: Int = if (focusBit >= 0) {
-            var index = 0
-            for (exerciseRow in exerciseRows) {
-                if (exerciseRow.filterIsInstance<TrainingBitRow>()
-                        .map { row -> row.bit.id }
-                        .any { id -> id == focusBit })
-                    break
-                else
-                    index++
-            }
-            if (index < exerciseRows.size) index
-            else -1
-        } else -1
+        val focusElement = if (focusBit < 0) -1 else {
+            exerciseRows.withIndex()
+                .firstOrNull {
+                    it.value
+                        .filterIsInstance<TrainingBitRow>()
+                        .any { row -> row.bit.id == focusBit }
+                }
+                ?.index ?: -1
+        }
 
         val historyRecyclerView: RecyclerView = findViewById(R.id.historyList)
         historyRecyclerView.layoutManager = LinearLayoutManager(this).also { linearLayout = it }

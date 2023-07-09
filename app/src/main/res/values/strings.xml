@@ -184,4 +184,8 @@
     <string name="exercise_sorting_last_used">Sort by last used</string>
     <string name="exercise_sorting_alphabetically">Sort alphabetically</string>
 
+    <string name="training_bits_sorting_title">Training sorting</string>
+    <string name="training_bits_chronologically">Sort chronologically</string>
+    <string name="training_bits_group_exercises">Group exercises</string>
+
 </resources>
