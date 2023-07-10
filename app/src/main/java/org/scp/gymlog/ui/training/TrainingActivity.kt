@@ -51,22 +51,33 @@ class TrainingActivity : DBAppCompatActivity() {
             val exercise = variation.exercise
 
             val exerciseRow =
-                if (order == TrainingOrder.CHRONOLOGICALLY) {
+                if (bit.superSet > 0) {
+                    exerciseRows
+                        .firstOrNull { it.superSet == bit.superSet }
+                        ?.also { it.addVariation(variation) }
+                        ?: ExerciseRows(variation, bit.superSet).also { exerciseRows.add(it) }
+
+                } else if (order == TrainingOrder.CHRONOLOGICALLY) {
                     exerciseRows.lastOrNull()
-                        ?.let { if (it.exercise === exercise) it else null }
-                        ?: ExerciseRows(exercise).also { exerciseRows.add(it) }
+                        ?.let { if (it.superSet == null && it.exercise === exercise) it else null }
+                        ?: ExerciseRows(variation).also { exerciseRows.add(it) }
 
                 } else {
                     exerciseRows
-                        .filter { it.exercise === exercise }
+                        .filter { it.superSet == null && it.exercise === exercise }
                         .getOrElse(0) {
-                            ExerciseRows(exercise).also { exerciseRows.add(it) }
+                            ExerciseRows(variation).also { exerciseRows.add(it) }
                         }
                 }
 
             val lastVariationId = getLastVar(exerciseRow)
+            val isSuperSet = exerciseRow.superSet != null
 
-            if (variation.id != lastVariationId) {
+            if (isSuperSet) {
+                if (exerciseRow.isEmpty()) {
+                    exerciseRow.add(TrainingHeaderRow(true))
+                }
+            } else if (variation.id != lastVariationId) {
                 if (!variation.default) {
                     exerciseRow.add(TrainingVariationRow(variation))
                     exerciseRow.add(TrainingHeaderRow())

@@ -47,6 +47,7 @@ class BitEntity {
     var instant = false
     var note: String = ""
     var timestamp: LocalDateTime = Constants.DATE_ZERO
+    var superSet = 0
 
     class WithBar {
         @Embedded

@@ -38,7 +38,7 @@ class TrainingFloatingActionButton : FloatingActionButton {
 
         setOnClickListener {
             val trainingId = Data.trainingId
-            if (trainingId >= 0) {
+            if (trainingId != null) {
                 val dialog = TextDialogFragment(
                         R.string.dialog_confirm_training_title,
                         R.string.dialog_confirm_training_text
@@ -65,7 +65,8 @@ class TrainingFloatingActionButton : FloatingActionButton {
                                 } else {
                                     trainingDao.delete(training)
                                 }
-                                Data.trainingId = -1
+                                Data.trainingId = null
+                                Data.superSet = null
                                 updateFloatingActionButton()
                             }
                         }
@@ -86,15 +87,15 @@ class TrainingFloatingActionButton : FloatingActionButton {
 
     fun updateFloatingActionButton() {
         val context = context
-        backgroundTintList = if (Data.trainingId >= 0) {
-            setImageResource(R.drawable.ic_stop_24dp)
-            ColorStateList.valueOf(
-                resources.getColor(R.color.red, context.theme)
-            )
-        } else {
+        backgroundTintList = if (Data.trainingId == null) {
             setImageResource(R.drawable.ic_play_24dp)
             ColorStateList.valueOf(
                 resources.getColor(R.color.green, context.theme)
+            )
+        } else {
+            setImageResource(R.drawable.ic_stop_24dp)
+            ColorStateList.valueOf(
+                resources.getColor(R.color.red, context.theme)
             )
         }
     }

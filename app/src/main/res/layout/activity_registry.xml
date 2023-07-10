@@ -170,14 +170,14 @@
     <EditText
         android:id="@+id/editNotes"
         android:inputType="text"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
+        android:ems="7"
         android:layout_marginBottom="@dimen/text_margin"
-        android:layout_marginEnd="6dp"
         android:focusable="false"
         app:layout_constraintBottom_toTopOf="@id/editWeight"
-        app:layout_constraintLeft_toLeftOf="@id/editWeight"
-        app:layout_constraintRight_toLeftOf="@id/clearNote"/>
+        app:layout_constraintLeft_toRightOf="@id/labelNotes"
+        app:layout_constraintRight_toLeftOf="@id/clearNote" />
 
     <ImageView
         android:id="@+id/clearNote"
@@ -198,6 +198,19 @@
         android:layout_height="44dp"
         android:padding="10dp"
         android:src="@drawable/ic_unlock_24dp"
+        app:layout_constraintTop_toTopOf="@id/superSet"
+        app:layout_constraintRight_toLeftOf="@id/superSet"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
+        app:tint="@color/themedIcon" />
+
+    <ImageView
+        android:id="@+id/superSet"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_super_set_24dp"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         app:layout_constraintTop_toTopOf="@id/editNotes"
         app:layout_constraintBottom_toBottomOf="@id/editNotes"
@@ -217,17 +230,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:text="@string/text_weight" />
 
-    <ImageView
-        android:id="@+id/weightSpecIcon"
-        android:layout_width="36dp"
-        android:layout_height="24dp"
-        android:src="@drawable/ic_bar_with_plates_36x24dp"
-        app:layout_constraintBottom_toBottomOf="@id/weightModifier"
-        app:layout_constraintTop_toTopOf="@id/weightModifier"
-        app:layout_constraintRight_toLeftOf="@id/editWeight"
-        app:layout_constraintLeft_toRightOf="@id/labelWeight"
-        app:tint="@color/themedIcon" />
-
     <EditText
         android:id="@+id/editWeight"
         android:layout_width="wrap_content"
@@ -237,8 +239,7 @@
         android:paddingEnd="30dp"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toBottomOf="@id/weightModifier"
-        app:layout_constraintRight_toLeftOf="@id/weightModifier"
-        app:layout_constraintLeft_toRightOf="@id/labelReps"
+        app:layout_constraintLeft_toLeftOf="@id/editReps"
         android:focusable="false"
         tools:ignore="RtlSymmetry" />
 
@@ -254,15 +255,15 @@
 
 
     <ImageView
-        android:id="@+id/warning"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/list_text_margin"
-        android:src="@drawable/ic_warning_24dp"
+        android:id="@+id/weightSpecIcon"
+        android:layout_width="36dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_bar_with_plates_36x24dp"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
         app:layout_constraintBottom_toBottomOf="@id/weightModifier"
-        app:layout_constraintTop_toTopOf="@id/weightModifier"
         app:layout_constraintLeft_toRightOf="@id/editWeight"
-        app:tint="@color/orange_light" />
+        app:layout_constraintTop_toTopOf="@id/weightModifier"
+        app:tint="@color/themedIcon" />
 
     <org.scp.gymlog.ui.common.components.NumberModifierView
         android:id="@+id/weightModifier"
@@ -292,8 +293,7 @@
         android:textAlignment="viewEnd"
         android:paddingEnd="30dp"
         app:layout_constraintBottom_toBottomOf="@id/repsModifier"
-        app:layout_constraintRight_toLeftOf="@id/repsModifier"
-        app:layout_constraintLeft_toRightOf="@id/labelReps"
+        app:layout_constraintLeft_toLeftOf="@id/editNotes"
         android:focusable="false"
         tools:ignore="RtlSymmetry" />
 

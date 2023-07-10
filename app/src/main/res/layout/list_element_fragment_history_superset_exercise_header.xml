@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="7dp"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingVertical="@dimen/list_text_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground" >
+
+        <View
+            android:id="@+id/indicator"
+            android:layout_width="3dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="6dp"
+            android:layout_marginEnd="6dp"
+            android:background="#8B8B8B" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/superSetTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_superset"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/hash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/symbol_hash"
+                android:layout_marginStart="6dp"
+                app:layout_constraintLeft_toRightOf="@+id/superSetTitle"
+                app:layout_constraintTop_toTopOf="@id/superSetTitle"/>
+
+            <TextView
+                android:id="@+id/superSetNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/hash"
+                app:layout_constraintTop_toTopOf="@id/hash"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/exerciseList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context=".ui.training.TrainingActivity"
+                app:layout_constraintTop_toBottomOf="@id/superSetTitle"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:listitem="@layout/list_element_fragment_history_exercise_row"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bitList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".ui.training.TrainingActivity"
+        tools:listitem="@layout/list_element_fragment_history_bit"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+</LinearLayout>

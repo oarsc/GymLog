@@ -23,7 +23,7 @@ import java.util.function.BiConsumer
 
 class LogRecyclerViewAdapter(
     private val log: List<Bit>,
-    private val currentTrainingId: Int,
+    private val currentTrainingId: Int?,
     private val internationalSystem: Boolean
 ) : RecyclerView.Adapter<LogRecyclerViewAdapter.ViewHolder>() {
 

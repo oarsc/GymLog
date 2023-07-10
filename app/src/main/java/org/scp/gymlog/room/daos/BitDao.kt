@@ -45,6 +45,9 @@ interface BitDao {
     @Query("SELECT timestamp FROM bit WHERE trainingId = :trainingId ORDER BY timestamp ASC LIMIT 1")
     fun getFirstTimestampByTrainingId(trainingId: Int): LocalDateTime?
 
+    @Query("SELECT MAX(superSet) FROM bit WHERE trainingId = :trainingId")
+    fun getMaxSuperSet(trainingId: Int): Int?
+
     // NOTES
     @Query("SELECT DISTINCT note FROM bit WHERE " +
             "variationId = :variationId AND note <> '' ORDER BY timestamp DESC LIMIT :limit")

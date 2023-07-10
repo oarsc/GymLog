@@ -51,6 +51,7 @@
     <string name="text_set">Set</string>
     <string name="text_started_at">Started at</string>
     <string name="text_subtitle">Subtitle</string>
+    <string name="text_superset">Superset</string>
     <string name="text_test">-TEST-</string>
     <string name="text_time">Time</string>
     <string name="text_title">Title</string>
@@ -94,6 +95,7 @@
     <string name="symbol_3_middle_points">···</string>
     <string name="symbol_bar">/</string>
     <string name="symbol_empty"/>
+    <string name="symbol_hash">&#35;</string>
     <string name="symbol_is_space">:&#160;</string>
     <string name="symbol_hyphen">-</string>
     <string name="symbol_s">s</string>

@@ -76,6 +76,7 @@ class DataBaseDumperService {
                 if (bit.getBoolean("kilos")) bit.remove("kilos")
                 if (bit.getString("note").trim().isEmpty()) bit.remove("note")
                 if (!bit.getBoolean("instant")) bit.remove("instant")
+                if (bit.getInt("superSet") <= 0) bit.remove("superSet")
             }
         } catch (e: JSONException) {
             throw LoadException("", e)
@@ -266,6 +267,7 @@ class DataBaseDumperService {
             if (!bit.has("kilos")) bit.put("kilos", true)
             if (!bit.has("note")) bit.put("note", "")
             if (!bit.has("instant")) bit.put("instant", false)
+            if (!bit.has("superSet")) bit.put("superSet", 0)
         }
         return convertToObject(list, BitEntity::class)
     }

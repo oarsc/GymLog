@@ -1,6 +1,8 @@
 package org.scp.gymlog.ui.training
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -27,9 +29,11 @@ class TrainingRecyclerViewAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (rows[position].type) {
-            ITrainingRow.Type.BIT -> R.layout.list_element_fragment_history_bit
+            ITrainingRow.Type.HEADER,
+            ITrainingRow.Type.HEADER_SUPERSET -> R.layout.list_element_fragment_history_headers
+            ITrainingRow.Type.BIT,
+            ITrainingRow.Type.BIT_SUPERSET -> R.layout.list_element_fragment_history_bit
             ITrainingRow.Type.VARIATION -> R.layout.list_element_fragment_history_variation
-            else -> R.layout.list_element_fragment_history_headers
         }
     }
 
@@ -53,17 +57,21 @@ class TrainingRecyclerViewAdapter(
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val row = rows[position]
 
         when (row.type) {
             ITrainingRow.Type.HEADER -> {
-
+                holder.mNumber!!.visibility = View.GONE
             }
+            ITrainingRow.Type.HEADER_SUPERSET -> { }
+
             ITrainingRow.Type.VARIATION -> {
                 val vRow = row as TrainingVariationRow
                 holder.mNote!!.text = vRow.variation.name
             }
+
             ITrainingRow.Type.BIT -> {
                 holder.bitRow = row as TrainingBitRow
                 val bit = holder.bitRow!!.bit
@@ -72,6 +80,7 @@ class TrainingRecyclerViewAdapter(
                     bit.variation.weightSpec,
                     bit.variation.bar)
 
+                holder.mNumber!!.visibility = View.GONE
                 holder.mWeight!!.bigDecimal = weight.getValue(internationalSystem)
                 holder.mReps!!.text = bit.reps.toString()
                 holder.mNote!!.text = bit.note
@@ -84,12 +93,39 @@ class TrainingRecyclerViewAdapter(
                     setAlpha(holder, 1f)
                 }
             }
+            ITrainingRow.Type.BIT_SUPERSET -> {
+                holder.bitRow = row as TrainingBitRow
+                val bit = holder.bitRow!!.bit
+
+                val weight = bit.weight.calculate(
+                    bit.variation.weightSpec,
+                    bit.variation.bar)
+
+                holder.mWeight!!.bigDecimal = weight.getValue(internationalSystem)
+                holder.mReps!!.text = bit.reps.toString()
+                holder.mNote!!.text = bit.note
+
+                val index = rows.variations.indexOf(bit.variation) + 1
+                holder.mNumber!!.text = index.toString()
+
+                if (bit.instant) {
+                    holder.mTime!!.setText(R.string.symbol_empty)
+                    setAlpha(holder, 0.4f)
+                } else {
+                    if (index == 1) {
+                        holder.mTime!!.text = bit.timestamp.getTimeString()
+                    } else {
+                        holder.mTime!!.setText(R.string.symbol_empty)
+                    }
+                    setAlpha(holder, 1f)
+                }
+            }
         }
     }
 
     private fun setAlpha(holder: ViewHolder, alpha: Float) {
-        listOf(holder.mWeight, holder.mReps, holder.mNote)
-            .forEach { view -> view?.alpha = alpha }
+        listOf(holder.mWeight, holder.mReps, holder.mNote, holder.mNumber)
+            .forEach { it?.alpha = alpha }
     }
 
     override fun getItemCount(): Int {
@@ -102,12 +138,14 @@ class TrainingRecyclerViewAdapter(
         val mReps: TextView?
         val mTime: TextView?
         val mNote: TextView?
+        val mNumber: TextView?
 
         constructor(binding: ListElementFragmentHistoryBitBinding) : super(binding.root) {
             mWeight = binding.weight
             mReps = binding.reps
             mTime = binding.time
             mNote = binding.note
+            mNumber = binding.number
 
             itemView.setOnClickListener {
                 onClickListener?.accept(bitRow!!.bit, rows.indexOf(bitRow!!))
@@ -119,6 +157,7 @@ class TrainingRecyclerViewAdapter(
             mReps = null
             mWeight = null
             mNote = binding.variationName
+            mNumber = null
         }
 
         constructor(binding: ListElementFragmentHistoryHeadersBinding) : super(binding.root) {
@@ -126,6 +165,7 @@ class TrainingRecyclerViewAdapter(
             mTime = null
             mReps = null
             mWeight = null
+            mNumber = binding.hashColumn
         }
 
         override fun toString(): String {

@@ -13,8 +13,9 @@ object Data {
 	val exercises =  mutableListOf<Exercise>()
 	val muscles = mutableListOf<Muscle>()
 	val bars = mutableListOf<Bar>()
-	var trainingId = -1
 	var currentGym = 0
+	var trainingId: Int? = null
+	var superSet: Int? = null
 
 	init {
 		var muscleId = 0

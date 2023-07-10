@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -47,6 +48,7 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.function.BiConsumer
 
+
 class RegistryActivity : DBAppCompatActivity() {
 
     companion object {
@@ -61,15 +63,14 @@ class RegistryActivity : DBAppCompatActivity() {
         .also { defaultTimeColor = it.textColors.defaultColor } }
     private val reps: EditText by lazy { findViewById(R.id.editReps) }
     private val notes: EditText by lazy { findViewById(R.id.editNotes) }
+    private val superSet: ImageView by lazy { findViewById(R.id.superSet) }
     private val weightModifier: NumberModifierView by lazy { findViewById(R.id.weightModifier) }
     private val weightSpecIcon: ImageView by lazy { findViewById(R.id.weightSpecIcon) }
-    private val warningIcon: ImageView by lazy { findViewById(R.id.warning) }
     private val confirmInstantButton: ImageView by lazy { findViewById(R.id.confirm) }
     private lateinit var recyclerViewLayout: LinearLayoutManager
     private lateinit var recyclerViewAdapter: LogRecyclerViewAdapter
     private var internationalSystem = false
     private val log: MutableList<Bit> = ArrayList()
-    private var trainingId = 0
     private var locked = false
     private var hiddenInstantSetButton = false
     private var sendRefreshList = false
@@ -78,10 +79,6 @@ class RegistryActivity : DBAppCompatActivity() {
     private var countdownThread: CountdownThread? = null
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
-        db.trainingDao().getCurrentTraining()?.also {
-            trainingId = it.trainingId
-        }
-
         val exerciseId = intent.extras!!.getInt("exerciseId")
         val variationId = intent.extras!!.getInt("variationId", 0)
 
@@ -155,7 +152,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
         // Logs:
         recyclerViewLayout = LinearLayoutManager(this)
-        recyclerViewAdapter = LogRecyclerViewAdapter(log, trainingId, internationalSystem)
+        recyclerViewAdapter = LogRecyclerViewAdapter(log, Data.trainingId, internationalSystem)
 
         recyclerViewAdapter.onClickElementListener = BiConsumer { view, bit -> onClickBit(view, bit) }
         recyclerViewAdapter.onLoadMoreListener = Runnable { loadMoreHistory() }
@@ -173,7 +170,7 @@ class RegistryActivity : DBAppCompatActivity() {
         findViewById<View>(R.id.confirmSet).setOnClickListener { saveBitLog(false) }
         confirmInstantButton.setOnClickListener { saveBitLog(true) }
 
-        hiddenInstantSetButton = log.map(Bit::trainingId).none { id -> id == trainingId }
+        hiddenInstantSetButton = log.none { it.trainingId == Data.trainingId }
 
         if (hiddenInstantSetButton) {
             confirmInstantButton.layoutParams.width = 0
@@ -200,6 +197,22 @@ class RegistryActivity : DBAppCompatActivity() {
                 lockView.setImageResource(R.drawable.ic_unlock_24dp)
         }
 
+        // Super set button
+        superSet.setOnClickListener {
+            activeTraining { trainingId ->
+                if (Data.superSet == null) {
+                    DBThread.run(this) { db ->
+                        Data.superSet = (db.bitDao().getMaxSuperSet(trainingId) ?: 0) +1
+                        runOnUiThread { updateSuperSetIcon() }
+                    }
+                } else {
+                    Data.superSet = null
+                    updateSuperSetIcon()
+                }
+            }
+        }
+        updateSuperSetIcon()
+
         // Weight and Reps Input fields:
         weight.filters = arrayOf(InputFilter { source: CharSequence, _, _, dest: Spanned, _, _ ->
             val input = (dest.toString() + source.toString()).safeBigDecimal()
@@ -221,13 +234,13 @@ class RegistryActivity : DBAppCompatActivity() {
 
         weightModifier.setStep(variation.step)
 
-        weightSpecIcon.setImageResource(variation.weightSpec.icon)
+        val warningColor = if ((variation.type === ExerciseType.BARBELL) == (variation.bar == null))
+                resources.getColor(R.color.orange_light, theme)
+            else
+                resources.getColor(R.color.themedIcon, theme)
 
-        if ((variation.type === ExerciseType.BARBELL) == (variation.bar == null)) {
-            warningIcon.visibility = View.VISIBLE
-        } else {
-            warningIcon.visibility = View.INVISIBLE
-        }
+        weightSpecIcon.setColorFilter(warningColor)
+        weightSpecIcon.setImageResource(variation.weightSpec.icon)
 
         precalculateWeight()
     }
@@ -322,11 +335,21 @@ class RegistryActivity : DBAppCompatActivity() {
 
     private fun updateForms() {
         weightModifier.setStep(variation.step)
+
+        val warningColor = if ((variation.type === ExerciseType.BARBELL) == (variation.bar == null))
+                resources.getColor(R.color.orange_light, theme)
+            else
+                resources.getColor(R.color.themedIcon, theme)
+
+        weightSpecIcon.setColorFilter(warningColor)
         weightSpecIcon.setImageResource(variation.weightSpec.icon)
-        if ((variation.type === ExerciseType.BARBELL) == (variation.bar == null)) {
-            warningIcon.visibility = View.VISIBLE
+    }
+
+    private fun updateSuperSetIcon() {
+        if (Data.superSet == null) {
+            superSet.setImageResource(R.drawable.ic_super_set_24dp)
         } else {
-            warningIcon.visibility = View.INVISIBLE
+            superSet.setImageResource(R.drawable.ic_super_set_on_24dp)
         }
     }
 
@@ -347,7 +370,7 @@ class RegistryActivity : DBAppCompatActivity() {
             var bit: Bit = log[0]
 
             for (b in log) {
-                if (b.trainingId == trainingId) {
+                if (b.trainingId == Data.trainingId) {
                     if (!b.instant) {
                         bit = b
                         currentSet++
@@ -403,64 +426,63 @@ class RegistryActivity : DBAppCompatActivity() {
     }
 
     private fun saveBitLog(instant: Boolean) {
-        if (trainingId <= 0) {
-            Snackbar.make(findViewById(android.R.id.content),
-                R.string.validation_training_not_started, Snackbar.LENGTH_LONG).show()
-            return
-        }
-        DBThread.run(this) { db ->
-            val bit = Bit(variation)
+        activeTraining { trainingId ->
 
-            val totalWeight = Weight(weight.bigDecimal, internationalSystem).calculateTotal(
-                variation.weightSpec,
-                variation.bar)
+            DBThread.run(this) { db ->
+                val bit = Bit(variation)
 
-            bit.weight = totalWeight
-            bit.note = notes.text.toString()
-            bit.reps = reps.integer
-            bit.trainingId = trainingId
-            bit.instant = instant
-            bit.gymId = Data.currentGym
+                val totalWeight = Weight(weight.bigDecimal, internationalSystem).calculateTotal(
+                    variation.weightSpec,
+                    variation.bar)
 
-            exercise.lastTrained = currentDateTime()
+                bit.weight = totalWeight
+                bit.note = notes.text.toString()
+                bit.reps = reps.integer
+                bit.trainingId = trainingId
+                bit.instant = instant
+                bit.gymId = Data.currentGym
+                bit.superSet = Data.superSet ?: 0
 
-            // SAVE TO DB:
-            bit.id = db.bitDao().insert(bit.toEntity()).toInt()
-            db.exerciseDao().update(exercise.toEntity())
-            prepareExerciseListToRefreshWhenFinish()
+                exercise.lastTrained = currentDateTime()
 
-            runOnUiThread {
-                var added = false
-                var idx = 0
-                for (logBit in log) {
-                    if (logBit.trainingId == trainingId) {
-                        idx++
-                    } else {
-                        log.add(idx, bit)
-                        recyclerViewAdapter.notifyItemInserted(idx)
-                        recyclerViewLayout.scrollToPosition(0)
-                        added = true
-                        break
+                // SAVE TO DB:
+                bit.id = db.bitDao().insert(bit.toEntity()).toInt()
+                db.exerciseDao().update(exercise.toEntity())
+                prepareExerciseListToRefreshWhenFinish()
+
+                runOnUiThread {
+                    var added = false
+                    var idx = 0
+                    for (logBit in log) {
+                        if (logBit.trainingId == trainingId) {
+                            idx++
+                        } else {
+                            log.add(idx, bit)
+                            recyclerViewAdapter.notifyItemInserted(idx)
+                            recyclerViewLayout.scrollToPosition(0)
+                            added = true
+                            break
+                        }
                     }
-                }
 
-                if (!added) {
-                    log.add(bit)
-                    recyclerViewAdapter.notifyItemInserted(log.size - 1)
-                }
+                    if (!added) {
+                        log.add(bit)
+                        recyclerViewAdapter.notifyItemInserted(log.size - 1)
+                    }
 
-                if (!locked) {
-                    notes.setText(R.string.symbol_empty)
-                }
+                    if (!locked) {
+                        notes.setText(R.string.symbol_empty)
+                    }
 
-                if (hiddenInstantSetButton) {
-                    hiddenInstantSetButton = false
-                    val anim = ResizeWidthAnimation(confirmInstantButton, 90, 250)
-                    confirmInstantButton.startAnimation(anim)
+                    if (hiddenInstantSetButton) {
+                        hiddenInstantSetButton = false
+                        val anim = ResizeWidthAnimation(confirmInstantButton, 90, 250)
+                        confirmInstantButton.startAnimation(anim)
+                    }
+                    startTimer()
+                    if (!locked)
+                        precalculateWeight()
                 }
-                startTimer()
-                if (!locked)
-                    precalculateWeight()
             }
         }
     }
@@ -480,7 +502,7 @@ class RegistryActivity : DBAppCompatActivity() {
                 db.bitDao().update(updateBit.toEntity())
             }
 
-            if (log.map(Bit::trainingId).none { id -> id == trainingId }) {
+            if (log.none { it.trainingId == trainingId }) {
                 db.trainingDao().deleteEmptyTraining()
             }
 
@@ -511,6 +533,16 @@ class RegistryActivity : DBAppCompatActivity() {
                 else
                     recyclerViewAdapter.notifyTrainingIdChanged(bit.trainingId, index)
             }
+        }
+    }
+
+    private fun activeTraining(block: (trainingId: Int) -> Unit) {
+        val trainingId = Data.trainingId
+        if (trainingId == null) {
+            Snackbar.make(findViewById(android.R.id.content),
+                R.string.validation_training_not_started, Snackbar.LENGTH_LONG).show()
+        } else {
+            block(trainingId);
         }
     }
 

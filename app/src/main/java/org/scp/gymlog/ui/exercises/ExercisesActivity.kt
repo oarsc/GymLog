@@ -146,8 +146,7 @@ class ExercisesActivity : DBAppCompatActivity() {
                 val exerciseId = data.getIntExtra("exerciseId", -1)
                 val exercise = Data.getExercise(exerciseId)
                 val hasMuscle = exercise.primaryMuscles
-                    .map(Muscle::id)
-                    .any { it == muscleId }
+                    .any { it.id == muscleId }
 
                 if (hasMuscle) {
                     recyclerAdapter.updateNotify(exercise)
@@ -160,8 +159,7 @@ class ExercisesActivity : DBAppCompatActivity() {
                 val exerciseId = data.getIntExtra("exerciseId", -1)
                 val exercise = Data.getExercise(exerciseId)
                 val hasMuscle = exercise.primaryMuscles
-                    .map(Muscle::id)
-                    .any { id -> id == muscleId }
+                    .any { it.id == muscleId }
 
                 if (hasMuscle) {
                     exercisesId.add(exercise.id)

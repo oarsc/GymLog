@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListElementFragmentHistoryExerciseHeaderBinding
+import org.scp.gymlog.databinding.ListElementFragmentHistorySupersetExerciseHeaderBinding
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Muscle
@@ -32,7 +33,6 @@ class TrainingMainRecyclerViewAdapter(
 
     private val holders: MutableList<ViewHolder> = ArrayList()
     private val expandedElements: MutableSet<Int> = HashSet()
-    var onLongClickListener: Consumer<ExerciseRows>? = null
     var onBitChangedListener: Consumer<Bit>? = null
 
     init {
@@ -41,12 +41,27 @@ class TrainingMainRecyclerViewAdapter(
         }
     }
 
+    override fun getItemViewType(position: Int): Int {
+        val row = exerciseRows[position]
+        return if (row.superSet != null)
+                R.layout.list_element_fragment_history_superset_exercise_header
+            else
+                R.layout.list_element_fragment_history_exercise_header
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            ListElementFragmentHistoryExerciseHeaderBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false
+        return when(viewType) {
+            R.layout.list_element_fragment_history_superset_exercise_header -> ViewHolder(
+                ListElementFragmentHistorySupersetExerciseHeaderBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
             )
-        )
+            else -> ViewHolder(
+                ListElementFragmentHistoryExerciseHeaderBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+            )
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -54,26 +69,41 @@ class TrainingMainRecyclerViewAdapter(
         val context = holder.itemView.context
 
         holder.exerciseRow = exerciseRows[position]
+        val exerciseRow = holder.exerciseRow!!
 
-        val exerciseRow = holder.exerciseRow
-        val exercise = exerciseRow!!.exercise
-        holder.mTitle.text = exercise.name
-        holder.mSubtitle.text = exercise.primaryMuscles
-            .map(Muscle::text)
-            .map { id: Int -> context.resources.getString(id) }
-            .joinToString { it }
+        if (exerciseRow.superSet != null) {
+            holder.mTitle?.text = exerciseRow.superSet.toString()
 
-        holder.mIndicator.setCardBackgroundColor(
-            ResourcesCompat.getColor(context.resources, exercise.primaryMuscles[0].color, null))
+            val exercisesAdapter = TrainingVariationsRecyclerViewAdapter(exerciseRow)
+            holder.mExerciseList?.adapter = exercisesAdapter
+            holder.mExerciseList?.suppressLayout(true)
+            holder.mExerciseList?.layoutManager = object : LinearLayoutManager(context) {
+                override fun canScrollVertically(): Boolean {
+                    return false
+                }
+            }
 
-        val fileName = "previews/" + exercise.image + ".png"
-        try {
-            val ims = context.assets.open(fileName)
-            val d = Drawable.createFromStream(ims, null)
-            holder.mImage.setImageDrawable(d)
+        } else {
+            val exercise = exerciseRow.exercise
 
-        } catch (e: IOException) {
-            throw LoadException("Could not read \"$fileName\"", e)
+            holder.mTitle?.text = exercise.name
+            holder.mSubtitle?.text = exercise.primaryMuscles
+                .map(Muscle::text)
+                .map { id: Int -> context.resources.getString(id) }
+                .joinToString { it }
+
+            holder.mIndicator?.setCardBackgroundColor(
+                ResourcesCompat.getColor(context.resources, exercise.primaryMuscles[0].color, null))
+
+            val fileName = "previews/" + exercise.image + ".png"
+            try {
+                val ims = context.assets.open(fileName)
+                val d = Drawable.createFromStream(ims, null)
+                holder.mImage?.setImageDrawable(d)
+
+            } catch (e: IOException) {
+                throw LoadException("Could not read \"$fileName\"", e)
+            }
         }
 
         holder.mBitList.layoutManager = object : LinearLayoutManager(context) {
@@ -118,22 +148,39 @@ class TrainingMainRecyclerViewAdapter(
         return exerciseRows.size
     }
 
-    inner class ViewHolder(binding: ListElementFragmentHistoryExerciseHeaderBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+
+
+
+    inner class ViewHolder : RecyclerView.ViewHolder {
 
         var exerciseRow: ExerciseRows? = null
-        val mTitle: TextView = binding.title
-        val mSubtitle: TextView = binding.subtitle
-        val mIndicator: CardView = binding.indicator
-        val mImage: ImageView = binding.image
-        val mBitList: RecyclerView = binding.bitList
+        val mTitle: TextView?
+        val mSubtitle: TextView?
+        val mIndicator: CardView?
+        val mImage: ImageView?
+        val mBitList: RecyclerView
+        val mExerciseList: RecyclerView?
 
-        init {
+        constructor(binding: ListElementFragmentHistoryExerciseHeaderBinding) : super(binding.root) {
+            mTitle = binding.row.title
+            mSubtitle = binding.row.subtitle
+            mIndicator = binding.row.indicator
+            mImage = binding.row.image
+            mBitList = binding.bitList
+            mExerciseList = null
+
             binding.header.setOnClickListener { toggleBits() }
-            binding.header.setOnLongClickListener {
-                onLongClickListener?.accept(exerciseRow!!)
-                onLongClickListener != null
-            }
+        }
+
+        constructor(binding: ListElementFragmentHistorySupersetExerciseHeaderBinding) : super(binding.root) {
+            mTitle = binding.superSetNumber
+            mSubtitle = null
+            mIndicator = null
+            mImage = null
+            mBitList = binding.bitList
+            mExerciseList = binding.exerciseList
+
+            binding.header.setOnClickListener { toggleBits() }
         }
 
         private fun toggleBits() {
@@ -148,7 +195,7 @@ class TrainingMainRecyclerViewAdapter(
         }
 
         override fun toString(): String {
-            return super.toString() + " '" + mTitle.text + "'"
+            return super.toString() + " '" + mTitle?.text + "'"
         }
     }
 }
