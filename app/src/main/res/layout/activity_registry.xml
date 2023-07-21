@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            layout="@layout/list_element_fragment_exercise"/>
+            layout="@layout/listitem_exercise"/>
 
         <LinearLayout
             android:id="@+id/timerButton"
@@ -146,7 +146,7 @@
             android:id="@+id/log_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/list_element_fragment_log" />
+            tools:listitem="@layout/listitem_log" />
 
     </LinearLayout>
 

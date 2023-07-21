@@ -13,8 +13,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
-import org.scp.gymlog.databinding.ListElementFragmentHistoryExerciseHeaderBinding
-import org.scp.gymlog.databinding.ListElementFragmentHistorySupersetExerciseHeaderBinding
+import org.scp.gymlog.databinding.ListitemHistoryExerciseHeaderBinding
+import org.scp.gymlog.databinding.ListitemHistorySupersetExerciseHeaderBinding
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Muscle
@@ -44,20 +44,20 @@ class TrainingMainRecyclerViewAdapter(
     override fun getItemViewType(position: Int): Int {
         val row = exerciseRows[position]
         return if (row.superSet != null)
-                R.layout.list_element_fragment_history_superset_exercise_header
+                R.layout.listitem_history_superset_exercise_header
             else
-                R.layout.list_element_fragment_history_exercise_header
+                R.layout.listitem_history_exercise_header
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when(viewType) {
-            R.layout.list_element_fragment_history_superset_exercise_header -> ViewHolder(
-                ListElementFragmentHistorySupersetExerciseHeaderBinding.inflate(
+            R.layout.listitem_history_superset_exercise_header -> ViewHolder(
+                ListitemHistorySupersetExerciseHeaderBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
             else -> ViewHolder(
-                ListElementFragmentHistoryExerciseHeaderBinding.inflate(
+                ListitemHistoryExerciseHeaderBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
@@ -161,7 +161,7 @@ class TrainingMainRecyclerViewAdapter(
         val mBitList: RecyclerView
         val mExerciseList: RecyclerView?
 
-        constructor(binding: ListElementFragmentHistoryExerciseHeaderBinding) : super(binding.root) {
+        constructor(binding: ListitemHistoryExerciseHeaderBinding) : super(binding.root) {
             mTitle = binding.row.title
             mSubtitle = binding.row.subtitle
             mIndicator = binding.row.indicator
@@ -172,7 +172,7 @@ class TrainingMainRecyclerViewAdapter(
             binding.header.setOnClickListener { toggleBits() }
         }
 
-        constructor(binding: ListElementFragmentHistorySupersetExerciseHeaderBinding) : super(binding.root) {
+        constructor(binding: ListitemHistorySupersetExerciseHeaderBinding) : super(binding.root) {
             mTitle = binding.superSetNumber
             mSubtitle = null
             mIndicator = null

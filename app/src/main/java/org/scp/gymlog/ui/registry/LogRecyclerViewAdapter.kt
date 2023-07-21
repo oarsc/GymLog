@@ -7,17 +7,15 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
-import org.scp.gymlog.databinding.ListElementFragmentLogBinding
-import org.scp.gymlog.databinding.ListElementFragmentLogMoreButtonBinding
+import org.scp.gymlog.databinding.ListitemLogBinding
+import org.scp.gymlog.databinding.ListitemLogMoreButtonBinding
 import org.scp.gymlog.model.Bit
-import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.DateUtils.diffYearsAndDays
 import org.scp.gymlog.util.DateUtils.getLetterFrom
 import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
-import org.scp.gymlog.util.WeightUtils
 import org.scp.gymlog.util.WeightUtils.calculate
 import java.util.function.BiConsumer
 
@@ -41,20 +39,20 @@ class LogRecyclerViewAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return if (position == log.size)
-            R.layout.list_element_fragment_log_more_button
+            R.layout.listitem_log_more_button
         else
-            R.layout.list_element_fragment_log
+            R.layout.listitem_log
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when(viewType) {
-            R.layout.list_element_fragment_log_more_button -> ViewHolder(
-                ListElementFragmentLogMoreButtonBinding.inflate(
+            R.layout.listitem_log_more_button -> ViewHolder(
+                ListitemLogMoreButtonBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
             else -> ViewHolder(
-                ListElementFragmentLogBinding.inflate(
+                ListitemLogBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
@@ -161,7 +159,7 @@ class LogRecyclerViewAdapter(
         var set = 0
         var loadMoreBtn = false
 
-        constructor(binding: ListElementFragmentLogBinding) : super(binding.root) {
+        constructor(binding: ListitemLogBinding) : super(binding.root) {
             mDay = binding.day
             mSet = binding.set
             mWeight = binding.weight
@@ -171,7 +169,7 @@ class LogRecyclerViewAdapter(
             itemView.setOnClickListener { onClickElementListener?.accept(itemView, bit) }
         }
 
-        constructor(binding: ListElementFragmentLogMoreButtonBinding) : super(binding.root) {
+        constructor(binding: ListitemLogMoreButtonBinding) : super(binding.root) {
             loadMoreBtn = true
             itemView.setOnClickListener { onLoadMoreListener?.run() }
         }

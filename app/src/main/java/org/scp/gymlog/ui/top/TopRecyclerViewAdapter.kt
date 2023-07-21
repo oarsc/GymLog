@@ -6,12 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
-import org.scp.gymlog.databinding.ListElementFragmentTopBitBinding
-import org.scp.gymlog.databinding.ListElementFragmentTopHeadersBinding
-import org.scp.gymlog.databinding.ListElementFragmentTopSpaceBinding
-import org.scp.gymlog.databinding.ListElementFragmentTopVariationBinding
+import org.scp.gymlog.databinding.ListitemTopBitBinding
+import org.scp.gymlog.databinding.ListitemTopHeadersBinding
+import org.scp.gymlog.databinding.ListitemTopSpaceBinding
+import org.scp.gymlog.databinding.ListitemTopVariationBinding
 import org.scp.gymlog.model.Bit
-import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.ui.top.rows.ITopRow
 import org.scp.gymlog.ui.top.rows.TopBitRow
 import org.scp.gymlog.ui.top.rows.TopVariationRow
@@ -34,32 +33,32 @@ class TopRecyclerViewAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (rows[position].type) {
-            ITopRow.Type.BIT -> R.layout.list_element_fragment_top_bit
-            ITopRow.Type.VARIATION -> R.layout.list_element_fragment_top_variation
-            ITopRow.Type.HEADER -> R.layout.list_element_fragment_top_headers
-            else -> R.layout.list_element_fragment_top_space
+            ITopRow.Type.BIT -> R.layout.listitem_top_bit
+            ITopRow.Type.VARIATION -> R.layout.listitem_top_variation
+            ITopRow.Type.HEADER -> R.layout.listitem_top_headers
+            else -> R.layout.listitem_top_space
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when(viewType) {
-            R.layout.list_element_fragment_top_bit -> ViewHolder(
-                ListElementFragmentTopBitBinding.inflate(
+            R.layout.listitem_top_bit -> ViewHolder(
+                ListitemTopBitBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
-            R.layout.list_element_fragment_top_variation -> ViewHolder(
-                ListElementFragmentTopVariationBinding.inflate(
+            R.layout.listitem_top_variation -> ViewHolder(
+                ListitemTopVariationBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
-            R.layout.list_element_fragment_top_headers -> ViewHolder(
-                ListElementFragmentTopHeadersBinding.inflate(
+            R.layout.listitem_top_headers -> ViewHolder(
+                ListitemTopHeadersBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
             else -> ViewHolder(
-                ListElementFragmentTopSpaceBinding.inflate(
+                ListitemTopSpaceBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
@@ -111,7 +110,7 @@ class TopRecyclerViewAdapter(
         val mTime: TextView?
         val mNote: TextView?
 
-        constructor(binding: ListElementFragmentTopBitBinding) : super(binding.root) {
+        constructor(binding: ListitemTopBitBinding) : super(binding.root) {
             mWeight = binding.weight
             mReps = binding.reps
             mTime = binding.time
@@ -126,21 +125,21 @@ class TopRecyclerViewAdapter(
             }
         }
 
-        constructor(binding: ListElementFragmentTopVariationBinding) : super(binding.root) {
+        constructor(binding: ListitemTopVariationBinding) : super(binding.root) {
             mTime = null
             mReps = null
             mWeight = null
             mNote = binding.variationName
         }
 
-        constructor(binding: ListElementFragmentTopHeadersBinding) : super(binding.root) {
+        constructor(binding: ListitemTopHeadersBinding) : super(binding.root) {
             mNote = null
             mTime = null
             mReps = null
             mWeight = null
         }
 
-        constructor(binding: ListElementFragmentTopSpaceBinding) : super(binding.root) {
+        constructor(binding: ListitemTopSpaceBinding) : super(binding.root) {
             mNote = null
             mTime = null
             mReps = null

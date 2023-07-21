@@ -17,7 +17,7 @@
         android:background="?android:attr/selectableItemBackground" >
 
         <include android:id="@+id/row"
-            layout="@layout/list_element_fragment_history_exercise_row" />
+            layout="@layout/listitem_history_exercise_row" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".ui.training.TrainingActivity"
-        tools:listitem="@layout/list_element_fragment_history_bit"
+        tools:listitem="@layout/listitem_history_bit"
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
 </LinearLayout>

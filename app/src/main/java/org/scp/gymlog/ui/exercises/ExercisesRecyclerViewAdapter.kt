@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
-import org.scp.gymlog.databinding.ListElementFragmentExerciseBinding
-import org.scp.gymlog.databinding.ListElementFragmentVariationBinding
+import org.scp.gymlog.databinding.ListitemExerciseBinding
+import org.scp.gymlog.databinding.ListitemVariationBinding
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.model.Order
@@ -49,20 +49,20 @@ class ExercisesRecyclerViewAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return if (variations[orderedIndexes[position]].isChild)
-            R.layout.list_element_fragment_variation
+            R.layout.listitem_variation
         else
-            R.layout.list_element_fragment_exercise
+            R.layout.listitem_exercise
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when(viewType){
-            R.layout.list_element_fragment_exercise -> ViewHolder(
-                ListElementFragmentExerciseBinding.inflate(
+            R.layout.listitem_exercise -> ViewHolder(
+                ListitemExerciseBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
             else -> ViewHolder(
-                ListElementFragmentVariationBinding.inflate(
+                ListitemVariationBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
@@ -238,7 +238,7 @@ class ExercisesRecyclerViewAdapter(
         val mContentView: TextView
         val mTime: TextView?
 
-        constructor(binding: ListElementFragmentExerciseBinding) : super(binding.root) {
+        constructor(binding: ListitemExerciseBinding) : super(binding.root) {
             root = binding.root
             mImageView = binding.image
             mContentView = binding.content
@@ -265,7 +265,7 @@ class ExercisesRecyclerViewAdapter(
             }
         }
 
-        constructor(binding: ListElementFragmentVariationBinding) : super(binding.root) {
+        constructor(binding: ListitemVariationBinding) : super(binding.root) {
             root = binding.root
             mImageView = null
             mContentView = binding.content

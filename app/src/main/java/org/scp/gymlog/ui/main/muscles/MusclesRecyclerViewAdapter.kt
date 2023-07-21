@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import org.scp.gymlog.databinding.ListElementFragmentMuscleBinding
+import org.scp.gymlog.databinding.ListitemMuscleBinding
 import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.util.Data
 import java.util.function.Consumer
@@ -24,7 +24,7 @@ class MusclesRecyclerViewAdapter(
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 		return ViewHolder(
-			ListElementFragmentMuscleBinding.inflate(
+			ListitemMuscleBinding.inflate(
 				LayoutInflater.from(parent.context), parent, false
 			)
 		)
@@ -46,7 +46,7 @@ class MusclesRecyclerViewAdapter(
 		return muscles.size
 	}
 
-	inner class ViewHolder(binding: ListElementFragmentMuscleBinding) :
+	inner class ViewHolder(binding: ListitemMuscleBinding) :
 		RecyclerView.ViewHolder(binding.root) {
 
 		lateinit var muscle: Muscle

@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
-import org.scp.gymlog.databinding.ListElementFragmentDialogMenuBinding
+import org.scp.gymlog.databinding.ListitemDialogMenuBinding
 import java.util.function.BiConsumer
 
 class TextSelectRecyclerViewAdapter(
@@ -19,7 +19,7 @@ class TextSelectRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ListElementFragmentDialogMenuBinding.inflate(
+            ListitemDialogMenuBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
@@ -42,7 +42,7 @@ class TextSelectRecyclerViewAdapter(
         return texts.size
     }
 
-    inner class ViewHolder(binding: ListElementFragmentDialogMenuBinding) :
+    inner class ViewHolder(binding: ListitemDialogMenuBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val mContentView: TextView = binding.content
         val mImageView: ImageView = binding.image

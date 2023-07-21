@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/list_element_fragment_training" />
+    <include layout="@layout/listitem_training" />
 
     <View
         android:layout_width="match_parent"
@@ -21,6 +21,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.exercises.ExercisesActivity"
-        tools:listitem="@layout/list_element_fragment_history_exercise_header" />
+        tools:listitem="@layout/listitem_history_exercise_header" />
 
 </LinearLayout>

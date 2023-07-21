@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
-import org.scp.gymlog.databinding.ListElementFragmentHistoryBitBinding
-import org.scp.gymlog.databinding.ListElementFragmentHistoryHeadersBinding
-import org.scp.gymlog.databinding.ListElementFragmentHistoryVariationBinding
+import org.scp.gymlog.databinding.ListitemHistoryBitBinding
+import org.scp.gymlog.databinding.ListitemHistoryHeadersBinding
+import org.scp.gymlog.databinding.ListitemHistoryVariationBinding
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.ui.training.rows.ITrainingRow
 import org.scp.gymlog.ui.training.rows.TrainingBitRow
@@ -30,27 +30,27 @@ class TrainingRecyclerViewAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (rows[position].type) {
             ITrainingRow.Type.HEADER,
-            ITrainingRow.Type.HEADER_SUPERSET -> R.layout.list_element_fragment_history_headers
+            ITrainingRow.Type.HEADER_SUPERSET -> R.layout.listitem_history_headers
             ITrainingRow.Type.BIT,
-            ITrainingRow.Type.BIT_SUPERSET -> R.layout.list_element_fragment_history_bit
-            ITrainingRow.Type.VARIATION -> R.layout.list_element_fragment_history_variation
+            ITrainingRow.Type.BIT_SUPERSET -> R.layout.listitem_history_bit
+            ITrainingRow.Type.VARIATION -> R.layout.listitem_history_variation
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when(viewType) {
-            R.layout.list_element_fragment_history_bit -> ViewHolder(
-                ListElementFragmentHistoryBitBinding.inflate(
+            R.layout.listitem_history_bit -> ViewHolder(
+                ListitemHistoryBitBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
-            R.layout.list_element_fragment_history_variation -> ViewHolder(
-                ListElementFragmentHistoryVariationBinding.inflate(
+            R.layout.listitem_history_variation -> ViewHolder(
+                ListitemHistoryVariationBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
             else -> ViewHolder(
-                ListElementFragmentHistoryHeadersBinding.inflate(
+                ListitemHistoryHeadersBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
@@ -140,7 +140,7 @@ class TrainingRecyclerViewAdapter(
         val mNote: TextView?
         val mNumber: TextView?
 
-        constructor(binding: ListElementFragmentHistoryBitBinding) : super(binding.root) {
+        constructor(binding: ListitemHistoryBitBinding) : super(binding.root) {
             mWeight = binding.weight
             mReps = binding.reps
             mTime = binding.time
@@ -152,7 +152,7 @@ class TrainingRecyclerViewAdapter(
             }
         }
 
-        constructor(binding: ListElementFragmentHistoryVariationBinding) : super(binding.root) {
+        constructor(binding: ListitemHistoryVariationBinding) : super(binding.root) {
             mTime = null
             mReps = null
             mWeight = null
@@ -160,7 +160,7 @@ class TrainingRecyclerViewAdapter(
             mNumber = null
         }
 
-        constructor(binding: ListElementFragmentHistoryHeadersBinding) : super(binding.root) {
+        constructor(binding: ListitemHistoryHeadersBinding) : super(binding.root) {
             mNote = null
             mTime = null
             mReps = null

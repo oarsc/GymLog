@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import org.scp.gymlog.databinding.ListElementFragmentTextBinding
+import org.scp.gymlog.databinding.ListitemTextBinding
 import java.util.function.Consumer
 
 class EditNotesRecyclerViewAdapter(
@@ -14,7 +14,7 @@ class EditNotesRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ListElementFragmentTextBinding.inflate(
+            ListitemTextBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
@@ -29,7 +29,7 @@ class EditNotesRecyclerViewAdapter(
     }
 
     inner class ViewHolder(
-        binding: ListElementFragmentTextBinding
+        binding: ListitemTextBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         val mContentView: TextView = binding.content

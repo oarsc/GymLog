@@ -11,9 +11,8 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
-import org.scp.gymlog.databinding.ListElementFragmentHistoryExerciseRowBinding
+import org.scp.gymlog.databinding.ListitemHistoryExerciseRowBinding
 import org.scp.gymlog.exceptions.LoadException
-import org.scp.gymlog.model.Muscle
 import java.io.IOException
 
 class TrainingVariationsRecyclerViewAdapter(
@@ -22,7 +21,7 @@ class TrainingVariationsRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ListElementFragmentHistoryExerciseRowBinding.inflate(
+            ListitemHistoryExerciseRowBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
@@ -63,7 +62,7 @@ class TrainingVariationsRecyclerViewAdapter(
         return exerciseRow.variations.size
     }
 
-    inner class ViewHolder(binding: ListElementFragmentHistoryExerciseRowBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(binding: ListitemHistoryExerciseRowBinding) : RecyclerView.ViewHolder(binding.root) {
 
         val root: View = binding.root
         val mImageView: ImageView = binding.image

@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import org.scp.gymlog.databinding.ListElementFragmentMuscleBinding
+import org.scp.gymlog.databinding.ListitemMuscleBinding
 import org.scp.gymlog.ui.main.routines.placeholder.PlaceholderContent
 
 /**
@@ -20,7 +20,7 @@ class RoutineRecyclerViewAdapter : RecyclerView.Adapter<RoutineRecyclerViewAdapt
 	}
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 		return ViewHolder(
-			ListElementFragmentMuscleBinding.inflate(
+			ListitemMuscleBinding.inflate(
 				LayoutInflater.from(parent.context), parent, false
 			)
 		)
@@ -36,7 +36,7 @@ class RoutineRecyclerViewAdapter : RecyclerView.Adapter<RoutineRecyclerViewAdapt
 	}
 
 	inner class ViewHolder(
-		binding: ListElementFragmentMuscleBinding
+		binding: ListitemMuscleBinding
 	) : RecyclerView.ViewHolder(binding.root) {
 
 		val mContentView: TextView = binding.content

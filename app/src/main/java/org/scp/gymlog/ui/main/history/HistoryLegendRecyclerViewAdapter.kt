@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
-import org.scp.gymlog.databinding.ListElementFragmentLegendBinding
+import org.scp.gymlog.databinding.ListitemLegendBinding
 import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.util.Data
 
@@ -28,7 +28,7 @@ class HistoryLegendRecyclerViewAdapter :
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 		ctx = parent.context
 		return ViewHolder(
-			ListElementFragmentLegendBinding.inflate(
+			ListitemLegendBinding.inflate(
 				LayoutInflater.from(ctx), parent, false
 			)
 		)
@@ -83,7 +83,7 @@ class HistoryLegendRecyclerViewAdapter :
 		return size
 	}
 
-	inner class ViewHolder(binding: ListElementFragmentLegendBinding) :
+	inner class ViewHolder(binding: ListitemLegendBinding) :
 		RecyclerView.ViewHolder(binding.root) {
 
 		lateinit var muscle: Muscle

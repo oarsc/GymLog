@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
-import org.scp.gymlog.databinding.ListElementFragmentTrainingBinding
+import org.scp.gymlog.databinding.ListitemTrainingBinding
 import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.DateUtils.getTimeString
@@ -22,7 +22,7 @@ class HistoryRecyclerViewAdapter : RecyclerView.Adapter<HistoryRecyclerViewAdapt
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 		ctx = parent.context
 		return ViewHolder(
-			ListElementFragmentTrainingBinding.inflate(
+			ListitemTrainingBinding.inflate(
 				LayoutInflater.from(ctx), parent, false
 			)
 		)
@@ -76,7 +76,7 @@ class HistoryRecyclerViewAdapter : RecyclerView.Adapter<HistoryRecyclerViewAdapt
 		return trainingDataList.size
 	}
 
-	inner class ViewHolder(binding: ListElementFragmentTrainingBinding) :
+	inner class ViewHolder(binding: ListitemTrainingBinding) :
 		RecyclerView.ViewHolder(binding.root) {
 
 		var id = 0

@@ -51,7 +51,7 @@ class ImageSelectorActivity : CustomAppCompatActivity() {
         val drawable = Drawable.createFromStream(ims, null)
 
         val imageView =
-            layoutInflater.inflate(R.layout.list_element_fragment_image_selector, null) as ImageView
+            layoutInflater.inflate(R.layout.listitem_image_selector, null) as ImageView
         imageView.setImageDrawable(drawable)
         imageView.setOnClickListener {
             val returnIntent = Intent()

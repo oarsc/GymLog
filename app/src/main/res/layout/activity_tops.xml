@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/fragmentExercise"
-        layout="@layout/list_element_fragment_exercise" />
+        layout="@layout/listitem_exercise" />
 
     <View
         android:layout_width="match_parent"
@@ -23,6 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.top.TopActivity"
-        tools:listitem="@layout/list_element_fragment_top_variation" />
+        tools:listitem="@layout/listitem_top_variation" />
 
 </LinearLayout>

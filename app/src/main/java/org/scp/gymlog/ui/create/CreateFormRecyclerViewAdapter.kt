@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import org.scp.gymlog.databinding.ListElementFragmentFormBinding
+import org.scp.gymlog.databinding.ListitemDefaultRowBinding
 
 class CreateFormRecyclerViewAdapter(
 	private val formElements: List<CreateFormElement>
@@ -13,7 +13,7 @@ class CreateFormRecyclerViewAdapter(
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 		return ViewHolder(
-			ListElementFragmentFormBinding.inflate(
+			ListitemDefaultRowBinding.inflate(
 				LayoutInflater.from(parent.context), parent, false
 			)
 		)
@@ -32,7 +32,7 @@ class CreateFormRecyclerViewAdapter(
 		return formElements.size
 	}
 
-	inner class ViewHolder(binding: ListElementFragmentFormBinding) :
+	inner class ViewHolder(binding: ListitemDefaultRowBinding) :
 		RecyclerView.ViewHolder(binding.root) {
 
 		lateinit var formElement: CreateFormElement
