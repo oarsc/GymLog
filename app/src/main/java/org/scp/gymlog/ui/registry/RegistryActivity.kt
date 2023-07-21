@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +23,7 @@ import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.service.NotificationService.Companion.lastEndTime
 import org.scp.gymlog.ui.common.DBAppCompatActivity
+import org.scp.gymlog.ui.common.animations.ResizeHeightAnimation
 import org.scp.gymlog.ui.common.animations.ResizeWidthAnimation
 import org.scp.gymlog.ui.common.components.NumberModifierView
 import org.scp.gymlog.ui.common.dialogs.*
@@ -64,6 +64,7 @@ class RegistryActivity : DBAppCompatActivity() {
     private val reps: EditText by lazy { findViewById(R.id.editReps) }
     private val notes: EditText by lazy { findViewById(R.id.editNotes) }
     private val superSet: ImageView by lazy { findViewById(R.id.superSet) }
+    private val superSetPanel: TextView by lazy { findViewById(R.id.activeSuperset) }
     private val weightModifier: NumberModifierView by lazy { findViewById(R.id.weightModifier) }
     private val weightSpecIcon: ImageView by lazy { findViewById(R.id.weightSpecIcon) }
     private val confirmInstantButton: ImageView by lazy { findViewById(R.id.confirm) }
@@ -211,7 +212,13 @@ class RegistryActivity : DBAppCompatActivity() {
                 }
             }
         }
-        updateSuperSetIcon()
+        superSetPanel.setOnClickListener {
+            if (Data.superSet != null) {
+                Data.superSet = null
+                updateSuperSetIcon()
+            }
+        }
+        updateSuperSetIcon(true)
 
         // Weight and Reps Input fields:
         weight.filters = arrayOf(InputFilter { source: CharSequence, _, _, dest: Spanned, _, _ ->
@@ -345,11 +352,24 @@ class RegistryActivity : DBAppCompatActivity() {
         weightSpecIcon.setImageResource(variation.weightSpec.icon)
     }
 
-    private fun updateSuperSetIcon() {
+    private fun updateSuperSetIcon(onInit: Boolean = false) {
         if (Data.superSet == null) {
             superSet.setImageResource(R.drawable.ic_super_set_24dp)
+
+            if (onInit) {
+                superSetPanel.visibility = View.GONE
+            } else {
+                val anim = ResizeHeightAnimation(superSetPanel, 0, 250)
+                superSetPanel.startAnimation(anim)
+            }
         } else {
             superSet.setImageResource(R.drawable.ic_super_set_on_24dp)
+            superSetPanel.text = String.format(getString(R.string.text_active_superset), Data.superSet)
+
+            if (!onInit) {
+                val anim = ResizeHeightAnimation(superSetPanel, 48, 250)
+                superSetPanel.startAnimation(anim)
+            }
         }
     }
 

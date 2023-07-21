@@ -52,6 +52,7 @@
     <string name="text_started_at">Started at</string>
     <string name="text_subtitle">Subtitle</string>
     <string name="text_superset">Superset</string>
+    <string name="text_active_superset">Active Superset #%1$d</string>
     <string name="text_test">-TEST-</string>
     <string name="text_time">Time</string>
     <string name="text_title">Title</string>
