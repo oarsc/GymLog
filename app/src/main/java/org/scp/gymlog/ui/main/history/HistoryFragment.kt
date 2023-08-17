@@ -53,7 +53,7 @@ class HistoryFragment : Fragment() {
 		}
 
 		// TRAININGS LIST
-		val trainingRecyclerView: RecyclerView = view.findViewById(R.id.trainingList)
+		val trainingRecyclerView = view.findViewById<RecyclerView>(R.id.trainingList)
 		trainingRecyclerView.layoutManager = object : LinearLayoutManager(context) {
 			override fun canScrollVertically(): Boolean { return false }
 		}
@@ -181,6 +181,7 @@ class HistoryFragment : Fragment() {
 			return TrainingData(
 				training.trainingId,
 				training.start,
+				training.end,
 				mostUsedMuscles)
 		}
 	}

@@ -48,7 +48,7 @@
                     android:paddingHorizontal="16dp"
                     android:visibility="gone"
                     tools:context=".ui.main.history.HistoryFragment"
-                    tools:listitem="@layout/list_element_fragment_legend" />
+                    tools:listitem="@layout/listitem_legend" />
 
                 <LinearLayout
                     android:id="@+id/showLegend"
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".ui.main.history.HistoryFragment"
-                tools:listitem="@layout/list_element_fragment_training" />
+                tools:listitem="@layout/listitem_training" />
 
         </LinearLayout>
 

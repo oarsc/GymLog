@@ -3,6 +3,7 @@ package org.scp.gymlog.util
 import org.scp.gymlog.util.Constants.DATE_ZERO
 import java.time.*
 import java.time.format.DateTimeFormatter
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -44,6 +45,12 @@ object DateUtils {
 
     fun LocalDateTime.getDateString(): String {
         return parseDateToString(this, "yyyy-MM-dd")
+    }
+
+    fun Int.minutesToTimeString(): String {
+        val hours = TimeUnit.MINUTES.toHours(this.toLong())
+        val remainMinutes = this - TimeUnit.HOURS.toMinutes(hours)
+        return String.format("%01d:%02d", hours, remainMinutes)
     }
 
     private fun parseDateToString(date: LocalDateTime, format: String): String {

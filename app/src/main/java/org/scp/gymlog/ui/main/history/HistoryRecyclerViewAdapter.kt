@@ -13,10 +13,11 @@ import org.scp.gymlog.databinding.ListitemTrainingBinding
 import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.DateUtils.getTimeString
+import org.scp.gymlog.util.DateUtils.minutesToTimeString
 
 class HistoryRecyclerViewAdapter : RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder>() {
 
-	private val trainingDataList: MutableList<TrainingData> = ArrayList()
+	private val trainingDataList = mutableListOf<TrainingData>()
 	private lateinit var ctx: Context
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,19 +31,28 @@ class HistoryRecyclerViewAdapter : RecyclerView.Adapter<HistoryRecyclerViewAdapt
 
 	@SuppressLint("SetTextI18n")
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-		val data = trainingDataList[position]
-		holder.id = data.id
-		holder.mTitle.text =
-			(ctx.resources.getString(R.string.text_training) + " #${data.id}: " + ctx.resources.getString(
-				R.string.text_started_at
-			) + " " + data.startDate.getTimeString())
+		val trainingData = trainingDataList[position]
 
-		holder.mSubtitle.text = data.mostUsedMuscles
+		holder.id = trainingData.id
+		holder.mTitle.text = if (trainingData.duration == null)
+				String.format(
+					ctx.getString(R.string.compound_training_start_date),
+					trainingData.id,
+					trainingData.startTime.getTimeString()
+				)
+			else
+				String.format(
+					ctx.getString(R.string.compound_training_duration),
+					trainingData.id,
+					trainingData.duration?.minutesToTimeString()
+				)
+
+		holder.mSubtitle.text = trainingData.mostUsedMuscles
 			.map(Muscle::text)
 			.map { resText -> ctx.resources.getString(resText) }
 			.joinToString { it }
 
-		holder.mIndicator.setBackgroundResource(data.mostUsedMuscles[0].color)
+		holder.mIndicator.setBackgroundResource(trainingData.mostUsedMuscles[0].color)
 	}
 
 	fun clear() {

@@ -28,6 +28,10 @@
     <string name="group_triceps">Triceps</string>
     <string name="group_upper_back">Upper Back</string>
 
+    <string name="compound_training_start_date">Training #%1$d started at %2$s</string>
+    <string name="compound_training_date">Training #%1$d on %2$s</string>
+    <string name="compound_training_duration">Training #%1$d. %2$s duration</string>
+
     <string name="text_add">Add</string>
     <string name="text_collapse_all">Collapse all</string>
     <string name="text_countdown">Countdown</string>
@@ -45,18 +49,15 @@
     <string name="text_no_bar">No bar</string>
     <string name="text_none">None</string>
     <string name="text_notes">Notes</string>
-    <string name="text_on_smallcaps">on</string>
     <string name="text_reps">Reps</string>
     <string name="text_seconds">Seconds</string>
     <string name="text_set">Set</string>
-    <string name="text_started_at">Started at</string>
     <string name="text_subtitle">Subtitle</string>
     <string name="text_superset">Superset</string>
     <string name="text_active_superset">Active Superset #%1$d</string>
     <string name="text_test">-TEST-</string>
     <string name="text_time">Time</string>
     <string name="text_title">Title</string>
-    <string name="text_training">Training</string>
     <string name="text_variations">Variations</string>
     <string name="text_weight">Weight</string>
     <string name="text_yes">Yes</string>

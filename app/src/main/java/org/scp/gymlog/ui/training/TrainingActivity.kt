@@ -164,10 +164,11 @@ class TrainingActivity : DBAppCompatActivity() {
 
         fragment.isClickable = false
 
-        title.text = (resources.getString(R.string.text_training) + " #${trainingData.id} " + resources.getString(
-                R.string.text_on_smallcaps
-            )
-                    + " " + trainingData.startDate.getDateString())
+        title.text = String.format(
+            resources.getString(R.string.compound_training_date),
+            trainingData.id,
+            trainingData.startTime.getDateString()
+        )
 
         subtitle.text = trainingData.mostUsedMuscles
             .map(Muscle::text)
