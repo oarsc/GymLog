@@ -14,6 +14,7 @@ import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.DateUtils.diffYearsAndDays
 import org.scp.gymlog.util.DateUtils.getLetterFrom
 import org.scp.gymlog.util.DateUtils.currentDateTime
+import org.scp.gymlog.util.DateUtils.getTimeString
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.WeightUtils.calculate
@@ -76,13 +77,8 @@ class LogRecyclerViewAdapter(
         }
 
         if (bit.trainingId == currentTrainingId) {
-            if (lastTrainingId == currentTrainingId) {
-                holder.mDay!!.setText(R.string.symbol_empty)
-                bit.set = if (bit.instant) lastSet else lastSet + 1
-            } else {
-                holder.mDay!!.text = "T"
-                bit.set = 1
-            }
+            holder.mDay!!.text = bit.timestamp.getTimeString()
+            bit.set = if (bit.instant) lastSet else lastSet + 1
 
         } else {
             val lastDateDiff = lastDate.diffYearsAndDays(bit.timestamp)
