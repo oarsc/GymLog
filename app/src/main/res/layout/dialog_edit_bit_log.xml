@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:paddingHorizontal="@dimen/dialog_margin">
 
     <TextView
@@ -60,8 +59,7 @@
         android:paddingEnd="30dp"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toBottomOf="@id/weightModifier"
-        app:layout_constraintRight_toLeftOf="@id/weightModifier"
-        app:layout_constraintLeft_toRightOf="@id/labelReps"
+        app:layout_constraintLeft_toLeftOf="@id/editReps"
         tools:ignore="RtlSymmetry" />
 
     <TextView
@@ -78,7 +76,6 @@
         android:id="@+id/weightModifier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
         app:target="@id/editWeight"
         app:layout_constraintBottom_toTopOf="@id/repsModifier"
         app:layout_constraintRight_toRightOf="parent"/>
@@ -130,9 +127,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginTop="30dp"
         app:target="@id/editReps"
-        app:layout_constraintBottom_toTopOf="@id/instantSwitch"
+
+        app:layout_constraintTop_toBottomOf="@id/weightModifier"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/labelSuperSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/text_margin"
+        app:layout_constraintBottom_toBottomOf="@id/editSuperSet"
+        app:layout_constraintTop_toTopOf="@id/editSuperSet"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/text_superset" />
+
+    <EditText
+        android:id="@+id/editSuperSet"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:ems="2"
+        android:textAlignment="center"
+        android:layout_marginTop="30dp"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/repsModifier"
+        app:layout_constraintLeft_toLeftOf="@id/editReps"
+        app:layout_constraintRight_toRightOf="@id/editReps"
+        tools:ignore="RtlSymmetry" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/instantSwitch"
@@ -143,6 +165,7 @@
         android:paddingVertical="@dimen/text_margin"
         android:text="@string/text_instantly"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

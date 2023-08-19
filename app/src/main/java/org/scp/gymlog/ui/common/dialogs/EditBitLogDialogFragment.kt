@@ -27,7 +27,7 @@ import org.scp.gymlog.util.WeightUtils.toPounds
 import java.math.BigDecimal
 import java.util.function.Consumer
 
-class EditBitLogDialogFragment @JvmOverloads constructor(
+class EditBitLogDialogFragment (
     @StringRes title: Int,
     private val enableInstantSwitch: Boolean,
     private val internationalSystem: Boolean,
@@ -60,8 +60,8 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
 
         view.findViewById<View>(R.id.clearButton).setOnClickListener { editNotes.text.clear() }
 
-        val editWeight: EditText = view.findViewById(R.id.editWeight)
-        val converted: TextView = view.findViewById(R.id.converted)
+        val editWeight = view.findViewById<EditText>(R.id.editWeight)
+        val converted = view.findViewById<TextView>(R.id.converted)
 
         val weight = getBigDecimalInitialWeight(internationalSystem)
         editWeight.bigDecimal = weight
@@ -86,8 +86,13 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
         val modifier: NumberModifierView = view.findViewById(R.id.weightModifier)
         modifier.setStep(initialValue.variation.step)
 
-        val editReps: EditText = view.findViewById(R.id.editReps)
+        val editReps = view.findViewById<EditText>(R.id.editReps)
         editReps.integer = initialValue.reps
+
+        val editSuperSet = view.findViewById<EditText>(R.id.editSuperSet)
+        if (initialValue.superSet > 0) {
+            editSuperSet.integer = initialValue.superSet
+        }
 
         val instantSwitch: SwitchMaterial = view.findViewById(R.id.instantSwitch)
         if (enableInstantSwitch) {
@@ -105,9 +110,12 @@ class EditBitLogDialogFragment @JvmOverloads constructor(
                     initialValue.variation.weightSpec,
                     initialValue.variation.bar)
 
+                // TODO: Validate that bits with same superSets should be consecutive
+
                 initialValue.weight = totalWeight
                 initialValue.reps = editReps.integer
                 initialValue.note = editNotes.text.toString()
+                initialValue.superSet = editSuperSet.integer
                 initialValue.instant = instantSwitch.isChecked
                 confirm.accept(initialValue)
             }
