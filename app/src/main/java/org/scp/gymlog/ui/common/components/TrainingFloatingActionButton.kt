@@ -54,7 +54,8 @@ class TrainingFloatingActionButton : FloatingActionButton {
                                     throw LoadException("TrainingId $trainingId already ended")
                                 }
                                 val endDate = db.bitDao()
-                                    .getMostRecentTimestampByTrainingId(trainingId)
+                                    .getMostRecentByTrainingId(trainingId)
+                                    ?.timestamp
 
                                 if (endDate != null) {
                                     val startDate =db.bitDao()

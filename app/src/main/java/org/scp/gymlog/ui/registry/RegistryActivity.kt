@@ -73,7 +73,7 @@ class RegistryActivity : DBAppCompatActivity() {
     private var internationalSystem = false
     private val log: MutableList<Bit> = ArrayList()
     private var locked = false
-    private var hiddenInstantSetButton = false
+    private var hiddenInstantSetButton = true
     private var sendRefreshList = false
     private val notificationService: NotificationService by lazy { NotificationService(this) }
     private var defaultTimer = 0
@@ -97,6 +97,13 @@ class RegistryActivity : DBAppCompatActivity() {
 
         log.map { Bit(it) }
             .also { this.log.addAll(it) }
+
+        Data.trainingId?.also { trainingId ->
+            hiddenInstantSetButton = db.bitDao().getMostRecentByTrainingId(trainingId)
+                ?.let { it.variationId != variationId }
+                ?: true
+        }
+
         return CONTINUE
     }
 
@@ -170,8 +177,6 @@ class RegistryActivity : DBAppCompatActivity() {
         // Save bit log
         findViewById<View>(R.id.confirmSet).setOnClickListener { saveBitLog(false) }
         confirmInstantButton.setOnClickListener { saveBitLog(true) }
-
-        hiddenInstantSetButton = log.none { it.trainingId == Data.trainingId }
 
         if (hiddenInstantSetButton) {
             confirmInstantButton.layoutParams.width = 0
@@ -495,7 +500,6 @@ class RegistryActivity : DBAppCompatActivity() {
                     }
 
                     if (hiddenInstantSetButton) {
-                        hiddenInstantSetButton = false
                         val anim = ResizeWidthAnimation(confirmInstantButton, 90, 250)
                         confirmInstantButton.startAnimation(anim)
                     }
@@ -577,19 +581,24 @@ class RegistryActivity : DBAppCompatActivity() {
                     startActivityForResult(intent, IntentReference.TRAINING)
                 }
                 R.id.editBit -> {
-                    val enableInstantSwitch = log
-                        .filter { b -> b.trainingId == bit.trainingId }
-                        .getOrNull(0) !== bit
-                    val initialInstant = enableInstantSwitch && bit.instant
+                    DBThread.run(this) { db ->
+                        val enableInstantSwitch = db.bitDao().getPreviousByTraining(bit.trainingId, bit.timestamp)
+                            ?.let { it.variationId == variation.id}
+                            ?: false
 
-                    val editDialog = EditBitLogDialogFragment(
-                        R.string.title_registry,
-                        enableInstantSwitch,
-                        internationalSystem,
-                        bit,
-                        { b -> updateBitLog(b, initialInstant == b.instant) })
+                        val initialInstant = enableInstantSwitch && bit.instant
 
-                    editDialog.show(supportFragmentManager, null)
+                        val editDialog = EditBitLogDialogFragment(
+                            R.string.title_registry,
+                            enableInstantSwitch,
+                            internationalSystem,
+                            bit,
+                            { b -> updateBitLog(b, initialInstant == b.instant) })
+
+                        runOnUiThread {
+                            editDialog.show(supportFragmentManager, null)
+                        }
+                    }
                 }
                 R.id.removeBit -> removeBitLog(bit)
             }

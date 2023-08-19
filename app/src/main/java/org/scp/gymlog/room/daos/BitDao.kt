@@ -39,8 +39,11 @@ interface BitDao {
     fun getHistoryByTrainingId(trainingId: Int): List<BitEntity>
 
     // MOST/LEAST RECENT
-    @Query("SELECT timestamp FROM bit WHERE trainingId = :trainingId ORDER BY timestamp DESC LIMIT 1")
-    fun getMostRecentTimestampByTrainingId(trainingId: Int): LocalDateTime?
+    @Query("SELECT * FROM bit WHERE trainingId == :trainingId AND timestamp < :timestamp ORDER BY timestamp DESC LIMIT 1")
+    fun getPreviousByTraining(trainingId: Int, timestamp: LocalDateTime): BitEntity?
+
+    @Query("SELECT * FROM bit WHERE trainingId = :trainingId ORDER BY timestamp DESC LIMIT 1")
+    fun getMostRecentByTrainingId(trainingId: Int): BitEntity?
 
     @Query("SELECT timestamp FROM bit WHERE trainingId = :trainingId ORDER BY timestamp ASC LIMIT 1")
     fun getFirstTimestampByTrainingId(trainingId: Int): LocalDateTime?

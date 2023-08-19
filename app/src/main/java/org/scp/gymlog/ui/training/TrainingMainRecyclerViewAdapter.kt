@@ -115,20 +115,33 @@ class TrainingMainRecyclerViewAdapter(
         val adapter = TrainingRecyclerViewAdapter(exerciseRow, internationalSystem)
         holder.mBitList.adapter = adapter
 
-        adapter.onClickListener = BiConsumer { bit: Bit?, index: Int ->
-            val editDialog = EditBitLogDialogFragment(
-                R.string.title_registry,
-                exerciseRow[index - 1] is TrainingBitRow,
-                internationalSystem, bit!!,
-                { b: Bit -> DBThread.run(context) { db ->
-                    db.bitDao().update(b.toEntity())
-                    (context as Activity).runOnUiThread { adapter.notifyItemChanged(index) }
-                    if (onBitChangedListener != null) {
-                        onBitChangedListener!!.accept(b)
+        adapter.onClickListener = BiConsumer { bit, index ->
+            DBThread.run(context) { db ->
+
+                val enableInstantSwitch = db.bitDao().getPreviousByTraining(bit.trainingId, bit.timestamp)
+                    ?.let { it.variationId == bit.variation.id }
+                    ?: false
+
+                context as Activity
+
+                val editDialog = EditBitLogDialogFragment(
+                    R.string.title_registry,
+                    enableInstantSwitch,
+                    internationalSystem,
+                    bit,
+                    { editedBit ->
+                        DBThread.run(context) { db ->
+                            db.bitDao().update(editedBit.toEntity())
+                            context.runOnUiThread { adapter.notifyItemChanged(index) }
+                            onBitChangedListener?.accept(editedBit)
+                        }
                     }
-                }}
-            )
-            editDialog.show((context as FragmentActivity).supportFragmentManager, null)
+                )
+
+                context.runOnUiThread {
+                    editDialog.show((context as FragmentActivity).supportFragmentManager, null)
+                }
+            }
         }
 
         holder.toggleBits(expandedElements.contains(position))

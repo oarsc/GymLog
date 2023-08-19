@@ -29,6 +29,7 @@ import java.time.LocalDateTime
     ],
     indices = [
         Index("trainingId"),
+        Index("trainingId", "timestamp"),
         Index("variationId", "gymId"),
         Index("variationId", "timestamp", "gymId"),
         Index("variationId", "trainingId", "timestamp", "gymId"),
