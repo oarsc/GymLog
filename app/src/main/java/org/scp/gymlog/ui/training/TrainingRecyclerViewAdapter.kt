@@ -1,6 +1,7 @@
 package org.scp.gymlog.ui.training
 
 import android.annotation.SuppressLint
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -112,10 +113,11 @@ class TrainingRecyclerViewAdapter(
                     holder.mTime!!.setText(R.string.symbol_empty)
                     setAlpha(holder, 0.4f)
                 } else {
-                    if (index == 1) {
-                        holder.mTime!!.text = bit.timestamp.getTimeString()
+                    holder.mTime!!.text = bit.timestamp.getTimeString()
+                    if (index != 1) {
+                        holder.mTime.alpha = 0.7f
                     } else {
-                        holder.mTime!!.setText(R.string.symbol_empty)
+                        setBold(holder)
                     }
                     setAlpha(holder, 1f)
                 }
@@ -126,6 +128,11 @@ class TrainingRecyclerViewAdapter(
     private fun setAlpha(holder: ViewHolder, alpha: Float) {
         listOf(holder.mWeight, holder.mReps, holder.mNote, holder.mNumber)
             .forEach { it?.alpha = alpha }
+    }
+
+    private fun setBold(holder: ViewHolder) {
+        listOf(holder.mWeight, holder.mReps, holder.mNote, holder.mNumber, holder.mTime)
+            .forEach { it?.setTypeface(null, Typeface.BOLD) }
     }
 
     override fun getItemCount(): Int {

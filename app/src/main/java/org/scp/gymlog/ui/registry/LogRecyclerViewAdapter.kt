@@ -77,9 +77,13 @@ class LogRecyclerViewAdapter(
         }
 
         if (bit.trainingId == currentTrainingId) {
-            holder.mDay!!.text = bit.timestamp.getTimeString()
-            bit.set = if (bit.instant) lastSet else lastSet + 1
-
+            if (bit.instant) {
+                holder.mDay!!.setText(R.string.symbol_empty)
+                bit.set = lastSet
+            } else {
+                holder.mDay!!.text = bit.timestamp.getTimeString()
+                bit.set = lastSet + 1
+            }
         } else {
             val lastDateDiff = lastDate.diffYearsAndDays(bit.timestamp)
 
