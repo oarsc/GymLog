@@ -35,13 +35,13 @@ class HistoryFragment : Fragment() {
 		val view = inflater.inflate(R.layout.fragment_history, container, false)
 
 		// LEGEND LIST
-		val legendRecyclerView: RecyclerView = view.findViewById(R.id.legend)
+		val legendRecyclerView = view.findViewById<RecyclerView>(R.id.legend)
 		legendRecyclerView.layoutManager = object : GridLayoutManager(context, 2) {
 			override fun canScrollVertically(): Boolean { return false }
 		}
 		legendRecyclerView.adapter = legendAdapter
 
-		val showLegendIcon: ImageView = view.findViewById(R.id.showLegendIcon)
+		val showLegendIcon = view.findViewById<ImageView>(R.id.showLegendIcon)
 		view.findViewById<View>(R.id.showLegend).setOnClickListener {
 			if (legendRecyclerView.visibility == View.VISIBLE) {
 				legendRecyclerView.visibility = View.GONE
@@ -69,7 +69,7 @@ class HistoryFragment : Fragment() {
 		}
 
 		// TOOLBAR
-		val toolbar: Toolbar = view.findViewById(R.id.toolbar)
+		val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
 		toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
 		return view
 	}

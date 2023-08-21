@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 		val binding = ActivityMainBinding.inflate(layoutInflater)
 		setContentView(binding.root)
 
-		val navView: BottomNavigationView = findViewById(R.id.navView)
+		val navView = findViewById<BottomNavigationView>(R.id.navView)
 		// Passing each menu ID as a set of Ids because each
 		// menu should be considered as top level destinations.
 		val appBarConfiguration = AppBarConfiguration.Builder(

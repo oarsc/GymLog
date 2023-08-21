@@ -25,7 +25,7 @@ class MenuDialogFragment(
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.dialog_menu, null)
-        val recyclerView: RecyclerView = view.findViewById(R.id.parentLayout)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.parentLayout)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = MenuRecyclerViewAdapter(requireContext(), menuId) { menuItemId ->

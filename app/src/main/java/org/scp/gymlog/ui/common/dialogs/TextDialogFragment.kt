@@ -18,7 +18,7 @@ class TextDialogFragment(
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.dialog_show_text, null)
-        val textView: TextView = view.findViewById(R.id.text)
+        val textView = view.findViewById<TextView>(R.id.text)
         textView.setText(text)
 
         val builder = AlertDialog.Builder(activity)

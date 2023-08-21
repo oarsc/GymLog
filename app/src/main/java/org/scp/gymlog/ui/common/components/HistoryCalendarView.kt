@@ -61,7 +61,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
     }
 
     private fun updateHeader() {
-        val year:TextView = findViewById(R.id.year)
+        val year = findViewById<TextView>(R.id.year)
         year.text = firstDayOfMonth.year.toString()
         val monthRef = when (firstDayOfMonth.month.ordinal) {
             1 -> R.string.month_february
@@ -77,12 +77,12 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
             11 -> R.string.month_december
             else -> R.string.month_january
         }
-        val month: TextView = findViewById(R.id.monthName)
+        val month = findViewById<TextView>(R.id.monthName)
         month.setText(monthRef)
     }
 
     private fun drawWeeks() {
-        val weeks: ViewGroup = findViewById(R.id.weeks)
+        val weeks = findViewById<ViewGroup>(R.id.weeks)
 
         weeks.removeAllViewsInLayout()
         daysMap.clear()
@@ -93,7 +93,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
         var j = 0
         do {
             inflate(context, R.layout.view_calendar_week, weeks)
-            val week: ViewGroup = weeks.getChildAt(j++).findViewById(R.id.week)
+            val week = weeks.getChildAt(j++).findViewById<ViewGroup>(R.id.week)
 
             for (i in 0..6) {
                 inflate(context, R.layout.view_calendar_day, week)
@@ -106,10 +106,10 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
                 day.setOnClickListener { selectDay(currentDay) }
 
                 daysMap[lastDay.timeInMillis] = day
-                val number: TextView = day.findViewById(R.id.dayNumber)
+                val number = day.findViewById<TextView>(R.id.dayNumber)
                 number.text = lastDay.dayOfMonth.toString()
 
-                val chart: PieChart = day.findViewById(R.id.chart1)
+                val chart = day.findViewById<PieChart>(R.id.chart1)
                 chart.isDrawHoleEnabled = false
                 chart.description.text = ""
                 chart.legend.isEnabled = false
@@ -131,7 +131,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
     private fun updateSelectedDay() {
         val day = daysMap[selectedDay.timeInMillis]
         if (day != null) {
-            val number: TextView = day.findViewById(R.id.dayNumber)
+            val number = day.findViewById<TextView>(R.id.dayNumber)
             day.setBackgroundResource(R.color.backgroundAccent)
             number.paintFlags = number.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         }
@@ -140,7 +140,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
     private fun selectDay(selectDay: LocalDate) {
         val day = daysMap[selectedDay.timeInMillis]
         if (day != null) {
-            val number: TextView = day.findViewById(R.id.dayNumber)
+            val number = day.findViewById<TextView>(R.id.dayNumber)
             day.setBackgroundColor(Color.TRANSPARENT)
             number.paintFlags = number.paintFlags and Paint.UNDERLINE_TEXT_FLAG.inv()
         }
@@ -165,7 +165,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
             ?: throw RuntimeException("COULD NOT FIND DAY $dayTime IN MONTH: " +
                     daysMap.keys.map { day -> day.toString() })
 
-        val chart: PieChart = day.findViewById(R.id.chart1)
+        val chart = day.findViewById<PieChart>(R.id.chart1)
         if (values == null) {
             chart.visibility = INVISIBLE
             return
@@ -191,7 +191,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
         dataSet.setDrawIcons(false)
         dataSet.selectionShift = 0f
 
-        val text: TextView = day.findViewById(R.id.dayNumber)
+        val text = day.findViewById<TextView>(R.id.dayNumber)
         text.setTextColor(
             ResourcesCompat.getColor(resources, R.color.dark, context.theme)
         )

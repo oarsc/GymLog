@@ -51,7 +51,7 @@ open class TopActivity : DBAppCompatActivity() {
 
         setHeaderInfo()
 
-        val historyRecyclerView: RecyclerView = findViewById(R.id.variantTopList)
+        val historyRecyclerView = findViewById<RecyclerView>(R.id.variantTopList)
         historyRecyclerView.layoutManager = LinearLayoutManager(this)
 
         adapter = TopRecyclerViewAdapter(listData, internationalSystem)
@@ -121,9 +121,9 @@ open class TopActivity : DBAppCompatActivity() {
     }
 
     private fun setHeaderInfo() {
-        val image: ImageView = findViewById(R.id.image)
-        val time: TextView = findViewById(R.id.time)
-        val title: TextView = findViewById(R.id.content)
+        val image = findViewById<ImageView>(R.id.image)
+        val time = findViewById<TextView>(R.id.time)
+        val title = findViewById<TextView>(R.id.content)
 
         title.text = exercise.name
         time.visibility = View.GONE

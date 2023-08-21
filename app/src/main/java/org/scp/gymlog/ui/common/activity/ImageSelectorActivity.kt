@@ -17,7 +17,7 @@ import java.io.IOException
 class ImageSelectorActivity : CustomAppCompatActivity() {
 
     private val defaultLayoutParams by lazy { RelativeLayout.LayoutParams(175, 175) }
-    private val layout: FlexboxLayout by lazy { findViewById(R.id.imageSelectorLayout) }
+    private val layout by lazy { findViewById<FlexboxLayout>(R.id.imageSelectorLayout) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

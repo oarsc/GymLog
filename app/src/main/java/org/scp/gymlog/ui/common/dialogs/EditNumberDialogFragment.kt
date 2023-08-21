@@ -32,8 +32,8 @@ class EditNumberDialogFragment @JvmOverloads constructor(
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.dialog_edit_number, null)
-        val input: EditText = view.findViewById(R.id.dialogText)
-        val modifier: NumberModifierView = view.findViewById(R.id.modifier)
+        val input = view.findViewById<EditText>(R.id.dialogText)
+        val modifier = view.findViewById<NumberModifierView>(R.id.modifier)
         input.bigDecimal = initialValue
 
         if (allowNegatives) {
@@ -46,7 +46,7 @@ class EditNumberDialogFragment @JvmOverloads constructor(
         if (!showButtons) {
             modifier.visibility = View.INVISIBLE
 
-            val constraintLayout: ConstraintLayout = view.findViewById(R.id.parentLayout)
+            val constraintLayout = view.findViewById<ConstraintLayout>(R.id.parentLayout)
             val constraintSet = ConstraintSet()
             constraintSet.clone(constraintLayout)
 

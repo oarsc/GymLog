@@ -80,7 +80,7 @@ class EditTimerDialogFragment(
                 .also(Thread::start)
         }
 
-        val editNotes: EditText = view.findViewById(R.id.editTimer)
+        val editNotes = view.findViewById<EditText>(R.id.editTimer)
         editNotes.setText(initialValue.toString())
         editNotes.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}

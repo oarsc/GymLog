@@ -26,7 +26,7 @@ class EditNotesDialogFragment(
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.dialog_edit_notes, null)
-        val input: EditText = view.findViewById(R.id.dialogText)
+        val input = view.findViewById<EditText>(R.id.dialogText)
         input.setText(initialValue)
 
         view.findViewById<RecyclerView>(R.id.historicNotes).apply {
@@ -44,7 +44,7 @@ class EditNotesDialogFragment(
             }
         }
 
-        val clearButton: ImageView = view.findViewById(R.id.clearButton)
+        val clearButton = view.findViewById<ImageView>(R.id.clearButton)
         clearButton.setOnClickListener { input.text.clear() }
 
         val builder = AlertDialog.Builder(activity)

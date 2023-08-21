@@ -61,7 +61,7 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 			}
 		}
 
-		val recyclerView: RecyclerView = findViewById(R.id.createFormList)
+		val recyclerView = findViewById<RecyclerView>(R.id.createFormList)
 		recyclerView.layoutManager = LinearLayoutManager(this)
 		recyclerView.adapter = CreateFormRecyclerViewAdapter(createForm())
 	}

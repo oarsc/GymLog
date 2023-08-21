@@ -66,7 +66,7 @@ class TrainingActivity : DBAppCompatActivity() {
                 ?.index ?: -1
         }
 
-        val historyRecyclerView: RecyclerView = findViewById(R.id.historyList)
+        val historyRecyclerView = findViewById<RecyclerView>(R.id.historyList)
         historyRecyclerView.layoutManager = LinearLayoutManager(this).also { linearLayout = it }
         historyRecyclerView.adapter = TrainingMainRecyclerViewAdapter(exerciseRows,
             internationalSystem, focusElement
@@ -172,10 +172,10 @@ class TrainingActivity : DBAppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun setHeaderInfo() {
-        val fragment: View = findViewById(R.id.fragmentTraining)
-        val title: TextView = findViewById(R.id.title)
-        val subtitle: TextView = findViewById(R.id.subtitle)
-        val indicator: View = findViewById(R.id.indicator)
+        val fragment = findViewById<View>(R.id.fragmentTraining)
+        val title = findViewById<TextView>(R.id.title)
+        val subtitle = findViewById<TextView>(R.id.subtitle)
+        val indicator = findViewById<View>(R.id.indicator)
 
         fragment.isClickable = false
 

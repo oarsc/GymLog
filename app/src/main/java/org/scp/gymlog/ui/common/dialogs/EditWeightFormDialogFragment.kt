@@ -108,7 +108,7 @@ class EditWeightFormDialogFragment(
             }
         })
 
-        val layoutStep: View = view.findViewById(R.id.stepBox)
+        val layoutStep = view.findViewById<View>(R.id.stepBox)
         layoutStep.setOnClickListener {
             val popup = PopupMenu(activity, layoutStep)
             val menu = popup.menu
@@ -132,7 +132,7 @@ class EditWeightFormDialogFragment(
         }
         updateStep()
 
-        val layoutBars: View = view.findViewById(R.id.barsBox)
+        val layoutBars = view.findViewById<View>(R.id.barsBox)
         layoutBars.setOnClickListener {
             val popup = PopupMenu(activity, layoutBars)
             val menu = popup.menu
@@ -188,7 +188,7 @@ class EditWeightFormDialogFragment(
             popup.show()
         }
 
-        val layoutWeightSpec: View = view.findViewById(R.id.weightsConfigBox)
+        val layoutWeightSpec = view.findViewById<View>(R.id.weightsConfigBox)
         layoutWeightSpec.setOnClickListener {
             val popup = PopupMenu(activity, layoutWeightSpec)
             popup.setOnMenuItemClickListener { menuItem ->

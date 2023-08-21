@@ -19,7 +19,7 @@ class EditTextDialogFragment constructor(
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.dialog_edit_text, null)
-        val input: EditText = view.findViewById(R.id.dialogText)
+        val input = view.findViewById<EditText>(R.id.dialogText)
         input.setText(initialValue)
 
         val builder = AlertDialog.Builder(activity)

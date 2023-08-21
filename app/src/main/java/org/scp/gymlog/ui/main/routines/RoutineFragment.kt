@@ -28,7 +28,7 @@ class RoutineFragment : Fragment() {
 		savedInstanceState: Bundle?
 	): View {
 		val view = inflater.inflate(R.layout.fragment_list_routines, container, false)
-		val toolbar: Toolbar = view.findViewById(R.id.toolbar)
+		val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
 		toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
 
 		// Set the adapter

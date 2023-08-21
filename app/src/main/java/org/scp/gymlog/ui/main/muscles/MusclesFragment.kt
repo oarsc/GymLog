@@ -47,13 +47,13 @@ class MusclesFragment : CustomFragment() {
 	): View {
 		val view = inflater.inflate(R.layout.fragment_list_muscles, container, false)
 
-		val recyclerView: RecyclerView = view.findViewById(R.id.musclesList)
+		val recyclerView = view.findViewById<RecyclerView>(R.id.musclesList)
 		recyclerView.layoutManager = LinearLayoutManager(context)
 		recyclerView.adapter = MusclesRecyclerViewAdapter { muscle -> onMuscleClicked(muscle) }
 
 		trainingFloatingButton = view.findViewById(R.id.fabTraining)
 
-		val toolbar: Toolbar = view.findViewById(R.id.toolbar)
+		val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
 		toolbar.setOnMenuItemClickListener { item: MenuItem ->
 			when (item.itemId) {
 				R.id.createButton -> {

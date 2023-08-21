@@ -40,12 +40,12 @@ class EditBitLogDialogFragment (
         val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.dialog_edit_bit_log, null)
 
-        val editNotes: EditText = view.findViewById(R.id.editNotes)
+        val editNotes = view.findViewById<EditText>(R.id.editNotes)
         editNotes.setText(initialValue.note)
 
-        val unit: TextView = view.findViewById(R.id.unit)
+        val unit = view.findViewById<TextView>(R.id.unit)
         unit.setText(WeightUtils.unit(internationalSystem))
-        val convertedUnit: TextView = view.findViewById(R.id.convertUnit)
+        val convertedUnit = view.findViewById<TextView>(R.id.convertUnit)
         convertedUnit.setText(WeightUtils.unit(!internationalSystem))
 
         editNotes.setOnClickListener {
@@ -83,7 +83,7 @@ class EditBitLogDialogFragment (
             }
         })
 
-        val modifier: NumberModifierView = view.findViewById(R.id.weightModifier)
+        val modifier = view.findViewById<NumberModifierView>(R.id.weightModifier)
         modifier.setStep(initialValue.variation.step)
 
         val editReps = view.findViewById<EditText>(R.id.editReps)
@@ -94,7 +94,7 @@ class EditBitLogDialogFragment (
             editSuperSet.integer = initialValue.superSet
         }
 
-        val instantSwitch: SwitchMaterial = view.findViewById(R.id.instantSwitch)
+        val instantSwitch = view.findViewById<SwitchMaterial>(R.id.instantSwitch)
         if (enableInstantSwitch) {
             instantSwitch.isChecked = initialValue.instant
         } else {

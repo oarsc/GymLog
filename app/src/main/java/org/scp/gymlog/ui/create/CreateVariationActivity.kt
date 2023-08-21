@@ -46,7 +46,7 @@ class CreateVariationActivity : CustomAppCompatActivity() {
 			gymRelation = Converters.toGymRelation(getInt("gymRelation", 0).toShort())
 		}
 
-		val recyclerView: RecyclerView = findViewById(R.id.createFormList)
+		val recyclerView = findViewById<RecyclerView>(R.id.createFormList)
 		recyclerView.layoutManager = LinearLayoutManager(this)
 		recyclerView.adapter = CreateFormRecyclerViewAdapter(createForm())
 	}

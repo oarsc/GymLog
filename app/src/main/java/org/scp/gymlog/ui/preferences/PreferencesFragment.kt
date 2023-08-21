@@ -25,7 +25,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), OnSharedPreferenceChange
 	): View {
 
 		val view = super.onCreateView(inflater, container, savedInstanceState)!!
-		val toolbar: Toolbar = view.findViewById(R.id.toolbar)
+		val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
 		toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
 
 		return view

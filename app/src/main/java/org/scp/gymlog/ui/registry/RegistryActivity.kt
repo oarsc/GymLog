@@ -57,17 +57,17 @@ class RegistryActivity : DBAppCompatActivity() {
 
     private lateinit var exercise: Exercise
     private lateinit var variation: Variation
-    private val weight: EditText by lazy { findViewById(R.id.editWeight) }
+    private val weight by lazy { findViewById<EditText>(R.id.editWeight) }
     private var defaultTimeColor = 0
-    private val timer: TextView by lazy { findViewById<TextView>(R.id.timerSeconds)
+    private val timer by lazy { findViewById<TextView>(R.id.timerSeconds)
         .also { defaultTimeColor = it.textColors.defaultColor } }
-    private val reps: EditText by lazy { findViewById(R.id.editReps) }
-    private val notes: EditText by lazy { findViewById(R.id.editNotes) }
-    private val superSet: ImageView by lazy { findViewById(R.id.superSet) }
-    private val superSetPanel: TextView by lazy { findViewById(R.id.activeSuperset) }
-    private val weightModifier: NumberModifierView by lazy { findViewById(R.id.weightModifier) }
-    private val weightSpecIcon: ImageView by lazy { findViewById(R.id.weightSpecIcon) }
-    private val confirmInstantButton: ImageView by lazy { findViewById(R.id.confirm) }
+    private val reps by lazy { findViewById<EditText>(R.id.editReps) }
+    private val notes by lazy { findViewById<EditText>(R.id.editNotes) }
+    private val superSet by lazy { findViewById<ImageView>(R.id.superSet) }
+    private val superSetPanel by lazy { findViewById<TextView>(R.id.activeSuperset) }
+    private val weightModifier by lazy { findViewById<NumberModifierView>(R.id.weightModifier) }
+    private val weightSpecIcon by lazy { findViewById<ImageView>(R.id.weightSpecIcon) }
+    private val confirmInstantButton by lazy { findViewById<ImageView>(R.id.confirm) }
     private lateinit var recyclerViewLayout: LinearLayoutManager
     private lateinit var recyclerViewAdapter: LogRecyclerViewAdapter
     private var internationalSystem = false
@@ -120,7 +120,7 @@ class RegistryActivity : DBAppCompatActivity() {
         setHeaderInfo()
 
         // Timer button:
-        val timerButton: View = findViewById(R.id.timerButton)
+        val timerButton = findViewById<View>(R.id.timerButton)
         timerButton.setOnClickListener {
             val dialog = EditTimerDialogFragment(this, R.string.text_notes, variation) { result ->
                 if (variation.restTime != result) {
@@ -189,8 +189,8 @@ class RegistryActivity : DBAppCompatActivity() {
             dialog.show(supportFragmentManager, null)
         }
 
-        val clearNote: ImageView = findViewById(R.id.clearNote)
-        val lockView: ImageView = findViewById(R.id.lock)
+        val clearNote = findViewById<ImageView>(R.id.clearNote)
+        val lockView = findViewById<ImageView>(R.id.lock)
         clearNote.setOnClickListener {
             notes.text.clear()
         }
@@ -241,7 +241,7 @@ class RegistryActivity : DBAppCompatActivity() {
             dialog.show(supportFragmentManager, null)
         }
 
-        val unitTextView: TextView = findViewById(R.id.unit)
+        val unitTextView = findViewById<TextView>(R.id.unit)
         unitTextView.setText(WeightUtils.unit(internationalSystem))
 
         weightModifier.setStep(variation.step)
@@ -258,10 +258,10 @@ class RegistryActivity : DBAppCompatActivity() {
     }
 
     private fun setHeaderInfo() {
-        val fragment: View = findViewById(R.id.fragmentExercise)
-        val title: TextView = findViewById(R.id.content)
-        val time: TextView = findViewById(R.id.time)
-        val image: ImageView = findViewById(R.id.image)
+        val fragment = findViewById<View>(R.id.fragmentExercise)
+        val title = findViewById<TextView>(R.id.content)
+        val time = findViewById<TextView>(R.id.time)
+        val image = findViewById<ImageView>(R.id.image)
 
         fragment.isClickable = false
         title.text = exercise.name
