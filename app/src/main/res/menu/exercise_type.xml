@@ -17,18 +17,22 @@
 
     <item
         android:id="@+id/optionPlate"
+        android:icon="@drawable/ic_plate_24dp"
         android:title="@string/type_plate"/>
 
     <item
         android:id="@+id/optionPulley"
+        android:icon="@drawable/ic_pulley_24dp"
         android:title="@string/type_pulley"/>
 
     <item
         android:id="@+id/optionSmith"
+        android:icon="@drawable/ic_smith_24dp"
         android:title="@string/type_smith"/>
 
     <item
         android:id="@+id/optionMachine"
+        android:icon="@drawable/ic_machine_24dp"
         android:title="@string/type_machine"/>
 
     <item

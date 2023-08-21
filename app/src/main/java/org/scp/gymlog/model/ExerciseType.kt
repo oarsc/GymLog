@@ -31,28 +31,28 @@ enum class ExerciseType(
         defaultIndex = 0),
 
     PLATE(
-        0,
+        R.drawable.ic_plate_24dp,
         R.string.type_plate,
         WeightSpecification.TOTAL_WEIGHT,
         WeightSpecification.ONE_SIDE_WEIGHT,
         defaultIndex = 0),
 
     PULLEY_MACHINE(
-        0,
+        R.drawable.ic_pulley_24dp,
         R.string.type_pulley,
         WeightSpecification.TOTAL_WEIGHT,
         WeightSpecification.ONE_SIDE_WEIGHT,
         defaultIndex = 1),
 
     SMITH_MACHINE(
-        0,
+        R.drawable.ic_smith_24dp,
         R.string.type_smith,
         WeightSpecification.TOTAL_WEIGHT,
         WeightSpecification.ONE_SIDE_WEIGHT,
         defaultIndex = 0),
 
     MACHINE(
-        0,
+        R.drawable.ic_machine_24dp,
         R.string.type_machine,
         WeightSpecification.TOTAL_WEIGHT,
         WeightSpecification.ONE_SIDE_WEIGHT,
