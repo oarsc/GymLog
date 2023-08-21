@@ -1575,6 +1575,14 @@
 	"general": true
 },
 {
+	"tag": "lat_bench_dumbbell_reverse_flys_lying",
+	"name": "Reverse Dumbbell Inclined Bench Flys (prone)",
+	"type": "dumbbell",
+	"primary": [4],
+	"secondary": [],
+	"general": true
+},
+{
 	"tag": "lower_back_machine_hyperextensions_incline",
 	"name": "Machine Hyperextensions",
 	"type": "machine",
@@ -1935,6 +1943,14 @@
 	"general": true
 },
 {
+	"tag": "shoulders_dumbbell_front_raise_seated",
+	"name": "Dumbbell Front Raise (seated)",
+	"type": "dumbbell",
+	"primary": [4],
+	"secondary": [],
+	"general": true
+},
+{
 	"tag": "shoulders_plate_front_raise_standing",
 	"name": "Plate Front Raise (standing)",
 	"type": "plate",
@@ -2129,6 +2145,14 @@
 {
 	"tag": "traps_dumbbell_shrugs_standing",
 	"name": "Dumbbell Shrugs (standing)",
+	"type": "dumbbell",
+	"primary": [5],
+	"secondary": [],
+	"general": true
+},
+{
+	"tag": "traps_dumbbell_shrugs_front_standing",
+	"name": "Dumbbell Front Shrugs (standing)",
 	"type": "dumbbell",
 	"primary": [5],
 	"secondary": [],
