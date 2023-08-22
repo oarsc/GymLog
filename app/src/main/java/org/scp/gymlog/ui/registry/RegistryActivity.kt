@@ -28,6 +28,7 @@ import org.scp.gymlog.ui.common.animations.ResizeWidthAnimation
 import org.scp.gymlog.ui.common.components.NumberModifierView
 import org.scp.gymlog.ui.common.dialogs.*
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData
+import org.scp.gymlog.ui.latest.LatestExercisesActivity
 import org.scp.gymlog.ui.top.TopActivity
 import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.Constants
@@ -283,11 +284,17 @@ class RegistryActivity : DBAppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.topRanking) {
-            val intent = Intent(this, TopActivity::class.java)
-            intent.putExtra("exerciseId", exercise.id)
-            startActivityForResult(intent, IntentReference.TOP_RECORDS)
-            return true
+        when (item.itemId) {
+            R.id.latestButton -> {
+                val intent = Intent(this, LatestExercisesActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.topRanking -> {
+                val intent = Intent(this, TopActivity::class.java)
+                intent.putExtra("exerciseId", exercise.id)
+                startActivityForResult(intent, IntentReference.TOP_RECORDS)
+                return true
+            }
         }
         return false
     }

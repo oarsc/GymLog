@@ -51,6 +51,10 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.latest.LatestExercisesActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.top.TopActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

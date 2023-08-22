@@ -19,14 +19,15 @@ import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.common.CustomFragment
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment
+import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment.Companion.DIALOG_CLOSED
 import org.scp.gymlog.ui.common.dialogs.TextSelectDialogFragment
 import org.scp.gymlog.ui.create.CreateExerciseActivity
 import org.scp.gymlog.ui.exercises.ExercisesActivity
+import org.scp.gymlog.ui.latest.LatestExercisesActivity
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.PreferencesUtils.save
-import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment.Companion.DIALOG_CLOSED
 
 
 /**
@@ -62,6 +63,12 @@ class MusclesFragment : CustomFragment() {
 					return@setOnMenuItemClickListener true
 				}
 				R.id.searchButton -> {
+				}
+				R.id.latestButton -> {
+					requireActivity().apply {
+						val intent = Intent(this, LatestExercisesActivity::class.java)
+						startActivity(intent)
+					}
 				}
 				R.id.gymSelectButton -> {
 					val context = requireContext()

@@ -23,7 +23,7 @@ open class CustomFragment : Fragment() {
 
     open fun onActivityResult(intentReference: IntentReference, data: Intent) {}
 
-    protected fun startActivityForResult(intent: Intent, intentReference: IntentReference) {
+    fun startActivityForResult(intent: Intent, intentReference: IntentReference) {
         checkEmptyIntent()
         if (intentReference !== IntentReference.NONE) {
             intentResultId = intentReference

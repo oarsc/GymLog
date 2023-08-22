@@ -17,6 +17,7 @@ import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment
 import org.scp.gymlog.ui.create.CreateExerciseActivity
+import org.scp.gymlog.ui.latest.LatestExercisesActivity
 import org.scp.gymlog.ui.registry.RegistryActivity
 import org.scp.gymlog.ui.top.TopActivity
 import org.scp.gymlog.util.Constants.IntentReference
@@ -84,6 +85,10 @@ class ExercisesActivity : DBAppCompatActivity() {
                 val intent = Intent(this, CreateExerciseActivity::class.java)
                 intent.putExtra("muscleId", muscleId)
                 startActivityForResult(intent, IntentReference.CREATE_EXERCISE_FROM_MUSCLE)
+            }
+            R.id.latestButton -> {
+                val intent = Intent(this, LatestExercisesActivity::class.java)
+                startActivity(intent)
             }
             R.id.sortAlphabetically -> {
                 order = Order.ALPHABETICALLY.also { recyclerAdapter.switchOrder(it) }
