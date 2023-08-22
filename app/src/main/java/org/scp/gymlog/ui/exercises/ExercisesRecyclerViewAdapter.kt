@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
-import org.scp.gymlog.databinding.ListitemExerciseBinding
 import org.scp.gymlog.databinding.ListitemVariationBinding
+import org.scp.gymlog.databinding.ListitemExercisesVariationBinding
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.model.Order
@@ -49,20 +49,20 @@ class ExercisesRecyclerViewAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return if (variations[orderedIndexes[position]].isChild)
-            R.layout.listitem_variation
+            R.layout.listitem_exercises_variation
         else
-            R.layout.listitem_exercise
+            R.layout.listitem_variation
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when(viewType){
-            R.layout.listitem_exercise -> ViewHolder(
-                ListitemExerciseBinding.inflate(
+            R.layout.listitem_variation -> ViewHolder(
+                ListitemVariationBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
             else -> ViewHolder(
-                ListitemVariationBinding.inflate(
+                ListitemExercisesVariationBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
@@ -238,11 +238,13 @@ class ExercisesRecyclerViewAdapter(
         val mContentView: TextView
         val mTime: TextView?
 
-        constructor(binding: ListitemExerciseBinding) : super(binding.root) {
+        constructor(binding: ListitemVariationBinding) : super(binding.root) {
             root = binding.root
             mImageView = binding.image
-            mContentView = binding.content
+            mContentView = binding.exerciseName
             mTime = binding.time
+
+            binding.variationName.visibility = View.GONE
 
             itemView.setOnClickListener {
                 if (model.canExpand) {
@@ -259,13 +261,13 @@ class ExercisesRecyclerViewAdapter(
                 val dialog = MenuDialogFragment(R.menu.exercise_menu) { action ->
                     menuOptionCallback.accept(model.variation, action)
                 }
-                val activity = binding.content.context as FragmentActivity
+                val activity = root.context as FragmentActivity
                 dialog.show(activity.supportFragmentManager, null)
                 true
             }
         }
 
-        constructor(binding: ListitemVariationBinding) : super(binding.root) {
+        constructor(binding: ListitemExercisesVariationBinding) : super(binding.root) {
             root = binding.root
             mImageView = null
             mContentView = binding.content

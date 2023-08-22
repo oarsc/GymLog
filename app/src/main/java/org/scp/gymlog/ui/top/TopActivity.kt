@@ -123,7 +123,9 @@ open class TopActivity : DBAppCompatActivity() {
     private fun setHeaderInfo() {
         val image = findViewById<ImageView>(R.id.image)
         val time = findViewById<TextView>(R.id.time)
-        val title = findViewById<TextView>(R.id.content)
+        val title = findViewById<TextView>(R.id.exerciseName)
+
+        findViewById<TextView>(R.id.variationName).visibility = View.GONE
 
         title.text = exercise.name
         time.visibility = View.GONE

@@ -4,12 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.InternalException
-import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.model.Order
 import org.scp.gymlog.model.Order.Companion.getByCode
 import org.scp.gymlog.model.Variation
@@ -23,6 +21,8 @@ import org.scp.gymlog.ui.registry.RegistryActivity
 import org.scp.gymlog.ui.top.TopActivity
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
+import org.scp.gymlog.util.PreferencesUtils.loadString
+import org.scp.gymlog.util.PreferencesUtils.save
 import java.util.function.Consumer
 
 class ExercisesActivity : DBAppCompatActivity() {
@@ -41,9 +41,7 @@ class ExercisesActivity : DBAppCompatActivity() {
 
     override fun onDelayedCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_exercises)
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        order = getByCode(
-            preferences.getString("exercisesSortLastUsed", Order.ALPHABETICALLY.code)!!)
+        order = getByCode(loadString("exercisesSortLastUsed", Order.ALPHABETICALLY.code))
 
         val muscle = Data.muscles
             .filter { it.id == muscleId }
@@ -89,16 +87,12 @@ class ExercisesActivity : DBAppCompatActivity() {
             }
             R.id.sortAlphabetically -> {
                 order = Order.ALPHABETICALLY.also { recyclerAdapter.switchOrder(it) }
-                val editor = PreferenceManager.getDefaultSharedPreferences(this).edit()
-                editor.putString("exercisesSortLastUsed", order.code)
-                editor.apply()
+                save("exercisesSortLastUsed", order.code)
                 item.isChecked = true
             }
             R.id.sortLastUsed -> {
                 order = Order.LAST_USED.also { recyclerAdapter.switchOrder(it) }
-                val editor = PreferenceManager.getDefaultSharedPreferences(this).edit()
-                editor.putString("exercisesSortLastUsed", order.code)
-                editor.apply()
+                save("exercisesSortLastUsed", order.code)
                 item.isChecked = true
             }
         }

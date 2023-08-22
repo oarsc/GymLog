@@ -149,15 +149,6 @@ class RegistryActivity : DBAppCompatActivity() {
             updateTimer()
         }
 
-        // Variations
-        if (variation.default) {
-            findViewById<View>(R.id.variationBox).visibility = View.GONE
-        } else {
-            findViewById<TextView>(R.id.variationText).apply {
-                text = variation.name
-            }
-        }
-
         // Logs:
         recyclerViewLayout = LinearLayoutManager(this)
         recyclerViewAdapter = LogRecyclerViewAdapter(log, Data.trainingId, internationalSystem)
@@ -259,13 +250,21 @@ class RegistryActivity : DBAppCompatActivity() {
 
     private fun setHeaderInfo() {
         val fragment = findViewById<View>(R.id.fragmentExercise)
-        val title = findViewById<TextView>(R.id.content)
+        val title = findViewById<TextView>(R.id.exerciseName)
+        val subtitle = findViewById<TextView>(R.id.variationName)
         val time = findViewById<TextView>(R.id.time)
         val image = findViewById<ImageView>(R.id.image)
 
         fragment.isClickable = false
         title.text = exercise.name
         time.visibility = View.GONE
+
+        if (variation.default) {
+            subtitle.visibility = View.GONE
+        } else {
+            subtitle.text = variation.name
+        }
+
         val fileName = "previews/" + exercise.image + ".png"
         try {
             val ims = assets.open(fileName)

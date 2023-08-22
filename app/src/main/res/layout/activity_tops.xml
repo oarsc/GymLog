@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/fragmentExercise"
-        layout="@layout/listitem_exercise" />
+        layout="@layout/listitem_variation" />
 
     <View
         android:layout_width="match_parent"
