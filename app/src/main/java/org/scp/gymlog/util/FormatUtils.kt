@@ -39,7 +39,6 @@ object FormatUtils {
         return try {
             this.toInt()
         } catch (e: NumberFormatException) {
-            e.printStackTrace()
             0
         }
     }

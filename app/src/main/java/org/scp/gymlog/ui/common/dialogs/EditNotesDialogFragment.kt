@@ -12,6 +12,7 @@ import org.scp.gymlog.R
 import org.scp.gymlog.model.GymRelation
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.room.DBThread
+import org.scp.gymlog.util.ComponentsUtils.runOnUiThread
 import org.scp.gymlog.util.Data
 import java.util.function.Consumer
 
@@ -38,7 +39,7 @@ class EditNotesDialogFragment(
                     else
                         db.bitDao().getNotesHistory(Data.currentGym, variation.id, 18)
 
-                activity?.runOnUiThread {
+                runOnUiThread {
                     adapter = EditNotesRecyclerViewAdapter(notes) { input.setText(it) }
                 }
             }

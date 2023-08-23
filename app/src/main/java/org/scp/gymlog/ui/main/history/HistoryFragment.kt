@@ -17,6 +17,7 @@ import org.scp.gymlog.room.entities.BitEntity
 import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.ui.common.components.HistoryCalendarView
 import org.scp.gymlog.ui.common.components.HistoryCalendarView.PieDataInfo
+import org.scp.gymlog.util.ComponentsUtils.runOnUiThread
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.timeInMillis
 import java.time.LocalDate
@@ -184,10 +185,6 @@ class HistoryFragment : Fragment() {
 				training.end,
 				mostUsedMuscles)
 		}
-	}
-
-	private fun runOnUiThread(action: Runnable) {
-		requireActivity().runOnUiThread(action)
 	}
 
 	internal class MuscleCount(val muscle: Muscle) {

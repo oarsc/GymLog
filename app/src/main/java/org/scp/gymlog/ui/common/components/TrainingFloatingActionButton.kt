@@ -58,7 +58,7 @@ class TrainingFloatingActionButton : FloatingActionButton {
                                     ?.timestamp
 
                                 if (endDate != null) {
-                                    val startDate =db.bitDao()
+                                    val startDate = db.bitDao()
                                         .getFirstTimestampByTrainingId(trainingId)
                                     training.start = startDate!!
                                     training.end = endDate

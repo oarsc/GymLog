@@ -42,6 +42,9 @@ interface BitDao {
     @Query("SELECT * FROM bit WHERE trainingId == :trainingId AND timestamp < :timestamp ORDER BY timestamp DESC LIMIT 1")
     fun getPreviousByTraining(trainingId: Int, timestamp: LocalDateTime): BitEntity?
 
+    @Query("SELECT * FROM bit WHERE trainingId == :trainingId AND timestamp > :timestamp ORDER BY timestamp ASC LIMIT 1")
+    fun getNextByTraining(trainingId: Int, timestamp: LocalDateTime): BitEntity?
+
     @Query("SELECT * FROM bit WHERE trainingId = :trainingId ORDER BY timestamp DESC LIMIT 1")
     fun getMostRecentByTrainingId(trainingId: Int): BitEntity?
 
@@ -50,6 +53,10 @@ interface BitDao {
 
     @Query("SELECT MAX(superSet) FROM bit WHERE trainingId = :trainingId")
     fun getMaxSuperSet(trainingId: Int): Int?
+
+    // SUPERSETS
+    @Query("SELECT DISTINCT superSet FROM bit WHERE trainingId = :trainingId")
+    fun getAvailableSuperSets(trainingId: Int): List<Int>
 
     // NOTES
     @Query("SELECT DISTINCT note FROM bit WHERE " +

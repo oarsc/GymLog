@@ -6,15 +6,18 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.StringRes
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Bit
-import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.model.Weight
+import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.ui.common.components.NumberModifierView
+import org.scp.gymlog.util.ComponentsUtils.runOnUiThread
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.FormatUtils.safeBigDecimal
@@ -36,16 +39,22 @@ class EditBitLogDialogFragment (
     cancel: Runnable = Runnable {}
 ) : CustomDialogFragment<Bit>(title, confirm, cancel) {
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val inflater = requireActivity().layoutInflater
-        val view = inflater.inflate(R.layout.dialog_edit_bit_log, null)
+    private val dialogView: View by lazy {
+        requireActivity().layoutInflater.inflate(R.layout.dialog_edit_bit_log, null)
+    }
 
-        val editNotes = view.findViewById<EditText>(R.id.editNotes)
+    private val editNotes: EditText by lazy { dialogView.findViewById(R.id.editNotes) }
+    private val editWeight: EditText by lazy { dialogView.findViewById(R.id.editWeight) }
+    private val editReps: EditText by lazy { dialogView.findViewById(R.id.editReps) }
+    private val editSuperSet: EditText by lazy { dialogView.findViewById(R.id.editSuperSet) }
+    private val instantSwitch: SwitchMaterial by lazy { dialogView.findViewById(R.id.instantSwitch) }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         editNotes.setText(initialValue.note)
 
-        val unit = view.findViewById<TextView>(R.id.unit)
+        val unit = dialogView.findViewById<TextView>(R.id.unit)
         unit.setText(WeightUtils.unit(internationalSystem))
-        val convertedUnit = view.findViewById<TextView>(R.id.convertUnit)
+        val convertedUnit = dialogView.findViewById<TextView>(R.id.convertUnit)
         convertedUnit.setText(WeightUtils.unit(!internationalSystem))
 
         editNotes.setOnClickListener {
@@ -58,10 +67,9 @@ class EditBitLogDialogFragment (
             dialog.show(childFragmentManager, null)
         }
 
-        view.findViewById<View>(R.id.clearButton).setOnClickListener { editNotes.text.clear() }
+        dialogView.findViewById<View>(R.id.clearButton).setOnClickListener { editNotes.text.clear() }
 
-        val editWeight = view.findViewById<EditText>(R.id.editWeight)
-        val converted = view.findViewById<TextView>(R.id.converted)
+        val converted = dialogView.findViewById<TextView>(R.id.converted)
 
         val weight = getBigDecimalInitialWeight(internationalSystem)
         editWeight.bigDecimal = weight
@@ -83,18 +91,15 @@ class EditBitLogDialogFragment (
             }
         })
 
-        val modifier = view.findViewById<NumberModifierView>(R.id.weightModifier)
+        val modifier = dialogView.findViewById<NumberModifierView>(R.id.weightModifier)
         modifier.setStep(initialValue.variation.step)
 
-        val editReps = view.findViewById<EditText>(R.id.editReps)
         editReps.integer = initialValue.reps
 
-        val editSuperSet = view.findViewById<EditText>(R.id.editSuperSet)
         if (initialValue.superSet > 0) {
             editSuperSet.integer = initialValue.superSet
         }
 
-        val instantSwitch = view.findViewById<SwitchMaterial>(R.id.instantSwitch)
         if (enableInstantSwitch) {
             instantSwitch.isChecked = initialValue.instant
         } else {
@@ -104,24 +109,68 @@ class EditBitLogDialogFragment (
 
         val builder = AlertDialog.Builder(activity)
         builder.setMessage(title)
-            .setView(view)
-            .setPositiveButton(R.string.button_confirm) { _,_ ->
-                val totalWeight = Weight(editWeight.bigDecimal, internationalSystem).calculateTotal(
-                    initialValue.variation.weightSpec,
-                    initialValue.variation.bar)
-
-                // TODO: Validate that bits with same superSets should be consecutive
-
-                initialValue.weight = totalWeight
-                initialValue.reps = editReps.integer
-                initialValue.note = editNotes.text.toString()
-                initialValue.superSet = editSuperSet.integer
-                initialValue.instant = instantSwitch.isChecked
-                confirm.accept(initialValue)
-            }
+            .setView(dialogView)
+            .setPositiveButton(R.string.button_confirm, null)
             .setNegativeButton(R.string.button_cancel) { _,_ -> cancel.run() }
 
-        return builder.create()
+        return builder.create().apply {
+            setOnShowListener {
+                val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+                button.setOnClickListener{
+
+                    val superSet = editSuperSet.integer
+
+                    if (initialValue.superSet == superSet || superSet == 0) {
+                        confirmDialog()
+                        dismiss()
+                    } else {
+                        DBThread.run(requireContext()) { db ->
+
+                            val canUpdate = db.bitDao().let { dao ->
+                                val superSetsList = dao.getAvailableSuperSets(initialValue.trainingId)
+
+                                if (superSetsList.contains(superSet)) {
+                                    val nextIsSameSuperset = dao.getNextByTraining(
+                                        initialValue.trainingId,
+                                        initialValue.timestamp
+                                    )?.let { it.superSet == superSet } ?: false
+
+                                    if (!nextIsSameSuperset) {
+                                        return@let dao.getPreviousByTraining(
+                                            initialValue.trainingId,
+                                            initialValue.timestamp
+                                        )?.let { it.superSet == superSet } ?: false
+                                    }
+                                }
+                                true
+                            }
+
+                            if (canUpdate) {
+                                confirmDialog()
+                                dismiss()
+                            } else {
+                                runOnUiThread {
+                                    Toast.makeText(context, R.string.validation_super_set_must_be_in_touch,
+                                        Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun confirmDialog() {
+        initialValue.superSet = editSuperSet.integer
+        initialValue.reps = editReps.integer
+        initialValue.note = editNotes.text.toString()
+        initialValue.instant = instantSwitch.isChecked
+        initialValue.weight = Weight(editWeight.bigDecimal, internationalSystem).calculateTotal(
+            initialValue.variation.weightSpec,
+            initialValue.variation.bar)
+
+        confirm.accept(initialValue)
     }
 
     private fun updateConvertedWeight(value: BigDecimal, label: TextView) {
