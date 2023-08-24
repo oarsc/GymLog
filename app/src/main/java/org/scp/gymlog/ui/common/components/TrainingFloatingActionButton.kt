@@ -9,12 +9,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.room.AppDatabase
-import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.currentDateTime
+import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 
 class TrainingFloatingActionButton : FloatingActionButton {
 
@@ -45,7 +45,7 @@ class TrainingFloatingActionButton : FloatingActionButton {
                     ) { confirmed ->
                         if (confirmed) {
                             notificationService.hideNotification()
-                            DBThread.run(context) { db: AppDatabase ->
+                            context.dbThread { db: AppDatabase ->
                                 val trainingDao = db.trainingDao()
                                 val training = trainingDao.getTraining(trainingId)
                                     ?: throw  LoadException("Can't find trainingId $trainingId")
@@ -75,7 +75,7 @@ class TrainingFloatingActionButton : FloatingActionButton {
                 val activity: FragmentActivity = getContext() as AppCompatActivity
                 dialog.show(activity.supportFragmentManager, null)
             } else {
-                DBThread.run(context) { db: AppDatabase ->
+                context.dbThread { db: AppDatabase ->
                     val training = TrainingEntity()
                     training.start = currentDateTime()
                     training.trainingId = db.trainingDao().insert(training).toInt()

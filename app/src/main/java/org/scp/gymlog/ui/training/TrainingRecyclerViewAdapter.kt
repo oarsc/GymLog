@@ -106,13 +106,13 @@ class TrainingRecyclerViewAdapter(
                 holder.mReps!!.text = bit.reps.toString()
                 holder.mNote!!.text = bit.note
 
-                val index = rows.variations.indexOf(bit.variation) + 1
-                holder.mNumber!!.text = index.toString()
-
                 if (bit.instant) {
                     holder.mTime!!.setText(R.string.symbol_empty)
                     setAlpha(holder, 0.4f)
                 } else {
+                    val index = rows.variations.indexOf(bit.variation) + 1
+                    holder.mNumber!!.text = index.toString()
+
                     holder.mTime!!.text = bit.timestamp.getTimeString()
                     if (index != 1) {
                         holder.mTime.alpha = 0.7f

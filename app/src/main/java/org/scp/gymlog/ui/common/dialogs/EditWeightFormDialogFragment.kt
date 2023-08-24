@@ -9,7 +9,10 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.annotation.StringRes
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Bar
@@ -28,6 +31,7 @@ import org.scp.gymlog.util.WeightUtils.calculateTotal
 import org.scp.gymlog.util.WeightUtils.convertWeight
 import org.scp.gymlog.util.WeightUtils.toKilograms
 import org.scp.gymlog.util.WeightUtils.toPounds
+import org.scp.gymlog.util.extensions.MessagingExts.toast
 import java.math.BigDecimal
 import java.util.function.Consumer
 
@@ -152,8 +156,7 @@ class EditWeightFormDialogFragment(
                         initialValue.exerciseUpdated = true
                         if (initialValue.type == ExerciseType.BARBELL) {
                             incompatibleBar.visibility = View.VISIBLE
-                            Toast.makeText(context, R.string.validation_should_have_bar,
-                                Toast.LENGTH_LONG).show()
+                            toast(R.string.validation_should_have_bar)
                         } else {
                             incompatibleBar.visibility = View.INVISIBLE
                         }
@@ -177,8 +180,7 @@ class EditWeightFormDialogFragment(
                             incompatibleBar.visibility = View.INVISIBLE
                         } else {
                             incompatibleBar.visibility = View.VISIBLE
-                            Toast.makeText(context, R.string.validation_shouldnt_have_bar,
-                                Toast.LENGTH_LONG).show()
+                            toast(R.string.validation_shouldnt_have_bar)
                         }
                         updateConfig(lastBar = lastBar)
                     }

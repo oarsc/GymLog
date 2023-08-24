@@ -54,9 +54,6 @@ interface BitDao {
     @Query("SELECT MAX(superSet) FROM bit WHERE trainingId = :trainingId")
     fun getMaxSuperSet(trainingId: Int): Int?
 
-    // SUPERSETS
-    @Query("SELECT DISTINCT superSet FROM bit WHERE trainingId = :trainingId")
-    fun getAvailableSuperSets(trainingId: Int): List<Int>
 
     // NOTES
     @Query("SELECT DISTINCT note FROM bit WHERE " +

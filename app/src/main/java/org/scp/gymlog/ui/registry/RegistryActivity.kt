@@ -14,12 +14,10 @@ import android.widget.TextView
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.*
 import org.scp.gymlog.room.AppDatabase
-import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.service.NotificationService.Companion.lastEndTime
 import org.scp.gymlog.ui.common.DBAppCompatActivity
@@ -44,6 +42,8 @@ import org.scp.gymlog.util.SecondTickThread
 import org.scp.gymlog.util.WeightUtils
 import org.scp.gymlog.util.WeightUtils.calculate
 import org.scp.gymlog.util.WeightUtils.calculateTotal
+import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
+import org.scp.gymlog.util.extensions.MessagingExts.snackBar
 import java.io.IOException
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -126,7 +126,7 @@ class RegistryActivity : DBAppCompatActivity() {
             val dialog = EditTimerDialogFragment(this, R.string.text_notes, variation) { result ->
                 if (variation.restTime != result) {
                     variation.restTime = result
-                    DBThread.run(this) { db -> db.variationDao().update(variation.toEntity()) }
+                    dbThread { db -> db.variationDao().update(variation.toEntity()) }
                 }
                 //if (countdownThread == null) {
                     updateTimer(result)
@@ -199,7 +199,7 @@ class RegistryActivity : DBAppCompatActivity() {
         superSet.setOnClickListener {
             activeTraining { trainingId ->
                 if (Data.superSet == null) {
-                    DBThread.run(this) { db ->
+                    dbThread { db ->
                         Data.superSet = (db.bitDao().getMaxSuperSet(trainingId) ?: 0) +1
                         runOnUiThread { updateSuperSetIcon() }
                     }
@@ -307,7 +307,7 @@ class RegistryActivity : DBAppCompatActivity() {
                     updateForms()
                 }
                 IntentReference.TRAINING -> {
-                    DBThread.run(this) { db ->
+                    dbThread { db ->
                         val log = if (variation.gymRelation == GymRelation.NO_RELATION)
                             db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
                         else
@@ -344,7 +344,7 @@ class RegistryActivity : DBAppCompatActivity() {
                     recyclerViewAdapter.notifyItemRangeChanged(0, log.size)
 
                     updateForms()
-                    DBThread.run(this) { db -> db.variationDao().update(variation.toEntity()) }
+                    dbThread { db -> db.variationDao().update(variation.toEntity()) }
                 }
             }
         )
@@ -435,7 +435,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
     private fun loadMoreHistory() {
         val initialSize = log.size
-        DBThread.run(this) { db ->
+        dbThread { db ->
             val bit = log[initialSize - 1]
             val date = bit.timestamp
 
@@ -459,7 +459,7 @@ class RegistryActivity : DBAppCompatActivity() {
     private fun saveBitLog(instant: Boolean) {
         activeTraining { trainingId ->
 
-            DBThread.run(this) { db ->
+            dbThread { db ->
                 val bit = Bit(variation)
 
                 val totalWeight = Weight(weight.bigDecimal, internationalSystem).calculateTotal(
@@ -518,7 +518,7 @@ class RegistryActivity : DBAppCompatActivity() {
     }
 
     private fun removeBitLog(bit: Bit) {
-        DBThread.run(this) { db ->
+        dbThread { db ->
             db.bitDao().delete(bit.toEntity())
 
             val index = log.indexOf(bit)
@@ -554,7 +554,7 @@ class RegistryActivity : DBAppCompatActivity() {
     }
 
     private fun updateBitLog(bit: Bit, updateTrainingId: Boolean) {
-        DBThread.run(this) { db ->
+        dbThread { db ->
             db.bitDao().update(bit.toEntity())
             val index = log.indexOf(bit)
             runOnUiThread {
@@ -567,13 +567,9 @@ class RegistryActivity : DBAppCompatActivity() {
     }
 
     private fun activeTraining(block: (trainingId: Int) -> Unit) {
-        val trainingId = Data.trainingId
-        if (trainingId == null) {
-            Snackbar.make(findViewById(android.R.id.content),
-                R.string.validation_training_not_started, Snackbar.LENGTH_LONG).show()
-        } else {
-            block(trainingId);
-        }
+        Data.trainingId
+            ?.also(block)
+            ?: snackBar(R.string.validation_training_not_started)
     }
 
     private fun onClickBit(view: View, bit: Bit) {
@@ -587,7 +583,7 @@ class RegistryActivity : DBAppCompatActivity() {
                     startActivityForResult(intent, IntentReference.TRAINING)
                 }
                 R.id.editBit -> {
-                    DBThread.run(this) { db ->
+                    dbThread { db ->
                         val enableInstantSwitch = db.bitDao().getPreviousByTraining(bit.trainingId, bit.timestamp)
                             ?.let { it.variationId == variation.id}
                             ?: false

@@ -1,9 +1,9 @@
 package org.scp.gymlog.ui.common
 
 import android.os.Bundle
-import android.widget.Toast
 import org.scp.gymlog.room.AppDatabase
-import org.scp.gymlog.room.DBThread
+import org.scp.gymlog.util.extensions.MessagingExts.toast
+import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 
 abstract class DBAppCompatActivity : CustomAppCompatActivity() {
 
@@ -14,15 +14,13 @@ abstract class DBAppCompatActivity : CustomAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DBThread.run(this) { db ->
+        dbThread { db ->
             val result = onLoad(savedInstanceState, db)
             if (result == CONTINUE) {
                 runOnUiThread { onDelayedCreate(savedInstanceState) }
             } else {
                 if (result != ERROR_WITHOUT_MESSAGE) {
-                    runOnUiThread {
-                        Toast.makeText(this, result, Toast.LENGTH_LONG).show()
-                    }
+                    toast(result)
                 }
                 finish()
             }

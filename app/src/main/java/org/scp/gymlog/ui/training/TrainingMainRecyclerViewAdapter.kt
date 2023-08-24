@@ -18,9 +18,8 @@ import org.scp.gymlog.databinding.ListitemHistorySupersetExerciseHeaderBinding
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Muscle
-import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.ui.common.dialogs.EditBitLogDialogFragment
-import org.scp.gymlog.ui.training.rows.TrainingBitRow
+import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import java.io.IOException
 import java.util.function.BiConsumer
 import java.util.function.Consumer
@@ -116,7 +115,7 @@ class TrainingMainRecyclerViewAdapter(
         holder.mBitList.adapter = adapter
 
         adapter.onClickListener = BiConsumer { bit, index ->
-            DBThread.run(context) { db ->
+            context.dbThread { db ->
 
                 val enableInstantSwitch = db.bitDao().getPreviousByTraining(bit.trainingId, bit.timestamp)
                     ?.let { it.variationId == bit.variation.id }
@@ -130,7 +129,7 @@ class TrainingMainRecyclerViewAdapter(
                     internationalSystem,
                     bit,
                     { editedBit ->
-                        DBThread.run(context) { db ->
+                        context.dbThread { db ->
                             db.bitDao().update(editedBit.toEntity())
                             context.runOnUiThread { adapter.notifyItemChanged(index) }
                             onBitChangedListener?.accept(editedBit)

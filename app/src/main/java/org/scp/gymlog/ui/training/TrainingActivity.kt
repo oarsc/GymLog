@@ -25,7 +25,7 @@ import org.scp.gymlog.ui.training.rows.TrainingHeaderRow
 import org.scp.gymlog.ui.training.rows.TrainingVariationRow
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.getDateString
-import org.scp.gymlog.util.PreferencesUtils.loadString
+import org.scp.gymlog.util.extensions.PreferencesExts.loadString
 import java.util.function.Consumer
 
 class TrainingActivity : DBAppCompatActivity() {

@@ -12,14 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Muscle
-import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.room.entities.BitEntity
 import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.ui.common.components.HistoryCalendarView
 import org.scp.gymlog.ui.common.components.HistoryCalendarView.PieDataInfo
-import org.scp.gymlog.util.ComponentsUtils.runOnUiThread
+import org.scp.gymlog.util.extensions.ComponentsExts.runOnUiThread
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.timeInMillis
+import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import java.time.LocalDate
 
 class HistoryFragment : Fragment() {
@@ -78,7 +78,7 @@ class HistoryFragment : Fragment() {
 	private fun onDaySelected(startDate: LocalDate, muscles: List<Muscle>?) {
 		val initDate = startDate.atStartOfDay()
 		val endDate = initDate.plusDays(1)
-		DBThread.run(requireContext()) { db ->
+		requireContext().dbThread { db ->
 			val trainings = db.trainingDao().getTrainingByStartDate(initDate, endDate)
 
 			val initialSize: Int = historyAdapter.size()
@@ -102,7 +102,7 @@ class HistoryFragment : Fragment() {
 
 	private fun updateMonthData(first: LocalDate, end: LocalDate) {
 		val allMuscles: List<Muscle> = Data.muscles
-		DBThread.run(requireContext()) { db ->
+		requireContext().dbThread { db ->
 			val bits = db.bitDao().getCalendarHistory(first.atStartOfDay(), end.atStartOfDay())
 
 			var currentDay = first

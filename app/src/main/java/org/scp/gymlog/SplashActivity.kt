@@ -6,13 +6,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.*
 import org.scp.gymlog.room.AppDatabase
-import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.room.entities.BarEntity
 import org.scp.gymlog.room.entities.ExerciseEntity.WithMusclesAndVariations
 import org.scp.gymlog.room.entities.MuscleEntity
@@ -21,10 +19,12 @@ import org.scp.gymlog.service.InitialDataService
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.main.MainActivity
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.PreferencesUtils.loadBoolean
-import org.scp.gymlog.util.PreferencesUtils.loadInteger
-import org.scp.gymlog.util.PreferencesUtils.loadString
 import org.scp.gymlog.util.WeightUtils
+import org.scp.gymlog.util.extensions.MessagingExts.toast
+import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
+import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
+import org.scp.gymlog.util.extensions.PreferencesExts.loadInteger
+import org.scp.gymlog.util.extensions.PreferencesExts.loadString
 import java.io.File
 import java.io.FileOutputStream
 
@@ -48,7 +48,7 @@ class SplashActivity : AppCompatActivity() {
 
             NotificationService(this).createNotificationsChannel()
 
-            DBThread.run(this) { db ->
+            dbThread { db ->
                 val muscles = db.muscleDao().getOnlyMuscles()
                 if (muscles.isEmpty()) {
                     InitialDataService.persist(assets, db)
@@ -64,7 +64,7 @@ class SplashActivity : AppCompatActivity() {
         if (importUri != null) {
             intent.removeExtra("import")
 
-            DBThread.run(this) { db ->
+            dbThread { db ->
                 contentResolver.openInputStream(importUri).use { inputStream ->
                     dataBaseDumperService.load(this, inputStream!!, db)
                     runOnUiThread { recreate() }
@@ -81,14 +81,12 @@ class SplashActivity : AppCompatActivity() {
             intent.removeExtra("export")
             val fileName = getFileName(exportUri)
 
-            DBThread.run(this) { db ->
+            dbThread { db ->
                 (contentResolver.openOutputStream(exportUri) as FileOutputStream)
                     .use { fileOutputStream ->
                         dataBaseDumperService.save(this, fileOutputStream, db)
-                        runOnUiThread {
-                            Toast.makeText(this, "Saved \"$fileName\"", Toast.LENGTH_LONG).show()
-                            goMain()
-                        }
+                        toast("Saved \"$fileName\"")
+                        goMain()
                     }
             }
             return true

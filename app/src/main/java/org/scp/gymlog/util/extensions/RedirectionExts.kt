@@ -1,4 +1,4 @@
-package org.scp.gymlog.util
+package org.scp.gymlog.util.extensions
 
 import android.content.Context
 import android.content.Intent
@@ -7,9 +7,10 @@ import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.CustomFragment
 import org.scp.gymlog.ui.exercises.ExercisesActivity
 import org.scp.gymlog.ui.registry.RegistryActivity
+import org.scp.gymlog.util.Constants
 
 
-object RedirectionUtils {
+object RedirectionExts {
     fun CustomAppCompatActivity.goToVariation(variation: Variation) {
         internalGoToVariation(variation, this, this::startActivity, this::startActivityForResult)
     }

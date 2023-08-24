@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
 import org.scp.gymlog.SplashActivity
 import org.scp.gymlog.model.Muscle
-import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.room.entities.GymEntity
 import org.scp.gymlog.service.DataBaseDumperService
 import org.scp.gymlog.service.NotificationService
@@ -27,7 +26,8 @@ import org.scp.gymlog.ui.latest.LatestExercisesActivity
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.currentDateTime
-import org.scp.gymlog.util.PreferencesUtils.save
+import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
+import org.scp.gymlog.util.extensions.PreferencesExts.save
 
 
 /**
@@ -73,7 +73,7 @@ class MusclesFragment : CustomFragment() {
 				R.id.gymSelectButton -> {
 					val context = requireContext()
 
-					DBThread.run(context) { db ->
+					context.dbThread { db ->
 						val gyms = db.gymDao().getAll()
 						val labels = gyms
 							.map(GymEntity::name)
@@ -83,7 +83,7 @@ class MusclesFragment : CustomFragment() {
 							if (idx != DIALOG_CLOSED) {
 								if (idx == gyms.size) {
 									val dialog = EditTextDialogFragment(R.string.dialog_write_new_gym, confirm = {
-										DBThread.run(context) { db ->
+										context.dbThread { db ->
 											db.gymDao().insert(GymEntity(name = it))
 											val gymId = idx + 1;
 											context.save("gym", gymId)

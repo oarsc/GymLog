@@ -6,18 +6,15 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.StringRes
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Weight
-import org.scp.gymlog.room.DBThread
+import org.scp.gymlog.room.daos.BitDao
 import org.scp.gymlog.ui.common.components.NumberModifierView
-import org.scp.gymlog.util.ComponentsUtils.runOnUiThread
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.FormatUtils.safeBigDecimal
@@ -27,6 +24,8 @@ import org.scp.gymlog.util.WeightUtils.calculateTotal
 import org.scp.gymlog.util.WeightUtils.defaultScaled
 import org.scp.gymlog.util.WeightUtils.toKilograms
 import org.scp.gymlog.util.WeightUtils.toPounds
+import org.scp.gymlog.util.extensions.MessagingExts.toast
+import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import java.math.BigDecimal
 import java.util.function.Consumer
 
@@ -118,47 +117,53 @@ class EditBitLogDialogFragment (
                 val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
                 button.setOnClickListener{
 
-                    val superSet = editSuperSet.integer
 
-                    if (initialValue.superSet == superSet || superSet == 0) {
+                    if (initialValue.superSet == editSuperSet.integer) {
                         confirmDialog()
                         dismiss()
                     } else {
-                        DBThread.run(requireContext()) { db ->
-
-                            val canUpdate = db.bitDao().let { dao ->
-                                val superSetsList = dao.getAvailableSuperSets(initialValue.trainingId)
-
-                                if (superSetsList.contains(superSet)) {
-                                    val nextIsSameSuperset = dao.getNextByTraining(
-                                        initialValue.trainingId,
-                                        initialValue.timestamp
-                                    )?.let { it.superSet == superSet } ?: false
-
-                                    if (!nextIsSameSuperset) {
-                                        return@let dao.getPreviousByTraining(
-                                            initialValue.trainingId,
-                                            initialValue.timestamp
-                                        )?.let { it.superSet == superSet } ?: false
-                                    }
-                                }
-                                true
-                            }
-
+                        dbThread { db ->
+                            val canUpdate = db.bitDao().validateBitEdit()
                             if (canUpdate) {
                                 confirmDialog()
                                 dismiss()
-                            } else {
-                                runOnUiThread {
-                                    Toast.makeText(context, R.string.validation_super_set_must_be_in_touch,
-                                        Toast.LENGTH_LONG).show()
-                                }
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun BitDao.validateBitEdit(): Boolean {
+        val superSet = editSuperSet.integer
+        val trainingBits = getHistoryByTrainingId(initialValue.trainingId)
+
+        val index = trainingBits.indices.find { trainingBits[it].bitId == initialValue.id }
+            ?: throw RuntimeException("Bit not found on its own training... Id:${initialValue.id} #${initialValue.trainingId}")
+
+        val nextSs = if (index < trainingBits.size - 1) trainingBits[index + 1].superSet else 0
+        val prevSs = if (index > 0) trainingBits[index - 1].superSet else 0
+
+        if (superSet == 0) {
+            if (nextSs == prevSs && nextSs != 0) {
+                toast(R.string.validation_super_set_must_be_in_touch)
+                return false
+            }
+        } else {
+
+            if (trainingBits.any { it.superSet == superSet }) {
+                if (nextSs != superSet && prevSs != superSet) {
+                    toast(R.string.validation_super_set_must_be_in_touch)
+                    return false
+                }
+            }
+            if (nextSs == prevSs && nextSs != 0 && nextSs != superSet) {
+                toast(R.string.validation_super_set_must_be_in_touch)
+                return false
+            }
+        }
+        return true
     }
 
     private fun confirmDialog() {

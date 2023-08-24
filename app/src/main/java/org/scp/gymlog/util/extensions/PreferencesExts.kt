@@ -1,10 +1,10 @@
-package org.scp.gymlog.util
+package org.scp.gymlog.util.extensions
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 
-object PreferencesUtils {
+object PreferencesExts {
 
     private val Context.preferences: SharedPreferences
         get() = PreferenceManager.getDefaultSharedPreferences(this)

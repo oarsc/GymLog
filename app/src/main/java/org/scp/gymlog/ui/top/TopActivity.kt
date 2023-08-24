@@ -15,13 +15,13 @@ import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.room.AppDatabase
-import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.top.rows.*
 import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
+import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import java.io.IOException
 import java.util.function.Consumer
 
@@ -112,7 +112,7 @@ open class TopActivity : DBAppCompatActivity() {
                 adapter.notifyItemRangeChanged(0, listData.size)
 
             } else if (intentReference === IntentReference.TRAINING) {
-                DBThread.run(this) { db ->
+                dbThread { db ->
                     transformBitsToRows(getBits(db, exercise.id))
                     runOnUiThread { adapter.notifyDataSetChanged() }
                 }

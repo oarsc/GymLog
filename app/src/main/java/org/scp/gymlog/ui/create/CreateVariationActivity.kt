@@ -7,7 +7,6 @@ import android.view.MenuItem
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import org.scp.gymlog.R
 import org.scp.gymlog.model.ExerciseType
 import org.scp.gymlog.model.GymRelation
@@ -17,6 +16,7 @@ import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment.Companion.DIALOG_CLOSED
 import org.scp.gymlog.util.Constants.IntentReference
+import org.scp.gymlog.util.extensions.MessagingExts.snackBar
 
 class CreateVariationActivity : CustomAppCompatActivity() {
 
@@ -62,8 +62,7 @@ class CreateVariationActivity : CustomAppCompatActivity() {
 		}
 
 		if (name.isBlank()) {
-			Snackbar.make(findViewById(android.R.id.content),
-				R.string.validation_name, Snackbar.LENGTH_LONG).show()
+			snackBar(R.string.validation_name)
 
 		} else {
 			val data = Intent()

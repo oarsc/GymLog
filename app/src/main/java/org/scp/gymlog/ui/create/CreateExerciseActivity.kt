@@ -9,12 +9,10 @@ import android.view.MenuItem
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.*
 import org.scp.gymlog.room.Converters
-import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.activity.ImageSelectorActivity
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment
@@ -23,6 +21,8 @@ import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment.Companion.DIALOG_CLOS
 import org.scp.gymlog.ui.common.dialogs.TextSelectDialogFragment
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
+import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
+import org.scp.gymlog.util.extensions.MessagingExts.snackBar
 import java.io.IOException
 import java.util.regex.Pattern
 
@@ -77,16 +77,13 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 		}
 
 		if (exercise.image.isBlank()) {
-			Snackbar.make(findViewById(android.R.id.content),
-				R.string.validation_image, Snackbar.LENGTH_LONG).show()
+			snackBar(R.string.validation_image)
 
 		} else if (exercise.name.isBlank()) {
-			Snackbar.make(findViewById(android.R.id.content),
-				R.string.validation_name, Snackbar.LENGTH_LONG).show()
+			snackBar(R.string.validation_name)
 
 		} else if (exercise.primaryMuscles.isEmpty()) {
-			Snackbar.make(findViewById(android.R.id.content),
-				R.string.validation_muscles, Snackbar.LENGTH_LONG).show()
+			snackBar(R.string.validation_muscles)
 
 		} else {
 			val data = Intent()
@@ -96,7 +93,7 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 
 				val original = Data.getExercise(exercise.id)
 
-				DBThread.run(this) { db ->
+				dbThread { db ->
 					db.exerciseDao().update(exercise.toEntity())
 
 					// Muscles
@@ -154,7 +151,7 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 
 			} else {
 
-				DBThread.run(this) { db ->
+				dbThread { db ->
 					val id = db.exerciseDao().insert(exercise.toEntity()).toInt()
 					exercise.id = id
 					data.putExtra("exerciseId", id)

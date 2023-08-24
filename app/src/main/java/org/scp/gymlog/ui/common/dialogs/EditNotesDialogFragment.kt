@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
 import org.scp.gymlog.model.GymRelation
 import org.scp.gymlog.model.Variation
-import org.scp.gymlog.room.DBThread
-import org.scp.gymlog.util.ComponentsUtils.runOnUiThread
+import org.scp.gymlog.util.extensions.ComponentsExts.runOnUiThread
 import org.scp.gymlog.util.Data
+import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import java.util.function.Consumer
 
 class EditNotesDialogFragment(
@@ -33,7 +33,7 @@ class EditNotesDialogFragment(
         view.findViewById<RecyclerView>(R.id.historicNotes).apply {
             layoutManager = LinearLayoutManager(context)
 
-            DBThread.run(requireContext()) { db ->
+            requireContext().dbThread { db ->
                 val notes = if (variation.gymRelation == GymRelation.NO_RELATION)
                         db.bitDao().getNotesHistory(variation.id, 18)
                     else

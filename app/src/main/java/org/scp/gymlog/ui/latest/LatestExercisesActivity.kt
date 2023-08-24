@@ -9,7 +9,7 @@ import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.RedirectionUtils.goToVariation
+import org.scp.gymlog.util.extensions.RedirectionExts.goToVariation
 import java.util.function.Consumer
 
 class LatestExercisesActivity : DBAppCompatActivity() {

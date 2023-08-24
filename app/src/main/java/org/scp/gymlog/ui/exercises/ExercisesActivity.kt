@@ -12,7 +12,6 @@ import org.scp.gymlog.model.Order
 import org.scp.gymlog.model.Order.Companion.getByCode
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.room.AppDatabase
-import org.scp.gymlog.room.DBThread
 import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment
@@ -22,8 +21,9 @@ import org.scp.gymlog.ui.registry.RegistryActivity
 import org.scp.gymlog.ui.top.TopActivity
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.PreferencesUtils.loadString
-import org.scp.gymlog.util.PreferencesUtils.save
+import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
+import org.scp.gymlog.util.extensions.PreferencesExts.loadString
+import org.scp.gymlog.util.extensions.PreferencesExts.save
 import java.util.function.Consumer
 
 class ExercisesActivity : DBAppCompatActivity() {
@@ -123,7 +123,7 @@ class ExercisesActivity : DBAppCompatActivity() {
                     R.string.dialog_confirm_remove_exercise_text
                 ) { confirmed ->
                     if (confirmed) {
-                        DBThread.run(this) { db ->
+                        dbThread { db ->
                             if (db.exerciseDao().delete(exercise.toEntity()) == 1) {
                                 runOnUiThread { recyclerAdapter.removeExercise(exercise) }
                                 db.trainingDao().deleteEmptyTraining()
