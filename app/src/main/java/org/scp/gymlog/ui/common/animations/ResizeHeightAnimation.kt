@@ -5,10 +5,17 @@ import android.view.animation.Animation
 import android.view.animation.Transformation
 import org.scp.gymlog.util.FormatUtils
 
-class ResizeHeightAnimation(private val mView: View, height: Int, duration: Long) : Animation() {
+class ResizeHeightAnimation(
+    private val mView: View,
+    height: Int,
+    duration: Long,
+    toDp: Boolean = false
+) : Animation() {
 
-    private val mHeight: Int = FormatUtils.toDp(mView.resources.displayMetrics, height)
-    private val mStartHeight: Int = mView.height
+    private val mStartHeight = mView.height
+    private val mHeight = if (toDp)
+        FormatUtils.toDp(mView.resources.displayMetrics, height) else
+        height
 
     init {
         setDuration(duration)

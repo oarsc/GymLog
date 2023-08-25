@@ -1,36 +1,52 @@
 package org.scp.gymlog.ui.top
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import org.scp.gymlog.R
+import org.scp.gymlog.databinding.ListitemTopBitBinding
+import org.scp.gymlog.databinding.ListitemTopHeadersBinding
+import org.scp.gymlog.databinding.ListitemTopSpaceBinding
+import org.scp.gymlog.databinding.ListitemTopVariationBinding
 import org.scp.gymlog.exceptions.InternalException
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.ui.common.DBAppCompatActivity
+import org.scp.gymlog.ui.common.components.listView.MultipleListHandler
+import org.scp.gymlog.ui.common.components.listView.MultipleListView
+import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.top.rows.*
 import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
+import org.scp.gymlog.util.DateUtils
+import org.scp.gymlog.util.DateUtils.getDateString
+import org.scp.gymlog.util.DateUtils.getLetterFrom
+import org.scp.gymlog.util.FormatUtils.bigDecimal
+import org.scp.gymlog.util.FormatUtils.integer
+import org.scp.gymlog.util.WeightUtils.calculate
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import java.io.IOException
-import java.util.function.Consumer
 
 open class TopActivity : DBAppCompatActivity() {
+
+    private val today = DateUtils.currentDateTime()
 
     private lateinit var exercise: Exercise
     private val listData: MutableList<ITopRow> = ArrayList()
     private var internationalSystem = false
-    private lateinit var adapter: TopRecyclerViewAdapter
+    private lateinit var topListView: MultipleListView<ITopRow>
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
         val exerciseId = intent.extras!!.getInt("exerciseId")
@@ -51,14 +67,8 @@ open class TopActivity : DBAppCompatActivity() {
 
         setHeaderInfo()
 
-        val historyRecyclerView = findViewById<RecyclerView>(R.id.variantTopList)
-        historyRecyclerView.layoutManager = LinearLayoutManager(this)
-
-        adapter = TopRecyclerViewAdapter(listData, internationalSystem)
-        historyRecyclerView.adapter = adapter
-
-        adapter.onClickListener = Consumer { topBit -> onElementClicked(topBit) }
-        adapter.onLongClickListener = Consumer { topBit -> onElementLongClicked(topBit) }
+        topListView = findViewById(R.id.variantTopList)
+        topListView.init(listData, TopListHandler())
     }
 
     protected open fun getBits(db: AppDatabase, exerciseId: Int): List<Bit> {
@@ -91,7 +101,7 @@ open class TopActivity : DBAppCompatActivity() {
         listData.add(TopEmptySpaceRow())
     }
 
-    private fun onElementClicked(topBit: Bit) {
+    protected fun onElementClicked(topBit: Bit) {
         val intent = Intent(this, TrainingActivity::class.java)
         intent.putExtra("trainingId", topBit.trainingId)
         intent.putExtra("focusBit", topBit.id)
@@ -108,13 +118,12 @@ open class TopActivity : DBAppCompatActivity() {
 
     override fun onActivityResult(intentReference: IntentReference, data: Intent) {
         if (data.getBooleanExtra("refresh", false)) {
-            if (intentReference === IntentReference.TOP_RECORDS) {
-                adapter.notifyItemRangeChanged(0, listData.size)
-
-            } else if (intentReference === IntentReference.TRAINING) {
+            if (intentReference === IntentReference.TOP_RECORDS ||
+                intentReference === IntentReference.TRAINING) {
                 dbThread { db ->
                     transformBitsToRows(getBits(db, exercise.id))
-                    runOnUiThread { adapter.notifyDataSetChanged() }
+                    topListView.setListData(listData)
+                    runOnUiThread { topListView.notifyDataSetChanged() }
                 }
             }
         }
@@ -136,6 +145,64 @@ open class TopActivity : DBAppCompatActivity() {
             image.setImageDrawable(d)
         } catch (e: IOException) {
             throw LoadException("Could not read \"$fileName\"", e)
+        }
+    }
+
+    inner class TopListHandler : MultipleListHandler<ITopRow> {
+        override val useListState = false
+
+        override fun generateListItemInflater(item: ITopRow): (LayoutInflater, ViewGroup?, Boolean) -> ViewBinding {
+            return when(item.type) {
+                ITopRow.Type.BIT -> ListitemTopBitBinding::inflate
+                ITopRow.Type.VARIATION -> ListitemTopVariationBinding::inflate
+                ITopRow.Type.HEADER -> ListitemTopHeadersBinding::inflate
+                else -> ListitemTopSpaceBinding::inflate
+            }
+        }
+
+        override fun buildListView(
+            binding: ViewBinding,
+            item: ITopRow,
+            index: Int,
+            state: SimpleListView.ListElementState?
+        ) {
+            when (item.type) {
+                ITopRow.Type.VARIATION -> {
+                    binding as ListitemTopVariationBinding
+                    item as TopVariationRow
+                    binding.variationName.text = item.variation.name
+                }
+                ITopRow.Type.BIT -> {
+                    binding as ListitemTopBitBinding
+
+                    item as TopBitRow
+                    val bit = item.bit
+
+                    val weight = bit.weight.calculate(
+                        bit.variation.weightSpec,
+                        bit.variation.bar)
+
+                    binding.weight.bigDecimal = weight.getValue(internationalSystem)
+                    binding.reps.integer = bit.reps
+
+                    @SuppressLint("SetTextI18n")
+                    binding.time.text = bit.timestamp.getDateString() + " (" +
+                        today.getLetterFrom(bit.timestamp) + ")"
+
+                    binding.note.text = bit.note
+
+                    binding.root.setOnClickListener {
+                        onElementClicked(item.bit)
+                    }
+
+                    binding.root.setOnLongClickListener {
+                        onElementLongClicked(item.bit)
+                        true
+                    }
+                }
+                else -> {}
+            }
+
         }
     }
 }

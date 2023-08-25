@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
 import org.scp.gymlog.model.GymRelation
 import org.scp.gymlog.model.Variation
-import org.scp.gymlog.util.extensions.ComponentsExts.runOnUiThread
 import org.scp.gymlog.util.Data
+import org.scp.gymlog.util.extensions.ComponentsExts.runOnUiThread
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import java.util.function.Consumer
 

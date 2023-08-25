@@ -5,18 +5,18 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.content.res.ResourcesCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
+import org.scp.gymlog.databinding.ListitemDefaultRowBinding
 import org.scp.gymlog.model.ExerciseType
 import org.scp.gymlog.model.GymRelation
 import org.scp.gymlog.room.Converters
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
+import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment.Companion.DIALOG_CLOSED
 import org.scp.gymlog.util.Constants.IntentReference
-import org.scp.gymlog.util.extensions.MessagingExts.snackBar
+import org.scp.gymlog.util.extensions.MessagingExts.snackbar
 
 class CreateVariationActivity : CustomAppCompatActivity() {
 
@@ -46,9 +46,8 @@ class CreateVariationActivity : CustomAppCompatActivity() {
 			gymRelation = Converters.toGymRelation(getInt("gymRelation", 0).toShort())
 		}
 
-		val recyclerView = findViewById<RecyclerView>(R.id.createFormList)
-		recyclerView.layoutManager = LinearLayoutManager(this)
-		recyclerView.adapter = CreateFormRecyclerViewAdapter(createForm())
+		findViewById<SimpleListView<CreateFormElement, ListitemDefaultRowBinding>>(R.id.createFormList)
+			.init(createForm(), CreateExerciseListHandler)
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -62,7 +61,7 @@ class CreateVariationActivity : CustomAppCompatActivity() {
 		}
 
 		if (name.isBlank()) {
-			snackBar(R.string.validation_name)
+			snackbar(R.string.validation_name)
 
 		} else {
 			val data = Intent()

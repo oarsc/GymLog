@@ -16,19 +16,19 @@ object MessagingExts {
     fun Fragment.toast(text: CharSequence, duration: Int = Toast.LENGTH_LONG) {
         internalToast(requireActivity(), text, duration)
     }
-    fun Fragment.snackBar(
+    fun Fragment.snackbar(
         @StringRes resId: Int,
         @IdRes viewId: Int = android.R.id.content,
         duration: Int = Snackbar.LENGTH_LONG
     ) {
-        internalSnackBar(requireActivity(), resId, viewId, duration)
+        internalSnackbar(requireActivity(), resId, viewId, duration)
     }
-    fun Fragment.snackBar(
+    fun Fragment.snackbar(
         text: CharSequence,
         @IdRes viewId: Int = android.R.id.content,
         duration: Int = Snackbar.LENGTH_LONG
     ) {
-        internalSnackBar(requireActivity(), text, viewId, duration)
+        internalSnackbar(requireActivity(), text, viewId, duration)
     }
     fun View.toast(@StringRes resId: Int, duration: Int = Toast.LENGTH_LONG) {
         internalToast(context as Activity, resId, duration)
@@ -36,19 +36,19 @@ object MessagingExts {
     fun View.toast(text: CharSequence, duration: Int = Toast.LENGTH_LONG) {
         internalToast(context as Activity, text, duration)
     }
-    fun View.snackBar(
+    fun View.snackbar(
         @StringRes resId: Int,
         @IdRes viewId: Int = android.R.id.content,
         duration: Int = Snackbar.LENGTH_LONG
     ) {
-        internalSnackBar(context as Activity, resId, viewId, duration)
+        internalSnackbar(context as Activity, resId, viewId, duration)
     }
-    fun View.snackBar(
+    fun View.snackbar(
         text: CharSequence,
         @IdRes viewId: Int = android.R.id.content,
         duration: Int = Snackbar.LENGTH_LONG
     ) {
-        internalSnackBar(context as Activity, text, viewId, duration)
+        internalSnackbar(context as Activity, text, viewId, duration)
     }
     fun Activity.toast(@StringRes resId: Int, duration: Int = Toast.LENGTH_LONG) {
         internalToast(this, resId, duration)
@@ -56,19 +56,19 @@ object MessagingExts {
     fun Activity.toast(text: CharSequence, duration: Int = Toast.LENGTH_LONG) {
         internalToast(this, text, duration)
     }
-    fun Activity.snackBar(
+    fun Activity.snackbar(
         @StringRes resId: Int,
         @IdRes viewId: Int = android.R.id.content,
         duration: Int = Snackbar.LENGTH_LONG
     ) {
-        internalSnackBar(this, resId, viewId, duration)
+        internalSnackbar(this, resId, viewId, duration)
     }
-    fun Activity.snackBar(
+    fun Activity.snackbar(
         text: CharSequence,
         @IdRes viewId: Int = android.R.id.content,
         duration: Int = Snackbar.LENGTH_LONG
     ) {
-        internalSnackBar(this, text, viewId, duration)
+        internalSnackbar(this, text, viewId, duration)
     }
 
     private fun internalToast(activity: Activity, @StringRes resId: Int, duration: Int) {
@@ -87,7 +87,7 @@ object MessagingExts {
         }
     }
 
-    private fun internalSnackBar(
+    private fun internalSnackbar(
         activity: Activity,
         @StringRes resId: Int,
         @IdRes viewId: Int,
@@ -102,7 +102,7 @@ object MessagingExts {
         }
     }
 
-    private fun internalSnackBar(
+    private fun internalSnackbar(
         activity: Activity,
         text: CharSequence,
         @IdRes viewId: Int,

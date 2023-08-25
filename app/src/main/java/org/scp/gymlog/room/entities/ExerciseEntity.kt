@@ -1,8 +1,6 @@
 package org.scp.gymlog.room.entities
 
 import androidx.room.*
-import org.scp.gymlog.model.ExerciseType
-import org.scp.gymlog.model.WeightSpecification
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.JsonUtils.NoJsonify
 

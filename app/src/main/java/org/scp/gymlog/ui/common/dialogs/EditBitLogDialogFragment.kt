@@ -24,8 +24,8 @@ import org.scp.gymlog.util.WeightUtils.calculateTotal
 import org.scp.gymlog.util.WeightUtils.defaultScaled
 import org.scp.gymlog.util.WeightUtils.toKilograms
 import org.scp.gymlog.util.WeightUtils.toPounds
-import org.scp.gymlog.util.extensions.MessagingExts.toast
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
+import org.scp.gymlog.util.extensions.MessagingExts.toast
 import java.math.BigDecimal
 import java.util.function.Consumer
 

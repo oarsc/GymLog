@@ -11,9 +11,9 @@ import org.scp.gymlog.databinding.ListitemLogBinding
 import org.scp.gymlog.databinding.ListitemLogMoreButtonBinding
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.util.Constants
+import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.DateUtils.diffYearsAndDays
 import org.scp.gymlog.util.DateUtils.getLetterFrom
-import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.DateUtils.getTimeString
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer

@@ -7,9 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Bit
@@ -18,6 +15,7 @@ import org.scp.gymlog.model.TrainingOrder
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.entities.BitEntity
 import org.scp.gymlog.ui.common.DBAppCompatActivity
+import org.scp.gymlog.ui.common.components.listView.MultipleListView
 import org.scp.gymlog.ui.main.history.HistoryFragment.Companion.getTrainingData
 import org.scp.gymlog.ui.main.history.TrainingData
 import org.scp.gymlog.ui.training.rows.TrainingBitRow
@@ -25,15 +23,18 @@ import org.scp.gymlog.ui.training.rows.TrainingHeaderRow
 import org.scp.gymlog.ui.training.rows.TrainingVariationRow
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.getDateString
+import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
-import java.util.function.Consumer
 
 class TrainingActivity : DBAppCompatActivity() {
 
     private val exerciseRows = mutableListOf<ExerciseRows>()
     private lateinit var trainingData: TrainingData
-    private lateinit var adapter: TrainingMainRecyclerViewAdapter
-    private lateinit var linearLayout: LinearLayoutManager
+
+    private lateinit var exercisesListView: MultipleListView<ExerciseRows>
+    private lateinit var exercisesListHandler: TrainingListHandler
+
+
     private var trainingId: Int = 0
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
@@ -50,8 +51,7 @@ class TrainingActivity : DBAppCompatActivity() {
         setContentView(R.layout.activity_training)
         setTitle(R.string.title_training)
 
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val internationalSystem = preferences.getBoolean("internationalSystem", true)
+        val internationalSystem = loadBoolean("internationalSystem", true)
 
         setHeaderInfo()
 
@@ -66,31 +66,22 @@ class TrainingActivity : DBAppCompatActivity() {
                 ?.index ?: -1
         }
 
-        val historyRecyclerView = findViewById<RecyclerView>(R.id.historyList)
-        historyRecyclerView.layoutManager = LinearLayoutManager(this).also { linearLayout = it }
-        historyRecyclerView.adapter = TrainingMainRecyclerViewAdapter(exerciseRows,
-            internationalSystem, focusElement
-        ).also { adapter = it }
+        exercisesListHandler = TrainingListHandler(this, internationalSystem, focusElement)
+
+        exercisesListView = findViewById(R.id.historyList)
+        exercisesListView.init(exerciseRows, exercisesListHandler)
 
         if (focusElement >= 0) {
-            linearLayout.scrollToPositionWithOffset(focusElement, 60)
+            exercisesListView.scrollToPosition(focusElement, 60)
         }
 
-        adapter.onBitChangedListener = Consumer {
-/*
-            DBThread.run(this) { db ->
-                val bits = db.bitDao().getHistoryByTrainingId(trainingId)
-                generateTrainingBitRows(bits)
-                runOnUiThread {
-                    historyRecyclerView.adapter?.notifyDataSetChanged()
-                }
-            }
-*/
+        exercisesListHandler.setOnBitChangedListener {
             Intent().also {
                 it.putExtra("refresh", true)
                 setResult(RESULT_OK, it)
             }
         }
+
     }
 
     private fun generateTrainingBitRows(bits: List<BitEntity>) {
@@ -160,12 +151,18 @@ class TrainingActivity : DBAppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.expandButton) {
-            adapter.expandAll()
-        } else if (item.itemId == R.id.collapseButton) {
-            adapter.collapseAll()
-            linearLayout.scrollToPosition(0)
+    override fun onOptionsItemSelected(menuItem: MenuItem): Boolean {
+        if (menuItem.itemId == R.id.expandButton) {
+            exercisesListView.applyToAll { binding, item, state ->
+                exercisesListHandler.expandAll(binding, item, state!!)
+            }
+
+        } else if (menuItem.itemId == R.id.collapseButton) {
+            exercisesListView.applyToAll { binding, item, state ->
+                exercisesListHandler.collapseAll(binding, item, state!!)
+            }
+            exercisesListView.notifyDataSetChanged()
+            exercisesListView.scrollToPosition(0)
         }
         return false
     }

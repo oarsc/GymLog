@@ -4,19 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
+import org.scp.gymlog.databinding.ListitemExercisesRowBinding
 import org.scp.gymlog.exceptions.InternalException
+import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.model.Order
 import org.scp.gymlog.model.Order.Companion.getByCode
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
+import org.scp.gymlog.ui.common.components.listView.SimpleListView
+import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment
 import org.scp.gymlog.ui.create.CreateExerciseActivity
-import org.scp.gymlog.ui.latest.LatestExercisesActivity
 import org.scp.gymlog.ui.registry.RegistryActivity
 import org.scp.gymlog.ui.top.TopActivity
 import org.scp.gymlog.util.Constants.IntentReference
@@ -24,25 +25,25 @@ import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
 import org.scp.gymlog.util.extensions.PreferencesExts.save
-import java.util.function.Consumer
 
 class ExercisesActivity : DBAppCompatActivity() {
 
     private var muscleId = 0
-    private lateinit var exercisesId: MutableList<Int>
-    private var order: Order = Order.ALPHABETICALLY
-    private lateinit var recyclerAdapter: ExercisesRecyclerViewAdapter
-    private lateinit var exercisesRecyclerView: RecyclerView
+    private lateinit var exercises: MutableList<Exercise>
+
+    private lateinit var exercisesListView: SimpleListView<Exercise, ListitemExercisesRowBinding>
+    private lateinit var handler: ExercisesListHandler
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
         muscleId = intent.extras!!.getInt("muscleId")
-        exercisesId = db.exerciseDao().getExercisesIdByMuscleId(muscleId).toMutableList()
+        exercises = db.exerciseDao().getExercisesIdByMuscleId(muscleId)
+            .map { Data.getExercise(it) }
+            .toMutableList()
         return CONTINUE
     }
 
     override fun onDelayedCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_exercises)
-        order = getByCode(loadString("exercisesSortLastUsed", Order.ALPHABETICALLY.code))
 
         val muscle = Data.muscles
             .filter { it.id == muscleId }
@@ -50,20 +51,13 @@ class ExercisesActivity : DBAppCompatActivity() {
 
         setTitle(muscle.text)
 
-        recyclerAdapter = ExercisesRecyclerViewAdapter(exercisesId, order) { variation, action ->
-            onExerciseItemMenuSelected(variation, action) }
+        exercisesListView = findViewById(R.id.exercisesList)
 
-        recyclerAdapter.onClickListener = Consumer { variation ->
-            val intent = Intent(this, RegistryActivity::class.java)
-            intent.putExtra("exerciseId", variation.exercise.id)
-            intent.putExtra("variationId", variation.id)
-            startActivityForResult(intent, IntentReference.REGISTRY)
-        }
-
-        exercisesRecyclerView = findViewById<RecyclerView>(R.id.exercisesList).apply {
-            layoutManager = LinearLayoutManager(this@ExercisesActivity)
-            adapter = recyclerAdapter
-        }
+        handler = ExercisesListHandler(this, exercisesListView)
+        exercisesListView.init(exercises, handler)
+        handler.init()
+        handler.onExerciseClicked(this::itemClicked)
+        handler.onVariationClicked(this::itemClicked)
 
         findViewById<TrainingFloatingActionButton>(R.id.fabTraining).updateFloatingActionButton()
     }
@@ -72,7 +66,7 @@ class ExercisesActivity : DBAppCompatActivity() {
         val inflater = menuInflater
         inflater.inflate(R.menu.exercises_menu, menu)
 
-        when (order) {
+        when (getByCode(loadString("exercisesSortLastUsed", Order.ALPHABETICALLY.code))) {
             Order.ALPHABETICALLY -> menu.findItem(R.id.sortAlphabetically).isChecked = true
             Order.LAST_USED -> menu.findItem(R.id.sortLastUsed).isChecked = true
         }
@@ -87,16 +81,18 @@ class ExercisesActivity : DBAppCompatActivity() {
                 startActivityForResult(intent, IntentReference.CREATE_EXERCISE_FROM_MUSCLE)
             }
             R.id.latestButton -> {
-                val intent = Intent(this, LatestExercisesActivity::class.java)
+                val intent = Intent(this, LatestActivity::class.java)
                 startActivity(intent)
             }
             R.id.sortAlphabetically -> {
-                order = Order.ALPHABETICALLY.also { recyclerAdapter.switchOrder(it) }
+                val order = Order.ALPHABETICALLY
+                handler.updateOrder(order)
                 save("exercisesSortLastUsed", order.code)
                 item.isChecked = true
             }
             R.id.sortLastUsed -> {
-                order = Order.LAST_USED.also { recyclerAdapter.switchOrder(it) }
+                val order = Order.LAST_USED
+                handler.updateOrder(order)
                 save("exercisesSortLastUsed", order.code)
                 item.isChecked = true
             }
@@ -104,8 +100,29 @@ class ExercisesActivity : DBAppCompatActivity() {
         return false
     }
 
-    private fun onExerciseItemMenuSelected(variation: Variation, action: Int) {
+    private fun itemClicked(exercise: Exercise, long: Boolean) {
+        if (long) {
+            MenuDialogFragment(R.menu.exercise_menu) { action ->
+                exerciseMenuActionSelected(exercise, action)
+            }.apply { show(supportFragmentManager, null) }
+        } else {
+            val variation = exercise.variations.first { it.default }
+            val intent = Intent(this, RegistryActivity::class.java)
+            intent.putExtra("exerciseId", exercise.id)
+            intent.putExtra("variationId", variation.id)
+            startActivityForResult(intent, IntentReference.REGISTRY)
+        }
+    }
+
+    private fun itemClicked(variation: Variation) {
         val exercise = variation.exercise
+        val intent = Intent(this, RegistryActivity::class.java)
+        intent.putExtra("exerciseId", exercise.id)
+        intent.putExtra("variationId", variation.id)
+        startActivityForResult(intent, IntentReference.REGISTRY)
+    }
+
+    private fun exerciseMenuActionSelected(exercise: Exercise, action: Int) {
         when (action) {
             R.id.topRanking -> {
                 val intent = Intent(this, TopActivity::class.java)
@@ -125,10 +142,9 @@ class ExercisesActivity : DBAppCompatActivity() {
                     if (confirmed) {
                         dbThread { db ->
                             if (db.exerciseDao().delete(exercise.toEntity()) == 1) {
-                                runOnUiThread { recyclerAdapter.removeExercise(exercise) }
+                                runOnUiThread { exercisesListView.remove(exercise) }
                                 db.trainingDao().deleteEmptyTraining()
-
-                                exercisesId.remove(variation.id)
+                                exercises.remove(exercise)
                                 Data.exercises.removeIf { it === exercise }
                             }
                         }
@@ -148,10 +164,10 @@ class ExercisesActivity : DBAppCompatActivity() {
                     .any { it.id == muscleId }
 
                 if (hasMuscle) {
-                    recyclerAdapter.updateNotify(exercise)
+                    exercisesListView.notifyUpdate(exercise)
                 } else {
-                    recyclerAdapter.removeExercise(exercise)
-                    exercisesId.remove(exercise.id)
+                    exercisesListView.remove(exercise)
+                    exercises.remove(exercise)
                 }
             }
             IntentReference.CREATE_EXERCISE_FROM_MUSCLE -> {
@@ -161,20 +177,20 @@ class ExercisesActivity : DBAppCompatActivity() {
                     .any { it.id == muscleId }
 
                 if (hasMuscle) {
-                    exercisesId.add(exercise.id)
-                    recyclerAdapter.addExercise(exercise)
+                    exercises.add(exercise)
+                    exercisesListView.add(exercise)
                 }
             }
             IntentReference.REGISTRY -> {
                 if (data.getBooleanExtra("refresh", false)) {
+                    val order = getByCode(loadString("exercisesSortLastUsed", Order.ALPHABETICALLY.code))
+
                     if (order == Order.ALPHABETICALLY) {
                         val id = data.getIntExtra("exerciseId", -1)
                         val ex = Data.getExercise(id)
-                        recyclerAdapter.updateNotify(ex)
+                        exercisesListView.notifyUpdate(ex)
                     } else {
-//                        if (modified)
-//                            exercisesRecyclerView.scrollToPosition(0)
-                        recyclerAdapter.switchOrder(order)
+                        exercisesListView.forceReorder()
                     }
                 }
             }

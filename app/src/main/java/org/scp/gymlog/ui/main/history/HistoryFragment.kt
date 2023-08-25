@@ -7,26 +7,27 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
+import org.scp.gymlog.databinding.ListitemLegendBinding
+import org.scp.gymlog.databinding.ListitemTrainingBinding
 import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.room.entities.BitEntity
 import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.ui.common.components.HistoryCalendarView
 import org.scp.gymlog.ui.common.components.HistoryCalendarView.PieDataInfo
-import org.scp.gymlog.util.extensions.ComponentsExts.runOnUiThread
+import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.timeInMillis
+import org.scp.gymlog.util.extensions.ComponentsExts.runOnUiThread
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import java.time.LocalDate
 
 class HistoryFragment : Fragment() {
 
 	private lateinit var calendarView: HistoryCalendarView
-	private val historyAdapter by lazy { HistoryRecyclerViewAdapter() }
-	private val legendAdapter by lazy { HistoryLegendRecyclerViewAdapter() }
+
+	private lateinit var legendListView: SimpleListView<Muscle, ListitemLegendBinding>
+	private lateinit var trainingListView: SimpleListView<TrainingData, ListitemTrainingBinding>
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -36,29 +37,25 @@ class HistoryFragment : Fragment() {
 		val view = inflater.inflate(R.layout.fragment_history, container, false)
 
 		// LEGEND LIST
-		val legendRecyclerView = view.findViewById<RecyclerView>(R.id.legend)
-		legendRecyclerView.layoutManager = object : GridLayoutManager(context, 2) {
-			override fun canScrollVertically(): Boolean { return false }
-		}
-		legendRecyclerView.adapter = legendAdapter
+		legendListView = view.findViewById(R.id.legend)
+		legendListView.unScrollableVertically = true
+		legendListView.init(Data.muscles, HistoryLegendListHandler(requireContext()))
 
 		val showLegendIcon = view.findViewById<ImageView>(R.id.showLegendIcon)
 		view.findViewById<View>(R.id.showLegend).setOnClickListener {
-			if (legendRecyclerView.visibility == View.VISIBLE) {
-				legendRecyclerView.visibility = View.GONE
+			if (legendListView.visibility == View.VISIBLE) {
+				legendListView.visibility = View.GONE
 				showLegendIcon.animate().rotation(0f).start()
 			} else {
-				legendRecyclerView.visibility = View.VISIBLE
+				legendListView.visibility = View.VISIBLE
 				showLegendIcon.animate().rotation(180f).start()
 			}
 		}
 
 		// TRAININGS LIST
-		val trainingRecyclerView = view.findViewById<RecyclerView>(R.id.trainingList)
-		trainingRecyclerView.layoutManager = object : LinearLayoutManager(context) {
-			override fun canScrollVertically(): Boolean { return false }
-		}
-		trainingRecyclerView.adapter = historyAdapter
+		trainingListView = view.findViewById(R.id.trainingList)
+		trainingListView.unScrollableVertically = true
+		trainingListView.init(listOf(), HistoryTrainingListHandler(requireContext()))
 
 		// CALENDAR VIEW
 		calendarView = view.findViewById(R.id.calendarView);
@@ -81,21 +78,26 @@ class HistoryFragment : Fragment() {
 		requireContext().dbThread { db ->
 			val trainings = db.trainingDao().getTrainingByStartDate(initDate, endDate)
 
-			val initialSize: Int = historyAdapter.size()
-			val endSize = trainings.size
-			historyAdapter.clear()
+			val initialSize = trainingListView.size
 
-			trainings.forEach {
+			val newTrainings = trainings.mapNotNull {
 				val bits = db.bitDao().getHistoryByTrainingId(it.trainingId)
 				if (bits.isNotEmpty()) {
-					val td = getTrainingData(it, bits)
-					historyAdapter.add(td)
+					getTrainingData(it, bits)
+				} else {
+					null
 				}
 			}
 
 			runOnUiThread {
-				legendAdapter.focusMuscles(muscles)
-				historyAdapter.notifyItemsChanged(initialSize, endSize)
+				val legend = muscles ?: Data.muscles
+				val initSize = legendListView.size
+
+				legendListView.setListData(legend)
+				legendListView.dynamicallyItemsChangedBySize(initSize)
+
+				trainingListView.setListData(newTrainings)
+				trainingListView.dynamicallyItemsChangedBySize(initialSize)
 			}
 		}
 	}
@@ -133,7 +135,7 @@ class HistoryFragment : Fragment() {
 				}
 				val data = summary.entries
 					.filter { (_, value) -> value[0] > 0 }
-					.sortedWith(Comparator.comparing { (_, value) -> value[0] })
+					.sortedWith(Comparator.comparing { (_, value) -> -value[0] })
 					.map { (key, value) -> PieDataInfo(value[0], key) }
 
 				if (data.isNotEmpty()) {
@@ -143,9 +145,10 @@ class HistoryFragment : Fragment() {
 
 				if (calendarView.isSelected(currentDay) && data.isNotEmpty()) {
 					runOnUiThread {
-						legendAdapter.focusMuscles(data.map(PieDataInfo::muscle))
+						legendListView.setListData(data.map(PieDataInfo::muscle))
 					}
 				}
+
 				currentDay = currentDay.plusDays(1)
 			}
 			runOnUiThread { calendarView.isEnabled = true }

@@ -5,11 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.create.CreateExerciseActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <org.scp.gymlog.ui.common.components.listView.SimpleListView
         android:id="@+id/createFormList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.create.CreateExerciseActivity"
-        tools:listitem="@layout/list_element_fragment_form" />
+        tools:listitem="@layout/listitem_default_row" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

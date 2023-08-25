@@ -7,7 +7,10 @@ import org.json.JSONObject
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.*
 import org.scp.gymlog.room.AppDatabase
-import org.scp.gymlog.room.entities.*
+import org.scp.gymlog.room.entities.ExerciseEntity
+import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef
+import org.scp.gymlog.room.entities.SecondaryExerciseMuscleCrossRef
+import org.scp.gymlog.room.entities.VariationEntity
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.JsonUtils.map

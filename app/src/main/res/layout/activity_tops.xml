@@ -18,10 +18,10 @@
         app:layout_constraintBottom_toTopOf="@id/bottomPanel"
         app:layout_constraintRight_toRightOf="parent"/>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <org.scp.gymlog.ui.common.components.listView.MultipleListView
         android:id="@+id/variantTopList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".ui.top.TopActivity"
         tools:listitem="@layout/listitem_top_variation" />
 

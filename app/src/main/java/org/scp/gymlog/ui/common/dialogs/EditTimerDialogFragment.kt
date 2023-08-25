@@ -18,9 +18,9 @@ import org.scp.gymlog.R
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.service.NotificationService.Companion.lastEndTime
 import org.scp.gymlog.util.Constants.DATE_ZERO
+import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.DateUtils.diffSeconds
 import org.scp.gymlog.util.DateUtils.isPast
-import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.SecondTickThread
 import java.time.LocalDateTime

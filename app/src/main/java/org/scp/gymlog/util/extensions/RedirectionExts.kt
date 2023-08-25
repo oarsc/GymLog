@@ -6,11 +6,16 @@ import org.scp.gymlog.model.Variation
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.CustomFragment
 import org.scp.gymlog.ui.exercises.ExercisesActivity
+import org.scp.gymlog.ui.main.MainActivity
 import org.scp.gymlog.ui.registry.RegistryActivity
 import org.scp.gymlog.util.Constants
 
 
 object RedirectionExts {
+    fun Context.goToVariation(variation: Variation) {
+        (this as CustomAppCompatActivity).goToVariation(variation)
+    }
+
     fun CustomAppCompatActivity.goToVariation(variation: Variation) {
         internalGoToVariation(variation, this, this::startActivity, this::startActivityForResult)
     }
@@ -26,10 +31,15 @@ object RedirectionExts {
         startActivityForResult: (Intent, Constants.IntentReference) -> Unit
     ) {
         val exercise = variation.exercise
-        val muscle = exercise.primaryMuscles[0]
 
-        Intent(context, ExercisesActivity::class.java).apply {
+        Intent(context, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivity(this)
+        }
+
+        val muscle = exercise.primaryMuscles[0]
+        Intent(context, ExercisesActivity::class.java).apply {
             putExtra("muscleId", muscle.id)
             startActivity(this)
         }

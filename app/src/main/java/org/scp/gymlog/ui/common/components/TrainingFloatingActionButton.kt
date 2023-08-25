@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
-import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment

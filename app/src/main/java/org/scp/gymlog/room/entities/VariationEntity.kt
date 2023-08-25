@@ -7,8 +7,6 @@ import androidx.room.PrimaryKey
 import org.scp.gymlog.model.ExerciseType
 import org.scp.gymlog.model.GymRelation
 import org.scp.gymlog.model.WeightSpecification
-import org.scp.gymlog.util.Constants
-import org.scp.gymlog.util.JsonUtils
 
 @Entity(
     tableName = "variation",

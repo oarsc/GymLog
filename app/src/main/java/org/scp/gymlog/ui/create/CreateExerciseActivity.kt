@@ -7,14 +7,14 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.content.res.ResourcesCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
+import org.scp.gymlog.databinding.ListitemDefaultRowBinding
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.*
 import org.scp.gymlog.room.Converters
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.activity.ImageSelectorActivity
+import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment.Companion.DIALOG_CLOSED
@@ -22,7 +22,7 @@ import org.scp.gymlog.ui.common.dialogs.TextSelectDialogFragment
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
-import org.scp.gymlog.util.extensions.MessagingExts.snackBar
+import org.scp.gymlog.util.extensions.MessagingExts.snackbar
 import java.io.IOException
 import java.util.regex.Pattern
 
@@ -61,9 +61,8 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 			}
 		}
 
-		val recyclerView = findViewById<RecyclerView>(R.id.createFormList)
-		recyclerView.layoutManager = LinearLayoutManager(this)
-		recyclerView.adapter = CreateFormRecyclerViewAdapter(createForm())
+		findViewById<SimpleListView<CreateFormElement, ListitemDefaultRowBinding>>(R.id.createFormList)
+			.init(createForm(), CreateExerciseListHandler)
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -77,13 +76,13 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 		}
 
 		if (exercise.image.isBlank()) {
-			snackBar(R.string.validation_image)
+			snackbar(R.string.validation_image)
 
 		} else if (exercise.name.isBlank()) {
-			snackBar(R.string.validation_name)
+			snackbar(R.string.validation_name)
 
 		} else if (exercise.primaryMuscles.isEmpty()) {
-			snackBar(R.string.validation_muscles)
+			snackbar(R.string.validation_muscles)
 
 		} else {
 			val data = Intent()

@@ -55,7 +55,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/hash"
                 app:layout_constraintTop_toTopOf="@id/hash"/>
 
-            <androidx.recyclerview.widget.RecyclerView
+            <org.scp.gymlog.ui.common.components.listView.SimpleListView
                 android:id="@+id/exerciseList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <org.scp.gymlog.ui.common.components.listView.MultipleListView
         android:id="@+id/bitList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

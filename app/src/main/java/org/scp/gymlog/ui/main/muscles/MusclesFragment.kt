@@ -1,28 +1,30 @@
 package org.scp.gymlog.ui.main.muscles
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
 import org.scp.gymlog.SplashActivity
+import org.scp.gymlog.databinding.ListitemMuscleBinding
 import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.room.entities.GymEntity
 import org.scp.gymlog.service.DataBaseDumperService
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.common.CustomFragment
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
+import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
+import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment.Companion.DIALOG_CLOSED
 import org.scp.gymlog.ui.common.dialogs.TextSelectDialogFragment
 import org.scp.gymlog.ui.create.CreateExerciseActivity
 import org.scp.gymlog.ui.exercises.ExercisesActivity
-import org.scp.gymlog.ui.latest.LatestExercisesActivity
+import org.scp.gymlog.ui.exercises.LatestActivity
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.currentDateTime
@@ -48,9 +50,8 @@ class MusclesFragment : CustomFragment() {
 	): View {
 		val view = inflater.inflate(R.layout.fragment_list_muscles, container, false)
 
-		val recyclerView = view.findViewById<RecyclerView>(R.id.musclesList)
-		recyclerView.layoutManager = LinearLayoutManager(context)
-		recyclerView.adapter = MusclesRecyclerViewAdapter { muscle -> onMuscleClicked(muscle) }
+		view.findViewById<SimpleListView<Muscle, ListitemMuscleBinding>>(R.id.musclesList)
+			.init(Data.muscles, MuscleListHandler())
 
 		trainingFloatingButton = view.findViewById(R.id.fabTraining)
 
@@ -66,7 +67,7 @@ class MusclesFragment : CustomFragment() {
 				}
 				R.id.latestButton -> {
 					requireActivity().apply {
-						val intent = Intent(this, LatestExercisesActivity::class.java)
+						val intent = Intent(this, LatestActivity::class.java)
 						startActivity(intent)
 					}
 				}
@@ -170,5 +171,30 @@ class MusclesFragment : CustomFragment() {
 	override fun onResume() {
 		super.onResume()
 		trainingFloatingButton?.updateFloatingActionButton()
+	}
+
+	inner class MuscleListHandler : SimpleListHandler<Muscle, ListitemMuscleBinding> {
+		override val useListState = false
+
+		override fun generateListItemInflater(): (LayoutInflater, ViewGroup?, Boolean) -> ListitemMuscleBinding {
+			return ListitemMuscleBinding::inflate
+		}
+
+		override fun buildListView(
+			binding: ListitemMuscleBinding,
+			item: Muscle,
+			index: Int,
+			state: SimpleListView.ListElementState?
+		) {
+			binding.apply {
+				root.setOnClickListener { onMuscleClicked(item) }
+				content.setText(item.text)
+				image.setImageResource(item.icon)
+				image.imageTintList = ColorStateList.valueOf(
+					resources.getColor(item.color, null)
+				)
+				indicator.setBackgroundResource(item.color)
+			}
+		}
 	}
 }

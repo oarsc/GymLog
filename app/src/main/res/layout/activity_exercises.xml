@@ -7,12 +7,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <org.scp.gymlog.ui.common.components.listView.SimpleListView
         android:id="@+id/exercisesList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.exercises.ExercisesActivity"
-        tools:listitem="@layout/listitem_variation" />
+        tools:listitem="@layout/listitem_exercises_row" />
 
     <org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
         android:id="@+id/fabTraining"

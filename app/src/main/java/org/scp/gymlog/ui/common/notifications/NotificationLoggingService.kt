@@ -12,9 +12,9 @@ import androidx.core.app.NotificationCompat
 import org.scp.gymlog.R
 import org.scp.gymlog.SplashActivity
 import org.scp.gymlog.service.NotificationService
+import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.DateUtils.diff
 import org.scp.gymlog.util.DateUtils.isPast
-import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.DateUtils.timeInMillis
 import org.scp.gymlog.util.DateUtils.toLocalDateTime
 import java.time.LocalDateTime

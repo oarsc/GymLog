@@ -14,7 +14,6 @@ import androidx.cardview.widget.CardView
 import org.scp.gymlog.R
 import org.scp.gymlog.util.FormatUtils
 import org.scp.gymlog.util.FormatUtils.bigDecimal
-import org.scp.gymlog.util.FormatUtils.toLocaleString
 import java.math.BigDecimal
 
 class NumberModifierView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {

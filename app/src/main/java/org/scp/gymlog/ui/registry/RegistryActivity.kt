@@ -26,7 +26,7 @@ import org.scp.gymlog.ui.common.animations.ResizeWidthAnimation
 import org.scp.gymlog.ui.common.components.NumberModifierView
 import org.scp.gymlog.ui.common.dialogs.*
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData
-import org.scp.gymlog.ui.latest.LatestExercisesActivity
+import org.scp.gymlog.ui.exercises.LatestActivity
 import org.scp.gymlog.ui.top.TopActivity
 import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.Constants
@@ -43,7 +43,7 @@ import org.scp.gymlog.util.WeightUtils
 import org.scp.gymlog.util.WeightUtils.calculate
 import org.scp.gymlog.util.WeightUtils.calculateTotal
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
-import org.scp.gymlog.util.extensions.MessagingExts.snackBar
+import org.scp.gymlog.util.extensions.MessagingExts.snackbar
 import java.io.IOException
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -286,7 +286,7 @@ class RegistryActivity : DBAppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.latestButton -> {
-                val intent = Intent(this, LatestExercisesActivity::class.java)
+                val intent = Intent(this, LatestActivity::class.java)
                 startActivity(intent)
             }
             R.id.topRanking -> {
@@ -370,7 +370,7 @@ class RegistryActivity : DBAppCompatActivity() {
             if (onInit) {
                 superSetPanel.visibility = View.GONE
             } else {
-                val anim = ResizeHeightAnimation(superSetPanel, 0, 250)
+                val anim = ResizeHeightAnimation(superSetPanel, 0, 250, true)
                 superSetPanel.startAnimation(anim)
             }
         } else {
@@ -378,7 +378,7 @@ class RegistryActivity : DBAppCompatActivity() {
             superSetPanel.text = String.format(getString(R.string.text_active_superset), Data.superSet)
 
             if (!onInit) {
-                val anim = ResizeHeightAnimation(superSetPanel, 48, 250)
+                val anim = ResizeHeightAnimation(superSetPanel, 48, 250, true)
                 superSetPanel.startAnimation(anim)
             }
         }
@@ -506,7 +506,7 @@ class RegistryActivity : DBAppCompatActivity() {
                     }
 
                     if (hiddenInstantSetButton) {
-                        val anim = ResizeWidthAnimation(confirmInstantButton, 90, 250)
+                        val anim = ResizeWidthAnimation(confirmInstantButton, 90, 250, true)
                         confirmInstantButton.startAnimation(anim)
                     }
                     startTimer()
@@ -569,7 +569,7 @@ class RegistryActivity : DBAppCompatActivity() {
     private fun activeTraining(block: (trainingId: Int) -> Unit) {
         Data.trainingId
             ?.also(block)
-            ?: snackBar(R.string.validation_training_not_started)
+            ?: snackbar(R.string.validation_training_not_started)
     }
 
     private fun onClickBit(view: View, bit: Bit) {

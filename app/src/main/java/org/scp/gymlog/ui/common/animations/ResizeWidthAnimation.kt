@@ -5,10 +5,17 @@ import android.view.animation.Animation
 import android.view.animation.Transformation
 import org.scp.gymlog.util.FormatUtils
 
-class ResizeWidthAnimation(private val mView: View, width: Int, duration: Long) : Animation() {
+class ResizeWidthAnimation(
+    private val mView: View,
+    width: Int,
+    duration: Long,
+    toDp: Boolean = false
+) : Animation() {
 
-    private val mWidth: Int = FormatUtils.toDp(mView.resources.displayMetrics, width)
     private val mStartWidth: Int = mView.width
+    private val mWidth: Int = if (toDp)
+        FormatUtils.toDp(mView.resources.displayMetrics, width) else
+        width
 
     init {
         setDuration(duration)

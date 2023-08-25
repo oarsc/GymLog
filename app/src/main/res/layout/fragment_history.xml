@@ -41,7 +41,7 @@
                 android:animateLayoutChanges="true"
                 android:orientation="vertical">
 
-                <androidx.recyclerview.widget.RecyclerView
+                <org.scp.gymlog.ui.common.components.listView.SimpleListView
                     android:id="@+id/legend"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -70,7 +70,7 @@
 
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
+            <org.scp.gymlog.ui.common.components.listView.SimpleListView
                 android:id="@+id/trainingList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

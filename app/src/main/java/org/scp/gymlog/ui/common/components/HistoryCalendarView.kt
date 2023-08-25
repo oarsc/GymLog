@@ -15,10 +15,9 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Muscle
-import org.scp.gymlog.util.DateUtils.timeInMillis
 import org.scp.gymlog.util.DateUtils.prevMonday
+import org.scp.gymlog.util.DateUtils.timeInMillis
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.Month
 import java.util.function.BiConsumer
 
@@ -177,26 +176,28 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
         dayDataMap[dayTime] = values.map { pieData -> pieData.muscle }
         chart.visibility = VISIBLE
 
-        val pieData = PieData()
+        val reversedValues = values.reversed()
 
-        val dataSet = PieDataSet(values
-                .map { pieDataInfo -> pieDataInfo.value }
-                .map { value -> PieEntry(value) }, null)
+        val pieValues = reversedValues
+            .map { pieDataInfo -> pieDataInfo.value }
+            .map { value -> PieEntry(value) }
 
-        dataSet.colors = values
-            .map { pieDataInfo -> pieDataInfo.muscle.color }
-            .map { color -> ResourcesCompat.getColor(context.resources, color, null ) }
+        val dataSet = PieDataSet(pieValues, null).apply {
+            colors = reversedValues
+                .map { pieDataInfo -> pieDataInfo.muscle.color }
+                .map { color -> ResourcesCompat.getColor(context.resources, color, null ) }
 
-        dataSet.setDrawValues(false)
-        dataSet.setDrawIcons(false)
-        dataSet.selectionShift = 0f
+            setDrawValues(false)
+            setDrawIcons(false)
+            selectionShift = 0f
+        }
 
-        val text = day.findViewById<TextView>(R.id.dayNumber)
-        text.setTextColor(
-            ResourcesCompat.getColor(resources, R.color.dark, context.theme)
-        )
+        day.findViewById<TextView>(R.id.dayNumber)
+            .setTextColor(
+                ResourcesCompat.getColor(resources, R.color.dark, context.theme)
+            )
 
-        pieData.dataSet = dataSet
+        val pieData = PieData(dataSet)
         chart.data = pieData
     }
 

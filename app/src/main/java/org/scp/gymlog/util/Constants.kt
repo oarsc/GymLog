@@ -3,7 +3,6 @@ package org.scp.gymlog.util
 import org.scp.gymlog.util.DateUtils.toLocalDateTime
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import java.util.*
 
 object Constants {
     val TWO = BigDecimal("2")

@@ -20,8 +20,8 @@ import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.main.MainActivity
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.WeightUtils
-import org.scp.gymlog.util.extensions.MessagingExts.toast
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
+import org.scp.gymlog.util.extensions.MessagingExts.toast
 import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
 import org.scp.gymlog.util.extensions.PreferencesExts.loadInteger
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString

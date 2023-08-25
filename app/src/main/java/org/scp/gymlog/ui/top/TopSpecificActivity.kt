@@ -1,11 +1,13 @@
 package org.scp.gymlog.ui.top
 
+import android.content.Intent
 import android.os.Bundle
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.GymRelation
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.entities.BitEntity
+import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.timeInMillis
 import java.time.LocalDate
@@ -55,7 +57,17 @@ class TopSpecificActivity : TopActivity() {
         return Comparator.comparingLong { bit: Bit -> -bit.timestamp.timeInMillis }
     }
 
-    override fun onElementLongClicked(topBit: Bit) {
-        // do nothing
+    override fun onElementLongClicked(topBit: Bit) = onElementClicked(topBit)
+
+    override fun onActivityResult(intentReference: Constants.IntentReference, data: Intent) {
+        if (data.getBooleanExtra("refresh", false)) {
+            if (intentReference === Constants.IntentReference.TRAINING) {
+                Intent().apply {
+                    putExtra("refresh", true)
+                    setResult(RESULT_OK, this)
+                }
+            }
+        }
+        super.onActivityResult(intentReference, data)
     }
 }

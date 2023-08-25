@@ -2,8 +2,8 @@ package org.scp.gymlog.ui.common
 
 import android.os.Bundle
 import org.scp.gymlog.room.AppDatabase
-import org.scp.gymlog.util.extensions.MessagingExts.toast
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
+import org.scp.gymlog.util.extensions.MessagingExts.toast
 
 abstract class DBAppCompatActivity : CustomAppCompatActivity() {
 
