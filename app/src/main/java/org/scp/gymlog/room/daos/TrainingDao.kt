@@ -10,6 +10,9 @@ interface TrainingDao {
     @Query("SELECT * FROM training")
     fun getAll(): List<TrainingEntity>
 
+    @Query("SELECT MAX(trainingId) FROM training")
+    fun getMaxTrainingId(): Int?
+
     @Query("SELECT * FROM training WHERE `end` IS NULL")
     fun getCurrentTraining(): TrainingEntity?
 
@@ -36,6 +39,9 @@ interface TrainingDao {
 
     @Query("DELETE FROM training WHERE trainingId NOT IN (SELECT DISTINCT trainingId FROM bit)")
     fun deleteEmptyTraining(): Int
+
+    @Query("DELETE FROM training WHERE trainingId <> :trainingId AND trainingId NOT IN (SELECT DISTINCT trainingId FROM bit)")
+    fun deleteEmptyTrainingExcept(trainingId: Int): Int
 
     @Query("DELETE FROM training")
     fun clear()

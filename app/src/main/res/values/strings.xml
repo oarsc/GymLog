@@ -50,6 +50,7 @@
     <string name="text_no_bar">No bar</string>
     <string name="text_none">None</string>
     <string name="text_notes">Notes</string>
+    <string name="text_open">Open</string>
     <string name="text_reps">Reps</string>
     <string name="text_seconds">Seconds</string>
     <string name="text_set">Set</string>
@@ -85,6 +86,10 @@
     <string name="dialog_confirm_remove_exercise_title">Removing exercise</string>
     <string name="dialog_confirm_remove_exercise_text">This process wil remove this exercise.
     All its history will be removed as well. Do you want to proceed?</string>
+    <string name="dialog_confirm_init_training_title">Training not started</string>
+    <string name="dialog_confirm_init_training_text">There is no training currently ongoing.
+    Do you want to start training #%1$d?</string>
+
     <string name="dialog_show_bit_training">Show complete training</string>
 
     <string name="dialog_gym_no_relation">No related to any specific gym and registry is shared</string>

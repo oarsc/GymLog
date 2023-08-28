@@ -17,7 +17,7 @@ object VariationsListHandler: SimpleListHandler<Variation, ListitemExercisesVari
 
     override val useListState = false
 
-    override fun generateListItemInflater(): (LayoutInflater, ViewGroup?, Boolean) -> org.scp.gymlog.databinding.ListitemExercisesVariationBinding {
+    override fun generateListItemInflater(): (LayoutInflater, ViewGroup?, Boolean) -> ListitemExercisesVariationBinding {
         return org.scp.gymlog.databinding.ListitemExercisesVariationBinding::inflate
     }
 

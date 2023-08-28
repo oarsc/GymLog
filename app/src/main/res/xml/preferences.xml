@@ -48,6 +48,7 @@
         <ListPreference
             app:key="trainingBitsSort"
             app:title="@string/training_bits_sorting_title"
+            app:isPreferenceVisible="false"
             app:entries="@array/training_bit_sort_entries"
             app:entryValues="@array/training_bit_sort_values"
             app:useSimpleSummaryProvider="true"

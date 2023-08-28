@@ -7,17 +7,28 @@ import org.scp.gymlog.util.FormatUtils
 
 class ResizeWidthAnimation(
     private val mView: View,
-    width: Int,
-    duration: Long,
+    width: Int = CALCULATE,
+    duration: Long = 250,
     toDp: Boolean = false
 ) : Animation() {
 
-    private val mStartWidth: Int = mView.width
-    private val mWidth: Int = if (toDp)
-        FormatUtils.toDp(mView.resources.displayMetrics, width) else
-        width
+    companion object {
+        const val CALCULATE = -1
+    }
+
+    private val mStartWidth = mView.width
+    private val mWidth: Int
 
     init {
+        mWidth = if (width == CALCULATE) {
+            mView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+            mView.measuredWidth
+        } else if (toDp){
+            FormatUtils.toDp(mView.resources.displayMetrics, width)
+        } else {
+            width
+        }
+
         setDuration(duration)
     }
 

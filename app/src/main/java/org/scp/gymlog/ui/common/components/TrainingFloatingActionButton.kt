@@ -44,7 +44,7 @@ class TrainingFloatingActionButton : FloatingActionButton {
                     ) { confirmed ->
                         if (confirmed) {
                             notificationService.hideNotification()
-                            context.dbThread { db: AppDatabase ->
+                            context.dbThread { db ->
                                 val trainingDao = db.trainingDao()
                                 val training = trainingDao.getTraining(trainingId)
                                     ?: throw  LoadException("Can't find trainingId $trainingId")
@@ -74,11 +74,12 @@ class TrainingFloatingActionButton : FloatingActionButton {
                 val activity: FragmentActivity = getContext() as AppCompatActivity
                 dialog.show(activity.supportFragmentManager, null)
             } else {
-                context.dbThread { db: AppDatabase ->
+                context.dbThread { db ->
+                    val maxId = db.trainingDao().getMaxTrainingId() ?: 0
                     val training = TrainingEntity()
+                    training.trainingId = maxId + 1
                     training.start = currentDateTime()
-                    training.trainingId = db.trainingDao().insert(training).toInt()
-                    Data.trainingId = training.trainingId
+                    Data.trainingId = db.trainingDao().insert(training).toInt()
                     updateFloatingActionButton()
                 }
             }
@@ -86,7 +87,6 @@ class TrainingFloatingActionButton : FloatingActionButton {
     }
 
     fun updateFloatingActionButton() {
-        val context = context
         backgroundTintList = if (Data.trainingId == null) {
             setImageResource(R.drawable.ic_play_24dp)
             ColorStateList.valueOf(

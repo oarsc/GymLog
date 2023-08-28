@@ -8,13 +8,14 @@ import androidx.navigation.ui.NavigationUI
 import org.scp.gymlog.R
 import org.scp.gymlog.SplashActivity
 import org.scp.gymlog.databinding.ActivityMainBinding
+import org.scp.gymlog.util.Data
 
 class MainActivity : AppCompatActivity() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		if (intent.extras?.getBoolean("loaded", false) != true) {
+		if (Data.exercises.isEmpty() || intent.extras?.getBoolean("loaded", false) != true) {
 			val intent = Intent(this, SplashActivity::class.java)
 			startActivity(intent)
 			finish()

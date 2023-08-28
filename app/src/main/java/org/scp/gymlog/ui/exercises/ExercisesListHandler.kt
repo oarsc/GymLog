@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.MeasureSpec
 import android.view.ViewGroup
 import org.scp.gymlog.databinding.ListitemExercisesRowBinding
 import org.scp.gymlog.databinding.ListitemExercisesVariationBinding
@@ -97,10 +96,9 @@ class ExercisesListHandler(
                 val expanded = !state["expanded", false]
 
                 val anim = if (expanded) {
-                    variationList.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
-                    ResizeHeightAnimation(variationList, variationList.measuredHeight, 250)
+                    ResizeHeightAnimation(variationList)
                 } else {
-                    ResizeHeightAnimation(variationList, 0, 250)
+                    ResizeHeightAnimation(variationList, 0)
                 }
 
                 variationList.startAnimation(anim)

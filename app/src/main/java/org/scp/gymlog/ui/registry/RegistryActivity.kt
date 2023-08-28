@@ -18,6 +18,7 @@ import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.*
 import org.scp.gymlog.room.AppDatabase
+import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.service.NotificationService.Companion.lastEndTime
 import org.scp.gymlog.ui.common.DBAppCompatActivity
@@ -197,7 +198,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
         // Super set button
         superSet.setOnClickListener {
-            activeTraining { trainingId ->
+            requireActiveTraining(false) { trainingId ->
                 if (Data.superSet == null) {
                     dbThread { db ->
                         Data.superSet = (db.bitDao().getMaxSuperSet(trainingId) ?: 0) +1
@@ -457,7 +458,7 @@ class RegistryActivity : DBAppCompatActivity() {
     }
 
     private fun saveBitLog(instant: Boolean) {
-        activeTraining { trainingId ->
+        requireActiveTraining { trainingId ->
 
             dbThread { db ->
                 val bit = Bit(variation)
@@ -533,7 +534,9 @@ class RegistryActivity : DBAppCompatActivity() {
             }
 
             if (log.none { it.trainingId == trainingId }) {
-                db.trainingDao().deleteEmptyTraining()
+                Data.trainingId
+                    ?.also { db.trainingDao().deleteEmptyTrainingExcept(it) }
+                    ?: db.trainingDao().deleteEmptyTraining()
             }
 
             runOnUiThread {
@@ -566,10 +569,41 @@ class RegistryActivity : DBAppCompatActivity() {
         }
     }
 
-    private fun activeTraining(block: (trainingId: Int) -> Unit) {
+    private fun requireActiveTraining(createDialog: Boolean = true, block: (trainingId: Int) -> Unit) {
         Data.trainingId
-            ?.also(block)
-            ?: snackbar(R.string.validation_training_not_started)
+            ?.also { block(it) }
+            ?: run {
+                if (!createDialog) {
+                    snackbar(R.string.validation_training_not_started)
+                } else {
+                    dbThread { db ->
+                        val maxId = (db.trainingDao().getMaxTrainingId() ?: 0) + 1
+
+                        val dialogText = String.format(
+                            getString(R.string.dialog_confirm_init_training_text),
+                            maxId
+                        )
+
+                        runOnUiThread {
+                            val dialog = TextDialogFragment(
+                                R.string.dialog_confirm_init_training_title,
+                                dialogText
+                            ) { confirmed ->
+                                if (confirmed) {
+                                    dbThread { db ->
+                                        val training = TrainingEntity()
+                                        training.trainingId = maxId
+                                        training.start = currentDateTime()
+                                        Data.trainingId = db.trainingDao().insert(training).toInt()
+                                        runOnUiThread { block(training.trainingId) }
+                                    }
+                                }
+                            }
+                            dialog.show(supportFragmentManager, null)
+                        }
+                    }
+                }
+            }
     }
 
     private fun onClickBit(view: View, bit: Bit) {

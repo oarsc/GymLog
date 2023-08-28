@@ -15,11 +15,23 @@ class TextDialogFragment(
     private val callback: Consumer<Boolean>
 ) : DialogFragment() {
 
+    var customText: String? = null
+
+    constructor(
+        @StringRes title: Int,
+        text: String,
+        callback: Consumer<Boolean>
+    ): this(title, -1, callback) {
+        customText = text
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.dialog_show_text, null)
         val textView = view.findViewById<TextView>(R.id.text)
-        textView.setText(text)
+        customText
+            ?.also { textView.text = it }
+            ?: textView.setText(text)
 
         val builder = AlertDialog.Builder(activity)
         builder.setMessage(title)

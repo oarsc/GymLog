@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/open"
+        android:icon="@drawable/ic_dot_24dp"
+        android:title="@string/text_open"/>
+
+    <item
         android:id="@+id/topRanking"
         android:icon="@drawable/ic_ranking_left_24dp"
         android:title="@string/text_find_top_records"/>

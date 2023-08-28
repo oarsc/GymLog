@@ -31,6 +31,7 @@ class ExercisesActivity : DBAppCompatActivity() {
     private var muscleId = 0
     private lateinit var exercises: MutableList<Exercise>
 
+    private var trainingFloatingButton: TrainingFloatingActionButton? = null
     private lateinit var exercisesListView: SimpleListView<Exercise, ListitemExercisesRowBinding>
     private lateinit var handler: ExercisesListHandler
 
@@ -59,7 +60,9 @@ class ExercisesActivity : DBAppCompatActivity() {
         handler.onExerciseClicked(this::itemClicked)
         handler.onVariationClicked(this::itemClicked)
 
-        findViewById<TrainingFloatingActionButton>(R.id.fabTraining).updateFloatingActionButton()
+        trainingFloatingButton = findViewById<TrainingFloatingActionButton>(R.id.fabTraining).apply {
+            updateFloatingActionButton()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -124,6 +127,9 @@ class ExercisesActivity : DBAppCompatActivity() {
 
     private fun exerciseMenuActionSelected(exercise: Exercise, action: Int) {
         when (action) {
+            R.id.open -> {
+                itemClicked(exercise, false)
+            }
             R.id.topRanking -> {
                 val intent = Intent(this, TopActivity::class.java)
                 intent.putExtra("exerciseId", exercise.id)
@@ -153,6 +159,11 @@ class ExercisesActivity : DBAppCompatActivity() {
                 dialog.show(supportFragmentManager, null)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        trainingFloatingButton?.updateFloatingActionButton()
     }
 
     override fun onActivityResult(intentReference: IntentReference, data: Intent) {

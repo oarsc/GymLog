@@ -7,17 +7,28 @@ import org.scp.gymlog.util.FormatUtils
 
 class ResizeHeightAnimation(
     private val mView: View,
-    height: Int,
-    duration: Long,
+    height: Int = CALCULATE,
+    duration: Long = 250,
     toDp: Boolean = false
 ) : Animation() {
 
+    companion object {
+        const val CALCULATE = -1
+    }
+
     private val mStartHeight = mView.height
-    private val mHeight = if (toDp)
-        FormatUtils.toDp(mView.resources.displayMetrics, height) else
-        height
+    private val mHeight: Int
 
     init {
+        mHeight = if (height == CALCULATE) {
+            mView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+            mView.measuredHeight
+        } else if (toDp){
+            FormatUtils.toDp(mView.resources.displayMetrics, height)
+        } else {
+            height
+        }
+
         setDuration(duration)
     }
 

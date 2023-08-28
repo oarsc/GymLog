@@ -41,7 +41,6 @@ class MusclesFragment : CustomFragment() {
  * Mandatory empty constructor for the fragment manager to instantiate the
  * fragment (e.g. upon screen orientation changes).
  */
-	private val dataBaseDumperService by lazy { DataBaseDumperService() }
 	private var trainingFloatingButton: TrainingFloatingActionButton? = null
 
 	override fun onCreateView(
