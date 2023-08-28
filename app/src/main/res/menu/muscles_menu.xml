@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/createButton"
-        android:icon="@drawable/ic_add_24dp"
-        android:title="@string/title_create_exercise"
-        app:showAsAction="always"/>
-
-    <item
         android:id="@+id/searchButton"
         android:icon="@drawable/ic_search_24dp"
         android:title="@string/title_search"
@@ -19,6 +13,12 @@
         android:icon="@drawable/ic_latest_24dp"
         android:title="@string/title_latest"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/createButton"
+        android:icon="@drawable/ic_add_24dp"
+        android:title="@string/title_create_exercise"
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/gymSelectButton"

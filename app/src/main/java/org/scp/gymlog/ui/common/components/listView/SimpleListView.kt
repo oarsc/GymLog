@@ -21,7 +21,7 @@ open class SimpleListView<T: Any, B: ViewBinding>(
     protected lateinit var states: MutableMap<T, ListElementState>
     private lateinit var handler: SimpleListHandler<T, B>
 
-    protected var lastComparatorUsed: Comparator<Int>? = null
+    protected var lastComparatorUsed: Comparator<T>? = null
 
     var unScrollableVertically: Boolean = false
 
@@ -85,11 +85,16 @@ open class SimpleListView<T: Any, B: ViewBinding>(
     fun setListData(listData: List<T>) {
         this.data.clear()
         this.data.addAll(listData)
+        this.order = listData.indices.toMutableList()
+        forceReorder()
     }
 
-    fun sort(comparator: Comparator<Int>) {
+    fun sort(comparator: Comparator<T>) {
         this.lastComparatorUsed = comparator
-        this.order.sortWith(comparator)
+
+        val sorted = this.data.toMutableList().sortedWith(comparator)
+        this.order = sorted.map { this.data.indexOf(it) }.toMutableList()
+
         notifyDataSetChanged()
     }
 

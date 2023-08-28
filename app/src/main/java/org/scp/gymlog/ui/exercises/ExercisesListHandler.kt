@@ -121,13 +121,11 @@ class ExercisesListHandler(
     }
 
     fun updateOrder(order: Order) {
-        val exercises = simpleListView.data
-
         val alphabeticalComparator =
-            Comparator.comparing { i: Int -> exercises[i].name.lowercase(Locale.getDefault()) }
+            Comparator.comparing { e: Exercise -> e.name.lowercase(Locale.getDefault()) }
 
         val dateComparator by lazy {
-            Comparator.comparing { i: Int -> exercises[i].lastTrained }
+            Comparator.comparing { e: Exercise -> e.lastTrained }
         }
 
         val comparator = when (order) {
