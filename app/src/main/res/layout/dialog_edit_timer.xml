@@ -10,7 +10,6 @@
         android:id="@+id/countdownBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -60,8 +59,8 @@
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_substract_24dp" />
+                    android:padding="8dp"
+                    android:src="@drawable/ic_minus_ten_24dp" />
 
                 <ImageView
                     android:id="@+id/plusTenButton"
@@ -70,8 +69,8 @@
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_add_24dp" />
+                    android:padding="8dp"
+                    android:src="@drawable/ic_plus_ten_24dp" />
 
             </LinearLayout>
 
@@ -103,6 +102,12 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/backgroundAccent"
+        android:layout_marginVertical="8dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
