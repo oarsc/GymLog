@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemLegendBinding
 import org.scp.gymlog.databinding.ListitemTrainingBinding
@@ -21,6 +22,7 @@ import org.scp.gymlog.util.DateUtils.timeInMillis
 import org.scp.gymlog.util.extensions.ComponentsExts.runOnUiThread
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import java.time.LocalDate
+import kotlin.math.ceil
 
 class HistoryFragment : Fragment() {
 
@@ -38,8 +40,10 @@ class HistoryFragment : Fragment() {
 
 		// LEGEND LIST
 		legendListView = view.findViewById(R.id.legend)
-		legendListView.unScrollableVertically = true
-		legendListView.init(Data.muscles, HistoryLegendListHandler(requireContext()))
+		legendListView.layoutManager = object : GridLayoutManager(context, 2) {
+			override fun canScrollVertically() = false
+		}
+		legendListView.init(Data.muscles.sortToColumns, HistoryLegendListHandler(requireContext()))
 
 		val showLegendIcon = view.findViewById<ImageView>(R.id.showLegendIcon)
 		view.findViewById<View>(R.id.showLegend).setOnClickListener {
@@ -72,6 +76,22 @@ class HistoryFragment : Fragment() {
 		return view
 	}
 
+	private val List<Muscle>.sortToColumns: List<Muscle>
+		get() {
+			if (size < 2) return this
+			val halfPoint = ceil(size / 2f).toInt()
+
+			val firstColumn = subList(0, halfPoint)
+			val secondColumn = subList(halfPoint, size)
+
+			return (0 until halfPoint).flatMap {
+				if (it < secondColumn.size)
+					listOf(firstColumn[it], secondColumn[it])
+				else
+					listOf(firstColumn[it])
+			}
+		}
+
 	private fun onDaySelected(startDate: LocalDate, muscles: List<Muscle>?) {
 		val initDate = startDate.atStartOfDay()
 		val endDate = initDate.plusDays(1)
@@ -93,7 +113,7 @@ class HistoryFragment : Fragment() {
 				val legend = muscles ?: Data.muscles
 				val initSize = legendListView.size
 
-				legendListView.setListData(legend)
+				legendListView.setListData(legend.sortToColumns)
 				legendListView.dynamicallyItemsChangedBySize(initSize)
 
 				trainingListView.setListData(newTrainings)
@@ -145,7 +165,7 @@ class HistoryFragment : Fragment() {
 
 				if (calendarView.isSelected(currentDay) && data.isNotEmpty()) {
 					runOnUiThread {
-						legendListView.setListData(data.map(PieDataInfo::muscle))
+						legendListView.setListData(data.map(PieDataInfo::muscle).sortToColumns)
 					}
 				}
 
