@@ -14,6 +14,7 @@ interface BitBlockProperties {
 
 interface BitBlockState {
   date: Date
+  trainingId: number
   bits: OutputBit[]
 }
 
@@ -32,9 +33,12 @@ export default class BitBlock extends React.Component<BitBlockProperties, BitBlo
       this.setStateDate(this.state.date, data)
     );
 
+    const bits = this.filterBits(date, getData());
+
     this.state = {
       date,
-      bits: this.filterBits(date, getData())
+      trainingId: bits.length && bits[0].trainingId || 0,
+      bits
     }
   }
 
@@ -71,12 +75,30 @@ export default class BitBlock extends React.Component<BitBlockProperties, BitBlo
     this.setStateDate(state.date);
   }
 
+  setFilterTrainingState = (aaa: any) => {
+    const input = aaa.target as HTMLInputElement;
+
+    const trainingId = parseInt(input.value = input.value.replace(/[^0-9]/g, ''));
+
+    const bit = getData().bits.find(bit => bit.trainingId == trainingId);
+    
+    if (bit) {
+      const date = new Date(bit.timestamp);
+      date.setUTCHours(0);
+      date.setUTCMinutes(0);
+      date.setUTCSeconds(0);
+      date.setUTCMilliseconds(0);
+      this.setStateDate(date);
+    }
+  }
+
   setStateDate(date: Date, data: Output = getData()): boolean {
     const bits = this.filterBits(date, data);
 
     if (bits?.length || date.getTime() > new Date().getTime() || date.getTime() < FIRST_TRAINING_TIME) {
       this.setState({
         date,
+        trainingId: bits.length && bits[0].trainingId || 0,
         bits
       });
       return true;
@@ -103,6 +125,13 @@ export default class BitBlock extends React.Component<BitBlockProperties, BitBlo
           onChange={this.setFilterState} />
         <button onClick={this.prevDay}>&lt;</button>
         <button onClick={this.nextDay}>&gt;</button>
+        <Input
+          id='bit-training'
+          type='number'
+          data={this.state}
+          dataKey='trainingId'
+          linkValue={false}
+          onBlur={this.setFilterTrainingState} />
       </div>
       <div id='bits-frame'>
         <div id='bits'>
