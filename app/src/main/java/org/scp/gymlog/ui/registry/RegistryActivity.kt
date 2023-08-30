@@ -102,7 +102,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
         Data.trainingId?.also { trainingId ->
             hiddenInstantSetButton = db.bitDao().getMostRecentByTrainingId(trainingId)
-                ?.let { it.variationId != variationId }
+                ?.let { it.variationId != variationId || it.superSet != (Data.superSet ?: 0) }
                 ?: true
         }
 
@@ -197,25 +197,8 @@ class RegistryActivity : DBAppCompatActivity() {
         }
 
         // Super set button
-        superSet.setOnClickListener {
-            requireActiveTraining(false) { trainingId ->
-                if (Data.superSet == null) {
-                    dbThread { db ->
-                        Data.superSet = (db.bitDao().getMaxSuperSet(trainingId) ?: 0) +1
-                        runOnUiThread { updateSuperSetIcon() }
-                    }
-                } else {
-                    Data.superSet = null
-                    updateSuperSetIcon()
-                }
-            }
-        }
-        superSetPanel.setOnClickListener {
-            if (Data.superSet != null) {
-                Data.superSet = null
-                updateSuperSetIcon()
-            }
-        }
+        superSet.setOnClickListener { toggleSuperSet() }
+        superSetPanel.setOnClickListener { toggleSuperSet(false) }
         updateSuperSetIcon(true)
 
         // Weight and Reps Input fields:
@@ -248,6 +231,53 @@ class RegistryActivity : DBAppCompatActivity() {
         weightSpecIcon.setImageResource(variation.weightSpec.icon)
 
         precalculateWeight()
+    }
+
+    private fun toggleSuperSet(value: Boolean = Data.superSet == null) {
+        requireActiveTraining(false) { trainingId ->
+            if (value) {
+                if (Data.superSet != null) return@requireActiveTraining
+
+                dbThread { db ->
+                    Data.superSet = (db.bitDao().getMaxSuperSet(trainingId) ?: 0) +1
+                    runOnUiThread { updateSuperSetIcon() }
+                }
+
+                toggleInstantButton(false)
+
+            } else if (Data.superSet != null) {
+
+                Data.superSet = null
+                updateSuperSetIcon()
+
+                if (hiddenInstantSetButton) {
+                    dbThread { db ->
+                        val shouldEnable = db.bitDao().getMostRecentByTrainingId(trainingId)
+                            ?.let { it.variationId == variation.id && it.superSet == 0 }
+                            ?: false
+
+                        if (shouldEnable) toggleInstantButton(true)
+                    }
+                } else {
+                    toggleInstantButton(false)
+                }
+            }
+        }
+    }
+
+    private fun toggleInstantButton(value: Boolean = hiddenInstantSetButton) {
+        val anim = if (value) {
+            if (!hiddenInstantSetButton) return
+            hiddenInstantSetButton = false
+            ResizeWidthAnimation(confirmInstantButton, 90, 250, true)
+
+        } else if (!hiddenInstantSetButton) {
+            hiddenInstantSetButton = true
+            ResizeWidthAnimation(confirmInstantButton, 0, 250)
+
+        } else return
+
+        confirmInstantButton.startAnimation(anim)
     }
 
     private fun setHeaderInfo() {
@@ -507,8 +537,7 @@ class RegistryActivity : DBAppCompatActivity() {
                     }
 
                     if (hiddenInstantSetButton) {
-                        val anim = ResizeWidthAnimation(confirmInstantButton, 90, 250, true)
-                        confirmInstantButton.startAnimation(anim)
+                        toggleInstantButton(true)
                     }
                     startTimer()
                     if (!locked)
