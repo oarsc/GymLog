@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import org.scp.gymlog.ui.common.components.listView.SimpleListView.ListElementState
 
-interface MultipleListHandler<T> {
+interface MultipleListHandler<T: Any> {
     val useListState: Boolean
 
     fun generateListItemInflater(item: T): (LayoutInflater, ViewGroup?, Boolean) -> ViewBinding

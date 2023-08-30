@@ -15,6 +15,7 @@ import org.scp.gymlog.ui.common.animations.ResizeHeightAnimation
 import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.common.components.listView.SimpleListView.ListElementState
+import org.scp.gymlog.util.Constants.TODAY
 import org.scp.gymlog.util.DateUtils
 import org.scp.gymlog.util.DateUtils.getLetterFrom
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
@@ -29,7 +30,6 @@ class ExercisesListHandler(
     val context: Context,
     private val simpleListView: SimpleListView<Exercise, ListitemExercisesRowBinding>
 ): SimpleListHandler<Exercise, ListitemExercisesRowBinding> {
-    private val today: LocalDateTime = DateUtils.currentDateTime()
     private var onExerciseClickListener: BiConsumer<Exercise, Boolean>? = null
 
     fun onExerciseClicked(listener: BiConsumer<Exercise, Boolean>) {
@@ -64,7 +64,7 @@ class ExercisesListHandler(
             variationName.visibility = View.GONE
 
             time.apply {
-                val timeStr = today.getLetterFrom(item.lastTrained)
+                val timeStr = TODAY.getLetterFrom(item.lastTrained)
                 visibility = if (timeStr.isEmpty()) View.GONE else View.VISIBLE
                 text = timeStr
             }

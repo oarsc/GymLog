@@ -41,7 +41,7 @@ class MultipleListView<T: Any>(
             )
         }
 
-        override fun getItemCount() = data.size
+        override fun getItemCount() = size
 
         override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
             val index = lastComparatorUsed?.let { order[position] } ?: position

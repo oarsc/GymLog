@@ -29,6 +29,7 @@ import org.scp.gymlog.ui.top.rows.*
 import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Constants.IntentReference
+import org.scp.gymlog.util.Constants.TODAY
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils
 import org.scp.gymlog.util.DateUtils.getDateString
@@ -40,8 +41,6 @@ import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import java.io.IOException
 
 open class TopActivity : DBAppCompatActivity() {
-
-    private val today = DateUtils.currentDateTime()
 
     private lateinit var exercise: Exercise
     private val listData: MutableList<ITopRow> = ArrayList()
@@ -187,7 +186,7 @@ open class TopActivity : DBAppCompatActivity() {
 
                     @SuppressLint("SetTextI18n")
                     binding.time.text = bit.timestamp.getDateString() + " (" +
-                        today.getLetterFrom(bit.timestamp) + ")"
+                        TODAY.getLetterFrom(bit.timestamp) + ")"
 
                     binding.note.text = bit.note
 

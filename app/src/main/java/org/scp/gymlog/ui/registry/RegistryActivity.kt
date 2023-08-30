@@ -12,9 +12,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import org.scp.gymlog.R
+import org.scp.gymlog.databinding.ListitemLogBinding
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.*
 import org.scp.gymlog.room.AppDatabase
@@ -25,6 +24,7 @@ import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.common.animations.ResizeHeightAnimation
 import org.scp.gymlog.ui.common.animations.ResizeWidthAnimation
 import org.scp.gymlog.ui.common.components.NumberModifierView
+import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.common.dialogs.*
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData
 import org.scp.gymlog.ui.exercises.LatestActivity
@@ -70,8 +70,8 @@ class RegistryActivity : DBAppCompatActivity() {
     private val weightModifier by lazy { findViewById<NumberModifierView>(R.id.weightModifier) }
     private val weightSpecIcon by lazy { findViewById<ImageView>(R.id.weightSpecIcon) }
     private val confirmInstantButton by lazy { findViewById<ImageView>(R.id.confirm) }
-    private lateinit var recyclerViewLayout: LinearLayoutManager
-    private lateinit var recyclerViewAdapter: LogRecyclerViewAdapter
+    private lateinit var logListHandler: LogListHandler
+    private lateinit var logListView: SimpleListView<Bit, ListitemLogBinding>
     private var internationalSystem = false
     private val log: MutableList<Bit> = ArrayList()
     private var locked = false
@@ -152,20 +152,18 @@ class RegistryActivity : DBAppCompatActivity() {
         }
 
         // Logs:
-        recyclerViewLayout = LinearLayoutManager(this)
-        recyclerViewAdapter = LogRecyclerViewAdapter(log, Data.trainingId, internationalSystem)
 
-        recyclerViewAdapter.onClickElementListener = BiConsumer { view, bit -> onClickBit(view, bit) }
-        recyclerViewAdapter.onLoadMoreListener = Runnable { loadMoreHistory() }
-        if (log.size < LOG_PAGES_SIZE - 1) {
-            recyclerViewAdapter.setFullyLoaded(true)
-        }
+        logListView = findViewById(R.id.log_list)
+        logListView.isNestedScrollingEnabled = true
 
-        findViewById<RecyclerView>(R.id.log_list).apply {
-            layoutManager = recyclerViewLayout
-            adapter = recyclerViewAdapter
-            isNestedScrollingEnabled = true
-        }
+        logListHandler = LogListHandler(log, internationalSystem)
+            .apply { fullyLoaded = log.size < LOG_PAGES_SIZE - 1 }
+
+        logListView.init(log, logListHandler)
+
+        logListHandler.setOnLoadMoreListener(this::loadMoreHistory)
+        logListHandler.setOnBitClickListener(this::onClickBit)
+
 
         // Save bit log
         findViewById<View>(R.id.confirmSet).setOnClickListener { saveBitLog(false) }
@@ -251,13 +249,7 @@ class RegistryActivity : DBAppCompatActivity() {
                 updateSuperSetIcon()
 
                 if (hiddenInstantSetButton) {
-                    dbThread { db ->
-                        val shouldEnable = db.bitDao().getMostRecentByTrainingId(trainingId)
-                            ?.let { it.variationId == variation.id && it.superSet == 0 }
-                            ?: false
-
-                        if (shouldEnable) toggleInstantButton(true)
-                    }
+                    updateInstantButtonStatus()
                 } else {
                     toggleInstantButton(false)
                 }
@@ -334,7 +326,7 @@ class RegistryActivity : DBAppCompatActivity() {
         if (data.getBooleanExtra("refresh", false)) {
             when (intentReference) {
                 IntentReference.TOP_RECORDS -> {
-                    recyclerViewAdapter.notifyItemRangeChanged(0, log.size)
+                    logListView.notifyAllSizeChanged()
                     updateForms()
                 }
                 IntentReference.TRAINING -> {
@@ -345,9 +337,10 @@ class RegistryActivity : DBAppCompatActivity() {
                             db.bitDao().getHistory(Data.currentGym, variation.id, LOG_PAGES_SIZE)
 
                         this.log.clear()
-                        log.map { Bit(it) }
+                        val newBits = log.map { Bit(it) }
                             .also { this.log.addAll(it) }
-                        runOnUiThread { recyclerViewAdapter.notifyDataSetChanged() }
+
+                        runOnUiThread { logListView.setListData(newBits) }
                     }
                     updateForms()
                 }
@@ -372,7 +365,7 @@ class RegistryActivity : DBAppCompatActivity() {
                     variation.bar = result.bar
                     variation.step = result.step!!
                     variation.weightSpec = result.weightSpec
-                    recyclerViewAdapter.notifyItemRangeChanged(0, log.size)
+                    logListView.notifyAllSizeChanged()
 
                     updateForms()
                     dbThread { db -> db.variationDao().update(variation.toEntity()) }
@@ -475,14 +468,15 @@ class RegistryActivity : DBAppCompatActivity() {
             else
                 db.bitDao().getHistory(Data.currentGym, variation.id, bit.trainingId, date, LOG_PAGES_SIZE)
 
-            log.map { Bit(it) }
+            val newBits = log.map { Bit(it) }
                 .also { this.log.addAll(it) }
 
+            if (log.size < LOG_PAGES_SIZE - 1) {
+                logListHandler.fullyLoaded = true
+            }
+
             runOnUiThread {
-                recyclerViewAdapter.notifyItemRangeInserted(initialSize, log.size)
-                if (log.size < LOG_PAGES_SIZE - 1) {
-                    recyclerViewAdapter.setFullyLoaded(true)
-                }
+                logListView.add(newBits)
             }
         }
     }
@@ -520,8 +514,8 @@ class RegistryActivity : DBAppCompatActivity() {
                             idx++
                         } else {
                             log.add(idx, bit)
-                            recyclerViewAdapter.notifyItemInserted(idx)
-                            recyclerViewLayout.scrollToPosition(0)
+                            logListView.insert(idx, bit)
+                            logListView.scrollToPosition(0)
                             added = true
                             break
                         }
@@ -529,7 +523,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
                     if (!added) {
                         log.add(bit)
-                        recyclerViewAdapter.notifyItemInserted(log.size - 1)
+                        logListView.add(bit)
                     }
 
                     if (!locked) {
@@ -569,20 +563,41 @@ class RegistryActivity : DBAppCompatActivity() {
             }
 
             runOnUiThread {
-                recyclerViewAdapter.notifyItemRemoved(index)
-                if (index == 0) {
-                    if (log.isNotEmpty()) {
+                logListView.removeAt(index)
+                if (log.isNotEmpty()) {
+                    if (index == 0) {
                         if (log[0].trainingId != trainingId) {
-                            recyclerViewAdapter.notifyItemChanged(0)
+                            logListView.notifyItemChanged(0)
                         } else {
-                            recyclerViewAdapter.notifyTrainingIdChanged(trainingId, 0)
+                            notifyTrainingIdChanged(trainingId, 0)
                         }
+                    } else {
+                        notifyTrainingIdChanged(trainingId, index)
+                    }
+                    if (trainingId == Data.trainingId && !hiddenInstantSetButton) {
+                        updateInstantButtonStatus()
                     }
                 } else {
-                    recyclerViewAdapter.notifyTrainingIdChanged(trainingId, index)
+                    toggleInstantButton(false)
                 }
             }
         }
+    }
+
+    private fun updateInstantButtonStatus(databaseConnection: AppDatabase? = null) {
+        val trainingId = Data.trainingId ?: return
+        val currentSuperSet = Data.superSet ?: 0
+
+        fun action(db: AppDatabase) {
+            val shouldBeEnabled = db.bitDao().getMostRecentByTrainingId(trainingId)
+                ?.let { it.variationId == variation.id && it.superSet == currentSuperSet }
+                ?: false
+
+            toggleInstantButton(shouldBeEnabled)
+        }
+
+        databaseConnection?.also { action(it) }
+            ?: dbThread { action(it) }
     }
 
     private fun updateBitLog(bit: Bit, updateTrainingId: Boolean) {
@@ -591,12 +606,36 @@ class RegistryActivity : DBAppCompatActivity() {
             val index = log.indexOf(bit)
             runOnUiThread {
                 if (updateTrainingId)
-                    recyclerViewAdapter.notifyItemChanged(index)
+                    logListView.notifyItemChanged(index)
                 else
-                    recyclerViewAdapter.notifyTrainingIdChanged(bit.trainingId, index)
+                    notifyTrainingIdChanged(bit.trainingId, index)
             }
         }
     }
+
+    private fun notifyTrainingIdChanged(trainingId: Int, preIndex: Int) {
+        var startIndex = 0
+        var numberOfElements = 0
+
+        var found = false
+        for ((idx, bitLog) in log.withIndex()) {
+            if (bitLog.trainingId == trainingId) {
+                if (!found) {
+                    startIndex = idx
+                    found = true
+                }
+                numberOfElements++
+            } else if (found) break
+        }
+
+        if (numberOfElements > 0) {
+            if (preIndex > startIndex && preIndex < startIndex + numberOfElements)
+                logListView.notifyItemRangeChanged(preIndex, numberOfElements + startIndex - preIndex)
+            else
+                logListView.notifyItemRangeChanged(startIndex, numberOfElements)
+        }
+    }
+
 
     private fun requireActiveTraining(createDialog: Boolean = true, block: (trainingId: Int) -> Unit) {
         Data.trainingId

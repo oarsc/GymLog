@@ -17,7 +17,7 @@ open class SimpleListView<T: Any, B: ViewBinding>(
 
     lateinit var data: MutableList<T>
         protected set
-    protected lateinit var order: MutableList<Int>
+    protected lateinit var order: MutableList<Int>     // visualIndex -> original data index
     protected lateinit var states: MutableMap<T, ListElementState>
     private lateinit var handler: SimpleListHandler<T, B>
 
@@ -53,8 +53,9 @@ open class SimpleListView<T: Any, B: ViewBinding>(
     }
 
     private inner class CustomSimpleAdapter: Adapter<CustomViewHolder>() {
+        val inflater by lazy { handler.generateListItemInflater() }
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
-            val inflater = handler.generateListItemInflater()
             return CustomViewHolder(
                 inflater(LayoutInflater.from(parent.context), parent, false)
             )
@@ -104,26 +105,22 @@ open class SimpleListView<T: Any, B: ViewBinding>(
             ?: false
     }
 
-    fun scrollToPosition(position: Int, offset: Int = 0) =
+    fun scrollToPosition(position: Int, offset: Int) =
         (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, offset)
 
     fun remove(element: T) {
         val dataIndex = data.indexOf(element)
         if (dataIndex < 0) return
+        removeAt(dataIndex)
+    }
 
-        val orderedIndex = order.indexOf(dataIndex)
+    fun removeAt(position: Int) {
+        data.removeAt(position)
+        val orderPosition = order.indexOf(position)
+        order.removeAt(orderPosition)
+        order.replaceAll { if (it > position) it - 1 else it }
 
-        data.removeAt(dataIndex)
-        order.removeAt(orderedIndex)
-
-        order.indices.forEach {
-            val orderedIdx = order[it]
-            if (orderedIdx > orderedIndex) {
-                order[it] = orderedIdx - 1
-            }
-        }
-
-        adapter?.notifyItemRemoved(orderedIndex)
+        notifyItemRemoved(orderPosition)
     }
 
     fun add(element: T) {
@@ -131,20 +128,43 @@ open class SimpleListView<T: Any, B: ViewBinding>(
         data.add(element)
 
         if (!forceReorder()) {
-            adapter?.notifyItemInserted(order.size - 1)
+            notifyItemInserted(order.size - 1)
         }
+    }
+
+    fun add(elements: List<T>) {
+        val originalSize = data.size
+
+        order.addAll(originalSize until originalSize+elements.size)
+        data.addAll(elements)
+
+        if (!forceReorder()) {
+            notifyItemRangeInserted(originalSize, elements.size)
+        }
+    }
+
+    fun insert(position: Int, element: T) {
+        data.add(position, element)
+        order.replaceAll { if (it >= position) it + 1 else it }
+        order.add(position, position)
+
+        notifyItemInserted(position)
     }
 
     fun update(element: T, index: Int) {
         data.removeAt(index)
         data.add(index, element)
-        notifyItemChanged(index)
+
+        val orderIndex = order.indexOf(index)
+        notifyItemChanged(orderIndex)
     }
 
     fun notifyUpdate(element: T) {
         val dataIndex = data.indexOf(element)
-        if (dataIndex >= 0)
-            adapter?.notifyItemChanged(dataIndex)
+        if (dataIndex >= 0) {
+            val orderIndex = order.indexOf(dataIndex)
+            notifyItemChanged(orderIndex)
+        }
     }
 
     open fun applyToAll(callback : (B?, T, ListElementState?) -> Unit) {
@@ -164,13 +184,18 @@ open class SimpleListView<T: Any, B: ViewBinding>(
 
     @SuppressLint("NotifyDataSetChanged")
     fun notifyDataSetChanged() = adapter?.notifyDataSetChanged()
-    fun notifyItemInserted(position: Int) = adapter?.notifyItemInserted(position)
+    private fun notifyItemInserted(position: Int) = adapter?.notifyItemInserted(position)
+    private fun notifyItemRemoved(position: Int) = adapter?.notifyItemRemoved(position)
     fun notifyItemChanged(position: Int) = adapter?.notifyItemChanged(position)
     fun notifyItemRangeChanged(positionStart: Int, itemCount: Int) =
         adapter?.notifyItemRangeChanged(positionStart, itemCount)
-    fun notifyItemRangeRemoved(positionStart: Int, itemCount: Int) =
+    private fun notifyItemRangeRemoved(positionStart: Int, itemCount: Int) =
         adapter?.notifyItemRangeRemoved(positionStart, itemCount)
+    private fun notifyItemRangeInserted(positionStart: Int, itemCount: Int) =
+        adapter?.notifyItemRangeInserted(positionStart, itemCount)
 
+    fun notifyAllSizeChanged() =
+        adapter?.notifyItemRangeChanged(0, data.size)
 
     @SuppressLint("NotifyDataSetChanged")
     fun dynamicallyItemsChangedBySize(initialSize: Int, endSize: Int = data.size) {
