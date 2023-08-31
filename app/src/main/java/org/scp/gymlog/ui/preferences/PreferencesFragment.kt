@@ -15,6 +15,7 @@ import androidx.preference.SwitchPreferenceCompat
 import org.scp.gymlog.R
 import org.scp.gymlog.util.WeightUtils
 import java.util.*
+import org.scp.gymlog.ui.preferences.PreferencesDefinition.*
 
 class PreferencesFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
 
@@ -33,11 +34,12 @@ class PreferencesFragment : PreferenceFragmentCompat(), OnSharedPreferenceChange
 
 	override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 		setPreferencesFromResource(R.xml.preferences, rootKey)
-		loadNumberedEditText("restTime",
+		loadNumberedEditText(DEFAULT_REST_TIME.key,
 			InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED,
 			getString(R.string.text_seconds).lowercase(Locale.getDefault()))
 
-		loadNumberedEditText("conversionStep",
+		loadNumberedEditText(
+			UNIT_CONVERSION_STEP.key,
 			InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED or
 					InputType.TYPE_NUMBER_FLAG_DECIMAL,
 			null)
@@ -68,18 +70,18 @@ class PreferencesFragment : PreferenceFragmentCompat(), OnSharedPreferenceChange
 
 	override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
 		when (key) {
-			"restTime" -> {
+			DEFAULT_REST_TIME.key -> {
 				val prefRestTime = findPreference<EditTextPreference>(key)!!
 				prefRestTime.summary = prefRestTime.text + " " +
 						getString(R.string.text_seconds).lowercase(Locale.getDefault())
 			}
-			"conversionStep" -> {
+			UNIT_CONVERSION_STEP.key -> {
 				val prefConversionStep = findPreference<EditTextPreference>(key)!!
 				prefConversionStep.summary = prefConversionStep.text
 				updateFormatUtils()
 			}
-			"conversionExactValue" -> updateFormatUtils()
-			"nightTheme" -> {
+			UNIT_CONVERSION_EXACT_VALUE.key -> updateFormatUtils()
+			THEME.key -> {
 				if (sharedPreferences.getBoolean(key, false)) {
 					AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 				} else {
@@ -91,8 +93,8 @@ class PreferencesFragment : PreferenceFragmentCompat(), OnSharedPreferenceChange
 	}
 
 	private fun updateFormatUtils() {
-		val prefRestTime = findPreference<EditTextPreference>("conversionStep")
-		val conversionExactValue = findPreference<SwitchPreferenceCompat>("conversionExactValue")
+		val prefRestTime = findPreference<EditTextPreference>(UNIT_CONVERSION_STEP.key)
+		val conversionExactValue = findPreference<SwitchPreferenceCompat>(UNIT_CONVERSION_EXACT_VALUE.key)
 
 		if (prefRestTime != null && conversionExactValue != null) {
 			WeightUtils.setConvertParameters(

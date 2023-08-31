@@ -28,6 +28,7 @@ import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.common.dialogs.*
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData
 import org.scp.gymlog.ui.exercises.LatestActivity
+import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.ui.top.TopActivity
 import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.Constants
@@ -45,6 +46,8 @@ import org.scp.gymlog.util.WeightUtils.calculate
 import org.scp.gymlog.util.WeightUtils.calculateTotal
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.MessagingExts.snackbar
+import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
+import org.scp.gymlog.util.extensions.PreferencesExts.loadString
 import java.io.IOException
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -115,9 +118,8 @@ class RegistryActivity : DBAppCompatActivity() {
 
         prepareExerciseListToRefreshWhenFinish()
 
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        internationalSystem = preferences.getBoolean("internationalSystem", true)
-        defaultTimer = preferences.getString("restTime", "90")!!.toInt()
+        internationalSystem = loadBoolean(PreferencesDefinition.UNIT_INTERNATIONAL_SYSTEM)
+        defaultTimer = loadString(PreferencesDefinition.DEFAULT_REST_TIME).toInt()
 
         setHeaderInfo()
 
@@ -676,7 +678,11 @@ class RegistryActivity : DBAppCompatActivity() {
 
     private fun onClickBit(view: View, bit: Bit) {
         view.setBackgroundColor(resources.getColor(R.color.backgroundAccent, theme))
-        val dialog = MenuDialogFragment(R.menu.bit_menu) { result: Int ->
+
+        val deletionPref = loadString(PreferencesDefinition.BITS_DELETION)
+        val removedItems = if (deletionPref == "0") listOf(R.id.removeBit) else listOf()
+
+        val dialog = MenuDialogFragment(R.menu.bit_menu, removedItems) { result: Int ->
             when (result) {
                 R.id.showTraining -> {
                     val intent = Intent(this, TrainingActivity::class.java)
@@ -704,7 +710,22 @@ class RegistryActivity : DBAppCompatActivity() {
                         }
                     }
                 }
-                R.id.removeBit -> removeBitLog(bit)
+                R.id.removeBit -> {
+                    if (deletionPref == "prompt") {
+                        val dialog = TextDialogFragment(
+                            R.string.dialog_confirm_remove_log_title,
+                            R.string.dialog_confirm_remove_log_text
+                        ) { confirmed ->
+                            if (confirmed) {
+                                removeBitLog(bit)
+                            }
+                        }
+                        dialog.show(supportFragmentManager, null)
+
+                    } else if (deletionPref == "1") {
+                        removeBitLog(bit)
+                    }
+                }
             }
             view.setBackgroundColor(0x00000000)
         }

@@ -20,4 +20,27 @@
         <item>chronologically</item>
         <item>group_exercises</item>
     </string-array>
+
+    <!-- Permissions Preference -->
+    <string-array name="permission_1p0_entries">
+        <item>@string/permission_enabled</item>
+        <item>@string/permission_confirmation</item>
+        <item>@string/permission_disabled</item>
+    </string-array>
+
+    <string-array name="permission_1p0_values">
+        <item>1</item>
+        <item>prompt</item>
+        <item>0</item>
+    </string-array>
+
+    <string-array name="permission_p0_entries">
+        <item>@string/permission_confirmation</item>
+        <item>@string/permission_disabled</item>
+    </string-array>
+
+    <string-array name="permission_p0_values">
+        <item>prompt</item>
+        <item>0</item>
+    </string-array>
 </resources>

@@ -50,65 +50,61 @@ class LogListHandler(
         index: Int,
         state: SimpleListView.ListElementState?
     ) {
-        if (item.id >= 0) {
-            binding as ListitemLogBinding
-
-            var lastSet = 0
-            var lastDate = Constants.DATE_ZERO
-            var lastTrainingId = -1
-            if (index > 0) {
-                val lastBit = log[index - 1]
-                lastSet = lastBit.set
-                lastDate = lastBit.timestamp
-                lastTrainingId = lastBit.trainingId
-            }
-
-            if (item.trainingId == Data.trainingId) {
-                if (item.instant) {
-                    binding.day.setText(R.string.symbol_empty)
-                    item.set = lastSet
-                } else {
-                    binding.day.text = item.timestamp.getTimeString()
-                    item.set = lastSet + 1
-                }
-            } else {
-                val lastDateDiff = lastDate.diffYearsAndDays(item.timestamp)
-
-                if (lastDateDiff.years != 0 || lastDateDiff.days != 0) {
-                    val dayLabel = TODAY.getLetterFrom(item.timestamp)
-                    binding.day.text = dayLabel
-                    item.set = 1
-                } else {
-                    binding.day.setText(R.string.symbol_empty)
-                    if (lastTrainingId == item.trainingId) item.set =
-                        if (item.instant) lastSet else lastSet + 1 else item.set = 1
-                }
-            }
-
-            val weight = item.weight.calculate(
-                item.variation.weightSpec,
-                item.variation.bar)
-
-            binding.weight.bigDecimal = weight.getValue(internationalSystem)
-            if (item.instant) {
-                binding.set.setText(R.string.symbol_empty)
-                setAlpha(binding, 0.4f)
-            } else {
-                binding.set.integer = item.set
-                setAlpha(binding, 1f)
-            }
-
-            binding.reps.integer = item.reps
-            binding.notes.text = item.note
-
-            //binding.element.setPadding(0, 0, 0, 0)
-            //binding.root.setPadding(0, 0, 0, 0)
-
-            binding.root.setOnClickListener {
-                onBitClickListener?.accept(binding.root, item)
-            }
-
+        var lastSet = 0
+        var lastDate = Constants.DATE_ZERO
+        var lastTrainingId = -1
+        if (index > 0) {
+            val lastBit = log[index - 1]
+            lastSet = lastBit.set
+            lastDate = lastBit.timestamp
+            lastTrainingId = lastBit.trainingId
         }
+
+        if (item.trainingId == Data.trainingId) {
+            if (item.instant) {
+                binding.day.setText(R.string.symbol_empty)
+                item.set = lastSet
+            } else {
+                binding.day.text = item.timestamp.getTimeString()
+                item.set = lastSet + 1
+            }
+        } else {
+            val lastDateDiff = lastDate.diffYearsAndDays(item.timestamp)
+
+            if (lastDateDiff.years != 0 || lastDateDiff.days != 0) {
+                val dayLabel = TODAY.getLetterFrom(item.timestamp)
+                binding.day.text = dayLabel
+                item.set = 1
+            } else {
+                binding.day.setText(R.string.symbol_empty)
+                if (lastTrainingId == item.trainingId) item.set =
+                    if (item.instant) lastSet else lastSet + 1 else item.set = 1
+            }
+        }
+
+        val weight = item.weight.calculate(
+            item.variation.weightSpec,
+            item.variation.bar)
+
+        binding.weight.bigDecimal = weight.getValue(internationalSystem)
+        if (item.instant) {
+            binding.set.setText(R.string.symbol_empty)
+            setAlpha(binding, 0.4f)
+        } else {
+            binding.set.integer = item.set
+            setAlpha(binding, 1f)
+        }
+
+        binding.reps.integer = item.reps
+        binding.notes.text = item.note
+
+        //binding.element.setPadding(0, 0, 0, 0)
+        //binding.root.setPadding(0, 0, 0, 0)
+
+        binding.root.setOnClickListener {
+            onBitClickListener?.accept(binding.root, item)
+        }
+
         if (!fullyLoaded && index == log.size-1) {
             onLoadMoreListener?.run()
         }

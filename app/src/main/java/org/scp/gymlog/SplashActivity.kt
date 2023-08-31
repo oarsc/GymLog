@@ -18,6 +18,7 @@ import org.scp.gymlog.service.DataBaseDumperService
 import org.scp.gymlog.service.InitialDataService
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.main.MainActivity
+import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.WeightUtils
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
@@ -36,15 +37,15 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (loadBoolean("nightTheme", false) &&
+        if (loadBoolean(PreferencesDefinition.THEME) &&
                 AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             recreate()
 
         } else if (!importData() && !exportData()) {
             WeightUtils.setConvertParameters(
-                loadBoolean("conversionExactValue", false),
-                loadString("conversionStep", "1"))
+                loadBoolean(PreferencesDefinition.UNIT_CONVERSION_EXACT_VALUE),
+                loadString(PreferencesDefinition.UNIT_CONVERSION_STEP))
 
             NotificationService(this).createNotificationsChannel()
 
@@ -95,7 +96,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun loadData(db: AppDatabase) {
-        Data.currentGym = loadInteger("gym", 1)
+        Data.currentGym = loadInteger(PreferencesDefinition.CURRENT_GYM)
 
         Data.bars.clear()
         db.barDao().getAll()

@@ -26,6 +26,7 @@ import org.scp.gymlog.ui.create.CreateExerciseActivity
 import org.scp.gymlog.ui.exercises.ExercisesActivity
 import org.scp.gymlog.ui.exercises.LatestActivity
 import org.scp.gymlog.ui.exercises.SearchActivity
+import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.currentDateTime
@@ -90,7 +91,7 @@ class MusclesFragment : CustomFragment() {
 										context.dbThread { db ->
 											db.gymDao().insert(GymEntity(name = it))
 											val gymId = idx + 1;
-											context.save("gym", gymId)
+											context.save(PreferencesDefinition.CURRENT_GYM, gymId)
 											Data.currentGym = gymId
 
 											requireActivity().apply {
@@ -104,7 +105,7 @@ class MusclesFragment : CustomFragment() {
 
 								} else {
 									val gymId = idx + 1;
-									context.save("gym", gymId)
+									context.save(PreferencesDefinition.CURRENT_GYM, gymId)
 									Data.currentGym = gymId
 
 									requireActivity().apply {

@@ -13,6 +13,7 @@ import java.util.function.Consumer
 
 class MenuDialogFragment(
     @param:MenuRes private val menuId: Int,
+    private val removedActions: List<Int> = listOf(),
     private val callback: Consumer<Int>
 ) : DialogFragment() {
 
@@ -28,7 +29,7 @@ class MenuDialogFragment(
         val recyclerView = view.findViewById<RecyclerView>(R.id.parentLayout)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = MenuRecyclerViewAdapter(requireContext(), menuId) { menuItemId ->
+        recyclerView.adapter = MenuRecyclerViewAdapter(requireContext(), menuId, removedActions) { menuItemId ->
             onMenuElementClicked(menuItemId)
         }
 

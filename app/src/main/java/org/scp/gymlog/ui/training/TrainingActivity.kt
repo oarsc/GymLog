@@ -18,6 +18,7 @@ import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.common.components.listView.MultipleListView
 import org.scp.gymlog.ui.main.history.HistoryFragment.Companion.getTrainingData
 import org.scp.gymlog.ui.main.history.TrainingData
+import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.ui.training.rows.TrainingBitRow
 import org.scp.gymlog.ui.training.rows.TrainingHeaderRow
 import org.scp.gymlog.ui.training.rows.TrainingVariationRow
@@ -51,7 +52,7 @@ class TrainingActivity : DBAppCompatActivity() {
         setContentView(R.layout.activity_training)
         setTitle(R.string.title_training)
 
-        val internationalSystem = loadBoolean("internationalSystem", true)
+        val internationalSystem = loadBoolean(PreferencesDefinition.UNIT_INTERNATIONAL_SYSTEM)
 
         setHeaderInfo()
 
@@ -88,7 +89,7 @@ class TrainingActivity : DBAppCompatActivity() {
         exerciseRows.clear()
 
         val order = TrainingOrder.getByCode(
-            loadString("trainingBitsSort", TrainingOrder.CHRONOLOGICALLY.code)
+            loadString(PreferencesDefinition.TRAINING_ORDER)
         )
 
         for (bit in bits) {

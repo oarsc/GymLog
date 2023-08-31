@@ -17,12 +17,14 @@ import androidx.preference.PreferenceManager
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.service.NotificationService.Companion.lastEndTime
+import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.util.Constants.DATE_ZERO
 import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.DateUtils.diffSeconds
 import org.scp.gymlog.util.DateUtils.isPast
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.SecondTickThread
+import org.scp.gymlog.util.extensions.PreferencesExts.loadString
 import java.time.LocalDateTime
 import java.util.*
 import java.util.function.BiConsumer
@@ -49,8 +51,7 @@ class EditTimerDialogFragment(
     private var isDefaultValue = false
 
     init {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
-        defaultValue = preferences.getString("restTime", "90")!!.toInt()
+        defaultValue = ctx.loadString(PreferencesDefinition.DEFAULT_REST_TIME).toInt()
 
         val restTime = variation.restTime
         if (restTime < 0) {

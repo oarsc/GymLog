@@ -15,12 +15,11 @@ import org.scp.gymlog.ui.common.animations.ResizeHeightAnimation
 import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.common.components.listView.SimpleListView.ListElementState
+import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.util.Constants.TODAY
-import org.scp.gymlog.util.DateUtils
 import org.scp.gymlog.util.DateUtils.getLetterFrom
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
 import java.io.IOException
-import java.time.LocalDateTime
 import java.util.*
 import java.util.function.BiConsumer
 import java.util.function.Consumer
@@ -41,7 +40,7 @@ class ExercisesListHandler(
 
     fun init() {
         updateOrder(
-            Order.getByCode(context.loadString("exercisesSortLastUsed", Order.ALPHABETICALLY.code))
+            Order.getByCode(context.loadString(PreferencesDefinition.EXERCISES_ORDER))
         )
     }
 

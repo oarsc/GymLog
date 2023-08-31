@@ -25,6 +25,7 @@ import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.common.components.listView.MultipleListHandler
 import org.scp.gymlog.ui.common.components.listView.MultipleListView
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
+import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.ui.top.rows.*
 import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.Constants
@@ -38,6 +39,7 @@ import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.WeightUtils.calculate
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
+import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
 import java.io.IOException
 
 open class TopActivity : DBAppCompatActivity() {
@@ -61,8 +63,7 @@ open class TopActivity : DBAppCompatActivity() {
         setContentView(R.layout.activity_tops)
         setTitle(R.string.title_top_records)
 
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        internationalSystem = preferences.getBoolean("internationalSystem", true)
+        internationalSystem = loadBoolean(PreferencesDefinition.UNIT_INTERNATIONAL_SYSTEM)
 
         setHeaderInfo()
 

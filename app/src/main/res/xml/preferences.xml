@@ -56,4 +56,23 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/permissions_header">
+        <ListPreference
+            app:key="logDeletion"
+            app:title="@string/ability_remove_logs"
+            app:entries="@array/permission_1p0_entries"
+            app:entryValues="@array/permission_1p0_values"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="prompt" />
+
+        <ListPreference
+            app:key="exerciseDeletion"
+            app:title="@string/ability_remove_exercises"
+            app:entries="@array/permission_p0_entries"
+            app:entryValues="@array/permission_p0_values"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="prompt" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

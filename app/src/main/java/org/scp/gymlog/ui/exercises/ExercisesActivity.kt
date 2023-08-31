@@ -18,6 +18,7 @@ import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment
 import org.scp.gymlog.ui.create.CreateExerciseActivity
+import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.ui.registry.RegistryActivity
 import org.scp.gymlog.ui.top.TopActivity
 import org.scp.gymlog.util.Constants.IntentReference
@@ -69,7 +70,7 @@ class ExercisesActivity : DBAppCompatActivity() {
         val inflater = menuInflater
         inflater.inflate(R.menu.exercises_menu, menu)
 
-        when (getByCode(loadString("exercisesSortLastUsed", Order.ALPHABETICALLY.code))) {
+        when (getByCode(loadString(PreferencesDefinition.EXERCISES_ORDER))) {
             Order.ALPHABETICALLY -> menu.findItem(R.id.sortAlphabetically).isChecked = true
             Order.LAST_USED -> menu.findItem(R.id.sortLastUsed).isChecked = true
         }
@@ -90,13 +91,13 @@ class ExercisesActivity : DBAppCompatActivity() {
             R.id.sortAlphabetically -> {
                 val order = Order.ALPHABETICALLY
                 handler.updateOrder(order)
-                save("exercisesSortLastUsed", order.code)
+                save(PreferencesDefinition.EXERCISES_ORDER, order.code)
                 item.isChecked = true
             }
             R.id.sortLastUsed -> {
                 val order = Order.LAST_USED
                 handler.updateOrder(order)
-                save("exercisesSortLastUsed", order.code)
+                save(PreferencesDefinition.EXERCISES_ORDER, order.code)
                 item.isChecked = true
             }
         }
@@ -105,7 +106,10 @@ class ExercisesActivity : DBAppCompatActivity() {
 
     private fun itemClicked(exercise: Exercise, long: Boolean) {
         if (long) {
-            MenuDialogFragment(R.menu.exercise_menu) { action ->
+            val deletionPref = loadString(PreferencesDefinition.EXERCISES_DELETION)
+            val removedItems = if (deletionPref == "0") listOf(R.id.removeExercise) else listOf()
+
+            MenuDialogFragment(R.menu.exercise_menu, removedItems) { action ->
                 exerciseMenuActionSelected(exercise, action)
             }.apply { show(supportFragmentManager, null) }
         } else {
@@ -194,7 +198,7 @@ class ExercisesActivity : DBAppCompatActivity() {
             }
             IntentReference.REGISTRY -> {
                 if (data.getBooleanExtra("refresh", false)) {
-                    val order = getByCode(loadString("exercisesSortLastUsed", Order.ALPHABETICALLY.code))
+                    val order = getByCode(loadString(PreferencesDefinition.EXERCISES_ORDER))
 
                     if (order == Order.ALPHABETICALLY) {
                         val id = data.getIntExtra("exerciseId", -1)

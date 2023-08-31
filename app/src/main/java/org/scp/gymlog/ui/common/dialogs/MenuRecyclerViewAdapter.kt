@@ -15,6 +15,7 @@ import java.util.function.Consumer
 class MenuRecyclerViewAdapter(
     context: Context,
     @MenuRes menuId: Int,
+    removedActions: List<Int> = listOf(),
     private val onClick: Consumer<Int>
 ) : RecyclerView.Adapter<MenuRecyclerViewAdapter.ViewHolder>() {
 
@@ -24,6 +25,7 @@ class MenuRecyclerViewAdapter(
         val popupMenu = PopupMenu(context, null)
         popupMenu.inflate(menuId)
         menu = popupMenu.menu
+        removedActions.forEach(menu::removeItem)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
