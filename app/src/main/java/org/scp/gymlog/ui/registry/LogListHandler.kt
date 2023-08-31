@@ -3,12 +3,9 @@ package org.scp.gymlog.ui.registry
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewbinding.ViewBinding
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemLogBinding
-import org.scp.gymlog.databinding.ListitemLogMoreButtonBinding
 import org.scp.gymlog.model.Bit
-import org.scp.gymlog.ui.common.components.listView.MultipleListHandler
 import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.util.Constants

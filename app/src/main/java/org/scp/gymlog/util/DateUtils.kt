@@ -79,6 +79,10 @@ object DateUtils {
         return (this.diff(other) / 1000.0).roundToInt()
     }
 
+    fun LocalDateTime.diffSeconds(millis: Long): Int {
+        return abs((this.timeInMillis - millis) /1000.0).roundToInt()
+    }
+
 
     class YearsAndDays (val years: Int, val days: Int)
     fun LocalDateTime.diffYearsAndDays(other: LocalDateTime): YearsAndDays {

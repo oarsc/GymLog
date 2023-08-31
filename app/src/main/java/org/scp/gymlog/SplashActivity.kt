@@ -162,6 +162,9 @@ class SplashActivity : AppCompatActivity() {
     private fun goMain() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("loaded", true)
+        intent.putExtra("variationId",
+            this.intent.extras?.getInt("variationId", -1) ?: -1
+        )
         startActivity(intent)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()

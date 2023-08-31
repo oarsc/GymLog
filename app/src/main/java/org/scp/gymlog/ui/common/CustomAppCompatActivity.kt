@@ -24,8 +24,8 @@ open class CustomAppCompatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        //supportActionBar!!.setDisplayShowHomeEnabled(true);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        //supportActionBar?.setDisplayShowHomeEnabled(true);
     }
 
     override fun onSupportNavigateUp(): Boolean {

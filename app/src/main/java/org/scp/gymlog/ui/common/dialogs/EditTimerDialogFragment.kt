@@ -13,15 +13,14 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.StringRes
-import androidx.preference.PreferenceManager
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.service.NotificationService.Companion.lastEndTime
 import org.scp.gymlog.ui.preferences.PreferencesDefinition
-import org.scp.gymlog.util.Constants.DATE_ZERO
 import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.DateUtils.diffSeconds
 import org.scp.gymlog.util.DateUtils.isPast
+import org.scp.gymlog.util.DateUtils.isSet
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.SecondTickThread
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
@@ -39,8 +38,6 @@ class EditTimerDialogFragment(
 
     override var initialValue: Int = 60
 
-    var onStopListener: Runnable? = null
-    var onPlayListener: BiConsumer<LocalDateTime, Int>? = null
     private var countdownThread: CountdownThread? = null
     private lateinit var currentTimer: TextView
     private lateinit var secondLabel: TextView
@@ -49,6 +46,22 @@ class EditTimerDialogFragment(
     private lateinit var minusButton: ImageView
     private val defaultValue: Int
     private var isDefaultValue = false
+
+    private var onStopListener: Runnable? = null
+    private var onPlayListener: BiConsumer<LocalDateTime, Int>? = null
+    private var onAddTimeListener: Consumer<Int>? = null
+
+    fun setOnStopListener(onStopListener: Runnable) {
+        this.onStopListener = onStopListener
+    }
+
+    fun setOnPlayListener(onPlayListener: BiConsumer<LocalDateTime, Int>) {
+        this.onPlayListener = onPlayListener
+    }
+
+    fun setOnAddTimeListener(onAddTimeListener: Consumer<Int>) {
+        this.onAddTimeListener = onAddTimeListener
+    }
 
     init {
         defaultValue = ctx.loadString(PreferencesDefinition.DEFAULT_REST_TIME).toInt()
@@ -76,6 +89,10 @@ class EditTimerDialogFragment(
         if (lastEndTime.isPast) {
             uiStopCounter()
 
+            if (!lastEndTime.isSet) {
+                showCurrentCountdownButtons(false)
+            }
+
         } else {
             countdownThread = CountdownThread(activity as Activity)
                 .also(Thread::start)
@@ -96,8 +113,10 @@ class EditTimerDialogFragment(
         if (isDefaultValue) setInputAlpha(view, 0.4f)
 
         stopButton.setOnClickListener {
-            countdownThread?.interrupt() ?: uiStopCounter()
+            countdownThread?.interrupt()
             onStopListener?.run()
+            uiStopCounter()
+            showCurrentCountdownButtons(false)
         }
 
         view.findViewById<View>(R.id.playButton).setOnClickListener {
@@ -114,16 +133,25 @@ class EditTimerDialogFragment(
         }
 
         minusButton.setOnClickListener {
-            if (countdownThread != null) {
-                onPlayListener?.accept(DATE_ZERO, -10)
+            onAddTimeListener?.accept(-10)
+
+            if (lastEndTime.isPast) {
+                uiStopCounter()
+            } else {
                 countdownThread?.onTick()
             }
         }
 
         plusButton.setOnClickListener {
-            if (countdownThread != null) {
-                onPlayListener?.accept(DATE_ZERO, 10)
-                countdownThread?.onTick()
+            onAddTimeListener?.accept(10)
+
+            if (!lastEndTime.isPast) {
+                if (countdownThread == null) {
+                    countdownThread = CountdownThread(activity as Activity)
+                        .also(Thread::start)
+                } else {
+                    countdownThread?.onTick()
+                }
             }
         }
 
@@ -156,7 +184,6 @@ class EditTimerDialogFragment(
     }
 
     private fun uiStopCounter() {
-        showCurrentCountdownButtons(false)
         secondLabel.visibility = View.GONE
         currentTimer.text = ctx.resources.getString(R.string.text_none).lowercase(Locale.getDefault())
     }

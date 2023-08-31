@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
 import android.os.Binder
 import android.os.IBinder
 import android.widget.RemoteViews
@@ -12,8 +13,8 @@ import androidx.core.app.NotificationCompat
 import org.scp.gymlog.R
 import org.scp.gymlog.SplashActivity
 import org.scp.gymlog.service.NotificationService
-import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.DateUtils.diff
+import org.scp.gymlog.util.DateUtils.diffSeconds
 import org.scp.gymlog.util.DateUtils.isPast
 import org.scp.gymlog.util.DateUtils.timeInMillis
 import org.scp.gymlog.util.DateUtils.toLocalDateTime
@@ -39,111 +40,127 @@ class NotificationLoggingService : Service() {
     private var startTime: Long = 0
     private lateinit var endDate: LocalDateTime
     private var exerciseName: String? = null
+    private var variationId: Int = -1
     private var running = false
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        return when {
-            intent.action == ACTION_STOP -> {
+    private val notificationManager
+        by lazy { getSystemService(NOTIFICATION_SERVICE) as NotificationManager }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        intent ?: return super.onStartCommand(null, flags, startId)
+
+        return when (intent.action) {
+            ACTION_STOP -> {
+                notificationManager.cancel(NotificationService.NOTIFICATION_READY_ID)
+                stopForeground(true)
                 stopSelfResult(startId)
                 START_NOT_STICKY
             }
-            intent.action == ACTION_REPLACE && running -> {
+            ACTION_REPLACE -> {
                 val milliseconds = intent.getLongExtra("milliseconds", 0)
 
                 if (milliseconds > 0) {
                     endDate = milliseconds.toLocalDateTime
 
-                    if (!endDate.isPast) {
-                        val diff = endDate.diff().toInt()
-                        replaceView(diff, (endDate.timeInMillis - startTime).toInt());
+                    if (running) {
+                        if (!endDate.isPast) {
+                            val diff = endDate.diff().toInt()
+                            replaceView(diff, (endDate.timeInMillis - startTime).toInt());
+                        }
+                    } else {
+                        if (!endDate.isPast) {
+                            val seconds = endDate.diffSeconds(startTime)
+                            showCountdownNotification(seconds)
+                            thread?.interrupt()
+                            thread = RefresherThread().also(Thread::start)
+                        }
                     }
                 }
 
                 super.onStartCommand(intent, flags, startId)
             }
             else -> {
-                getNotificationManager().cancel(NotificationService.NOTIFICATION_READY_ID)
+                notificationManager.cancel(NotificationService.NOTIFICATION_READY_ID)
                 exerciseName = intent.getStringExtra("name")
+                variationId = intent.getIntExtra("variationId", -1)
                 val milliseconds = intent.getLongExtra("milliseconds", 0)
                 val seconds = intent.getIntExtra("seconds", 10)
 
-                if (milliseconds > 0) {
-                    endDate = milliseconds.toLocalDateTime
-                    startTime = endDate
-                        .minusSeconds(seconds.toLong())
-                        .timeInMillis
-                } else {
-                    currentDateTime().apply {
-                        startTime = timeInMillis
-                        endDate = plusSeconds(seconds.toLong())
-                    }
-                }
-                if (seconds <= 0) {
-                    showReadyNotification()
-                    stopSelf()
-                } else {
-                    startForeground(
-                        NotificationService.NOTIFICATION_COUNTDOWN_ID,
-                        generateCountdownNotification(seconds).also { notification = it })
+                endDate = milliseconds.toLocalDateTime
+                startTime = endDate
+                    .minusSeconds(seconds.toLong())
+                    .timeInMillis
 
-                    thread = Thread {
-                        running = true
-                        var endedNaturally = false
-                        try {
-                            while (!endDate.isPast) {
-                                val diff = endDate.diff().toInt()
-                                updateNotification(diff)
-                                Thread.sleep(500)
-                            }
-                            endedNaturally = true
-                        } catch (e: InterruptedException) {
-                            // Interrupted
-                        } finally {
-                            stopForeground(true)
-                            if (endedNaturally) {
-                                showReadyNotification()
-                                stopSelf()
-                            }
-                            running = false
-                        }
-                    }.also(Thread::start)
-                }
+                showCountdownNotification(seconds)
+                thread?.interrupt()
+                thread = RefresherThread().also(Thread::start)
 
                 super.onStartCommand(intent, flags, startId)
             }
         }
     }
 
+    inner class RefresherThread: Thread() {
+        override fun run() {
+            running = true
+            var endedNaturally = false
+            try {
+                while (!endDate.isPast) {
+                    val diff = endDate.diff().toInt()
+                    updateNotification(diff)
+                    sleep(500)
+                }
+                endedNaturally = true
+            } catch (e: InterruptedException) {
+                // Interrupted
+            } finally {
+                if (endedNaturally) {
+                    showReadyNotification()
+                } else {
+                    stopForeground(true)
+                    stopSelf()
+                }
+                running = false
+            }
+        }
+
+        private fun updateNotification(remainingSeconds: Int) {
+            updateViewSeconds(remainingSeconds)
+            notificationManager.notify(NotificationService.NOTIFICATION_COUNTDOWN_ID, notification)
+        }
+    }
+
     override fun onDestroy() {
-        if (thread != null) {
-            thread!!.interrupt()
+        thread?.apply {
+            interrupt()
             thread = null
         }
         super.onDestroy()
     }
 
-    private fun generateCountdownNotification(maxSeconds: Int): Notification {
+    private fun showCountdownNotification(maxSeconds: Int) {
         countdownRemoteView = RemoteViews(packageName, R.layout.notification_countdown)
         countdownRemoteView.setInt(R.id.progressBar, "setMax", maxSeconds * 1000)
         countdownRemoteView.setTextViewText(R.id.exerciseName, exerciseName)
-        val builder = NotificationCompat.Builder(this, NotificationService.COUNTDOWN_CHANNEL)
+        val notification = NotificationCompat.Builder(this, NotificationService.COUNTDOWN_CHANNEL)
             .setSmallIcon(R.drawable.ic_logo_24dp)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             .setCustomContentView(countdownRemoteView)
             .setOngoing(true)
+            .setUsesChronometer(true)
+            .setWhen(startTime)
             .setContentIntent(
                 PendingIntent.getActivity(
                     this, 0, getStartAppIntent(),
-                    PendingIntent.FLAG_IMMUTABLE
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
             )
-        return builder.build()
-    }
+            .build()
+            .also { this.notification = it }
 
-    private fun updateNotification(remainingSeconds: Int) {
-        updateViewSeconds(remainingSeconds)
-        val mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        mNotificationManager.notify(NotificationService.NOTIFICATION_COUNTDOWN_ID, notification)
+        notificationManager.cancel(NotificationService.NOTIFICATION_READY_ID)
+        //notificationManager.notify(NotificationService.NOTIFICATION_COUNTDOWN_ID, notification)
+        startForeground(NotificationService.NOTIFICATION_COUNTDOWN_ID, notification, FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE)
     }
 
     private fun updateViewSeconds(remainingSeconds: Int) {
@@ -169,14 +186,17 @@ class NotificationLoggingService : Service() {
             .setCustomContentView(remoteView)
             .setUsesChronometer(true)
             .setWhen(startTime)
-            .setAutoCancel(true)
+            //.setAutoCancel(true)
             .setContentIntent(
                 PendingIntent.getActivity(
                     this, 0, getStartAppIntent(),
-                    PendingIntent.FLAG_IMMUTABLE
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
             )
-        getNotificationManager().notify(NotificationService.NOTIFICATION_READY_ID, builder.build())
+
+        //notificationManager.cancel(NotificationService.NOTIFICATION_COUNTDOWN_ID)
+        stopForeground(true)
+        notificationManager.notify(NotificationService.NOTIFICATION_READY_ID, builder.build())
     }
 
     private fun getStartAppIntent() : Intent {
@@ -184,10 +204,9 @@ class NotificationLoggingService : Service() {
         startAppIntent.action = Intent.ACTION_MAIN
         startAppIntent.addCategory(Intent.CATEGORY_LAUNCHER)
         startAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        if (variationId >= 0) {
+            startAppIntent.putExtra("variationId", variationId)
+        }
         return startAppIntent
-    }
-
-    private fun getNotificationManager() : NotificationManager {
-        return getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     }
 }

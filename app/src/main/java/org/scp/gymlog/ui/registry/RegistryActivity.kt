@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.preference.PreferenceManager
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemLogBinding
 import org.scp.gymlog.exceptions.LoadException
@@ -37,6 +36,7 @@ import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.DateUtils.diffSeconds
 import org.scp.gymlog.util.DateUtils.isPast
+import org.scp.gymlog.util.DateUtils.isSet
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.FormatUtils.safeBigDecimal
@@ -51,7 +51,6 @@ import org.scp.gymlog.util.extensions.PreferencesExts.loadString
 import java.io.IOException
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import java.util.function.BiConsumer
 
 
 class RegistryActivity : DBAppCompatActivity() {
@@ -135,13 +134,18 @@ class RegistryActivity : DBAppCompatActivity() {
                     updateTimer(result)
                 //}
             }
-            dialog.onPlayListener = BiConsumer { endDate, seconds ->
-                if (lastEndTime.isPast)
-                    startTimer(endDate, seconds)
+            dialog.setOnPlayListener { endDate, seconds ->
+                if (lastEndTime.isSet)
+                    editTimer(endDate)
                 else
-                    editTimer(endDate, seconds)
+                    startTimer(endDate, seconds)
             }
-            dialog.onStopListener = Runnable { stopTimer() }
+            dialog.setOnStopListener { stopTimer() }
+            dialog.setOnAddTimeListener { seconds ->
+                val endingCountdown = lastEndTime.plusSeconds(seconds.toLong())
+                editTimer(endingCountdown)
+            }
+
             dialog.show(supportFragmentManager, null)
         }
 
@@ -745,19 +749,19 @@ class RegistryActivity : DBAppCompatActivity() {
     private fun startTimer() {
         val seconds = if (variation.restTime < 0) defaultTimer else variation.restTime
         val endDate = currentDateTime().plusSeconds(seconds.toLong())
-        startTimer(endDate, seconds)
-    }
-
-    private fun startTimer(endDate: LocalDateTime, seconds: Int) {
-        if (seconds > 0) {
-            notificationService.showNotification(endDate, seconds, exercise.name)
-            updateRunningTimer()
+        if (lastEndTime < endDate) {
+            startTimer(endDate, seconds)
         }
     }
 
-    private fun editTimer(endDate: LocalDateTime, seconds: Int) {
-        if (!lastEndTime.isPast) {
-            notificationService.editNotification(endDate, seconds)
+    private fun startTimer(endDate: LocalDateTime, seconds: Int) {
+        notificationService.startNewNotification(endDate, seconds, variation)
+        updateRunningTimer()
+    }
+
+    private fun editTimer(endDate: LocalDateTime) {
+        if (lastEndTime.isSet) {
+            notificationService.editNotification(endDate)
             updateRunningTimer()
         }
     }

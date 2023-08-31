@@ -137,7 +137,7 @@ class MusclesFragment : CustomFragment() {
 					val seconds = 2
 					val date = currentDateTime().plusSeconds(seconds.toLong())
 					NotificationService(requireContext())
-						.showNotification(date, seconds, "Test notification")
+						.startNewNotification(date, seconds, Data.exercises[0].variations[0])
 				}
 			}
 			false

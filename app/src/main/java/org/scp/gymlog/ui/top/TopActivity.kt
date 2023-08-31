@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.preference.PreferenceManager
 import androidx.viewbinding.ViewBinding
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemTopBitBinding
@@ -32,7 +31,6 @@ import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Constants.TODAY
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.DateUtils
 import org.scp.gymlog.util.DateUtils.getDateString
 import org.scp.gymlog.util.DateUtils.getLetterFrom
 import org.scp.gymlog.util.FormatUtils.bigDecimal
