@@ -134,7 +134,7 @@ class MusclesFragment : CustomFragment() {
 					startActivityForResult(intent, IntentReference.IMPORT_FILE)
 				}
 				R.id.testButton -> {
-					val seconds = 2
+					val seconds = 10
 					val date = currentDateTime().plusSeconds(seconds.toLong())
 					NotificationService(requireContext())
 						.startNewNotification(date, seconds, Data.exercises[0].variations[0])

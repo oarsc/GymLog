@@ -4,6 +4,7 @@
 
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
 
@@ -77,8 +78,18 @@
             android:enabled="true"
             android:exported="false"
             android:label="NotificationLoggingWidget"
-            android:foregroundServiceType="connectedDevice"
             android:name=".ui.common.notifications.NotificationLoggingService" />
+
+        <receiver
+            android:name=".ui.common.notifications.NotificationLoggingService$ScheduledNotification"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
