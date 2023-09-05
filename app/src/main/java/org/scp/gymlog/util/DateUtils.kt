@@ -9,9 +9,11 @@ import kotlin.math.roundToInt
 
 object DateUtils {
 
-    fun currentDateTime() : LocalDateTime {
-        return LocalDateTime.now(ZoneId.systemDefault())
-    }
+    @Deprecated("Use NOW instead", ReplaceWith("NOW", "org.scp.gymlog.util.DateUtils.NOW"))
+    fun currentDateTime() = NOW
+
+    val NOW: LocalDateTime
+        get() = LocalDateTime.now(ZoneId.systemDefault())
 
     val LocalDate.timeInMillis : Long
         get() = atStartOfDay().timeInMillis

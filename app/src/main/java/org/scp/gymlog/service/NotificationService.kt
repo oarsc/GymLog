@@ -33,7 +33,6 @@ class NotificationService(private val context: Context) {
         intent.putExtra("name", variation.exercise.name)
         intent.putExtra("variationId", variation.id)
 
-        context.stopService(intent)
         intent.action = NotificationLoggingService.ACTION_START
         context.startService(intent)
     }
@@ -53,7 +52,6 @@ class NotificationService(private val context: Context) {
 
     fun hideNotification() {
         val intent = Intent(context, NotificationLoggingService::class.java)
-        context.stopService(intent)
         intent.action = NotificationLoggingService.ACTION_STOP
         context.startService(intent)
         lastEndTime = DATE_ZERO
