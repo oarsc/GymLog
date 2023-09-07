@@ -128,11 +128,11 @@ class NotificationLoggingService : Service() {
             } catch (e: InterruptedException) {
                 // Interrupted
             } finally {
-                countdownNotification?.apply {
-                    close()
-                    countdownNotification = null
-                }
                 if (endedNaturally) {
+                    countdownNotification?.apply {
+                        close()
+                        countdownNotification = null
+                    }
                     ReadyNotification(
                         this@NotificationLoggingService,
                         exerciseName,

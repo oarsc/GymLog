@@ -32,6 +32,7 @@
     <string name="compound_training_start_date">Training #%1$d started at %2$s</string>
     <string name="compound_training_date">Training #%1$d on %2$s</string>
     <string name="compound_training_duration">Training #%1$d. %2$s duration</string>
+    <string name="compound_notification_countdown">Countdown: %1$ds</string>
 
     <string name="text_add">Add</string>
     <string name="text_collapse_all">Collapse all</string>
@@ -167,7 +168,6 @@
     <!-- Notifications -->
     <string name="notification_title_countdown">@string/text_countdown</string>
     <string name="notification_title_ready">Ready</string>
-    <string name="notification_fill_1">:&#160;</string>
     <string name="notification_rest_finished">Rest finished</string>
 
     <!-- Weight Specifications -->

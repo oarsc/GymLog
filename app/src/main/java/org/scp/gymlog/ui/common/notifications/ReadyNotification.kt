@@ -50,7 +50,6 @@ class ReadyNotification (
             .setUsesChronometer(true)
             .setWhen(startTime)
             .setOnlyAlertOnce(true)
-            .setOngoing(true)
             //.setAutoCancel(true)
             .setContentIntent(
                 PendingIntent.getActivity(
