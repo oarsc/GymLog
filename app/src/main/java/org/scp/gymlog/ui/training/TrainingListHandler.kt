@@ -13,8 +13,6 @@ import org.scp.gymlog.R
 import org.scp.gymlog.databinding.*
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Bit
-import org.scp.gymlog.model.Muscle
-import org.scp.gymlog.model.Variation
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.MultipleListHandler
@@ -22,7 +20,10 @@ import org.scp.gymlog.ui.common.components.listView.MultipleListView
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.common.dialogs.EditBitLogDialogFragment
 import org.scp.gymlog.ui.common.dialogs.TextSelectDialogFragment
-import org.scp.gymlog.ui.training.rows.ITrainingRow
+import org.scp.gymlog.ui.training.rows.ITrainingBitRow
+import org.scp.gymlog.ui.training.rows.TrainingBitHeaderRow
+import org.scp.gymlog.ui.training.rows.TrainingBitRow
+import org.scp.gymlog.ui.training.rows.TrainingRowData
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.RedirectionExts.goToVariation
 import java.io.IOException
@@ -31,15 +32,15 @@ import java.util.function.Consumer
 class TrainingListHandler(
     val context: Context,
     private val internationalSystem: Boolean,
-    var preExpandedIndex: Int? = null,
-) : MultipleListHandler<ExerciseRows> {
-    override val useListState = true
+    var preExpandedBitId: Int? = null,
+) : MultipleListHandler<TrainingRowData> {
+    override val useListState = false
     override val itemInflaters = listOf<(LayoutInflater, ViewGroup?, Boolean) -> ViewBinding>(
         ListitemHistoryExerciseHeaderBinding::inflate,
-        ListitemHistorySupersetExerciseHeaderBinding::inflate
+        ListitemHistorySupersetContainerBinding::inflate
     )
 
-    override fun findItemInflaterIndex(item: ExerciseRows) = item.superSet?.let { 1 } ?: 0
+    override fun findItemInflaterIndex(item: TrainingRowData) = item.superSet?.let { 1 } ?: 0
 
     private var onBitChangedListener: Consumer<Bit>? = null
 
@@ -50,38 +51,39 @@ class TrainingListHandler(
     @Suppress("UNCHECKED_CAST")
     override fun buildListView(
         binding: ViewBinding,
-        item: ExerciseRows,
+        item: TrainingRowData,
         index: Int,
         state: CommonListView.ListElementState?
     ) {
-        state!!
-
-        if (preExpandedIndex == index) {
-            preExpandedIndex = null
-            state["expanded"] = true
-        }
-
-        val bitList: MultipleListView<ITrainingRow>
-
         if (item.superSet == null) {
             binding as ListitemHistoryExerciseHeaderBinding
 
-            bitList = binding.bitList as MultipleListView<ITrainingRow>
+            preExpandedBitId?.let { bitId ->
+                if (item.any { it.id == bitId }) {
+                    item.expanded = true
+                    preExpandedBitId = null
+                }
+            }
+
+            val bitList = binding.bitList as MultipleListView<ITrainingBitRow>
             bitList.unScrollableVertically = true
 
             val bitHandler = TrainingBitListHandler(internationalSystem)
-            bitList.init(item, bitHandler)
+            val rows: List<ITrainingBitRow> = generateBitRows(item)
+            bitList.init(rows, bitHandler)
             bitHandler.setOnClickListener { bit, idx ->
                 bitClicked(bit, idx, bitList)
             }
 
-            val exercise = item.exercise
+            val variation = item.variation
+            val exercise = variation.exercise
 
             binding.row.title.text = exercise.name
-            binding.row.subtitle.text = exercise.primaryMuscles
-                .map(Muscle::text)
-                .map { id: Int -> context.resources.getString(id) }
-                .joinToString { it }
+            if (variation.default) {
+                binding.row.subtitle.setText(R.string.text_default)
+            } else {
+                binding.row.subtitle.text = variation.name
+            }
 
             binding.row.indicator.setCardBackgroundColor(
                 ResourcesCompat.getColor(context.resources, exercise.primaryMuscles[0].color, null))
@@ -96,7 +98,7 @@ class TrainingListHandler(
                 throw LoadException("Could not read \"$fileName\"", e)
             }
 
-            binding.header.setOnClickListener { toggleBits(bitList, state) }
+            binding.header.setOnClickListener { toggleBits(bitList, item) }
 
             binding.row.image.setOnLongClickListener {
                 val variations = exercise.gymVariations
@@ -114,41 +116,67 @@ class TrainingListHandler(
                 true
             }
 
-        } else {
-            binding as ListitemHistorySupersetExerciseHeaderBinding
+            bitList.visibility = if (item.expanded) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
 
-            bitList = binding.bitList as MultipleListView<ITrainingRow>
+        } else {
+            binding as ListitemHistorySupersetContainerBinding
+
+            val bitList = binding.exerciseList as SimpleListView<TrainingRowData, ListitemHistoryExerciseHeaderBinding>
             bitList.unScrollableVertically = true
 
-            val bitHandler = TrainingBitListHandler(internationalSystem, item.variations)
-            bitList.init(item, bitHandler)
-            bitHandler.setOnClickListener { bit, idx ->
-                bitClicked(bit, idx, bitList)
+            val handler = TrainingListSuperSetHandler(context, internationalSystem)
+            handler.setOnBitChangedListener { onBitChangedListener?.accept(it) }
+
+            val subRows = splitSuperSetRows(item).onEach { it.expanded = item.expanded }
+
+            preExpandedBitId?.let { bitId ->
+                subRows.forEach { row ->
+                    if (row.any { it.id == bitId }) {
+                        row.expanded = true
+                        preExpandedBitId = null
+                    }
+                }
             }
+
+            bitList.init(subRows, handler)
 
             binding.superSetNumber.text = item.superSet.toString()
-
-            val superSetExerciseListHandler = TrainingSuperSerHeaderHandler(context)
-            val exerciseList = binding.exerciseList as SimpleListView<Variation, ListitemHistoryExerciseRowBinding>
-            exerciseList.unScrollableVertically = true
-            exerciseList.init(item.variations, superSetExerciseListHandler)
-
-            exerciseList.suppressLayout(true)
-            binding.header.setOnClickListener { toggleBits(bitList, state) }
-
-            superSetExerciseListHandler.setOnLongImageClickListener {
-                context.goToVariation(it)
-            }
-        }
-
-        bitList.visibility = if (state["expanded", false]) {
-            View.VISIBLE
-        } else {
-            View.GONE
         }
     }
 
-    private fun bitClicked(bit: Bit, index: Int, bitList: MultipleListView<ITrainingRow>) {
+    private fun generateBitRows(rowData: TrainingRowData): List<ITrainingBitRow> {
+        val rows = mutableListOf<ITrainingBitRow>(
+            TrainingBitHeaderRow()
+        )
+
+        rowData
+            .map { TrainingBitRow(it) }
+            .let { rows.addAll(it) }
+
+        return rows
+    }
+
+    private fun splitSuperSetRows(rowData: TrainingRowData): List<TrainingRowData> {
+        val rows = mutableListOf<TrainingRowData>()
+
+        rowData.forEach { bit ->
+            val variation = bit.variation
+
+            val row = rows
+                .filter { it.variation === variation }
+                .getOrElse(0) {
+                    TrainingRowData(variation, rowData.superSet).also { rows.add(it) }
+                }
+            row.add(bit)
+        }
+        return rows
+    }
+
+    private fun bitClicked(bit: Bit, index: Int, bitList: MultipleListView<ITrainingBitRow>) {
         context.dbThread { db ->
 
             val enableInstantSwitch = db.bitDao().getPreviousByTraining(bit.trainingId, bit.timestamp)
@@ -178,43 +206,61 @@ class TrainingListHandler(
     }
 
     private fun toggleBits(
-        bitList: MultipleListView<ITrainingRow>,
-        state: CommonListView.ListElementState
+        bitList: MultipleListView<ITrainingBitRow>,
+        item: TrainingRowData
     ) {
-        val expanded = !state["expanded", false]
+        val expanded = !item.expanded
         bitList.visibility = if (expanded) View.VISIBLE else View.GONE
-        state["expanded"] = expanded
+        item.expanded = expanded
     }
 
-    fun expandAll(
+    fun expandItem(
         binding: ViewBinding?,
-        item: ExerciseRows,
-        state: CommonListView.ListElementState
+        item: TrainingRowData
     ) {
-        state["expanded"] = true
+        item.expanded = true
 
         binding?.let {
-            val bitList = if (item.superSet == null)
-                (it as ListitemHistoryExerciseHeaderBinding).bitList
-            else
-                (it as ListitemHistorySupersetExerciseHeaderBinding).bitList
-            bitList.visibility = View.VISIBLE
+            if (item.superSet == null) {
+                it as ListitemHistoryExerciseHeaderBinding
+
+                val bitList = it.bitList
+                bitList.visibility = View.VISIBLE
+
+            } else {
+                it as ListitemHistorySupersetContainerBinding
+
+                val bitList = it.exerciseList as SimpleListView<TrainingRowData, ListitemHistoryExerciseHeaderBinding>
+                val trainingListHandler = bitList.handler as TrainingListSuperSetHandler
+
+                bitList.applyToAll { subBinding, item, _ ->
+                    trainingListHandler.expandItem(subBinding, item)
+                }
+            }
         }
     }
 
-    fun collapseAll(
+    fun collapseItem(
         binding: ViewBinding?,
-        item: ExerciseRows,
-        state: CommonListView.ListElementState
+        item: TrainingRowData
     ) {
-        state["expanded"] = false
+        item.expanded = false
 
         binding?.let {
-            val bitList = if (item.superSet == null)
-                (it as ListitemHistoryExerciseHeaderBinding).bitList
-            else
-                (it as ListitemHistorySupersetExerciseHeaderBinding).bitList
-            bitList.visibility = View.GONE
+            if (item.superSet == null) {
+                val bitList = (it as ListitemHistoryExerciseHeaderBinding).bitList
+                bitList.visibility = View.GONE
+
+            } else {
+                it as ListitemHistorySupersetContainerBinding
+
+                val bitList = it.exerciseList as SimpleListView<TrainingRowData, ListitemHistoryExerciseHeaderBinding>
+                val trainingListHandler = bitList.handler as TrainingListSuperSetHandler
+
+                bitList.applyToAll { subBinding, item, _ ->
+                    trainingListHandler.collapseItem(subBinding, item)
+                }
+            }
         }
     }
 }

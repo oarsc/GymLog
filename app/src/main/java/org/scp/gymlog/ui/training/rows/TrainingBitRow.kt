@@ -4,9 +4,9 @@ import org.scp.gymlog.model.Bit
 
 class TrainingBitRow(
     val bit: Bit
-) : ITrainingRow {
+) : ITrainingBitRow {
     override val type = if (bit.superSet > 0)
-        ITrainingRow.Type.BIT_SUPERSET
+        ITrainingBitRow.Type.BIT_SUPERSET
     else
-        ITrainingRow.Type.BIT
+        ITrainingBitRow.Type.BIT
 }

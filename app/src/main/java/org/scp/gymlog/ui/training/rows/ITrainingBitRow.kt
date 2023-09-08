@@ -1,8 +1,8 @@
 package org.scp.gymlog.ui.training.rows
 
-interface ITrainingRow {
+interface ITrainingBitRow {
     enum class Type {
-        VARIATION, HEADER, BIT, HEADER_SUPERSET, BIT_SUPERSET
+        HEADER, BIT, HEADER_SUPERSET, BIT_SUPERSET
     }
     val type: Type
 }

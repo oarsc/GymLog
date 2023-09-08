@@ -1,17 +1,18 @@
-package org.scp.gymlog.ui.training
+package org.scp.gymlog.ui.training.rows
 
+import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Variation
-import org.scp.gymlog.ui.training.rows.ITrainingRow
 
-class ExerciseRows(
+class TrainingRowData(
     variation: Variation,
-    val superSet: Int? = null
-): MutableList<ITrainingRow> by mutableListOf()
+    val superSet: Int? = null,
+    var expanded: Boolean = false
+): MutableList<Bit> by mutableListOf()
 {
     private val _variations: MutableSet<Variation> = mutableSetOf(variation)
 
     val variations get() = _variations.toList()
-    val exercise get() = _variations.single().exercise
+    val variation get() = _variations.single()
 
     fun addVariation(variation: Variation) = _variations.add(variation)
 }

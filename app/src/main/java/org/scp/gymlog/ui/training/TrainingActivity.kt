@@ -11,29 +11,23 @@ import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Muscle
-import org.scp.gymlog.model.TrainingOrder
 import org.scp.gymlog.room.AppDatabase
-import org.scp.gymlog.room.entities.BitEntity
 import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.common.components.listView.MultipleListView
 import org.scp.gymlog.ui.main.history.HistoryFragment.Companion.getTrainingData
 import org.scp.gymlog.ui.main.history.TrainingData
 import org.scp.gymlog.ui.preferences.PreferencesDefinition
-import org.scp.gymlog.ui.training.rows.TrainingBitRow
-import org.scp.gymlog.ui.training.rows.TrainingHeaderRow
-import org.scp.gymlog.ui.training.rows.TrainingVariationRow
-import org.scp.gymlog.util.Data
+import org.scp.gymlog.ui.training.rows.TrainingRowData
 import org.scp.gymlog.util.DateUtils.getDateString
 import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
-import org.scp.gymlog.util.extensions.PreferencesExts.loadString
 
 class TrainingActivity : DBAppCompatActivity() {
 
-    private val exerciseRows = mutableListOf<ExerciseRows>()
+    private val rowsData = mutableListOf<TrainingRowData>()
     private lateinit var trainingData: TrainingData
 
-    private lateinit var exercisesListView: MultipleListView<ExerciseRows>
-    private lateinit var exercisesListHandler: TrainingListHandler
+    private lateinit var trainingListView: MultipleListView<TrainingRowData>
+    private lateinit var trainingListHandler: TrainingListHandler
 
 
     private var trainingId: Int = 0
@@ -44,7 +38,8 @@ class TrainingActivity : DBAppCompatActivity() {
             ?: throw LoadException("Cannot find trainingId: $trainingId")
         val bits = db.bitDao().getHistoryByTrainingId(trainingId)
         trainingData = getTrainingData(training, bits)
-        generateTrainingBitRows(bits)
+
+        generateTrainingBitRows(bits.map { Bit(it) })
         return CONTINUE
     }
 
@@ -56,27 +51,22 @@ class TrainingActivity : DBAppCompatActivity() {
 
         setHeaderInfo()
 
-        val focusBit = intent.extras!!.getInt("focusBit", -1)
-        val focusElement = if (focusBit < 0) -1 else {
-            exerciseRows.withIndex()
-                .firstOrNull {
-                    it.value
-                        .filterIsInstance<TrainingBitRow>()
-                        .any { row -> row.bit.id == focusBit }
-                }
-                ?.index ?: -1
+        val focusBitId = intent.extras!!.getInt("focusBit", -1)
+            .let { if (it < 0) null else it }
+
+        trainingListHandler = TrainingListHandler(this, internationalSystem, focusBitId)
+
+        trainingListView = findViewById(R.id.historyList)
+        trainingListView.init(rowsData, trainingListHandler)
+
+
+        focusBitId?.let { bitId ->
+            rowsData.withIndex()
+                .firstOrNull { it.value.any { bit -> bit.id == bitId } }
+                ?.let { trainingListView.scrollToPosition(it.index, 60) }
         }
 
-        exercisesListHandler = TrainingListHandler(this, internationalSystem, focusElement)
-
-        exercisesListView = findViewById(R.id.historyList)
-        exercisesListView.init(exerciseRows, exercisesListHandler)
-
-        if (focusElement >= 0) {
-            exercisesListView.scrollToPosition(focusElement, 60)
-        }
-
-        exercisesListHandler.setOnBitChangedListener {
+        trainingListHandler.setOnBitChangedListener {
             Intent().also {
                 it.putExtra("refresh", true)
                 setResult(RESULT_OK, it)
@@ -85,65 +75,27 @@ class TrainingActivity : DBAppCompatActivity() {
 
     }
 
-    private fun generateTrainingBitRows(bits: List<BitEntity>) {
-        exerciseRows.clear()
-
-        val order = TrainingOrder.getByCode(
-            loadString(PreferencesDefinition.TRAINING_ORDER)
-        )
+    private fun generateTrainingBitRows(bits: List<Bit>) {
+        rowsData.clear()
 
         for (bit in bits) {
-            val variation = Data.getVariation(bit.variationId)
-            val exercise = variation.exercise
+            val variation = bit.variation
 
-            val exerciseRow =
+            val currentRowData =
                 if (bit.superSet > 0) {
-                    exerciseRows
+                    rowsData
                         .firstOrNull { it.superSet == bit.superSet }
                         ?.also { it.addVariation(variation) }
-                        ?: ExerciseRows(variation, bit.superSet).also { exerciseRows.add(it) }
-
-                } else if (order == TrainingOrder.CHRONOLOGICALLY) {
-                    exerciseRows.lastOrNull()
-                        ?.let { if (it.superSet == null && it.exercise === exercise) it else null }
-                        ?: ExerciseRows(variation).also { exerciseRows.add(it) }
+                        ?: TrainingRowData(variation, bit.superSet).also { rowsData.add(it) }
 
                 } else {
-                    exerciseRows
-                        .filter { it.superSet == null && it.exercise === exercise }
-                        .getOrElse(0) {
-                            ExerciseRows(variation).also { exerciseRows.add(it) }
-                        }
+                    rowsData.lastOrNull()
+                        ?.let { if (it.superSet == null && it.variation === variation) it else null }
+                        ?: TrainingRowData(variation).also { rowsData.add(it) }
                 }
 
-            val lastVariationId = getLastVar(exerciseRow)
-            val isSuperSet = exerciseRow.superSet != null
-
-            if (isSuperSet) {
-                if (exerciseRow.isEmpty()) {
-                    exerciseRow.add(TrainingHeaderRow(true))
-                }
-            } else if (variation.id != lastVariationId) {
-                if (!variation.default) {
-                    exerciseRow.add(TrainingVariationRow(variation))
-                    exerciseRow.add(TrainingHeaderRow())
-                } else if (lastVariationId > 0) {
-                    exerciseRow.add(TrainingVariationRow(variation))
-                    exerciseRow.add(TrainingHeaderRow())
-                } else if (exerciseRow.isEmpty()) {
-                    exerciseRow.add(TrainingHeaderRow())
-                }
-            }
-            exerciseRow.add(TrainingBitRow(Bit(bit)))
+            currentRowData.add(bit)
         }
-    }
-
-    private fun getLastVar(exerciseRow: ExerciseRows): Int {
-        return exerciseRow
-            .reversed()
-            .filterIsInstance<TrainingVariationRow>()
-            .map { it.variation.id }
-            .getOrElse(0) { 0 }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -154,16 +106,16 @@ class TrainingActivity : DBAppCompatActivity() {
 
     override fun onOptionsItemSelected(menuItem: MenuItem): Boolean {
         if (menuItem.itemId == R.id.expandButton) {
-            exercisesListView.applyToAll { binding, item, state ->
-                exercisesListHandler.expandAll(binding, item, state!!)
+            trainingListView.applyToAll { binding, item, _ ->
+                trainingListHandler.expandItem(binding, item)
             }
 
         } else if (menuItem.itemId == R.id.collapseButton) {
-            exercisesListView.applyToAll { binding, item, state ->
-                exercisesListHandler.collapseAll(binding, item, state!!)
+            trainingListView.applyToAll { binding, item, _ ->
+                trainingListHandler.collapseItem(binding, item)
             }
-            exercisesListView.notifyDataSetChanged()
-            exercisesListView.scrollToPosition(0)
+            trainingListView.notifyDataSetChanged()
+            trainingListView.scrollToPosition(0)
         }
         return false
     }
