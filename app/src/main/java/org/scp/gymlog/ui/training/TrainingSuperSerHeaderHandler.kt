@@ -10,6 +10,7 @@ import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemHistoryExerciseRowBinding
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Variation
+import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import java.io.IOException
@@ -19,6 +20,8 @@ class TrainingSuperSerHeaderHandler(
     private val context: Context
 ) : SimpleListHandler<Variation, ListitemHistoryExerciseRowBinding> {
     override val useListState = false
+    override val itemInflater: (LayoutInflater, ViewGroup?, Boolean) -> ListitemHistoryExerciseRowBinding
+        = ListitemHistoryExerciseRowBinding::inflate
 
     private var onLongImageClickListener: Consumer<Variation>? = null
 
@@ -26,16 +29,12 @@ class TrainingSuperSerHeaderHandler(
         this.onLongImageClickListener = onLongImageClickListener
     }
 
-    override fun generateListItemInflater(): (LayoutInflater, ViewGroup?, Boolean) -> ListitemHistoryExerciseRowBinding {
-        return ListitemHistoryExerciseRowBinding::inflate
-    }
-
     @SuppressLint("SetTextI18n")
     override fun buildListView(
         binding: ListitemHistoryExerciseRowBinding,
         item: Variation,
         index: Int,
-        state: SimpleListView.ListElementState?
+        state: CommonListView.ListElementState?
     ) {
         val exercise = item.exercise
 

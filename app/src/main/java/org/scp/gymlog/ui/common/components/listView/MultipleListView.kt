@@ -9,33 +9,26 @@ import androidx.viewbinding.ViewBinding
 class MultipleListView<T: Any>(
     context: Context,
     attrs: AttributeSet? = null,
-) : SimpleListView<T, ViewBinding>(context, attrs) {
+) : CommonListView<T, ViewBinding>(context, attrs) {
 
-    private lateinit var handler: MultipleListHandler<T>
-
-    override fun init(
-        listData: List<T>,
-        handler: SimpleListHandler<T, ViewBinding>
-    ) {
-        throw java.lang.RuntimeException("Not supported for MultipleListView")
-    }
+    lateinit var handler: MultipleListHandler<T>
+        private set
 
     fun init(
         listData: List<T>,
         handler: MultipleListHandler<T>
     ) {
-        this.data = listData.toMutableList()
-        this.order = listData.indices.toMutableList()
+        super.init(listData)
         this.handler = handler
-        this.states = mutableMapOf()
+        this.useState = handler.useListState
+
         adapter = CustomMultipleAdapter()
     }
 
     private inner class CustomMultipleAdapter: Adapter<CustomViewHolder>() {
-
-        override fun getItemViewType(position: Int) = position
-        override fun onCreateViewHolder(parent: ViewGroup, position: Int): CustomViewHolder {
-            val inflater = handler.generateListItemInflater(data[position])
+        override fun getItemViewType(position: Int) = handler.findItemInflaterIndex(data[position])
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
+            val inflater = handler.itemInflaters[viewType]
             return CustomViewHolder(
                 inflater(LayoutInflater.from(parent.context), parent, false)
             )
@@ -51,22 +44,6 @@ class MultipleListView<T: Any>(
                 null
             holder.item = item
             handler.buildListView(holder.binding, item, index, state)
-        }
-    }
-
-    override fun applyToAll(callback : (ViewBinding?, T, ListElementState?) -> Unit) {
-        val bindings = (0 until childCount)
-            .map { getChildViewHolder(getChildAt(it)) }
-            .map { it as SimpleListView<T, ViewBinding>.CustomViewHolder }
-            .associate { it.item to it.binding }
-            .toMutableMap()
-
-        data.forEach { item ->
-            val state = if (handler.useListState)
-                states[item] ?: ListElementState().also { s -> states[item] = s } else
-                null
-
-            callback(bindings[item], item, state)
         }
     }
 }

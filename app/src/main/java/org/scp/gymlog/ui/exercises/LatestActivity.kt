@@ -12,6 +12,7 @@ import org.scp.gymlog.model.Variation
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
+import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.util.Data
@@ -47,16 +48,14 @@ class LatestActivity : DBAppCompatActivity() {
         exercisesRecyclerView = findViewById(R.id.exercisesList)
         exercisesRecyclerView.init(variations, object : SimpleListHandler<Variation, ListitemVariationBinding> {
             override val useListState = false
-
-            override fun generateListItemInflater(): (LayoutInflater, ViewGroup?, Boolean) -> ListitemVariationBinding {
-                return ListitemVariationBinding::inflate
-            }
+            override val itemInflater: (LayoutInflater, ViewGroup?, Boolean) -> ListitemVariationBinding
+                = ListitemVariationBinding::inflate
 
             override fun buildListView(
                 binding: ListitemVariationBinding,
                 item: Variation,
                 index: Int,
-                state: SimpleListView.ListElementState?
+                state: CommonListView.ListElementState?
             ) {
                 binding.time.visibility = View.GONE
                 

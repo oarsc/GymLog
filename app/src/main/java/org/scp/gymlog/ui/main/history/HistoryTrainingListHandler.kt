@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemTrainingBinding
 import org.scp.gymlog.model.Muscle
+import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
-import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.DateUtils.getTimeString
 import org.scp.gymlog.util.DateUtils.minutesToTimeString
@@ -17,16 +17,14 @@ class HistoryTrainingListHandler(
 	val context: Context
 ) : SimpleListHandler<TrainingData, ListitemTrainingBinding> {
 	override val useListState = false
-
-	override fun generateListItemInflater(): (LayoutInflater, ViewGroup?, Boolean) -> ListitemTrainingBinding {
-		return ListitemTrainingBinding::inflate
-	}
+	override val itemInflater: (LayoutInflater, ViewGroup?, Boolean) -> ListitemTrainingBinding
+		= ListitemTrainingBinding::inflate
 
 	override fun buildListView(
 		binding: ListitemTrainingBinding,
 		item: TrainingData,
 		index: Int,
-		state: SimpleListView.ListElementState?
+		state: CommonListView.ListElementState?
 	) {
 		//holder.id = item.id
 		binding.title.text = if (item.duration == null)

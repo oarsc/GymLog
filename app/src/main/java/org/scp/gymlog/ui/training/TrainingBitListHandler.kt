@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import org.scp.gymlog.R
-import org.scp.gymlog.databinding.ListitemHistoryBitBinding
-import org.scp.gymlog.databinding.ListitemHistoryHeadersBinding
-import org.scp.gymlog.databinding.ListitemHistoryVariationBinding
+import org.scp.gymlog.databinding.*
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Variation
+import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.MultipleListHandler
-import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.training.rows.ITrainingRow
 import org.scp.gymlog.ui.training.rows.TrainingBitRow
 import org.scp.gymlog.ui.training.rows.TrainingVariationRow
@@ -26,6 +24,19 @@ class TrainingBitListHandler(
     private val superSetVariations: List<Variation> = listOf(),
 ) : MultipleListHandler<ITrainingRow> {
     override val useListState = false
+    override val itemInflaters = listOf<(LayoutInflater, ViewGroup?, Boolean) -> ViewBinding>(
+        ListitemHistoryHeadersBinding::inflate,
+        ListitemHistoryBitBinding::inflate,
+        ListitemHistoryVariationBinding::inflate
+    )
+
+    override fun findItemInflaterIndex(item: ITrainingRow) = when (item.type) {
+        ITrainingRow.Type.HEADER,
+        ITrainingRow.Type.HEADER_SUPERSET -> 0
+        ITrainingRow.Type.BIT,
+        ITrainingRow.Type.BIT_SUPERSET -> 1
+        ITrainingRow.Type.VARIATION -> 2
+    }
 
     private var onClickListener: BiConsumer<Bit, Int>? = null
 
@@ -33,21 +44,11 @@ class TrainingBitListHandler(
         this.onClickListener = onClickListener
     }
 
-    override fun generateListItemInflater(item: ITrainingRow): (LayoutInflater, ViewGroup?, Boolean) -> ViewBinding {
-        return when (item.type) {
-            ITrainingRow.Type.HEADER,
-            ITrainingRow.Type.HEADER_SUPERSET -> ListitemHistoryHeadersBinding::inflate
-            ITrainingRow.Type.BIT,
-            ITrainingRow.Type.BIT_SUPERSET -> ListitemHistoryBitBinding::inflate
-            ITrainingRow.Type.VARIATION -> ListitemHistoryVariationBinding::inflate
-        }
-    }
-
     override fun buildListView(
         binding: ViewBinding,
         item: ITrainingRow,
         index: Int,
-        state: SimpleListView.ListElementState?
+        state: CommonListView.ListElementState?
     ) {
         when (item.type) {
             ITrainingRow.Type.HEADER -> {

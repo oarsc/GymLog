@@ -12,9 +12,9 @@ import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.model.Order
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.ui.common.animations.ResizeHeightAnimation
+import org.scp.gymlog.ui.common.components.listView.CommonListView.ListElementState
 import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
-import org.scp.gymlog.ui.common.components.listView.SimpleListView.ListElementState
 import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.util.Constants.TODAY
 import org.scp.gymlog.util.DateUtils.getLetterFrom
@@ -45,10 +45,9 @@ class ExercisesListHandler(
     }
 
     override val useListState = true
+    override val itemInflater: (LayoutInflater, ViewGroup?, Boolean) -> ListitemExercisesRowBinding
+        = ListitemExercisesRowBinding::inflate
 
-    override fun generateListItemInflater(): (LayoutInflater, ViewGroup?, Boolean) -> ListitemExercisesRowBinding {
-        return ListitemExercisesRowBinding::inflate
-    }
 
     override fun buildListView(
         binding: ListitemExercisesRowBinding,

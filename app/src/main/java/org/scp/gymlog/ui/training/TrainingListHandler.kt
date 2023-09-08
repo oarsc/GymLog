@@ -16,6 +16,7 @@ import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
+import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.MultipleListHandler
 import org.scp.gymlog.ui.common.components.listView.MultipleListView
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
@@ -33,6 +34,12 @@ class TrainingListHandler(
     var preExpandedIndex: Int? = null,
 ) : MultipleListHandler<ExerciseRows> {
     override val useListState = true
+    override val itemInflaters = listOf<(LayoutInflater, ViewGroup?, Boolean) -> ViewBinding>(
+        ListitemHistoryExerciseHeaderBinding::inflate,
+        ListitemHistorySupersetExerciseHeaderBinding::inflate
+    )
+
+    override fun findItemInflaterIndex(item: ExerciseRows) = item.superSet?.let { 1 } ?: 0
 
     private var onBitChangedListener: Consumer<Bit>? = null
 
@@ -40,19 +47,12 @@ class TrainingListHandler(
         this.onBitChangedListener = onBitChangedListener
     }
 
-    override fun generateListItemInflater(item: ExerciseRows): (LayoutInflater, ViewGroup?, Boolean) -> ViewBinding {
-        return if (item.superSet == null)
-            ListitemHistoryExerciseHeaderBinding::inflate
-        else
-            ListitemHistorySupersetExerciseHeaderBinding::inflate
-    }
-
     @Suppress("UNCHECKED_CAST")
     override fun buildListView(
         binding: ViewBinding,
         item: ExerciseRows,
         index: Int,
-        state: SimpleListView.ListElementState?
+        state: CommonListView.ListElementState?
     ) {
         state!!
 
@@ -179,7 +179,7 @@ class TrainingListHandler(
 
     private fun toggleBits(
         bitList: MultipleListView<ITrainingRow>,
-        state: SimpleListView.ListElementState
+        state: CommonListView.ListElementState
     ) {
         val expanded = !state["expanded", false]
         bitList.visibility = if (expanded) View.VISIBLE else View.GONE
@@ -189,7 +189,7 @@ class TrainingListHandler(
     fun expandAll(
         binding: ViewBinding?,
         item: ExerciseRows,
-        state: SimpleListView.ListElementState
+        state: CommonListView.ListElementState
     ) {
         state["expanded"] = true
 
@@ -205,7 +205,7 @@ class TrainingListHandler(
     fun collapseAll(
         binding: ViewBinding?,
         item: ExerciseRows,
-        state: SimpleListView.ListElementState
+        state: CommonListView.ListElementState
     ) {
         state["expanded"] = false
 

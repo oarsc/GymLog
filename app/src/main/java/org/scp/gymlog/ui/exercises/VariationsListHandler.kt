@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.scp.gymlog.databinding.ListitemExercisesVariationBinding
 import org.scp.gymlog.model.Variation
+import org.scp.gymlog.ui.common.components.listView.CommonListView.ListElementState
 import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
-import org.scp.gymlog.ui.common.components.listView.SimpleListView.ListElementState
 import java.util.function.Consumer
 
 object VariationsListHandler: SimpleListHandler<Variation, ListitemExercisesVariationBinding> {
@@ -16,10 +16,8 @@ object VariationsListHandler: SimpleListHandler<Variation, ListitemExercisesVari
     }
 
     override val useListState = false
-
-    override fun generateListItemInflater(): (LayoutInflater, ViewGroup?, Boolean) -> ListitemExercisesVariationBinding {
-        return org.scp.gymlog.databinding.ListitemExercisesVariationBinding::inflate
-    }
+    override val itemInflater: (LayoutInflater, ViewGroup?, Boolean) -> ListitemExercisesVariationBinding
+        = ListitemExercisesVariationBinding::inflate
 
     override fun buildListView(
         binding: ListitemExercisesVariationBinding,

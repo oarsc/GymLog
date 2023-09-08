@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemLogBinding
 import org.scp.gymlog.model.Bit
+import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
-import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Constants.TODAY
 import org.scp.gymlog.util.Data
@@ -37,15 +37,14 @@ class LogListHandler(
         this.onBitClickListener = onBitClickListener
     }
 
-    override fun generateListItemInflater(): (LayoutInflater, ViewGroup?, Boolean) -> ListitemLogBinding {
-        return ListitemLogBinding::inflate
-    }
+    override val itemInflater: (LayoutInflater, ViewGroup?, Boolean) -> ListitemLogBinding
+        = ListitemLogBinding::inflate
 
     override fun buildListView(
         binding: ListitemLogBinding,
         item: Bit,
         index: Int,
-        state: SimpleListView.ListElementState?
+        state: CommonListView.ListElementState?
     ) {
         var lastSet = 0
         var lastDate = Constants.DATE_ZERO

@@ -21,9 +21,9 @@ import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.ui.common.DBAppCompatActivity
+import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.MultipleListHandler
 import org.scp.gymlog.ui.common.components.listView.MultipleListView
-import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.ui.top.rows.*
 import org.scp.gymlog.ui.training.TrainingActivity
@@ -148,21 +148,25 @@ open class TopActivity : DBAppCompatActivity() {
 
     inner class TopListHandler : MultipleListHandler<ITopRow> {
         override val useListState = false
+        override val itemInflaters = listOf<(LayoutInflater, ViewGroup?, Boolean) -> ViewBinding>(
+            ListitemTopBitBinding::inflate,
+            ListitemTopVariationBinding::inflate,
+            ListitemTopHeadersBinding::inflate,
+            ListitemTopSpaceBinding::inflate
+        )
 
-        override fun generateListItemInflater(item: ITopRow): (LayoutInflater, ViewGroup?, Boolean) -> ViewBinding {
-            return when(item.type) {
-                ITopRow.Type.BIT -> ListitemTopBitBinding::inflate
-                ITopRow.Type.VARIATION -> ListitemTopVariationBinding::inflate
-                ITopRow.Type.HEADER -> ListitemTopHeadersBinding::inflate
-                else -> ListitemTopSpaceBinding::inflate
-            }
+        override fun findItemInflaterIndex(item: ITopRow) = when(item.type) {
+            ITopRow.Type.BIT -> 0
+            ITopRow.Type.VARIATION -> 1
+            ITopRow.Type.HEADER -> 2
+            else -> 3
         }
 
         override fun buildListView(
             binding: ViewBinding,
             item: ITopRow,
             index: Int,
-            state: SimpleListView.ListElementState?
+            state: CommonListView.ListElementState?
         ) {
             when (item.type) {
                 ITopRow.Type.VARIATION -> {

@@ -17,6 +17,7 @@ import org.scp.gymlog.service.DataBaseDumperService
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.common.CustomFragment
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
+import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.common.dialogs.EditTextDialogFragment
@@ -179,16 +180,14 @@ class MusclesFragment : CustomFragment() {
 
 	inner class MuscleListHandler : SimpleListHandler<Muscle, ListitemMuscleBinding> {
 		override val useListState = false
-
-		override fun generateListItemInflater(): (LayoutInflater, ViewGroup?, Boolean) -> ListitemMuscleBinding {
-			return ListitemMuscleBinding::inflate
-		}
+		override val itemInflater: (LayoutInflater, ViewGroup?, Boolean) -> ListitemMuscleBinding
+			= ListitemMuscleBinding::inflate
 
 		override fun buildListView(
 			binding: ListitemMuscleBinding,
 			item: Muscle,
 			index: Int,
-			state: SimpleListView.ListElementState?
+			state: CommonListView.ListElementState?
 		) {
 			binding.apply {
 				root.setOnClickListener { onMuscleClicked(item) }

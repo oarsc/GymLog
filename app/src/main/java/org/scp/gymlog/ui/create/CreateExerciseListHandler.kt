@@ -3,15 +3,13 @@ package org.scp.gymlog.ui.create
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.scp.gymlog.databinding.ListitemDefaultRowBinding
+import org.scp.gymlog.ui.common.components.listView.CommonListView.ListElementState
 import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
-import org.scp.gymlog.ui.common.components.listView.SimpleListView.ListElementState
 
 object CreateExerciseListHandler: SimpleListHandler<CreateFormElement, ListitemDefaultRowBinding> {
     override val useListState = false
-
-    override fun generateListItemInflater(): (LayoutInflater, ViewGroup?, Boolean) -> ListitemDefaultRowBinding {
-        return ListitemDefaultRowBinding::inflate
-    }
+    override val itemInflater: (LayoutInflater, ViewGroup?, Boolean) -> ListitemDefaultRowBinding
+        = ListitemDefaultRowBinding::inflate
 
     override fun buildListView(
         binding: ListitemDefaultRowBinding,
