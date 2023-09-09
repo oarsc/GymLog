@@ -18,16 +18,16 @@
     <string name="group_biceps">Biceps</string>
     <string name="group_calves">Calves</string>
     <string name="group_cardio">Cardio</string>
-    <string name="group_deltoid">Shoulders (Deltoid)</string>
+    <string name="group_deltoid">Shoulders</string>
     <string name="group_forearm">Forearm</string>
     <string name="group_glutes">Glutes</string>
     <string name="group_hamstrings">Hamstrings</string>
     <string name="group_lower_back">Lower Back</string>
-    <string name="group_pectoral">Chest (Pectoral)</string>
+    <string name="group_pectoral">Chest</string>
     <string name="group_quadriceps">Quadriceps</string>
     <string name="group_trapezius">Trapezius</string>
     <string name="group_triceps">Triceps</string>
-    <string name="group_upper_back">Upper Back</string>
+    <string name="group_upper_back">Back</string>
 
     <string name="compound_training_start_date">Training #%1$d started at %2$s</string>
     <string name="compound_training_date">Training #%1$d on %2$s</string>
