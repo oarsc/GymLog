@@ -39,6 +39,7 @@ class ImageSelectorActivity : CustomAppCompatActivity() {
         val folder = "previews"
         val tr = TaskRunner()
         for (asset in assets.list(folder)!!) {
+            if (asset == "others") continue
             tr.executeAsync(
                 { getImageViewFromAsset("$folder/$asset") }
             ) { view -> layout.addView(view, defaultLayoutParams) }

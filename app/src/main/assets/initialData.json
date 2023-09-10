@@ -47,14 +47,6 @@
 	"general": true
 },
 {
-	"tag": "abs_mat_twist_situp_lying_raise_bent_2",
-	"name": "Twisting Sit-ups, Raised Legs",
-	"type": "none",
-	"primary": [13],
-	"secondary": [],
-	"general": true
-},
-{
 	"tag": "abs_bench_situp_decline_bent_legs",
 	"name": "Sit-ups (decline)",
 	"type": "none",
