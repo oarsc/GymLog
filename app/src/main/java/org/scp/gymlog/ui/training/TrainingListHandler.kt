@@ -2,16 +2,13 @@ package org.scp.gymlog.ui.training
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.viewbinding.ViewBinding
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.*
-import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.components.listView.CommonListView
@@ -24,9 +21,9 @@ import org.scp.gymlog.ui.training.rows.ITrainingBitRow
 import org.scp.gymlog.ui.training.rows.TrainingBitHeaderRow
 import org.scp.gymlog.ui.training.rows.TrainingBitRow
 import org.scp.gymlog.ui.training.rows.TrainingRowData
+import org.scp.gymlog.util.extensions.ComponentsExts.assetImage
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.RedirectionExts.goToVariation
-import java.io.IOException
 import java.util.function.Consumer
 
 class TrainingListHandler(
@@ -78,27 +75,20 @@ class TrainingListHandler(
             val variation = item.variation
             val exercise = variation.exercise
 
-            binding.row.title.text = exercise.name
+            binding.row.exerciseName.text = exercise.name
             if (variation.default) {
-                binding.row.subtitle.setText(R.string.text_default)
+                binding.row.variationName.visibility = View.GONE
             } else {
-                binding.row.subtitle.text = variation.name
+                binding.row.variationName.visibility = View.VISIBLE
+                binding.row.variationName.text = variation.name
             }
 
-            binding.row.indicator.setCardBackgroundColor(
-                ResourcesCompat.getColor(context.resources, exercise.primaryMuscles[0].color, null))
+            binding.row.indicator.visibility = View.VISIBLE
+            binding.row.indicator.setBackgroundResource(exercise.primaryMuscles[0].color)
 
-            val fileName = "previews/" + exercise.image + ".png"
-            try {
-                val ims = context.assets.open(fileName)
-                val d = Drawable.createFromStream(ims, null)
-                binding.row.image.setImageDrawable(d)
+            binding.row.image.assetImage(context, exercise.image)
 
-            } catch (e: IOException) {
-                throw LoadException("Could not read \"$fileName\"", e)
-            }
-
-            binding.header.setOnClickListener { toggleBits(bitList, item) }
+            binding.row.root.setOnClickListener { toggleBits(bitList, item) }
 
             binding.row.image.setOnLongClickListener {
                 val variations = exercise.gymVariations

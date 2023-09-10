@@ -57,8 +57,6 @@ class LatestActivity : DBAppCompatActivity() {
                 index: Int,
                 state: CommonListView.ListElementState?
             ) {
-                binding.time.visibility = View.GONE
-                
                 binding.exerciseName.text = item.exercise.name
                 binding.variationName.apply {
                     if (item.default) visibility = View.GONE

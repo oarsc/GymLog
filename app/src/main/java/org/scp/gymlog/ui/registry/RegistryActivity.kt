@@ -282,12 +282,10 @@ class RegistryActivity : DBAppCompatActivity() {
         val fragment = findViewById<View>(R.id.fragmentExercise)
         val title = findViewById<TextView>(R.id.exerciseName)
         val subtitle = findViewById<TextView>(R.id.variationName)
-        val time = findViewById<TextView>(R.id.time)
         val image = findViewById<ImageView>(R.id.image)
 
         fragment.isClickable = false
         title.text = exercise.name
-        time.visibility = View.GONE
 
         if (variation.default) {
             subtitle.visibility = View.GONE
