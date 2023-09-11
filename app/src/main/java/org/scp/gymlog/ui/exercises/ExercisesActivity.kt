@@ -6,13 +6,12 @@ import android.view.Menu
 import android.view.MenuItem
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemExercisesRowBinding
-import org.scp.gymlog.exceptions.InternalException
 import org.scp.gymlog.model.Exercise
+import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.model.Order
 import org.scp.gymlog.model.Order.Companion.getByCode
 import org.scp.gymlog.model.Variation
-import org.scp.gymlog.room.AppDatabase
-import org.scp.gymlog.ui.common.DBAppCompatActivity
+import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.components.TrainingFloatingActionButton
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment
@@ -27,29 +26,27 @@ import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
 import org.scp.gymlog.util.extensions.PreferencesExts.save
 
-class ExercisesActivity : DBAppCompatActivity() {
+class ExercisesActivity : CustomAppCompatActivity() {
 
-    private var muscleId = 0
+    private lateinit var muscle: Muscle
     private lateinit var exercises: MutableList<Exercise>
 
     private var trainingFloatingButton: TrainingFloatingActionButton? = null
     private lateinit var exercisesListView: SimpleListView<Exercise, ListitemExercisesRowBinding>
     private lateinit var handler: ExercisesListHandler
 
-    override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
-        muscleId = intent.extras!!.getInt("muscleId")
-        exercises = db.exerciseDao().getExercisesIdByMuscleId(muscleId)
-            .map { Data.getExercise(it) }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val muscleId = intent.extras!!.getInt("muscleId")
+        muscle = Data.getMuscle(muscleId)
+
+        exercises = Data.exercises
+            .filter { it.primaryMuscles.contains(muscle) }
             .toMutableList()
-        return CONTINUE
-    }
 
-    override fun onDelayedCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_exercises)
-
-        val muscle = Data.muscles
-            .filter { it.id == muscleId }
-            .getOrElse(0) { throw InternalException("Muscle id not found") }
 
         setTitle(muscle.text)
 
@@ -79,9 +76,14 @@ class ExercisesActivity : DBAppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.searchButton -> {
+                val intent = Intent(this, SearchActivity::class.java)
+                intent.putExtra("muscleId", muscle.id)
+                startActivityForResult(intent, IntentReference.SEARCH_LIST)
+            }
             R.id.create_button -> {
                 val intent = Intent(this, CreateExerciseActivity::class.java)
-                intent.putExtra("muscleId", muscleId)
+                intent.putExtra("muscleId", muscle.id)
                 startActivityForResult(intent, IntentReference.CREATE_EXERCISE_FROM_MUSCLE)
             }
             R.id.latestButton -> {
@@ -176,7 +178,7 @@ class ExercisesActivity : DBAppCompatActivity() {
                 val exerciseId = data.getIntExtra("exerciseId", -1)
                 val exercise = Data.getExercise(exerciseId)
                 val hasMuscle = exercise.primaryMuscles
-                    .any { it.id == muscleId }
+                    .any { it.id == muscle.id }
 
                 if (hasMuscle) {
                     exercisesListView.notifyUpdate(exercise)
@@ -189,11 +191,20 @@ class ExercisesActivity : DBAppCompatActivity() {
                 val exerciseId = data.getIntExtra("exerciseId", -1)
                 val exercise = Data.getExercise(exerciseId)
                 val hasMuscle = exercise.primaryMuscles
-                    .any { it.id == muscleId }
+                    .any { it.id == muscle.id }
 
                 if (hasMuscle) {
                     exercises.add(exercise)
                     exercisesListView.add(exercise)
+                }
+            }
+            IntentReference.SEARCH_LIST -> {
+                if (data.getBooleanExtra("refresh", false)) {
+                    exercises = Data.exercises
+                        .filter { it.primaryMuscles.contains(muscle) }
+                        .toMutableList()
+
+                    exercisesListView.setListData(exercises)
                 }
             }
             IntentReference.REGISTRY -> {

@@ -6,13 +6,13 @@
         android:id="@+id/searchButton"
         android:icon="@drawable/ic_search_24dp"
         android:title="@string/title_search"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/latestButton"
         android:icon="@drawable/ic_latest_24dp"
         android:title="@string/title_latest"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/createButton"
@@ -25,7 +25,6 @@
         android:icon="@drawable/ic_gym_building_24dp"
         android:title="@string/title_select_gym"
         app:showAsAction="never"/>
-
 
     <item
         android:id="@+id/exportButton"

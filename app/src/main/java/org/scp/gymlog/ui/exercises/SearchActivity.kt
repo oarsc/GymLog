@@ -8,6 +8,7 @@ import androidx.appcompat.widget.SearchView
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemExercisesRowBinding
 import org.scp.gymlog.model.Exercise
+import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
@@ -26,6 +27,8 @@ class SearchActivity : CustomAppCompatActivity() {
 
     private lateinit var exercisesListView: SimpleListView<Exercise, ListitemExercisesRowBinding>
     private lateinit var handler: ExercisesListHandler
+    private lateinit var exercises: MutableList<Exercise>
+    private var muscle: Muscle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,8 +38,16 @@ class SearchActivity : CustomAppCompatActivity() {
 
         exercisesListView = findViewById(R.id.exercisesList)
 
+        muscle = intent.extras?.getInt("muscleId", -1)
+            ?.let { if(it < 0) null else it }
+            ?.let(Data::getMuscle)
+
+        exercises = muscle
+            ?.let { m -> Data.exercises.filter { it.primaryMuscles.contains(m) }.toMutableList()}
+            ?: Data.exercises.toMutableList()
+
         handler = ExercisesListHandler(this, exercisesListView)
-        exercisesListView.init(Data.exercises, handler)
+        exercisesListView.init(exercises, handler)
         exercisesListView.sort(Comparator.comparing { it.name.lowercase(Locale.getDefault()) })
         handler.onExerciseClicked(this::itemClicked)
         handler.onVariationClicked(this::itemClicked)
@@ -69,7 +80,7 @@ class SearchActivity : CustomAppCompatActivity() {
 
                 exercisesListView.scrollToPosition(0)
 
-                val exes = Data.exercises.filter {
+                val exes = exercises.filter {
                     val exerciseName = it.name.lowercase(Locale.getDefault())
                     textParts.all { part -> exerciseName.contains(part) }
                 }
@@ -89,12 +100,12 @@ class SearchActivity : CustomAppCompatActivity() {
             }.apply { show(supportFragmentManager, null) }
         } else {
             val variation = exercise.variations.first { it.default }
-            goToVariation(variation)
+            goToVariation(variation, muscle)
         }
     }
 
     private fun itemClicked(variation: Variation) {
-        goToVariation(variation)
+        goToVariation(variation, muscle)
     }
 
     private fun exerciseMenuActionSelected(exercise: Exercise, action: Int) {
@@ -123,6 +134,11 @@ class SearchActivity : CustomAppCompatActivity() {
                                 runOnUiThread { exercisesListView.remove(exercise) }
                                 db.trainingDao().deleteEmptyTraining()
                                 Data.exercises.removeIf { it === exercise }
+                                exercises.removeIf { it === exercise }
+
+                                val data = Intent()
+                                data.putExtra("refresh", true)
+                                setResult(RESULT_OK, data)
                             }
                         }
                     }

@@ -2,6 +2,7 @@ package org.scp.gymlog.util.extensions
 
 import android.content.Context
 import android.content.Intent
+import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.CustomFragment
@@ -16,19 +17,20 @@ object RedirectionExts {
         (this as CustomAppCompatActivity).goToVariation(variation)
     }
 
-    fun CustomAppCompatActivity.goToVariation(variation: Variation) {
-        internalGoToVariation(variation, this, this::startActivity, this::startActivityForResult)
+    fun CustomAppCompatActivity.goToVariation(variation: Variation, muscle: Muscle? = null) {
+        internalGoToVariation(variation, this, this::startActivity, this::startActivityForResult, muscle)
     }
 
-    fun CustomFragment.goToVariation(variation: Variation) {
-        internalGoToVariation(variation, context, this::startActivity, this::startActivityForResult)
+    fun CustomFragment.goToVariation(variation: Variation, muscle: Muscle? = null) {
+        internalGoToVariation(variation, context, this::startActivity, this::startActivityForResult, muscle)
     }
 
     private fun internalGoToVariation(
         variation: Variation,
         context: Context?,
         startActivity: (Intent) -> Unit,
-        startActivityForResult: (Intent, Constants.IntentReference) -> Unit
+        startActivityForResult: (Intent, Constants.IntentReference) -> Unit,
+        muscle: Muscle?
     ) {
         val exercise = variation.exercise
 
@@ -39,9 +41,9 @@ object RedirectionExts {
             startActivity(this)
         }
 
-        val muscle = exercise.primaryMuscles[0]
+        val muscleId = muscle?.id ?: exercise.primaryMuscles[0].id
         Intent(context, ExercisesActivity::class.java).apply {
-            putExtra("muscleId", muscle.id)
+            putExtra("muscleId", muscleId)
             addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(this)
         }

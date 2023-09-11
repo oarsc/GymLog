@@ -67,7 +67,6 @@ class MusclesFragment : CustomFragment() {
 				}
 				R.id.searchButton -> {
 					val intent = Intent(context, SearchActivity::class.java)
-					intent.putExtra("muscleId", 1)
 					startActivity(intent, IntentReference.SEARCH_LIST)
 				}
 				R.id.latestButton -> {
