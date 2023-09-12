@@ -35,7 +35,6 @@ class ExercisesActivity : CustomAppCompatActivity() {
     private lateinit var exercisesListView: SimpleListView<Exercise, ListitemExercisesRowBinding>
     private lateinit var handler: ExercisesListHandler
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,7 +51,7 @@ class ExercisesActivity : CustomAppCompatActivity() {
 
         exercisesListView = findViewById(R.id.exercisesList)
 
-        handler = ExercisesListHandler(this, exercisesListView)
+        handler = ExercisesListHandler(this, exercisesListView, muscle)
         exercisesListView.init(exercises, handler)
         handler.init()
         handler.onExerciseClicked(this::itemClicked)

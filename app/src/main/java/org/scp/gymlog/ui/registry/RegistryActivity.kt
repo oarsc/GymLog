@@ -1,7 +1,6 @@
 package org.scp.gymlog.ui.registry
 
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.Spanned
@@ -13,7 +12,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemLogBinding
-import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.*
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.entities.TrainingEntity
@@ -22,6 +20,7 @@ import org.scp.gymlog.service.NotificationService.Companion.lastEndTime
 import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.common.animations.ResizeHeightAnimation
 import org.scp.gymlog.ui.common.animations.ResizeWidthAnimation
+import org.scp.gymlog.ui.common.components.ExerciseImageView
 import org.scp.gymlog.ui.common.components.NumberModifierView
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.common.dialogs.*
@@ -48,7 +47,6 @@ import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.MessagingExts.snackbar
 import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
-import java.io.IOException
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -282,7 +280,7 @@ class RegistryActivity : DBAppCompatActivity() {
         val fragment = findViewById<View>(R.id.fragmentExercise)
         val title = findViewById<TextView>(R.id.exerciseName)
         val subtitle = findViewById<TextView>(R.id.variationName)
-        val image = findViewById<ImageView>(R.id.image)
+        val image = findViewById<ExerciseImageView>(R.id.image)
 
         fragment.isClickable = false
         title.text = exercise.name
@@ -293,15 +291,7 @@ class RegistryActivity : DBAppCompatActivity() {
             subtitle.text = variation.name
         }
 
-        val fileName = "previews/" + exercise.image + ".png"
-        try {
-            val ims = assets.open(fileName)
-            val d = Drawable.createFromStream(ims, null)
-            image.setImageDrawable(d)
-
-        } catch (e: IOException) {
-            throw LoadException("Could not read \"$fileName\"", e)
-        }
+        image.setImage(exercise.image, exercise.primaryMuscles[0].color)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -1,13 +1,11 @@
 package org.scp.gymlog.ui.exercises
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemVariationBinding
-import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.ui.common.DBAppCompatActivity
@@ -17,7 +15,6 @@ import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.extensions.RedirectionExts.goToVariation
-import java.io.IOException
 
 class LatestActivity : DBAppCompatActivity() {
 
@@ -63,15 +60,7 @@ class LatestActivity : DBAppCompatActivity() {
                     else              text = item.name
                 }
 
-                val fileName = "previews/" + item.exercise.image + ".png"
-                try {
-                    val ims = assets.open(fileName)
-                    val d = Drawable.createFromStream(ims, null)
-                    binding.image.setImageDrawable(d)
-
-                } catch (e: IOException) {
-                    throw LoadException("Could not read \"$fileName\"", e)
-                }
+                binding.image.setImage(item.exercise.image, item.exercise.primaryMuscles[0].color)
 
                 binding.root.setOnClickListener {
                     goToVariation(item)

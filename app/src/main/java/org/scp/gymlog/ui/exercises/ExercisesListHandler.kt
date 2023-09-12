@@ -1,14 +1,14 @@
 package org.scp.gymlog.ui.exercises
 
 import android.content.Context
-import android.graphics.drawable.Drawable
+import android.graphics.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import org.scp.gymlog.databinding.ListitemExercisesRowBinding
 import org.scp.gymlog.databinding.ListitemExercisesVariationBinding
-import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Exercise
+import org.scp.gymlog.model.Muscle
 import org.scp.gymlog.model.Order
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.ui.common.animations.ResizeHeightAnimation
@@ -19,7 +19,6 @@ import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.util.Constants.TODAY
 import org.scp.gymlog.util.DateUtils.getLetterFrom
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
-import java.io.IOException
 import java.util.*
 import java.util.function.BiConsumer
 import java.util.function.Consumer
@@ -27,7 +26,8 @@ import java.util.function.Consumer
 
 class ExercisesListHandler(
     val context: Context,
-    private val simpleListView: SimpleListView<Exercise, ListitemExercisesRowBinding>
+    private val simpleListView: SimpleListView<Exercise, ListitemExercisesRowBinding>,
+    private val muscle: Muscle? = null
 ): SimpleListHandler<Exercise, ListitemExercisesRowBinding> {
     private var onExerciseClickListener: BiConsumer<Exercise, Boolean>? = null
 
@@ -67,15 +67,7 @@ class ExercisesListHandler(
                 text = timeStr
             }
 
-            val fileName = "previews/" + item.image + ".png"
-            try {
-                val ims = context.assets.open(fileName)
-                val d = Drawable.createFromStream(ims, null)
-                image.setImageDrawable(d)
-
-            } catch (e: IOException) {
-                throw LoadException("Could not read \"$fileName\"", e)
-            }
+            image.setImage(item.image, muscle?.color ?: item.primaryMuscles[0].color)
         }
 
         binding.variationsList.visibility = if (state["expanded", false])

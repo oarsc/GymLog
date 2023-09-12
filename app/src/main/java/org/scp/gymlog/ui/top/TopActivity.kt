@@ -2,12 +2,10 @@ package org.scp.gymlog.ui.top
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewbinding.ViewBinding
 import org.scp.gymlog.R
@@ -16,11 +14,11 @@ import org.scp.gymlog.databinding.ListitemTopHeadersBinding
 import org.scp.gymlog.databinding.ListitemTopSpaceBinding
 import org.scp.gymlog.databinding.ListitemTopVariationBinding
 import org.scp.gymlog.exceptions.InternalException
-import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.ui.common.DBAppCompatActivity
+import org.scp.gymlog.ui.common.components.ExerciseImageView
 import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.MultipleListHandler
 import org.scp.gymlog.ui.common.components.listView.MultipleListView
@@ -38,7 +36,6 @@ import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.WeightUtils.calculate
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
-import java.io.IOException
 
 open class TopActivity : DBAppCompatActivity() {
 
@@ -128,21 +125,14 @@ open class TopActivity : DBAppCompatActivity() {
     }
 
     private fun setHeaderInfo() {
-        val image = findViewById<ImageView>(R.id.image)
+        val image = findViewById<ExerciseImageView>(R.id.image)
         val title = findViewById<TextView>(R.id.exerciseName)
 
         findViewById<TextView>(R.id.variationName).visibility = View.GONE
 
         title.text = exercise.name
 
-        val fileName = "previews/" + exercise.image + ".png"
-        try {
-            val ims = assets.open(fileName)
-            val d = Drawable.createFromStream(ims, null)
-            image.setImageDrawable(d)
-        } catch (e: IOException) {
-            throw LoadException("Could not read \"$fileName\"", e)
-        }
+        image.setImage(exercise.image, exercise.primaryMuscles[0].color)
     }
 
     inner class TopListHandler : MultipleListHandler<ITopRow> {

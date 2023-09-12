@@ -46,7 +46,7 @@ class SearchActivity : CustomAppCompatActivity() {
             ?.let { m -> Data.exercises.filter { it.primaryMuscles.contains(m) }.toMutableList()}
             ?: Data.exercises.toMutableList()
 
-        handler = ExercisesListHandler(this, exercisesListView)
+        handler = ExercisesListHandler(this, exercisesListView, muscle)
         exercisesListView.init(exercises, handler)
         exercisesListView.sort(Comparator.comparing { it.name.lowercase(Locale.getDefault()) })
         handler.onExerciseClicked(this::itemClicked)

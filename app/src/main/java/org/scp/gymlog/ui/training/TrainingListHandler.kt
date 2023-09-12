@@ -21,7 +21,6 @@ import org.scp.gymlog.ui.training.rows.ITrainingBitRow
 import org.scp.gymlog.ui.training.rows.TrainingBitHeaderRow
 import org.scp.gymlog.ui.training.rows.TrainingBitRow
 import org.scp.gymlog.ui.training.rows.TrainingRowData
-import org.scp.gymlog.util.extensions.ComponentsExts.assetImage
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.RedirectionExts.goToVariation
 import java.util.function.Consumer
@@ -83,10 +82,7 @@ class TrainingListHandler(
                 binding.row.variationName.text = variation.name
             }
 
-            binding.row.indicator.visibility = View.VISIBLE
-            binding.row.indicator.setBackgroundResource(exercise.primaryMuscles[0].color)
-
-            binding.row.image.assetImage(context, exercise.image)
+            binding.row.image.setImage(exercise.image, exercise.primaryMuscles[0].color)
 
             binding.row.root.setOnClickListener { toggleBits(bitList, item) }
 
