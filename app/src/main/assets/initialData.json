@@ -162,7 +162,7 @@
 	"tag": "abs_mat_pelvic_lift_lying_bent_legs",
 	"name": "Pelvic Lift Lying, Bent Legs (barbell)",
 	"type": "barbell",
-	"primary": [12, 13],
+	"primary": [11, 13],
 	"secondary": [],
 	"general": true
 },
@@ -170,7 +170,7 @@
 	"tag": "abs_mat_pelvic_lift_lying_bent_legs",
 	"name": "Pelvic Lift Lying, Bent Legs (machine)",
 	"type": "machine",
-	"primary": [12, 13],
+	"primary": [11, 13],
 	"secondary": [],
 	"general": false
 },
@@ -210,7 +210,7 @@
 	"tag": "abs_mat_flatter_kick_lying",
 	"name": "Flutter Kicks (lying)",
 	"type": "none",
-	"primary": [13, 12],
+	"primary": [13, 11],
 	"secondary": [],
 	"general": true
 },
@@ -650,7 +650,7 @@
 	"tag": "calves_barbell_rocking_standing",
 	"name": "Barbell Calf Raise (standing)",
 	"type": "barbell",
-	"primary": [11],
+	"primary": [12],
 	"secondary": [],
 	"general": true
 },
@@ -658,7 +658,7 @@
 	"tag": "calves_smith_machine_rocking_standing",
 	"name": "Smith Machine Calf Raise (standing)",
 	"type": "smith",
-	"primary": [11],
+	"primary": [12],
 	"secondary": [],
 	"general": false
 },
@@ -666,7 +666,7 @@
 	"tag": "calves_machine_rocking_standing",
 	"name": "Machine Calf Raise (standing)",
 	"type": "machine",
-	"primary": [11],
+	"primary": [12],
 	"secondary": [],
 	"general": false
 },
@@ -674,7 +674,7 @@
 	"tag": "calves_machine_rocking_seated",
 	"name": "Machine Soleus Calf Raise (seated)",
 	"type": "machine",
-	"primary": [11],
+	"primary": [12],
 	"secondary": [],
 	"general": false
 },
@@ -682,7 +682,7 @@
 	"tag": "calves_barbell_rocking_seated",
 	"name": "Barbell Soleus Calf Raise (seated)",
 	"type": "barbell",
-	"primary": [11],
+	"primary": [12],
 	"secondary": [],
 	"general": true
 },
@@ -690,7 +690,7 @@
 	"tag": "calves_dumbbell_rocking_standing",
 	"name": "Dumbbell Calf Rocking (standing)",
 	"type": "dumbbell",
-	"primary": [11],
+	"primary": [12],
 	"secondary": [],
 	"general": true
 },
@@ -698,7 +698,7 @@
 	"tag": "calves_machine_leg_press_rocking_incline_close_feet",
 	"name": "Machine Leg Press Calf Rocking",
 	"type": "machine",
-	"primary": [11],
+	"primary": [12],
 	"secondary": [],
 	"general": false
 },
@@ -706,7 +706,7 @@
 	"tag": "calves_machine_leg_press_stand",
 	"name": "Machine Leg Press Calf Rocking (standing)",
 	"type": "machine",
-	"primary": [11],
+	"primary": [12],
 	"secondary": [],
 	"general": false
 },
@@ -714,7 +714,7 @@
 	"tag": "calves_donkey_rocking_bent_over",
 	"name": "Donkey Rocking, Bent Over",
 	"type": "none",
-	"primary": [11],
+	"primary": [12],
 	"secondary": [],
 	"general": true
 },
@@ -722,7 +722,7 @@
 	"tag": "calves_smith_machine_stepper_reverse_rocking_standing",
 	"name": "Machine Reverse Smith Calf Rocking with Stepper (standing)",
 	"type": "smith",
-	"primary": [11],
+	"primary": [12],
 	"secondary": [],
 	"general": false
 },
@@ -1202,7 +1202,7 @@
 	"tag": "gluteus_mat_hip_extension_kneeling_bent_leg",
 	"name": "Hip Extension (kneeling)",
 	"type": "none",
-	"primary": [12],
+	"primary": [11],
 	"secondary": [],
 	"general": true
 },
@@ -1210,7 +1210,7 @@
 	"tag": "gluteus_machine_hip_extension_standing",
 	"name": "Machine Hip Extension",
 	"type": "machine",
-	"primary": [12],
+	"primary": [11],
 	"secondary": [],
 	"general": false
 },
@@ -1218,7 +1218,7 @@
 	"tag": "gluteus_mat_leg_kickbacks_kneeling_bent_leg",
 	"name": "Leg Kickback (kneeling)",
 	"type": "none",
-	"primary": [12],
+	"primary": [11],
 	"secondary": [],
 	"general": true
 },
@@ -1226,7 +1226,7 @@
 	"tag": "gluteus_low_cable_hip_extension_standing",
 	"name": "Pulley Machine Hip Extension (standing)",
 	"type": "pulley",
-	"primary": [12],
+	"primary": [11],
 	"secondary": [],
 	"general": false
 },
@@ -1234,7 +1234,7 @@
 	"tag": "gluteus_mat_barbell_squat_kneeling",
 	"name": "Barbell Squats (kneeling)",
 	"type": "barbell",
-	"primary": [12],
+	"primary": [11],
 	"secondary": [3],
 	"general": true
 },
@@ -1242,7 +1242,7 @@
 	"tag": "gluteus_low_cable_robe_pullthrough_standing",
 	"name": "Pulley Machine Rope Pull Through (standing)",
 	"type": "pulley",
-	"primary": [12, 3],
+	"primary": [11, 3],
 	"secondary": [],
 	"general": false
 },
@@ -1251,7 +1251,7 @@
 	"name": "Machine Leg Curl (prone)",
 	"type": "machine",
 	"primary": [10],
-	"secondary": [11],
+	"secondary": [12],
 	"general": false
 },
 {
@@ -1259,7 +1259,7 @@
 	"name": "Machine Leg Curl (standing)",
 	"type": "machine",
 	"primary": [10],
-	"secondary": [11],
+	"secondary": [12],
 	"general": false
 },
 {
@@ -1267,7 +1267,7 @@
 	"name": "Machine Leg Curl (seated)",
 	"type": "machine",
 	"primary": [10],
-	"secondary": [11],
+	"secondary": [12],
 	"general": false
 },
 {
@@ -1275,7 +1275,7 @@
 	"name": "Pulley Machine Leg Curl (standing)",
 	"type": "pulley",
 	"primary": [10],
-	"secondary": [11],
+	"secondary": [12],
 	"general": false
 },
 {
@@ -1594,7 +1594,7 @@
 	"tag": "lower_back_smith_machine_pulls_standing",
 	"name": "Smith Machine Back Curl (standing)",
 	"type": "smith",
-	"primary": [3, 12],
+	"primary": [3, 11],
 	"secondary": [],
 	"general": false
 },
@@ -1602,7 +1602,7 @@
 	"tag": "lower_back_barbell_good_mornings_standing",
 	"name": "Barbell Back Curl (standing)",
 	"type": "barbell",
-	"primary": [3, 12],
+	"primary": [3, 11],
 	"secondary": [],
 	"general": true
 },
@@ -1642,7 +1642,7 @@
 	"tag": "lower_back_barbell_deadlift_standing",
 	"name": "Barbell Deadlift Sumo, Wide Feet",
 	"type": "barbell",
-	"primary": [3, 12],
+	"primary": [3, 11],
 	"secondary": [9, 10],
 	"general": true
 },
@@ -1650,7 +1650,7 @@
 	"tag": "quads_machine_abduction_press_seated",
 	"name": "Machine Abduction Press (seated)",
 	"type": "machine",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [],
 	"general": false
 },
@@ -1658,7 +1658,7 @@
 	"tag": "quads_machine_abduction_press_standing",
 	"name": "Machine Abduction Press (standing)",
 	"type": "machine",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [],
 	"general": false
 },
@@ -1666,7 +1666,7 @@
 	"tag": "quads_machine_adduction_press_seated",
 	"name": "Machine Adduction Press (seated)",
 	"type": "machine",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [],
 	"general": false
 },
@@ -1682,7 +1682,7 @@
 	"tag": "calves_machine_rocking_standing",
 	"name": "Machine Leverage Squats (standing)",
 	"type": "machine",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": false
 },
@@ -1690,7 +1690,7 @@
 	"tag": "quads_barbell_squats_standing",
 	"name": "Barbell Squats (standing)",
 	"type": "barbell",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": true
 },
@@ -1698,7 +1698,7 @@
 	"tag": "calves_smith_machine_rocking_standing",
 	"name": "Smith Machine Squats (standing)",
 	"type": "smith",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": false
 },
@@ -1706,7 +1706,7 @@
 	"tag": "quads_smith_lunges",
 	"name": "Smith Machine Lunges",
 	"type": "smith",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": false
 },
@@ -1714,7 +1714,7 @@
 	"tag": "quads_bulgarian_split_squats",
 	"name": "Bulgarian Split Squats",
 	"type": "none",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": true
 },
@@ -1722,7 +1722,7 @@
 	"tag": "quads_bulgarian_dumbbell_split_squats",
 	"name": "Bulgarian Dumbbell Split Squats",
 	"type": "dumbbell",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": true
 },
@@ -1730,7 +1730,7 @@
 	"tag": "quads_smith_bulgarian_squats",
 	"name": "Smith Machine Bulgarian Split Squat",
 	"type": "smith",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": false
 },
@@ -1738,7 +1738,7 @@
 	"tag": "quads_barbell_front_squats_standing",
 	"name": "Barbell Front Squats (standing)",
 	"type": "barbell",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": true
 },
@@ -1746,7 +1746,7 @@
 	"tag": "quads_machine_squats_incline",
 	"name": "Machine Squats (incline)",
 	"type": "machine",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [],
 	"general": false
 },
@@ -1754,7 +1754,7 @@
 	"tag": "quads_barbell_squats_standing",
 	"name": "Ankle Support Free Squats",
 	"type": "none",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": true
 },
@@ -1762,7 +1762,7 @@
 	"tag": "quads_machine_leg_press_incline",
 	"name": "Machine Leg Press",
 	"type": "machine",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [10],
 	"general": false
 },
@@ -1770,7 +1770,7 @@
 	"tag": "quads_machine_leg_press_incline",
 	"name": "Machine Leg Press, Wide Feet",
 	"type": "machine",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [10],
 	"general": false
 },
@@ -1778,7 +1778,7 @@
 	"tag": "quads_machine_leg_press_incline",
 	"name": "Machine Leg Press (incline)",
 	"type": "machine",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [10],
 	"general": false
 },
@@ -1786,7 +1786,7 @@
 	"tag": "quads_machine_leg_press_incline",
 	"name": "Machine Leg Press, Wide Feet (incline)",
 	"type": "machine",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [10],
 	"general": false
 },
@@ -1826,7 +1826,7 @@
 	"tag": "cardio_icon_sport_skip_rope",
 	"name": "Fast Skipping (standing)",
 	"type": "cardio",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [10],
 	"general": true
 },
@@ -1835,7 +1835,7 @@
 	"name": "Barbell Deadlift",
 	"type": "barbell",
 	"primary": [2, 10],
-	"secondary": [3, 9, 12],
+	"secondary": [3, 9, 11],
 	"general": true
 },
 {
@@ -1843,7 +1843,7 @@
 	"name": "Pulley Machine Abduction Press (standing)",
 	"type": "pulley",
 	"primary": [9],
-	"secondary": [12],
+	"secondary": [11],
 	"general": false
 },
 {
@@ -1851,14 +1851,14 @@
 	"name": "Pulley Machine Adduction Press (standing)",
 	"type": "pulley",
 	"primary": [9],
-	"secondary": [12],
+	"secondary": [11],
 	"general": false
 },
 {
 	"tag": "quads_dumbbell_lunges",
 	"name": "Dumbbell Lunges",
 	"type": "dumbbell",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": true
 },
@@ -1866,7 +1866,7 @@
 	"tag": "quads_barbell_lunges",
 	"name": "Barbell Lunges",
 	"type": "barbell",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": true
 },
@@ -1874,7 +1874,7 @@
 	"tag": "quads_barbell_hack_squats_standing",
 	"name": "Barbell Hack Squats (standing)",
 	"type": "barbell",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [10],
 	"general": true
 },
@@ -1882,7 +1882,7 @@
 	"tag": "quads_smith_machine_hack_squats_standing",
 	"name": "Smith Machine Hack Squats (standing)",
 	"type": "smith",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": false
 },
@@ -1890,7 +1890,7 @@
 	"tag": "quads_smith_machine_front_squats_standing",
 	"name": "Smith Machine Front Squats (standing)",
 	"type": "smith",
-	"primary": [9, 12],
+	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": false
 },
@@ -1898,7 +1898,7 @@
 	"tag": "quads_dumbbell_deadlift_standing",
 	"name": "Dumbbell Deadlift",
 	"type": "dumbbell",
-	"primary": [9, 12, 3],
+	"primary": [9, 11, 3],
 	"secondary": [10],
 	"general": true
 },
@@ -1906,7 +1906,7 @@
 	"tag": "quads_lower_cable_deadlift_standing",
 	"name": "Pulley Machine Deadlift",
 	"type": "pulley",
-	"primary": [9, 12, 3],
+	"primary": [9, 11, 3],
 	"secondary": [10],
 	"general": false
 },

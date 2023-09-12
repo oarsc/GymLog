@@ -30,8 +30,8 @@ object Data {
 			Muscle(++muscleId, R.string.group_forearm, R.drawable.muscle_forearm, R.color.forearm),
 			Muscle(++muscleId, R.string.group_quadriceps, R.drawable.muscle_quadriceps, R.color.quadriceps),
 			Muscle(++muscleId, R.string.group_hamstrings, R.drawable.muscle_hamstring, R.color.hamstrings),
-			Muscle(++muscleId, R.string.group_calves, R.drawable.muscle_calves, R.color.calves),
 			Muscle(++muscleId, R.string.group_glutes, R.drawable.muscle_glutes, R.color.glutes),
+			Muscle(++muscleId, R.string.group_calves, R.drawable.muscle_calves, R.color.calves),
 			Muscle(++muscleId, R.string.group_abdominals, R.drawable.muscle_abdominals, R.color.abdominals),
 			Muscle(++muscleId, R.string.group_cardio, R.drawable.muscle_cardio, R.color.cardio),
 		)
