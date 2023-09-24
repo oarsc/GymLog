@@ -48,7 +48,6 @@ export abstract class BitTable<P extends BitTableProperties = BitTableProperties
       <thead>
         <tr>
           <th>Instant</th>
-          <th>Gym</th>
           <th>Super Set</th>
           <th>Reps</th>
           <th>Weight</th>
@@ -112,19 +111,6 @@ export class BitRow extends React.Component<BitRowProperties, BitRowState> {
           data={bit}
           dataKey='instant'
           onChange={this.updateBitState} />
-      </td>
-      <td className='bit-gym'>
-        <Select
-          type='number'
-          data={bit}
-          dataKey='gymId'
-          onChange={this.updateBitState} >
-          {
-            getData().gyms.map((name, idx) => 
-              <option key={idx} value={idx+1}>{name}</option>
-            )
-          }
-        </Select>
       </td>
       <td className='bit-super-set'>
         <Input

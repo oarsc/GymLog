@@ -215,8 +215,15 @@ class BitTraining extends BitTable<BitTrainingProperties, BitTableState> {
 
   override render(): JSX.Element {
 
+    const data = getData()
+
+    const training = data.trainings.find(tr => tr.trainingId == this.props.trainingId);
+    const gymName = training == null
+      ? ''
+      : ` (${data.gyms[training.gymId-1]})`
+
     return <div className='bit-training'>
-      <p>Training #{this.props.trainingId}</p>
+      <p>Training #{this.props.trainingId}{gymName}</p>
 
       {
         this.props.variations

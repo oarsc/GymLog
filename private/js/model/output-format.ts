@@ -51,12 +51,12 @@ export interface OutputVariation {
 
  export interface OutputTraining {
   end: number,
+  gymId: number,
   start: number,
   trainingId: number,
  }
 
  export interface OutputBit {
-  gymId: number,
   instant?: boolean,
   note?: string,
   reps: number,
