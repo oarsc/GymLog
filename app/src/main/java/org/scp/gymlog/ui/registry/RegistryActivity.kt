@@ -32,6 +32,7 @@ import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
+import org.scp.gymlog.util.DateUtils.NOW
 import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.DateUtils.diffSeconds
 import org.scp.gymlog.util.DateUtils.isPast
@@ -490,10 +491,9 @@ class RegistryActivity : DBAppCompatActivity() {
                 bit.reps = reps.integer
                 bit.trainingId = trainingId
                 bit.instant = instant
-                bit.gymId = Data.currentGym
                 bit.superSet = Data.superSet ?: 0
 
-                exercise.lastTrained = currentDateTime()
+                exercise.lastTrained = NOW
 
                 // SAVE TO DB:
                 bit.id = db.bitDao().insert(bit.toEntity()).toInt()
@@ -655,7 +655,8 @@ class RegistryActivity : DBAppCompatActivity() {
                                     dbThread { db ->
                                         val training = TrainingEntity()
                                         training.trainingId = maxId
-                                        training.start = currentDateTime()
+                                        training.start = NOW
+                                        training.gymId = Data.currentGym
                                         Data.trainingId = db.trainingDao().insert(training).toInt()
                                         runOnUiThread { block(training.trainingId) }
                                     }

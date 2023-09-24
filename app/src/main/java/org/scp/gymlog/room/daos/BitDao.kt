@@ -14,21 +14,24 @@ interface BitDao {
             "variationId = :variationId ORDER BY trainingId DESC, timestamp LIMIT :limit")
     fun getHistory(variationId: Int, limit: Int): List<BitEntity>
 
-    @Query("SELECT * FROM bit WHERE gymId = :gymId AND " +
-                "variationId = :variationId ORDER BY trainingId DESC, timestamp LIMIT :limit")
+    @Query("SELECT bit.* FROM bit " +
+        "JOIN training ON bit.trainingId = training.trainingId " +
+        "WHERE gymId = :gymId AND variationId = :variationId " +
+        "ORDER BY trainingId DESC, timestamp LIMIT :limit")
     fun getHistory(gymId: Int, variationId: Int, limit: Int): List<BitEntity>
 
     // GET REGISTRY NEXT PAGES
     @Query("SELECT * FROM bit WHERE " +
-            "variationId = :variationId AND " +
-            "(trainingId = :trainingId AND timestamp > :date OR trainingId < :trainingId) " +
-            "ORDER BY trainingId DESC, timestamp LIMIT :limit")
+        "variationId = :variationId AND " +
+        "(trainingId = :trainingId AND timestamp > :date OR trainingId < :trainingId) " +
+        "ORDER BY trainingId DESC, timestamp LIMIT :limit")
     fun getHistory(variationId: Int, trainingId: Int, date: LocalDateTime, limit: Int): List<BitEntity>
 
-    @Query("SELECT * FROM bit WHERE gymId = :gymId AND " +
-            "variationId = :variationId AND " +
-            "(trainingId = :trainingId AND timestamp > :date OR trainingId < :trainingId) " +
-            "ORDER BY trainingId DESC, timestamp LIMIT :limit")
+    @Query("SELECT bit.* FROM bit " +
+        "JOIN training ON bit.trainingId = training.trainingId WHERE " +
+        "gymId = :gymId AND variationId = :variationId AND " +
+        "(bit.trainingId = :trainingId AND timestamp > :date OR bit.trainingId < :trainingId) " +
+        "ORDER BY bit.trainingId DESC, timestamp LIMIT :limit")
     fun getHistory(gymId: Int, variationId: Int, trainingId: Int, date: LocalDateTime, limit: Int): List<BitEntity>
 
     // CALENDAR REGISTRY
@@ -60,24 +63,29 @@ interface BitDao {
             "variationId = :variationId AND note <> '' ORDER BY timestamp DESC LIMIT :limit")
     fun getNotesHistory(variationId: Int, limit: Int): List<String>
 
-    @Query("SELECT DISTINCT note FROM bit WHERE gymId = :gymId AND " +
-            "variationId = :variationId AND note <> '' ORDER BY timestamp DESC LIMIT :limit")
+    @Query("SELECT DISTINCT note FROM bit " +
+        "JOIN training ON bit.trainingId = training.trainingId " +
+        "WHERE gymId = :gymId AND variationId = :variationId AND note <> '' " +
+        "ORDER BY timestamp DESC LIMIT :limit")
     fun getNotesHistory(gymId: Int, variationId: Int, limit: Int): List<String>
 
     // TOPS PAGES
-    @Query("SELECT MAX(reps) AS reps, * FROM bit WHERE (gymId = :gymId OR " +
-            "variationId IN (SELECT variationId FROM variation WHERE gymRelation == 0)) AND " +
-            "variationId IN (SELECT variationId FROM variation WHERE exerciseId = :exerciseId) " +
-            "GROUP BY totalWeight, variationId ORDER BY timestamp")
+    @Query("SELECT MAX(reps) AS reps, bit.* FROM bit " +
+        "JOIN training ON bit.trainingId = training.trainingId " +
+        "JOIN variation ON bit.variationId = variation.variationId " +
+        "WHERE (training.gymId = :gymId OR gymRelation == 0) AND exerciseId = :exerciseId " +
+        "GROUP BY totalWeight, bit.variationId ORDER BY timestamp")
     fun findTops(gymId: Int, exerciseId: Int): List<BitEntity>
 
     @Query("SELECT * FROM bit WHERE " +
             "variationId = :variationId AND totalWeight = :weight ORDER BY timestamp DESC")
-    fun findAllByExerciseAndWeight(variationId: Int, weight: Int ): List<BitEntity>
+    fun findAllByExerciseAndWeight(variationId: Int, weight: Int): List<BitEntity>
 
-    @Query("SELECT * FROM bit WHERE gymId = :gymId AND " +
-            "variationId = :variationId AND totalWeight = :weight ORDER BY timestamp DESC")
-    fun findAllByExerciseAndWeight(gymId: Int, variationId: Int, weight: Int ): List<BitEntity>
+    @Query("SELECT bit.* FROM bit " +
+        "JOIN training ON bit.trainingId = training.trainingId " +
+        "WHERE gymId = :gymId AND variationId = :variationId AND totalWeight = :weight " +
+        "ORDER BY timestamp DESC")
+    fun findAllByExerciseAndWeight(gymId: Int, variationId: Int, weight: Int): List<BitEntity>
 
     @Insert
     fun insert(bit: BitEntity): Long

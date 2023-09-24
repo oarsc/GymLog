@@ -1,6 +1,9 @@
 package org.scp.gymlog.room.entities
 
-import androidx.room.*
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.JsonUtils.NoJsonify
 import java.time.LocalDateTime
@@ -20,19 +23,13 @@ import java.time.LocalDateTime
             childColumns = ["trainingId"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE),
-        ForeignKey(
-            entity = GymEntity::class,
-            parentColumns = ["gymId"],
-            childColumns = ["gymId"],
-            onDelete = ForeignKey.CASCADE,
-            onUpdate = ForeignKey.CASCADE),
     ],
     indices = [
         Index("trainingId"),
         Index("trainingId", "timestamp"),
-        Index("variationId", "gymId"),
-        Index("variationId", "timestamp", "gymId"),
-        Index("variationId", "trainingId", "timestamp", "gymId"),
+        Index("variationId"),
+        Index("variationId", "timestamp"),
+        Index("variationId", "trainingId", "timestamp"),
     ]
 )
 class BitEntity {
@@ -41,7 +38,6 @@ class BitEntity {
     var bitId = 0
     var variationId = 0
     var trainingId = 0
-    var gymId = 0
     var reps = 0
     var totalWeight = 0
     var kilos = false
@@ -49,15 +45,4 @@ class BitEntity {
     var note: String = ""
     var timestamp: LocalDateTime = Constants.DATE_ZERO
     var superSet = 0
-
-    class WithBar {
-        @Embedded
-        var bit: BitEntity? = null
-
-        @Relation(
-            parentColumn = "barId",
-            entityColumn = "barId"
-        )
-        var bar: BarEntity? = null
-    }
 }

@@ -12,7 +12,7 @@ import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.ui.common.dialogs.TextDialogFragment
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.DateUtils.currentDateTime
+import org.scp.gymlog.util.DateUtils.NOW
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 
 class TrainingFloatingActionButton : FloatingActionButton {
@@ -76,9 +76,11 @@ class TrainingFloatingActionButton : FloatingActionButton {
             } else {
                 context.dbThread { db ->
                     val maxId = db.trainingDao().getMaxTrainingId() ?: 0
-                    val training = TrainingEntity()
-                    training.trainingId = maxId + 1
-                    training.start = currentDateTime()
+                    val training = TrainingEntity().apply {
+                        this.trainingId = maxId + 1
+                        start = NOW
+                        gymId = Data.currentGym
+                    }
                     Data.trainingId = db.trainingDao().insert(training).toInt()
                     updateFloatingActionButton()
                 }

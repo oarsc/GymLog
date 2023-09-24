@@ -12,8 +12,8 @@ interface MuscleDao {
     @Query("SELECT * FROM muscle")
     fun getOnlyMuscles(): List<MuscleEntity>
 
-    @Query("SELECT * FROM muscle")
     @Transaction
+    @Query("SELECT * FROM muscle")
     fun getAll(): List<WithExercises>
 
     @Transaction
