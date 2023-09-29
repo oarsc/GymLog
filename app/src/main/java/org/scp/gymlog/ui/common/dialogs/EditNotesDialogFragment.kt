@@ -37,7 +37,7 @@ class EditNotesDialogFragment(
                 val notes = if (variation.gymRelation == GymRelation.NO_RELATION)
                         db.bitDao().getNotesHistory(variation.id, 18)
                     else
-                        db.bitDao().getNotesHistory(Data.currentGym, variation.id, 18)
+                        db.bitDao().getNotesHistory(Data.gym?.id ?: 0, variation.id, 18)
 
                 runOnUiThread {
                     adapter = EditNotesRecyclerViewAdapter(notes) { input.setText(it) }

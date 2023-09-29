@@ -63,9 +63,9 @@ interface BitDao {
             "variationId = :variationId AND note <> '' ORDER BY timestamp DESC LIMIT :limit")
     fun getNotesHistory(variationId: Int, limit: Int): List<String>
 
-    @Query("SELECT DISTINCT note FROM bit " +
+    @Query("SELECT DISTINCT bit.note FROM bit " +
         "JOIN training ON bit.trainingId = training.trainingId " +
-        "WHERE gymId = :gymId AND variationId = :variationId AND note <> '' " +
+        "WHERE gymId = :gymId AND variationId = :variationId AND bit.note <> '' " +
         "ORDER BY timestamp DESC LIMIT :limit")
     fun getNotesHistory(gymId: Int, variationId: Int, limit: Int): List<String>
 

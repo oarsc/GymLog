@@ -56,7 +56,7 @@ class LogListHandler(
             lastTrainingId = lastBit.trainingId
         }
 
-        if (item.trainingId == Data.trainingId) {
+        if (item.trainingId == Data.training?.id) {
             if (item.instant) {
                 binding.day.setText(R.string.symbol_empty)
                 item.set = lastSet

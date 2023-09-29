@@ -252,7 +252,7 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 					val relation = data.getIntExtra("gymRelation", 0)
 					variation.gymRelation = Converters.toGymRelation(relation.toShort())
 					if (variation.gymRelation == GymRelation.STRICT_RELATION) {
-						variation.gymId = Data.currentGym
+						variation.gymId = Data.gym?.id
 					}
 				}
 			}
@@ -263,7 +263,7 @@ class CreateExerciseActivity : CustomAppCompatActivity() {
 				val relation = data.getIntExtra("gymRelation", 0)
 				variation.gymRelation = Converters.toGymRelation(relation.toShort())
 				if (variation.gymRelation == GymRelation.STRICT_RELATION) {
-					variation.gymId = Data.currentGym
+					variation.gymId = Data.gym?.id
 				}
 				exercise.variations.add(variation)
 			}

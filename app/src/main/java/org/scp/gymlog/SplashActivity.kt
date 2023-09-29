@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.*
 import org.scp.gymlog.room.AppDatabase
-import org.scp.gymlog.room.entities.BarEntity
 import org.scp.gymlog.room.entities.ExerciseEntity.WithMusclesAndVariations
 import org.scp.gymlog.room.entities.MuscleEntity
 import org.scp.gymlog.service.DataBaseDumperService
@@ -96,12 +95,15 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun loadData(db: AppDatabase) {
-        Data.currentGym = loadInteger(PreferencesDefinition.CURRENT_GYM)
-
         Data.bars.clear()
         db.barDao().getAll()
-            .map { entity: BarEntity? -> Bar(entity!!) }
+            .map { Bar(it) }
             .also { Data.bars.addAll(it) }
+
+        Data.gyms.clear()
+        db.gymDao().getAll()
+            .map { Gym(it) }
+            .also { Data.gyms.addAll(it) }
 
         Data.exercises.clear()
 
@@ -141,8 +143,13 @@ class SplashActivity : AppCompatActivity() {
             }
             .also { Data.exercises.addAll(it) }
 
-        db.trainingDao().getCurrentTraining()?.apply {
-            Data.trainingId = trainingId
+        db.trainingDao().getCurrentTraining()?.also {
+            Data.training = Training(it)
+        }
+
+        val gymId = loadInteger(PreferencesDefinition.CURRENT_GYM)
+        if (gymId > 0) {
+            Data.gym = Data.getGym(gymId)
         }
     }
 

@@ -5,7 +5,6 @@ import androidx.preference.PreferenceManager
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.entities.*
 import org.scp.gymlog.util.Constants
@@ -66,21 +65,25 @@ class DataBaseDumperService {
     }
 
     private fun trainings(database: AppDatabase): JSONArray {
-        return convertToJSONArray(database.trainingDao().getAll())
+        val trainings = convertToJSONArray(database.trainingDao().getAll())
+
+        trainings.map(JSONArray::getJSONObject).forEach { training ->
+            if (training.getString("note").trim().isEmpty()) training.remove("note")
+        }
+
+        return trainings
     }
 
     private fun bits(database: AppDatabase): JSONArray {
         val bits = convertToJSONArray(database.bitDao().getAllFromAllGyms())
-        try {
-            bits.map(JSONArray::getJSONObject).forEach { bit ->
-                if (bit.getBoolean("kilos")) bit.remove("kilos")
-                if (bit.getString("note").trim().isEmpty()) bit.remove("note")
-                if (!bit.getBoolean("instant")) bit.remove("instant")
-                if (bit.getInt("superSet") <= 0) bit.remove("superSet")
-            }
-        } catch (e: JSONException) {
-            throw LoadException("", e)
+
+        bits.map(JSONArray::getJSONObject).forEach { bit ->
+            if (bit.getBoolean("kilos")) bit.remove("kilos")
+            if (bit.getString("note").trim().isEmpty()) bit.remove("note")
+            if (!bit.getBoolean("instant")) bit.remove("instant")
+            if (bit.getInt("superSet") <= 0) bit.remove("superSet")
         }
+
         return bits
     }
 
@@ -250,6 +253,9 @@ class DataBaseDumperService {
 
     @Throws(JSONException::class)
     private fun trainings(list: JSONArray): List<TrainingEntity> {
+        list.map(JSONArray::getJSONObject).forEach { training ->
+            if (!training.has("note")) training.put("note", "")
+        }
         return convertToObject(list, TrainingEntity::class)
     }
 

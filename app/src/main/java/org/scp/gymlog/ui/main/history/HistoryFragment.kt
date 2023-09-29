@@ -1,22 +1,26 @@
 package org.scp.gymlog.ui.main.history
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemLegendBinding
 import org.scp.gymlog.databinding.ListitemTrainingBinding
 import org.scp.gymlog.model.Muscle
+import org.scp.gymlog.model.Training
 import org.scp.gymlog.room.entities.BitEntity
 import org.scp.gymlog.room.entities.TrainingEntity
+import org.scp.gymlog.ui.common.CustomFragment
 import org.scp.gymlog.ui.common.components.HistoryCalendarView
 import org.scp.gymlog.ui.common.components.HistoryCalendarView.PieDataInfo
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
+import org.scp.gymlog.ui.training.TrainingActivity
+import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.timeInMillis
 import org.scp.gymlog.util.extensions.ComponentsExts.runOnUiThread
@@ -24,7 +28,7 @@ import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import java.time.LocalDate
 import kotlin.math.ceil
 
-class HistoryFragment : Fragment() {
+class HistoryFragment : CustomFragment() {
 
 	private lateinit var calendarView: HistoryCalendarView
 
@@ -35,7 +39,7 @@ class HistoryFragment : Fragment() {
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View {
-
+		val context = requireContext()
 		val view = inflater.inflate(R.layout.fragment_history, container, false)
 
 		// LEGEND LIST
@@ -43,7 +47,7 @@ class HistoryFragment : Fragment() {
 		legendListView.layoutManager = object : GridLayoutManager(context, 2) {
 			override fun canScrollVertically() = false
 		}
-		legendListView.init(Data.muscles.sortToColumns, HistoryLegendListHandler(requireContext()))
+		legendListView.init(Data.muscles.sortToColumns, HistoryLegendListHandler(context))
 
 		val showLegendIcon = view.findViewById<ImageView>(R.id.showLegendIcon)
 		view.findViewById<View>(R.id.showLegend).setOnClickListener {
@@ -57,9 +61,16 @@ class HistoryFragment : Fragment() {
 		}
 
 		// TRAININGS LIST
+		val listHandler = HistoryTrainingListHandler(context)
 		trainingListView = view.findViewById(R.id.trainingList)
 		trainingListView.unScrollableVertically = true
-		trainingListView.init(listOf(), HistoryTrainingListHandler(requireContext()))
+		trainingListView.init(listOf(), listHandler)
+
+		listHandler.setOnClickListener { training ->
+			val intent = Intent(context, TrainingActivity::class.java)
+			intent.putExtra("trainingId", training.id)
+			startActivityForResult(intent, Constants.IntentReference.TRAINING)
+		}
 
 		// CALENDAR VIEW
 		calendarView = view.findViewById(R.id.calendarView);
@@ -175,8 +186,20 @@ class HistoryFragment : Fragment() {
 		}
 	}
 
+	override fun onActivityResult(intentReference: Constants.IntentReference, data: Intent) {
+		when {
+			intentReference === Constants.IntentReference.TRAINING -> {
+				if (data.getBooleanExtra("refresh", false)) {
+					val day = calendarView.selectedDay
+					val muscles = calendarView.getDayMuscles(day)
+					onDaySelected(day, muscles)
+				}
+			}
+		}
+	}
+
 	companion object {
-		fun getTrainingData(training: TrainingEntity, bits: List<BitEntity>): TrainingData {
+		fun getTrainingData(entity: TrainingEntity, bits: List<BitEntity>): TrainingData {
 			val musclesCount = mutableListOf<MuscleCount>()
 
 			bits.map { Data.getVariation(it.variationId).exercise }
@@ -202,11 +225,7 @@ class HistoryFragment : Fragment() {
 				.filter { it.count / total > limit }
 				.map { it.muscle }
 
-			return TrainingData(
-				training.trainingId,
-				training.start,
-				training.end,
-				mostUsedMuscles)
+			return TrainingData(Training(entity), mostUsedMuscles)
 		}
 	}
 

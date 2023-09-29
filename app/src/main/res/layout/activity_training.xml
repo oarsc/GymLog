@@ -9,6 +9,82 @@
 
     <include layout="@layout/listitem_training" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/trainingDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginHorizontal="44dp"
+            android:paddingVertical="6dp">
+
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_gym" />
+                <TextView
+                    android:id="@+id/gymName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_gym"
+                    android:layout_marginStart="16dp"
+                    android:paddingVertical="@dimen/list_text_margin" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_time" />
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/compound_training_times"
+                    android:layout_marginStart="16dp"
+                    android:paddingVertical="@dimen/list_text_margin" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/noteRow" >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_notes" />
+                <TextView
+                    android:id="@+id/note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/symbol_empty"
+                    android:layout_marginStart="16dp"
+                    android:paddingVertical="@dimen/list_text_margin" />
+            </TableRow>
+
+        </TableLayout>
+
+        <ImageView
+            android:id="@+id/editTraining"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_edit_24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground"
+            app:tint="@color/themedIcon" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

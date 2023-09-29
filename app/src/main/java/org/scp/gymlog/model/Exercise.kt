@@ -18,7 +18,7 @@ class Exercise() : EntityMappable<ExerciseEntity> {
 	val variations = mutableListOf<Variation>()
 	val gymVariations
 		get() = variations.filter {
-			it.gymRelation != GymRelation.STRICT_RELATION || it.gymId == Data.currentGym
+			it.gymRelation != GymRelation.STRICT_RELATION || it.gymId == Data.gym?.id
 		}
 	var id = 0
 	var name: String = ""

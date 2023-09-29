@@ -96,13 +96,13 @@ class RegistryActivity : DBAppCompatActivity() {
         val log = if (variation.gymRelation == GymRelation.NO_RELATION)
                 db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
             else
-                db.bitDao().getHistory(Data.currentGym, variation.id, LOG_PAGES_SIZE)
+                db.bitDao().getHistory(Data.gym?.id ?: 0, variation.id, LOG_PAGES_SIZE)
 
         log.map { Bit(it) }
             .also { this.log.addAll(it) }
 
-        Data.trainingId?.also { trainingId ->
-            hiddenInstantSetButton = db.bitDao().getMostRecentByTrainingId(trainingId)
+        Data.training?.also { training ->
+            hiddenInstantSetButton = db.bitDao().getMostRecentByTrainingId(training.id)
                 ?.let { it.variationId != variationId || it.superSet != (Data.superSet ?: 0) }
                 ?: true
         }
@@ -329,7 +329,7 @@ class RegistryActivity : DBAppCompatActivity() {
                         val log = if (variation.gymRelation == GymRelation.NO_RELATION)
                             db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
                         else
-                            db.bitDao().getHistory(Data.currentGym, variation.id, LOG_PAGES_SIZE)
+                            db.bitDao().getHistory(Data.gym?.id ?: 0, variation.id, LOG_PAGES_SIZE)
 
                         this.log.clear()
                         val newBits = log.map { Bit(it) }
@@ -420,7 +420,7 @@ class RegistryActivity : DBAppCompatActivity() {
             var bit: Bit = log[0]
 
             for (b in log) {
-                if (b.trainingId == Data.trainingId) {
+                if (b.trainingId == Data.training?.id) {
                     if (!b.instant) {
                         bit = b
                         currentSet++
@@ -461,7 +461,7 @@ class RegistryActivity : DBAppCompatActivity() {
             val log = if (variation.gymRelation == GymRelation.NO_RELATION)
                 db.bitDao().getHistory(variation.id, bit.trainingId, date, LOG_PAGES_SIZE)
             else
-                db.bitDao().getHistory(Data.currentGym, variation.id, bit.trainingId, date, LOG_PAGES_SIZE)
+                db.bitDao().getHistory(Data.gym?.id ?: 0, variation.id, bit.trainingId, date, LOG_PAGES_SIZE)
 
             val newBits = log.map { Bit(it) }
                 .also { this.log.addAll(it) }
@@ -551,8 +551,8 @@ class RegistryActivity : DBAppCompatActivity() {
             }
 
             if (log.none { it.trainingId == trainingId }) {
-                Data.trainingId
-                    ?.also { db.trainingDao().deleteEmptyTrainingExcept(it) }
+                Data.training
+                    ?.also { db.trainingDao().deleteEmptyTrainingExcept(it.id) }
                     ?: db.trainingDao().deleteEmptyTraining()
             }
 
@@ -568,7 +568,7 @@ class RegistryActivity : DBAppCompatActivity() {
                     } else {
                         notifyTrainingIdChanged(trainingId, index)
                     }
-                    if (trainingId == Data.trainingId && !hiddenInstantSetButton) {
+                    if (trainingId == Data.training?.id && !hiddenInstantSetButton) {
                         updateInstantButtonStatus()
                     }
                 } else {
@@ -579,11 +579,11 @@ class RegistryActivity : DBAppCompatActivity() {
     }
 
     private fun updateInstantButtonStatus(databaseConnection: AppDatabase? = null) {
-        val trainingId = Data.trainingId ?: return
+        val training = Data.training ?: return
         val currentSuperSet = Data.superSet ?: 0
 
         fun action(db: AppDatabase) {
-            val shouldBeEnabled = db.bitDao().getMostRecentByTrainingId(trainingId)
+            val shouldBeEnabled = db.bitDao().getMostRecentByTrainingId(training.id)
                 ?.let { it.variationId == variation.id && it.superSet == currentSuperSet }
                 ?: false
 
@@ -632,8 +632,8 @@ class RegistryActivity : DBAppCompatActivity() {
 
 
     private fun requireActiveTraining(createDialog: Boolean = true, block: (trainingId: Int) -> Unit) {
-        Data.trainingId
-            ?.also { block(it) }
+        Data.training
+            ?.also { block(it.id) }
             ?: run {
                 if (!createDialog) {
                     snackbar(R.string.validation_training_not_started)
@@ -656,8 +656,9 @@ class RegistryActivity : DBAppCompatActivity() {
                                         val training = TrainingEntity()
                                         training.trainingId = maxId
                                         training.start = NOW
-                                        training.gymId = Data.currentGym
-                                        Data.trainingId = db.trainingDao().insert(training).toInt()
+                                        training.gymId = Data.gym?.id ?: 0
+                                        training.trainingId = db.trainingDao().insert(training).toInt()
+                                        Data.training = Training(training)
                                         runOnUiThread { block(training.trainingId) }
                                     }
                                 }

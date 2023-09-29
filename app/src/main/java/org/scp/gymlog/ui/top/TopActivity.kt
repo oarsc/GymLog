@@ -67,7 +67,7 @@ open class TopActivity : DBAppCompatActivity() {
     }
 
     protected open fun getBits(db: AppDatabase, exerciseId: Int): List<Bit> {
-        return db.bitDao().findTops(Data.currentGym, exerciseId)
+        return db.bitDao().findTops(Data.gym?.id ?: 0, exerciseId)
             .map { bitEntity -> Bit(bitEntity) }
     }
 

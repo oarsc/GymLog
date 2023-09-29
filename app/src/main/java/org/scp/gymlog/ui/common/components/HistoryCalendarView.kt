@@ -24,7 +24,8 @@ import java.util.function.BiConsumer
 class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
 
     private var firstDayOfMonth: LocalDate
-    private var selectedDay: LocalDate
+    var selectedDay: LocalDate
+        private set
     private val daysMap: MutableMap<Long, View> = HashMap()
     private val dayDataMap: MutableMap<Long, List<Muscle>> = HashMap()
     private var onMonthChangeListener: BiConsumer<LocalDate, LocalDate>? = null
@@ -144,7 +145,7 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
             number.paintFlags = number.paintFlags and Paint.UNDERLINE_TEXT_FLAG.inv()
         }
         selectedDay = selectDay
-        onSelectDayListener?.accept(selectedDay, dayDataMap[selectDay.timeInMillis])
+        onSelectDayListener?.accept(selectedDay, getDayMuscles(selectDay))
         val currentMonth = firstDayOfMonth.month
         val selectedMonth = selectDay.month
         if (currentMonth != selectedMonth) {
@@ -218,8 +219,10 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
         this.onSelectDayListener = onSelectDayListener
 
         // send current selected day
-        onSelectDayListener.accept(selectedDay, dayDataMap[selectedDay.timeInMillis])
+        onSelectDayListener.accept(selectedDay, getDayMuscles(selectedDay))
     }
+
+    fun getDayMuscles(day: LocalDate) = dayDataMap[day.timeInMillis]
 
     override fun setEnabled(enable: Boolean) {
         findViewById<View>(R.id.prevButton).isEnabled = enable

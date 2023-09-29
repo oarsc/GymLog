@@ -29,4 +29,5 @@ class TrainingEntity {
     var gymId = 0
     var start: LocalDateTime = Constants.DATE_ZERO
     var end: LocalDateTime? = null
+    var note: String = ""
 }

@@ -17,7 +17,7 @@ enum class PreferencesDefinition(
 	UNIT_INTERNATIONAL_SYSTEM("internationalSystem", defaultBoolean = true),
 
 	THEME("nightTheme", defaultBoolean = false),
-	CURRENT_GYM("gym", defaultInteger = 1),
+	CURRENT_GYM("gym", defaultInteger = 0),
 
 	BITS_DELETION("logDeletion", defaultString = "prompt"),
 	EXERCISES_DELETION("exerciseDeletion", defaultString = "prompt"),

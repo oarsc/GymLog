@@ -8,9 +8,10 @@ import androidx.fragment.app.FragmentActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
+import org.scp.gymlog.model.Training
 import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.service.NotificationService
-import org.scp.gymlog.ui.common.dialogs.TextDialogFragment
+import org.scp.gymlog.ui.common.dialogs.EditTrainingDialogFragment
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.NOW
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
@@ -36,52 +37,58 @@ class TrainingFloatingActionButton : FloatingActionButton {
         notificationService = NotificationService(context)
 
         setOnClickListener {
-            val trainingId = Data.trainingId
+            val trainingId = Data.training?.id
             if (trainingId != null) {
-                val dialog = TextDialogFragment(
-                        R.string.dialog_confirm_training_title,
-                        R.string.dialog_confirm_training_text
-                    ) { confirmed ->
-                        if (confirmed) {
+
+                context.dbThread { db ->
+                    val trainingEntity = db.trainingDao().getTraining(trainingId)
+                        ?: throw LoadException("Can't find trainingId $trainingId")
+
+                    if (trainingEntity.end != null) {
+                        throw LoadException("TrainingId $trainingId already ended")
+                    }
+
+                    val bitEntities = db.bitDao().getHistoryByTrainingId(trainingId)
+
+                    if (bitEntities.isEmpty()) {
+                        db.trainingDao().delete(trainingEntity)
+                        Data.training = null
+                        Data.superSet = null
+                        updateFloatingActionButton()
+                        return@dbThread
+                    }
+
+                    val dialog = EditTrainingDialogFragment(
+                        R.string.form_end_training,
+                        Training(trainingEntity),
+                        false,
+                        { result ->
                             notificationService.hideNotification()
                             context.dbThread { db ->
-                                val trainingDao = db.trainingDao()
-                                val training = trainingDao.getTraining(trainingId)
-                                    ?: throw  LoadException("Can't find trainingId $trainingId")
+                                result.start = bitEntities.map { it.timestamp }.minOf { it }
+                                result.end = bitEntities.map { it.timestamp }.maxOf { it }
 
-                                if (training.end != null) {
-                                    throw LoadException("TrainingId $trainingId already ended")
-                                }
-                                val endDate = db.bitDao()
-                                    .getMostRecentByTrainingId(trainingId)
-                                    ?.timestamp
+                                db.trainingDao().update(result.toEntity())
 
-                                if (endDate != null) {
-                                    val startDate = db.bitDao()
-                                        .getFirstTimestampByTrainingId(trainingId)
-                                    training.start = startDate!!
-                                    training.end = endDate
-                                    trainingDao.update(training)
-                                } else {
-                                    trainingDao.delete(training)
-                                }
-                                Data.trainingId = null
+                                Data.training = null
                                 Data.superSet = null
                                 updateFloatingActionButton()
                             }
                         }
-                    }
-                val activity: FragmentActivity = getContext() as AppCompatActivity
-                dialog.show(activity.supportFragmentManager, null)
+                    )
+                    val activity: FragmentActivity = getContext() as AppCompatActivity
+                    dialog.show(activity.supportFragmentManager, null)
+                }
             } else {
                 context.dbThread { db ->
                     val maxId = db.trainingDao().getMaxTrainingId() ?: 0
                     val training = TrainingEntity().apply {
                         this.trainingId = maxId + 1
                         start = NOW
-                        gymId = Data.currentGym
+                        gymId = Data.gym?.id ?: 0
                     }
-                    Data.trainingId = db.trainingDao().insert(training).toInt()
+                    training.trainingId = db.trainingDao().insert(training).toInt()
+                    Data.training = Training(training)
                     updateFloatingActionButton()
                 }
             }
@@ -89,7 +96,7 @@ class TrainingFloatingActionButton : FloatingActionButton {
     }
 
     fun updateFloatingActionButton() {
-        backgroundTintList = if (Data.trainingId == null) {
+        backgroundTintList = if (Data.training == null) {
             setImageResource(R.drawable.ic_play_24dp)
             ColorStateList.valueOf(
                 resources.getColor(R.color.green, context.theme)

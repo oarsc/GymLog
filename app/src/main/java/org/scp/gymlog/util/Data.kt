@@ -2,10 +2,7 @@ package org.scp.gymlog.util
 
 import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
-import org.scp.gymlog.model.Bar
-import org.scp.gymlog.model.Exercise
-import org.scp.gymlog.model.Muscle
-import org.scp.gymlog.model.Variation
+import org.scp.gymlog.model.*
 
 object Data {
 	val STEPS_KG = intArrayOf(50, 100, 125, 200, 250, 500, 1000, 1500, 2000, 2500)
@@ -13,8 +10,9 @@ object Data {
 	val exercises =  mutableListOf<Exercise>()
 	val muscles: List<Muscle>
 	val bars = mutableListOf<Bar>()
-	var currentGym = 0
-	var trainingId: Int? = null
+	val gyms =  mutableListOf<Gym>()
+	var gym: Gym? = null
+	var training: Training? = null
 	var superSet: Int? = null
 
 	init {
@@ -35,6 +33,12 @@ object Data {
 			Muscle(++muscleId, R.string.group_abdominals, R.drawable.muscle_abdominals, R.color.abdominals),
 			Muscle(++muscleId, R.string.group_cardio, R.drawable.muscle_cardio, R.color.cardio),
 		)
+	}
+
+	fun getGym(gymId: Int): Gym {
+		return gyms
+			.filter { it.id == gymId }
+			.getOrElse(0) { throw LoadException("NO GYM FOUND id:$gymId") }
 	}
 
 	fun getBar(barId: Int): Bar {

@@ -1,15 +1,13 @@
 package org.scp.gymlog.ui.main.history
 
 import org.scp.gymlog.model.Muscle
-import java.time.LocalDateTime
+import org.scp.gymlog.model.Training
 import java.time.temporal.ChronoUnit
 
 class TrainingData(
-    val id: Int,
-    val startTime: LocalDateTime,
-    val endTime: LocalDateTime?,
+    val training: Training,
     val mostUsedMuscles: List<Muscle>
 ) {
     val duration: Int?
-        get() = endTime?.let { ChronoUnit.MINUTES.between(startTime, it).toInt() }
+        get() = training.end?.let { ChronoUnit.MINUTES.between(training.start, it).toInt() }
 }

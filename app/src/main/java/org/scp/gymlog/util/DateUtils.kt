@@ -32,7 +32,7 @@ object DateUtils {
     }
 
     val LocalDateTime.isPast: Boolean
-        get() = this < currentDateTime()
+        get() = this < NOW
 
     val LocalDateTime.isSet: Boolean
         get() = this > DATE_ZERO

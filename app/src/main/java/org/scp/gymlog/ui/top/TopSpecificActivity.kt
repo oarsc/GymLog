@@ -28,7 +28,7 @@ class TopSpecificActivity : TopActivity() {
         val bits = if (variation.gymRelation == GymRelation.NO_RELATION)
                 db.bitDao().findAllByExerciseAndWeight(variation.id, weight)
             else
-                db.bitDao().findAllByExerciseAndWeight(Data.currentGym, variation.id, weight)
+                db.bitDao().findAllByExerciseAndWeight(Data.gym?.id ?: 0, variation.id, weight)
 
         return mutableMapOf<LocalDate, BitEntity>()
             .apply {

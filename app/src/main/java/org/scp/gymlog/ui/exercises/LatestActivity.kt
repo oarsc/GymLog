@@ -23,7 +23,7 @@ class LatestActivity : DBAppCompatActivity() {
     private lateinit var exercisesRecyclerView: SimpleListView<Variation, ListitemVariationBinding>
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
-        val trainingId = Data.trainingId
+        val trainingId = Data.training?.id
             ?: return R.string.validation_training_not_started
 
         variations = db.bitDao().getHistoryByTrainingId(trainingId)
