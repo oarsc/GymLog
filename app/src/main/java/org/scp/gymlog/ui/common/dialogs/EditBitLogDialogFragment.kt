@@ -15,6 +15,7 @@ import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Weight
 import org.scp.gymlog.room.daos.BitDao
 import org.scp.gymlog.ui.common.components.NumberModifierView
+import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.FormatUtils.safeBigDecimal
@@ -123,7 +124,7 @@ class EditBitLogDialogFragment (
                         dismiss()
                     } else {
                         dbThread { db ->
-                            val canUpdate = db.bitDao().validateBitEdit()
+                            val canUpdate = validateBitEdit(db.bitDao())
                             if (canUpdate) {
                                 confirmDialog()
                                 dismiss()
@@ -135,9 +136,9 @@ class EditBitLogDialogFragment (
         }
     }
 
-    private fun BitDao.validateBitEdit(): Boolean {
+    private fun validateBitEdit(bitDao: BitDao): Boolean {
         val superSet = editSuperSet.integer
-        val trainingBits = getHistoryByTrainingId(initialValue.trainingId)
+        val trainingBits = bitDao.getHistoryByTrainingId(initialValue.trainingId)
 
         val index = trainingBits.indices.find { trainingBits[it].bitId == initialValue.id }
             ?: throw RuntimeException("Bit not found on its own training... Id:${initialValue.id} #${initialValue.trainingId}")
@@ -163,6 +164,16 @@ class EditBitLogDialogFragment (
                 return false
             }
         }
+
+        if (index == trainingBits.size - 1 && initialValue.trainingId == Data.training?.id) {
+            Data.superSet?.also { activeSs ->
+                if (activeSs == prevSs) {
+                    toast(R.string.validation_super_set_active)
+                    return false
+                }
+            }
+        }
+
         return true
     }
 
