@@ -22,6 +22,9 @@ interface TrainingDao {
     @Query("SELECT * FROM training WHERE :startDate <= start AND start < :endDate")
     fun getTrainingByStartDate(startDate: LocalDateTime, endDate: LocalDateTime): List<TrainingEntity>
 
+    @Query("SELECT MIN(start) FROM training")
+    fun getFirstTrainingStartDate(): LocalDateTime?
+
     @Update
     fun update(training: TrainingEntity)
 

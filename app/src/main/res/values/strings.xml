@@ -95,6 +95,7 @@
     <string name="dialog_confirm_init_training_title">Training not started</string>
     <string name="dialog_confirm_init_training_text">There is no training currently ongoing.
     Do you want to start training #%1$d?</string>
+    <string name="dialog_title_select_month">Select month</string>
 
     <string name="dialog_show_bit_training">Show complete training</string>
 

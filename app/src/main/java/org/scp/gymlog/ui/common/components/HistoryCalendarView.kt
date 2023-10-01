@@ -9,12 +9,14 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.FragmentActivity
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Muscle
+import org.scp.gymlog.ui.common.dialogs.SelectMonthDialogFragment
 import org.scp.gymlog.util.DateUtils.prevMonday
 import org.scp.gymlog.util.DateUtils.timeInMillis
 import java.time.LocalDate
@@ -22,6 +24,23 @@ import java.time.Month
 import java.util.function.BiConsumer
 
 class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+
+    companion object {
+        val MONTH_NAMES = mapOf(
+            1 to R.string.month_january,
+            2 to R.string.month_february,
+            3 to R.string.month_march,
+            4 to R.string.month_april,
+            5 to R.string.month_may,
+            6 to R.string.month_june,
+            7 to R.string.month_july,
+            8 to R.string.month_august,
+            9 to R.string.month_september,
+            10 to R.string.month_october,
+            11 to R.string.month_november,
+            12 to R.string.month_december,
+        )
+    }
 
     private var firstDayOfMonth: LocalDate
     var selectedDay: LocalDate
@@ -39,6 +58,24 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
 
         findViewById<View>(R.id.prevButton).setOnClickListener { moveMonth(false) }
         findViewById<View>(R.id.nextButton).setOnClickListener { moveMonth(true) }
+
+        findViewById<View>(R.id.monthView).setOnClickListener {
+            val dialog = SelectMonthDialogFragment(
+                R.string.dialog_title_select_month,
+                firstDayOfMonth.monthValue,
+                firstDayOfMonth.year,
+                { month, year ->
+                    isEnabled = false
+                    dayDataMap.clear()
+                    firstDayOfMonth = LocalDate.of(year, month, 1)
+                    updateHeader()
+                    drawWeeks()
+                }
+            )
+
+            context as FragmentActivity
+            dialog.show(context.supportFragmentManager, null)
+        }
 
         updateHeader()
         drawWeeks()
@@ -63,22 +100,11 @@ class HistoryCalendarView(context: Context, attrs: AttributeSet?) : FrameLayout(
     private fun updateHeader() {
         val year = findViewById<TextView>(R.id.year)
         year.text = firstDayOfMonth.year.toString()
-        val monthRef = when (firstDayOfMonth.month.ordinal) {
-            1 -> R.string.month_february
-            2 -> R.string.month_march
-            3 -> R.string.month_april
-            4 -> R.string.month_may
-            5 -> R.string.month_june
-            6 -> R.string.month_july
-            7 -> R.string.month_august
-            8 -> R.string.month_september
-            9 -> R.string.month_october
-            10 -> R.string.month_november
-            11 -> R.string.month_december
-            else -> R.string.month_january
+
+        MONTH_NAMES[firstDayOfMonth.monthValue]?.also {
+            val month = findViewById<TextView>(R.id.monthName)
+            month.setText(it)
         }
-        val month = findViewById<TextView>(R.id.monthName)
-        month.setText(monthRef)
     }
 
     private fun drawWeeks() {
