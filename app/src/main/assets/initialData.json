@@ -1719,6 +1719,14 @@
 	"general": true
 },
 {
+	"tag": "quads_bulgarian_machine_split_squats",
+	"name": "Machine Bulgarian Split Squat",
+	"type": "machine",
+	"primary": [9, 11],
+	"secondary": [3, 10],
+	"general": false
+},
+{
 	"tag": "quads_bulgarian_dumbbell_split_squats",
 	"name": "Bulgarian Dumbbell Split Squats",
 	"type": "dumbbell",
@@ -1757,6 +1765,14 @@
 	"primary": [9, 11],
 	"secondary": [3, 10],
 	"general": true
+},
+{
+	"tag": "belt_squat_machine",
+	"name": "Belt squat machine",
+	"type": "machine",
+	"primary": [9],
+	"secondary": [11],
+	"general": false
 },
 {
 	"tag": "quads_machine_leg_press_incline",
@@ -2170,6 +2186,14 @@
 	"tag": "traps_smith_machine_behind_back_shrugs_standing",
 	"name": "Smith Machine Shrugs Behind The Back (standing)",
 	"type": "smith",
+	"primary": [5],
+	"secondary": [],
+	"general": false
+},
+{
+	"tag": "traps_pulley_machine_behind_back_shrugs_standing",
+	"name": "Pulley Machine Shrugs Behind The Back (standing)",
+	"type": "pulley",
 	"primary": [5],
 	"secondary": [],
 	"general": false
