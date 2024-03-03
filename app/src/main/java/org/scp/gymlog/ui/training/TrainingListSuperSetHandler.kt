@@ -69,8 +69,7 @@ class TrainingListSuperSetHandler(
         binding.row.image.setImage(exercise.image, exercise.primaryMuscles[0].color)
 
         binding.row.root.setOnClickListener { toggleBits(bitList, item) }
-
-        binding.row.image.setOnLongClickListener {
+        binding.row.root.setOnLongClickListener {
             val variations = exercise.gymVariations
             val context = binding.root.context as CustomAppCompatActivity
 
