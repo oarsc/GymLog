@@ -57,6 +57,17 @@ class ExercisesActivity : CustomAppCompatActivity() {
         handler.onExerciseClicked(this::itemClicked)
         handler.onVariationClicked(this::itemClicked)
 
+        val expandExerciseId = intent.extras!!.getInt("expandExerciseId", -1)
+        if (expandExerciseId > 0) {
+            val expandExercise = exercises.find { it.id == expandExerciseId }
+            if (expandExercise != null && expandExercise.gymVariations.size > 1) {
+                exercisesListView.updateState(expandExercise) {
+                    it["expanded"] = true
+                    true
+                }
+            }
+        }
+
         trainingFloatingButton = findViewById<TrainingFloatingActionButton>(R.id.fabTraining).apply {
             updateFloatingActionButton()
         }

@@ -44,6 +44,7 @@ object RedirectionExts {
         val muscleId = muscle?.id ?: exercise.primaryMuscles[0].id
         Intent(context, ExercisesActivity::class.java).apply {
             putExtra("muscleId", muscleId)
+            putExtra("expandExerciseId", exercise.id)
             addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(this)
         }

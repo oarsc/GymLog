@@ -157,6 +157,14 @@ abstract class CommonListView<T: Any, B: ViewBinding>(
         }
     }
 
+    fun updateState(element: T, action: (ListElementState) -> Boolean) {
+        if (!useState) return
+        val state = states[element] ?: ListElementState().apply { states[element] = this }
+        if (action(state)) {
+            notifyUpdate(element)
+        }
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     fun notifyDataSetChanged() = adapter?.notifyDataSetChanged()
     private fun notifyItemInserted(position: Int) = adapter?.notifyItemInserted(position)
