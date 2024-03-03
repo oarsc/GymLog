@@ -44,6 +44,7 @@ import org.scp.gymlog.util.SecondTickThread
 import org.scp.gymlog.util.WeightUtils
 import org.scp.gymlog.util.WeightUtils.calculate
 import org.scp.gymlog.util.WeightUtils.calculateTotal
+import org.scp.gymlog.util.extensions.ComponentsExts.overridePendingSideTransition
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.MessagingExts.snackbar
 import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
@@ -283,13 +284,34 @@ class RegistryActivity : DBAppCompatActivity() {
         val subtitle = findViewById<TextView>(R.id.variationName)
         val image = findViewById<ExerciseImageView>(R.id.image)
 
-        fragment.isClickable = false
         title.text = exercise.name
 
         if (variation.default) {
             subtitle.visibility = View.GONE
         } else {
             subtitle.text = variation.name
+        }
+
+        val variations = exercise.gymVariations
+        if (variations.size <= 1) {
+            fragment.isClickable = false
+        } else {
+            fragment.setOnClickListener {
+                TextSelectDialogFragment(variations.map { it.name }) { pos, _ ->
+                    if (pos != TextSelectDialogFragment.DIALOG_CLOSED) {
+                        val variation = variations[pos]
+                        if (variation != this.variation) {
+                            Intent(this, RegistryActivity::class.java).apply {
+                                putExtra("exerciseId", exercise.id)
+                                putExtra("variationId", variation.id)
+                                startActivityForResult(this, IntentReference.REGISTRY)
+                            }
+                            overridePendingSideTransition(variation.id > this.variation.id)
+                            finish()
+                        }
+                    }
+                }.apply { show(supportFragmentManager, null) }
+            }
         }
 
         image.setImage(exercise.image, exercise.primaryMuscles[0].color)
