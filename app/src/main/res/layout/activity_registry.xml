@@ -298,27 +298,33 @@
         android:layout_marginBottom="@dimen/text_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         app:target="@id/editReps"
-        app:layout_constraintBottom_toTopOf="@id/bottomPanel"
+        app:layout_constraintBottom_toTopOf="@id/bottomButtonPanel"
         app:layout_constraintRight_toRightOf="parent"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/backgroundAccent"
-        app:layout_constraintBottom_toTopOf="@id/bottomPanel"
+        app:layout_constraintBottom_toTopOf="@id/bottomButtonPanel"
         app:layout_constraintRight_toRightOf="parent"/>
 
-    <LinearLayout
-        android:id="@+id/bottomPanel"
+    <org.scp.gymlog.ui.common.components.SideButtonsLinearLayoutView
+        android:id="@+id/bottomButtonPanel"
         android:layout_width="match_parent"
         android:layout_height="90dp"
+        android:orientation="horizontal"
+        app:minWidth="0dp"
+        app:maxWidth="90dp"
+        app:activationWidth="60dp"
+        app:iconWidth="30dp"
+        app:leftIcon="@drawable/ic_arrow_left_24dp"
+        app:rightIcon="@drawable/ic_arrow_right_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:orientation="horizontal">
+        app:layout_constraintRight_toRightOf="parent" >
 
         <ImageView
-            android:id="@+id/confirm"
+            android:id="@+id/confirmInstantButton"
             android:layout_width="90dp"
             android:layout_height="match_parent"
             android:paddingVertical="30dp"
@@ -327,16 +333,8 @@
             android:focusable="true"
             android:background="?android:attr/selectableItemBackground" />
 
-        <!--
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/backgroundAccent"
-            app:layout_constraintBottom_toTopOf="@id/bottom_panel"
-            app:layout_constraintRight_toRightOf="parent"/> -->
-
         <ImageView
-            android:id="@+id/confirmSet"
+            android:id="@+id/mainButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -347,18 +345,5 @@
             android:background="?android:attr/selectableItemBackground" />
 
 
-        <ImageView
-            android:id="@+id/nextSuperSet"
-            android:layout_width="90dp"
-            android:layout_height="match_parent"
-            android:paddingVertical="30dp"
-            android:src="@drawable/ic_arrow_right_24dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?android:attr/selectableItemBackground" />
-
-    </LinearLayout>
-
-
-
+    </org.scp.gymlog.ui.common.components.SideButtonsLinearLayoutView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,4 +10,7 @@
 
     <color name="actionBarText">#E2E2E2</color>
     <color name="actionBarIcon">#A7A7A7</color>
+
+    <color name="pulseWrongAnimation">#FF653030</color>
+    <color name="pulseSuccessAnimation">#FF494949</color>
 </resources>

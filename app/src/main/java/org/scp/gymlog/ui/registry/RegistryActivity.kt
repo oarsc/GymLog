@@ -28,6 +28,7 @@ import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.common.animations.ResizeHeightAnimation
 import org.scp.gymlog.ui.common.components.ExerciseImageView
 import org.scp.gymlog.ui.common.components.NumberModifierView
+import org.scp.gymlog.ui.common.components.SideButtonsLinearLayoutView
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
 import org.scp.gymlog.ui.common.dialogs.EditBitLogDialogFragment
 import org.scp.gymlog.ui.common.dialogs.EditNotesDialogFragment
@@ -62,6 +63,7 @@ import org.scp.gymlog.util.WeightUtils.calculateTotal
 import org.scp.gymlog.util.extensions.ComponentsExts.overridePendingSideTransition
 import org.scp.gymlog.util.extensions.ComponentsExts.startResizeWidthAnimation
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
+import org.scp.gymlog.util.extensions.DatabaseExts.getDbConnection
 import org.scp.gymlog.util.extensions.MessagingExts.snackbar
 import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
@@ -87,10 +89,11 @@ class RegistryActivity : DBAppCompatActivity() {
     private val superSetPanel by lazy { findViewById<TextView>(R.id.activeSuperset) }
     private val weightModifier by lazy { findViewById<NumberModifierView>(R.id.weightModifier) }
     private val weightSpecIcon by lazy { findViewById<ImageView>(R.id.weightSpecIcon) }
-    private val confirmInstantButton by lazy { findViewById<ImageView>(R.id.confirm) }
-    private var hiddenInstantSetButton = true
-    private val nextSuperSetButton by lazy { findViewById<ImageView>(R.id.nextSuperSet) }
-    private var hiddenNextSuperSetButton = true
+    private val bottomButtonPanel by lazy { findViewById<SideButtonsLinearLayoutView>(R.id.bottomButtonPanel) }
+    private val confirmInstantButton by lazy { findViewById<ImageView>(R.id.confirmInstantButton) }
+    private val mainButton by lazy { findViewById<ImageView>(R.id.mainButton) }
+    private var initInstantSetButtonHidden = true
+    private var enableSuperSetNavigation = false
     private var lastSuperSet = 0
     private lateinit var logListHandler: LogListHandler
     private lateinit var logListView: SimpleListView<Bit, ListitemLogBinding>
@@ -127,16 +130,16 @@ class RegistryActivity : DBAppCompatActivity() {
             val bitDao = db.bitDao()
 
             val mostRecentTraining = bitDao.getMostRecentByTrainingId(training.id) ?: return@also
-            hiddenInstantSetButton = mostRecentTraining.variationId != variationId ||
+            initInstantSetButtonHidden = mostRecentTraining.variationId != variationId ||
                 mostRecentTraining.superSet != (Data.superSet ?: 0)
 
             lastSuperSet = mostRecentTraining.superSet
             if (lastSuperSet > 0 && Data.superSet == lastSuperSet) {
-                hiddenNextSuperSetButton = bitDao.getHistoryByTrainingId(training.id)
+                enableSuperSetNavigation = bitDao.getHistoryByTrainingId(training.id)
                     .filter { it.superSet == lastSuperSet }
                     .map { it.variationId }
                     .distinct()
-                    .size <= 1
+                    .size > 1
             }
         }
 
@@ -190,7 +193,6 @@ class RegistryActivity : DBAppCompatActivity() {
         }
 
         // Logs:
-
         logListView = findViewById(R.id.log_list)
         logListView.isNestedScrollingEnabled = true
 
@@ -202,14 +204,42 @@ class RegistryActivity : DBAppCompatActivity() {
         logListHandler.setOnLoadMoreListener(this::loadMoreHistory)
         logListHandler.setOnBitClickListener(this::onClickBit)
 
+        // Bottom button panel (main): Save bit log
+        bottomButtonPanel.clickListen(mainButton) { saveBitLog(false) }
 
-        // Save bit log
-        findViewById<View>(R.id.confirmSet).setOnClickListener { saveBitLog(false) }
-        confirmInstantButton.setOnClickListener { saveBitLog(true) }
-
-        if (hiddenInstantSetButton) {
+        // Bottom button panel (left): Instant button
+        bottomButtonPanel.clickListen(confirmInstantButton) { saveBitLog(true) }
+        if (initInstantSetButtonHidden) {
             confirmInstantButton.layoutParams.width = 0
         }
+
+        mainButton.isEnabled = false
+        confirmInstantButton.isEnabled = false
+        Thread {
+            Thread.sleep(200)
+            runOnUiThread {
+                mainButton.isEnabled = true
+                confirmInstantButton.isEnabled = true
+            }
+        }.start()
+
+        // Bottom button panel (swipe)
+        bottomButtonPanel.setOnSwipeLeftListener { // forward
+            if (goToNextVariation())
+                true
+            else if (enableSuperSetNavigation)
+                goToNextSuperSetVariation()
+            else false
+        }
+        bottomButtonPanel.setOnSwipeRightListener { // back
+            goToNextVariation(true)
+        }
+
+        // Super set button
+        superSet.setOnClickListener { toggleSuperSet() }
+        superSetPanel.setOnClickListener { toggleSuperSet(false) }
+        updateSuperSetIcon(true)
+
 
         // Notes
         notes.setOnClickListener {
@@ -226,20 +256,12 @@ class RegistryActivity : DBAppCompatActivity() {
 
         lockView.setOnClickListener {
             locked = !locked
-            if (locked)
-                lockView.setImageResource(R.drawable.ic_lock_24dp)
-            else
-                lockView.setImageResource(R.drawable.ic_unlock_24dp)
+            lockView.setImageResource(
+                if (locked) R.drawable.ic_lock_24dp
+                else R.drawable.ic_unlock_24dp
+            )
         }
 
-        // Super set button
-        superSet.setOnClickListener { toggleSuperSet() }
-        superSetPanel.setOnClickListener { toggleSuperSet(false) }
-        nextSuperSetButton.setOnClickListener { goToNextSuperSetVariation() }
-        updateSuperSetIcon(true)
-        if (hiddenNextSuperSetButton) {
-            nextSuperSetButton.layoutParams.width = 0
-        }
 
         // Weight and Reps Input fields:
         weight.filters = arrayOf(InputFilter { source: CharSequence, _, _, dest: Spanned, _, _ ->
@@ -317,29 +339,12 @@ class RegistryActivity : DBAppCompatActivity() {
                 Data.superSet = null
                 updateSuperSetIcon()
 
-                if (hiddenInstantSetButton) {
+                if (!leftButtonVisible) {
                     updateInstantButtonStatus()
                 } else {
                     toggleInstantButton(false)
                 }
-
-                if (!hiddenNextSuperSetButton) {
-                    hiddenNextSuperSetButton = true
-                    nextSuperSetButton.startResizeWidthAnimation(0, 250)
-                }
             }
-        }
-    }
-
-    private fun toggleInstantButton(value: Boolean = hiddenInstantSetButton) {
-        if (value) {
-            if (!hiddenInstantSetButton) return
-            hiddenInstantSetButton = false
-            confirmInstantButton.startResizeWidthAnimation(90, 250, true)
-
-        } else if (!hiddenInstantSetButton) {
-            hiddenInstantSetButton = true
-            confirmInstantButton.startResizeWidthAnimation(0, 250)
         }
     }
 
@@ -360,19 +365,14 @@ class RegistryActivity : DBAppCompatActivity() {
         val variations = exercise.gymVariations
         if (variations.size <= 1) {
             fragment.isClickable = false
+
         } else {
             fragment.setOnClickListener {
                 TextSelectDialogFragment(variations.map { it.name }) { pos, _ ->
                     if (pos != TextSelectDialogFragment.DIALOG_CLOSED) {
                         val variation = variations[pos]
                         if (variation != this.variation) {
-                            Intent(this, RegistryActivity::class.java).apply {
-                                putExtra("exerciseId", exercise.id)
-                                putExtra("variationId", variation.id)
-                                startActivityForResult(this, IntentReference.REGISTRY)
-                            }
-                            finish()
-                            overridePendingSideTransition(variation.id > this.variation.id)
+                            switchToVariation(variation, left=variation.id > this.variation.id)
                         }
                     }
                 }.apply { show(supportFragmentManager, null) }
@@ -479,11 +479,11 @@ class RegistryActivity : DBAppCompatActivity() {
         }
     }
 
-    private fun updateSuperSetIcon(onInit: Boolean = false) {
+    private fun updateSuperSetIcon(noAnimate: Boolean = false) {
         if (Data.superSet == null) {
             superSet.setImageResource(R.drawable.ic_super_set_24dp)
 
-            if (onInit) {
+            if (noAnimate) {
                 superSetPanel.visibility = View.GONE
             } else {
                 val anim = ResizeHeightAnimation(superSetPanel, 0, 250, true)
@@ -493,7 +493,7 @@ class RegistryActivity : DBAppCompatActivity() {
             superSet.setImageResource(R.drawable.ic_super_set_on_24dp)
             superSetPanel.text = String.format(getString(R.string.text_active_superset), Data.superSet)
 
-            if (!onInit) {
+            if (!noAnimate) {
                 val anim = ResizeHeightAnimation(superSetPanel, 48, 250, true)
                 superSetPanel.startAnimation(anim)
             }
@@ -573,34 +573,67 @@ class RegistryActivity : DBAppCompatActivity() {
         }
     }
 
-    private fun goToNextSuperSetVariation() {
-        requireActiveTraining(false) { trainingId ->
-            if (!hiddenNextSuperSetButton) {
-                val superSet = Data.superSet ?: return@requireActiveTraining
+    private fun goToNextSuperSetVariation(goBack: Boolean = false): Boolean {
+        if (!enableSuperSetNavigation) return false
+        Data.superSet ?: return false
+        val trainingId = Data.training?.id ?: return false
 
-                dbThread { db ->
-                    val variations = db.bitDao().getHistoryByTrainingId(trainingId)
-                        .filter { it.superSet == lastSuperSet }
-                        .map { it.variationId }
-                        .distinct()
+        confirmInstantButton.isEnabled = false
+        mainButton.isEnabled = false
 
-                    val idx = variations.indexOf(variation.id) + 1
-                    val nextVariationId = if (idx >= variations.size) variations[0]
-                        else variations[idx]
-                    val nextVariation = Data.getVariation(nextVariationId)
+        val db = getDbConnection()
 
-                    runOnUiThread {
-                        Intent(this, RegistryActivity::class.java).apply {
-                            putExtra("exerciseId", nextVariation.exercise.id)
-                            putExtra("variationId", nextVariationId)
-                            putExtra("reloadOnBack", true)
-                            startActivityForResult(this, IntentReference.REGISTRY)
-                        }
-                        finish()
-                        overridePendingSideTransition()
-                    }
+        val variations = db.bitDao().getHistoryByTrainingId(trainingId)
+            .filter { it.superSet == lastSuperSet }
+            .map { it.variationId }
+            .distinct()
+            .let { if (goBack) it.reversed() else it }
+
+        val idx = variations.indexOf(variation.id) + 1
+        val nextVariationId = if (idx >= variations.size) variations[0]
+            else variations[idx]
+        val nextVariation = Data.getVariation(nextVariationId)
+        switchToVariation(nextVariation, left=!goBack, reloadOnBack=true)
+
+        return true
+    }
+
+    private fun goToNextVariation(goBack: Boolean = false): Boolean {
+        val trainingId = Data.training?.id ?: return false
+
+        val db = getDbConnection()
+
+        val variations = db.bitDao().getHistoryByTrainingId(trainingId)
+            .map { it.variationId }
+            .reversed()
+            .distinct()
+            .let { if (goBack) it else it.reversed() }
+            .ifEmpty { return false }
+
+        val idx = variations.indexOf(variation.id) + 1
+        if (idx >= variations.size || idx == 0 && !goBack) return false
+        confirmInstantButton.isEnabled = false
+        mainButton.isEnabled = false
+        val nextVariation = Data.getVariation(variations[idx])
+        switchToVariation(nextVariation, left=!goBack, reloadOnBack=true)
+
+        return true
+    }
+
+    private fun switchToVariation(variation: Variation, left: Boolean = true, reloadOnBack: Boolean = false) {
+        runOnUiThread {
+            Intent(this, RegistryActivity::class.java).apply {
+                putExtra("exerciseId", variation.exercise.id)
+                putExtra("variationId", variation.id)
+                if (reloadOnBack) {
+                    putExtra("reloadOnBack", true)
+                    startActivity(this)
+                } else {
+                    startActivityForResult(this, IntentReference.REGISTRY)
                 }
             }
+            finish()
+            overridePendingSideTransition(left)
         }
     }
 
@@ -652,12 +685,9 @@ class RegistryActivity : DBAppCompatActivity() {
                         notes.setText(R.string.symbol_empty)
                     }
 
-                    if (hiddenInstantSetButton) {
-                        toggleInstantButton(true)
-                    }
-                    if (hiddenNextSuperSetButton && Data.superSet == lastSuperSet) {
-                        hiddenNextSuperSetButton = false
-                        nextSuperSetButton.startResizeWidthAnimation(90, 250, true)
+                    toggleInstantButton(true)
+                    if (Data.superSet == lastSuperSet) {
+                        enableSuperSetNavigation = true
                     }
                     startTimer()
                     if (!locked)
@@ -700,7 +730,7 @@ class RegistryActivity : DBAppCompatActivity() {
                     } else {
                         notifyTrainingIdChanged(trainingId, index)
                     }
-                    if (trainingId == Data.training?.id && !hiddenInstantSetButton) {
+                    if (trainingId == Data.training?.id && leftButtonVisible) {
                         updateInstantButtonStatus()
                     }
                 } else {
@@ -724,6 +754,17 @@ class RegistryActivity : DBAppCompatActivity() {
 
         databaseConnection?.also { action(it) }
             ?: dbThread { action(it) }
+    }
+
+    private val leftButtonVisible get() = confirmInstantButton.layoutParams.width > 0
+
+    private fun toggleInstantButton(value: Boolean = !leftButtonVisible) {
+        if (value) {
+            if (leftButtonVisible) return
+            confirmInstantButton.startResizeWidthAnimation(90, toDp = true, animLauncher = bottomButtonPanel)
+        } else if (leftButtonVisible) {
+            confirmInstantButton.startResizeWidthAnimation(0, animLauncher = bottomButtonPanel)
+        }
     }
 
     private fun updateBitLog(bit: Bit, updateTrainingId: Boolean) {

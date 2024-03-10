@@ -17,9 +17,14 @@ import org.scp.gymlog.util.FormatUtils.bigDecimal
 import java.math.BigDecimal
 
 class NumberModifierView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
-    private var targetId = -1
-    private var step = BigDecimal.ONE
-    private var allowNegatives = false
+
+    companion object {
+        private const val NAMESPACE = "http://schemas.android.com/apk/res-auto"
+    }
+
+    private val targetId: Int
+    private var step: BigDecimal
+    private var allowNegatives: Boolean
     private var autoExecuted = false
     private var autoCount = 0
     private val autoAdd: Runnable
@@ -27,14 +32,14 @@ class NumberModifierView(context: Context, attrs: AttributeSet) : LinearLayout(c
 
     init {
         targetId = attrs.getAttributeResourceValue(
-            "http://schemas.android.com/apk/res-auto", "target", -1)
+            NAMESPACE, "target", -1)
 
         allowNegatives = attrs.getAttributeBooleanValue(
-            "http://schemas.android.com/apk/res-auto", "negatives", false)
+            NAMESPACE, "negatives", false)
 
-        step = BigDecimal.valueOf(
-            attrs.getAttributeFloatValue(
-                "http://schemas.android.com/apk/res-auto", "step", 1f).toDouble())
+        step = attrs.getAttributeFloatValue(
+            NAMESPACE, "step", 1f)
+            .toBigDecimal()
 
         autoAdd = autoStep()
         autoSub = autoStep(false)

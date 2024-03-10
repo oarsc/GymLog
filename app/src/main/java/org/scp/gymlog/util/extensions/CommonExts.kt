@@ -5,6 +5,12 @@ import java.math.RoundingMode
 import kotlin.math.sqrt
 
 object CommonExts {
+    fun Pair<Float, Float>.distance(other: Pair<Float, Float>): Float {
+        val dx = first - other.first
+        val dy = second - other.second
+        return sqrt(dx * dx + dy * dy)
+    }
+
     fun BigDecimal.adjustScale(maxScale: Int = 2): BigDecimal {
         val realScale = realScale()
         return when {

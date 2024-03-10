@@ -21,6 +21,9 @@
     <color name="actionBarText">@color/white</color>
     <color name="actionBarIcon">@color/white</color>
 
+    <color name="pulseWrongAnimation">#FFFFD0D0</color>
+    <color name="pulseSuccessAnimation">#FFE0E0E0</color>
+
     <color name="pectoral">#9675CE</color>
     <color name="upper_back">#1073AE</color>
     <color name="lower_back">#4DD0E2</color>
