@@ -12,7 +12,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemLogBinding
-import org.scp.gymlog.model.*
+import org.scp.gymlog.model.Bit
+import org.scp.gymlog.model.Exercise
+import org.scp.gymlog.model.ExerciseType
+import org.scp.gymlog.model.GymRelation
+import org.scp.gymlog.model.Training
+import org.scp.gymlog.model.Variation
+import org.scp.gymlog.model.Weight
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.service.NotificationService
@@ -22,7 +28,14 @@ import org.scp.gymlog.ui.common.animations.ResizeHeightAnimation
 import org.scp.gymlog.ui.common.components.ExerciseImageView
 import org.scp.gymlog.ui.common.components.NumberModifierView
 import org.scp.gymlog.ui.common.components.listView.SimpleListView
-import org.scp.gymlog.ui.common.dialogs.*
+import org.scp.gymlog.ui.common.dialogs.EditBitLogDialogFragment
+import org.scp.gymlog.ui.common.dialogs.EditNotesDialogFragment
+import org.scp.gymlog.ui.common.dialogs.EditNumberDialogFragment
+import org.scp.gymlog.ui.common.dialogs.EditTimerDialogFragment
+import org.scp.gymlog.ui.common.dialogs.EditWeightFormDialogFragment
+import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment
+import org.scp.gymlog.ui.common.dialogs.TextDialogFragment
+import org.scp.gymlog.ui.common.dialogs.TextSelectDialogFragment
 import org.scp.gymlog.ui.common.dialogs.model.WeightFormData
 import org.scp.gymlog.ui.exercises.ExercisesActivity
 import org.scp.gymlog.ui.exercises.LatestActivity
@@ -30,8 +43,9 @@ import org.scp.gymlog.ui.main.MainActivity
 import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.ui.top.TopActivity
 import org.scp.gymlog.ui.training.TrainingActivity
-import org.scp.gymlog.util.*
+import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Constants.IntentReference
+import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.NOW
 import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.DateUtils.diffSeconds
@@ -40,6 +54,8 @@ import org.scp.gymlog.util.DateUtils.isSet
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.FormatUtils.safeBigDecimal
+import org.scp.gymlog.util.SecondTickThread
+import org.scp.gymlog.util.WeightUtils
 import org.scp.gymlog.util.WeightUtils.calculate
 import org.scp.gymlog.util.WeightUtils.calculateTotal
 import org.scp.gymlog.util.extensions.ComponentsExts.overridePendingSideTransition
@@ -345,11 +361,11 @@ class RegistryActivity : DBAppCompatActivity() {
                         val variation = variations[pos]
                         if (variation != this.variation) {
                             Intent(this, RegistryActivity::class.java).apply {
-                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 putExtra("exerciseId", exercise.id)
                                 putExtra("variationId", variation.id)
                                 startActivityForResult(this, IntentReference.REGISTRY)
                             }
+                            finish()
                             overridePendingSideTransition(variation.id > this.variation.id)
                         }
                     }
@@ -559,12 +575,12 @@ class RegistryActivity : DBAppCompatActivity() {
 
                     runOnUiThread {
                         Intent(this, RegistryActivity::class.java).apply {
-                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                             putExtra("exerciseId", nextVariation.exercise.id)
                             putExtra("variationId", nextVariationId)
                             putExtra("reloadOnBack", true)
                             startActivityForResult(this, IntentReference.REGISTRY)
                         }
+                        finish()
                         overridePendingSideTransition()
                     }
                 }
