@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.ui.common.notifications.NotificationLoggingService
@@ -66,13 +67,19 @@ class NotificationService(private val context: Context) {
         val countdownChannel = NotificationChannel(COUNTDOWN_CHANNEL,
             context.getString(R.string.notification_title_countdown),
             NotificationManager.IMPORTANCE_DEFAULT)
+            .apply {
+                setSound(null, null)
+            }
 
-        countdownChannel.setSound(null, null)
         notificationManager.createNotificationChannel(countdownChannel)
 
         val readyChannel = NotificationChannel(READY_CHANNEL,
             context.getString(R.string.notification_title_ready),
             NotificationManager.IMPORTANCE_HIGH)
+            .apply {
+                enableLights(true)
+                lightColor = Color.MAGENTA
+            }
 
         notificationManager.createNotificationChannel(readyChannel)
     }
