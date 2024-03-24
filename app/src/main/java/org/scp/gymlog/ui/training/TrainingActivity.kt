@@ -13,6 +13,7 @@ import org.scp.gymlog.exceptions.LoadException
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.GymRelation
 import org.scp.gymlog.model.Muscle
+import org.scp.gymlog.model.Training
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.ui.common.DBAppCompatActivity
 import org.scp.gymlog.ui.common.animations.ResizeHeightAnimation
@@ -22,11 +23,13 @@ import org.scp.gymlog.ui.main.history.HistoryFragment.Companion.getTrainingData
 import org.scp.gymlog.ui.main.history.TrainingData
 import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.ui.training.rows.TrainingRowData
+import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.getDateString
 import org.scp.gymlog.util.DateUtils.getTimeString
 import org.scp.gymlog.util.DateUtils.minutesToTimeString
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
+import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 class TrainingActivity : DBAppCompatActivity() {
@@ -40,9 +43,13 @@ class TrainingActivity : DBAppCompatActivity() {
     private var trainingId: Int = 0
     private var canEditGymId = false
 
+    private var canBeReopened = false
+
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
+        val trainingDao = db.trainingDao()
+
         trainingId = intent.extras!!.getInt("trainingId")
-        val training = db.trainingDao().getTraining(trainingId)
+        val training = trainingDao.getTraining(trainingId)
             ?: throw LoadException("Cannot find trainingId: $trainingId")
         val bitEntities = db.bitDao().getHistoryByTrainingId(trainingId)
         trainingData = getTrainingData(training, bitEntities)
@@ -53,6 +60,10 @@ class TrainingActivity : DBAppCompatActivity() {
         canEditGymId = bits.map { it.variation }
             .distinct()
             .all { it.gymRelation != GymRelation.STRICT_RELATION }
+
+        canBeReopened = Data.training == null &&
+            training.start.toLocalDate() == LocalDate.now() &&
+            (trainingDao.getMaxTrainingId() ?: 0) == trainingId
 
         return CONTINUE
     }
@@ -145,6 +156,7 @@ class TrainingActivity : DBAppCompatActivity() {
         val note = findViewById<TextView>(R.id.note)
         val noteRow = findViewById<View>(R.id.noteRow)
         val editTraining = findViewById<ImageView>(R.id.editTraining)
+        val reopenTraining = findViewById<ImageView>(R.id.reopenTraining)
         val notesImage = findViewById<ImageView>(R.id.notesImage)
 
         val training = trainingData.training
@@ -233,5 +245,28 @@ class TrainingActivity : DBAppCompatActivity() {
             )
             dialog.show(supportFragmentManager, null)
         }
+
+        if (canBeReopened) {
+            reopenTraining.setOnClickListener {
+                Data.training?.run { return@setOnClickListener }
+
+                dbThread { db ->
+                    val trainingEntity = db.trainingDao().getTraining(trainingId)
+                        ?: throw LoadException("Can't find trainingId $trainingId")
+                    trainingEntity.end = null
+                    db.trainingDao().update(trainingEntity)
+                    Data.training = Training(trainingEntity)
+                }
+
+                time.text = String.format(
+                    resources.getString(R.string.compound_training_times_ongoing),
+                    training.start.getTimeString()
+                )
+                reopenTraining.visibility = View.GONE
+            }
+        } else {
+            reopenTraining.visibility = View.GONE
+        }
+
     }
 }
