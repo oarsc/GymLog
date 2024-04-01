@@ -49,7 +49,6 @@ class ReadyNotification (
             .setCustomContentView(remoteView)
             .setUsesChronometer(true)
             .setWhen(startTime)
-            .setOnlyAlertOnce(true)
             //.setAutoCancel(true)
             .setContentIntent(
                 PendingIntent.getActivity(

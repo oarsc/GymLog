@@ -8,15 +8,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import org.scp.gymlog.util.DateUtils.NOW
 import org.scp.gymlog.util.DateUtils.diff
 import org.scp.gymlog.util.DateUtils.diffSeconds
 import org.scp.gymlog.util.DateUtils.isPast
 import org.scp.gymlog.util.DateUtils.timeInMillis
 import org.scp.gymlog.util.DateUtils.toLocalDateTime
 import java.time.LocalDateTime
-import java.util.*
-
 
 class NotificationLoggingService : Service() {
 
@@ -39,7 +36,6 @@ class NotificationLoggingService : Service() {
 
     private var running = false
     private var scheduledIntent: PendingIntent? = null
-    private var timer: Timer? = null
 
     private val alarmManager
         by lazy { getSystemService(ALARM_SERVICE) as AlarmManager }
@@ -139,6 +135,7 @@ class NotificationLoggingService : Service() {
                         startTime,
                         variationId
                     ).apply { showNotification() }
+                    cancelScheduledNotification()
                 }
                 running = false
             }
@@ -180,11 +177,6 @@ class NotificationLoggingService : Service() {
             it.cancel()
             scheduledIntent = null
         }
-        timer?.apply {
-            cancel()
-            purge()
-            timer = null
-        }
     }
 
     private fun scheduleNotification(endTime: Long) {
@@ -194,6 +186,7 @@ class NotificationLoggingService : Service() {
         intent.putExtra("exerciseName", exerciseName)
         intent.putExtra("startTime", startTime)
         intent.putExtra("variationId", variationId)
+        intent.flags = intent.flags or Intent.FLAG_RECEIVER_FOREGROUND
 
         PendingIntent.getBroadcast(
             this,
@@ -203,22 +196,6 @@ class NotificationLoggingService : Service() {
         ).also { pendingIntent ->
             scheduledIntent = pendingIntent
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, endTime, pendingIntent)
-        }
-
-        val delay = endTime - NOW.timeInMillis
-        if (delay > 0) {
-            timer = Timer().apply {
-                schedule(object: TimerTask() {
-                    override fun run() {
-                        ReadyNotification(
-                            this@NotificationLoggingService,
-                            exerciseName,
-                            startTime,
-                            variationId
-                        ).apply { showNotification() }
-                    }
-                }, delay)
-            }
         }
     }
 
