@@ -3,8 +3,6 @@ package org.scp.gymlog.ui.common.notifications
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
@@ -14,6 +12,7 @@ import org.scp.gymlog.util.DateUtils.isPast
 import org.scp.gymlog.util.DateUtils.timeInMillis
 import org.scp.gymlog.util.DateUtils.toLocalDateTime
 import java.time.LocalDateTime
+import java.util.Random
 
 class NotificationLoggingService : Service() {
 
@@ -21,6 +20,7 @@ class NotificationLoggingService : Service() {
         const val ACTION_STOP = "stop"
         const val ACTION_REPLACE = "replace"
         const val ACTION_START = "start"
+        const val ACTION_SCHEDULED = "scheduled"
 
         private val mBinder: IBinder = Binder()
     }
@@ -36,6 +36,8 @@ class NotificationLoggingService : Service() {
 
     private var running = false
     private var scheduledIntent: PendingIntent? = null
+    private var lastNotificationId = 0
+    private var nextNotificationId = 0
 
     private val alarmManager
         by lazy { getSystemService(ALARM_SERVICE) as AlarmManager }
@@ -44,6 +46,10 @@ class NotificationLoggingService : Service() {
         intent ?: return super.onStartCommand(null, flags, startId)
 
         return when (intent.action) {
+            ACTION_SCHEDULED -> {
+                showReadyNotification()
+                super.onStartCommand(intent, flags, startId)
+            }
             ACTION_STOP -> {
                 cancelThread()
                 cancelScheduledNotification()
@@ -73,6 +79,7 @@ class NotificationLoggingService : Service() {
                             thread = RefresherThread().also(Thread::start)
                         }
 
+                        nextNotificationId = Random().nextInt()
                         scheduleNotification(milliseconds)
                     } else {
 
@@ -99,6 +106,7 @@ class NotificationLoggingService : Service() {
                 cancelThread()
                 thread = RefresherThread().also(Thread::start)
 
+                nextNotificationId = Random().nextInt()
                 scheduleNotification(milliseconds)
 
                 super.onStartCommand(intent, flags, startId)
@@ -129,12 +137,7 @@ class NotificationLoggingService : Service() {
                         close()
                         countdownNotification = null
                     }
-                    ReadyNotification(
-                        this@NotificationLoggingService,
-                        exerciseName,
-                        startTime,
-                        variationId
-                    ).apply { showNotification() }
+                    showReadyNotification()
                     cancelScheduledNotification()
                 }
                 running = false
@@ -181,34 +184,34 @@ class NotificationLoggingService : Service() {
 
     private fun scheduleNotification(endTime: Long) {
         cancelScheduledNotification()
-        val intent = Intent(this, ScheduledNotificationBroadcastReceiver::class.java)
 
-        intent.putExtra("exerciseName", exerciseName)
-        intent.putExtra("startTime", startTime)
-        intent.putExtra("variationId", variationId)
-        intent.flags = intent.flags or Intent.FLAG_RECEIVER_FOREGROUND
+        val intent = Intent(this, NotificationLoggingService::class.java).apply {
+            action = ACTION_SCHEDULED
+            flags = flags or Intent.FLAG_RECEIVER_FOREGROUND
+            putExtra("exerciseName", exerciseName)
+            putExtra("startTime", startTime)
+            putExtra("variationId", variationId)
+        }
 
-        PendingIntent.getBroadcast(
+        scheduledIntent = PendingIntent.getService(
             this,
             0,
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        ).also { pendingIntent ->
-            scheduledIntent = pendingIntent
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, endTime, pendingIntent)
-        }
+        )
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, endTime, scheduledIntent)
     }
 
-    class ScheduledNotificationBroadcastReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val notification = ReadyNotification(
-                context.applicationContext,
-                intent.getStringExtra("exerciseName") ?: "",
-                intent.getLongExtra("startTime", 0),
-                intent.getIntExtra("variationId", -1)
-            )
+    private fun showReadyNotification() {
+        if (lastNotificationId != nextNotificationId) {
+            lastNotificationId = nextNotificationId
 
-            notification.showNotification()
+            ReadyNotification(
+                this@NotificationLoggingService,
+                exerciseName,
+                startTime,
+                variationId
+            ).apply { showNotification() }
         }
     }
 }
