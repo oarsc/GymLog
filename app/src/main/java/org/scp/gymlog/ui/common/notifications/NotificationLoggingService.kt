@@ -47,6 +47,9 @@ class NotificationLoggingService : Service() {
 
         return when (intent.action) {
             ACTION_SCHEDULED -> {
+                CountdownNotification.close(this)
+                countdownNotification = null
+
                 showReadyNotification()
                 super.onStartCommand(intent, flags, startId)
             }
@@ -79,7 +82,7 @@ class NotificationLoggingService : Service() {
                             thread = RefresherThread().also(Thread::start)
                         }
 
-                        nextNotificationId = Random().nextInt()
+                        nextNotificationId++
                         scheduleNotification(milliseconds)
                     } else {
 
@@ -106,7 +109,7 @@ class NotificationLoggingService : Service() {
                 cancelThread()
                 thread = RefresherThread().also(Thread::start)
 
-                nextNotificationId = Random().nextInt()
+                nextNotificationId++
                 scheduleNotification(milliseconds)
 
                 super.onStartCommand(intent, flags, startId)
@@ -118,7 +121,6 @@ class NotificationLoggingService : Service() {
     inner class RefresherThread: Thread() {
         override fun run() {
             running = true
-            var endedNaturally = false
             try {
                 while (!endDate.isPast) {
                     countdownNotification?.apply {
@@ -128,18 +130,17 @@ class NotificationLoggingService : Service() {
 
                     sleep(500)
                 }
-                endedNaturally = true
+
+                countdownNotification?.apply {
+                    close()
+                    countdownNotification = null
+                }
+                showReadyNotification()
+                cancelScheduledNotification()
+
             } catch (e: InterruptedException) {
                 // Interrupted
             } finally {
-                if (endedNaturally) {
-                    countdownNotification?.apply {
-                        close()
-                        countdownNotification = null
-                    }
-                    showReadyNotification()
-                    cancelScheduledNotification()
-                }
                 running = false
             }
         }
