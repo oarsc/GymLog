@@ -72,7 +72,6 @@ class TrainingActivity : DBAppCompatActivity() {
         setContentView(R.layout.activity_training)
         setTitle(R.string.title_training)
 
-
         val internationalSystem = loadBoolean(PreferencesDefinition.UNIT_INTERNATIONAL_SYSTEM)
 
         setHeaderInfo()
@@ -124,22 +123,30 @@ class TrainingActivity : DBAppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
-        inflater.inflate(R.menu.expand_collapse_menu, menu)
+        inflater.inflate(R.menu.training_menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(menuItem: MenuItem): Boolean {
-        if (menuItem.itemId == R.id.expandButton) {
-            trainingListView.applyToAll { binding, item, _ ->
-                trainingListHandler.expandItem(binding, item)
-            }
+        when (menuItem.itemId) {
+            R.id.expandButton -> {
+                trainingListView.applyToAll { binding, item, _ ->
+                    trainingListHandler.expandItem(binding, item)
+                }
 
-        } else if (menuItem.itemId == R.id.collapseButton) {
-            trainingListView.applyToAll { binding, item, _ ->
-                trainingListHandler.collapseItem(binding, item)
             }
-            trainingListView.notifyDataSetChanged()
-            trainingListView.scrollToPosition(0)
+            R.id.collapseButton -> {
+                trainingListView.applyToAll { binding, item, _ ->
+                    trainingListHandler.collapseItem(binding, item)
+                }
+                trainingListView.notifyDataSetChanged()
+                trainingListView.scrollToPosition(0)
+            }
+            R.id.totalsButton -> {
+                menuItem.isChecked = !menuItem.isChecked
+                trainingListHandler.showTotals = menuItem.isChecked
+                trainingListView.notifyDataSetChanged()
+            }
         }
         return false
     }

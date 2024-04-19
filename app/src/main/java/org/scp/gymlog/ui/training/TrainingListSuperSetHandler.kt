@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.viewbinding.ViewBinding
 import org.scp.gymlog.R
-import org.scp.gymlog.databinding.*
+import org.scp.gymlog.databinding.ListitemHistoryExerciseHeaderBinding
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.components.listView.CommonListView
@@ -26,7 +26,8 @@ import java.util.function.Consumer
 
 class TrainingListSuperSetHandler(
     val context: Context,
-    private val internationalSystem: Boolean
+    private val internationalSystem: Boolean,
+    private val showTotals: Boolean,
 ) : SimpleListHandler<TrainingRowData, ListitemHistoryExerciseHeaderBinding> {
     override val useListState = false
     override val itemInflater: (LayoutInflater, ViewGroup?, Boolean) -> ListitemHistoryExerciseHeaderBinding
@@ -48,7 +49,7 @@ class TrainingListSuperSetHandler(
         val bitList = binding.bitList as MultipleListView<ITrainingBitRow>
         bitList.unScrollableVertically = true
 
-        val bitHandler = TrainingBitListHandler(internationalSystem)
+        val bitHandler = TrainingBitListHandler(internationalSystem, showTotals)
         val rows: List<ITrainingBitRow> = generateBitRows(item)
         bitList.init(rows, bitHandler)
         bitHandler.setOnClickListener { bit, idx ->

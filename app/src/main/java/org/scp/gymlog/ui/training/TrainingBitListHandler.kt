@@ -8,6 +8,8 @@ import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemHistoryBitBinding
 import org.scp.gymlog.databinding.ListitemHistoryHeadersBinding
 import org.scp.gymlog.model.Bit
+import org.scp.gymlog.model.ExerciseType
+import org.scp.gymlog.model.WeightSpecification
 import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.MultipleListHandler
 import org.scp.gymlog.ui.training.rows.ITrainingBitRow
@@ -19,6 +21,7 @@ import java.util.function.BiConsumer
 
 class TrainingBitListHandler(
     private val internationalSystem: Boolean,
+    private val showTotals: Boolean,
 ) : MultipleListHandler<ITrainingBitRow> {
     override val useListState = false
     override val itemInflaters = listOf<(LayoutInflater, ViewGroup?, Boolean) -> ViewBinding>(
@@ -59,8 +62,14 @@ class TrainingBitListHandler(
 
                 val bit = item.bit
 
+                val weightSpec =
+                    if (showTotals && bit.variation.type != ExerciseType.DUMBBELL)
+                        WeightSpecification.TOTAL_WEIGHT
+                    else
+                        bit.variation.weightSpec
+
                 val weight = bit.weight.calculate(
-                    bit.variation.weightSpec,
+                    weightSpec,
                     bit.variation.bar)
 
                 binding.weight.bigDecimal = weight.getValue(internationalSystem)

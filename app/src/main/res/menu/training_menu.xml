@@ -5,12 +5,18 @@
         android:id="@+id/expandButton"
         android:icon="@drawable/ic_add_24dp"
         android:title="@string/text_expand_all"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/collapseButton"
         android:icon="@drawable/ic_substract_24dp"
         android:title="@string/text_collapse_all"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/totalsButton"
+        android:checkable="true"
+        android:title="@string/text_show_totals"
+        app:showAsAction="never"/>
 
 </menu>

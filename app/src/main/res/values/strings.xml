@@ -58,6 +58,7 @@
     <string name="text_reps">Reps</string>
     <string name="text_seconds">Seconds</string>
     <string name="text_set">Set</string>
+    <string name="text_show_totals">Show total weight</string>
     <string name="text_subtitle">Subtitle</string>
     <string name="text_superset">Superset</string>
     <string name="text_active_superset">Active Superset #%1$d</string>

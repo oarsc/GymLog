@@ -8,7 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.viewbinding.ViewBinding
 import org.scp.gymlog.R
-import org.scp.gymlog.databinding.*
+import org.scp.gymlog.databinding.ListitemHistoryExerciseHeaderBinding
+import org.scp.gymlog.databinding.ListitemHistorySupersetContainerBinding
 import org.scp.gymlog.model.Bit
 import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.components.listView.CommonListView
@@ -28,8 +29,16 @@ import java.util.function.Consumer
 class TrainingListHandler(
     val context: Context,
     private val internationalSystem: Boolean,
-    var preExpandedBitId: Int? = null,
+    private var preExpandedBitId: Int? = null,
 ) : MultipleListHandler<TrainingRowData> {
+
+    var showTotals = false
+    private var onBitChangedListener: Consumer<Bit>? = null
+
+    fun setOnBitChangedListener(onBitChangedListener: Consumer<Bit>) {
+        this.onBitChangedListener = onBitChangedListener
+    }
+
     override val useListState = false
     override val itemInflaters = listOf<(LayoutInflater, ViewGroup?, Boolean) -> ViewBinding>(
         ListitemHistoryExerciseHeaderBinding::inflate,
@@ -37,12 +46,6 @@ class TrainingListHandler(
     )
 
     override fun findItemInflaterIndex(item: TrainingRowData) = item.superSet?.let { 1 } ?: 0
-
-    private var onBitChangedListener: Consumer<Bit>? = null
-
-    fun setOnBitChangedListener(onBitChangedListener: Consumer<Bit>) {
-        this.onBitChangedListener = onBitChangedListener
-    }
 
     @Suppress("UNCHECKED_CAST")
     override fun buildListView(
@@ -64,7 +67,7 @@ class TrainingListHandler(
             val bitList = binding.bitList as MultipleListView<ITrainingBitRow>
             bitList.unScrollableVertically = true
 
-            val bitHandler = TrainingBitListHandler(internationalSystem)
+            val bitHandler = TrainingBitListHandler(internationalSystem, showTotals)
             val rows: List<ITrainingBitRow> = generateBitRows(item)
             bitList.init(rows, bitHandler)
             bitHandler.setOnClickListener { bit, idx ->
@@ -113,7 +116,7 @@ class TrainingListHandler(
             val bitList = binding.exerciseList as SimpleListView<TrainingRowData, ListitemHistoryExerciseHeaderBinding>
             bitList.unScrollableVertically = true
 
-            val handler = TrainingListSuperSetHandler(context, internationalSystem)
+            val handler = TrainingListSuperSetHandler(context, internationalSystem, showTotals)
             handler.setOnBitChangedListener { onBitChangedListener?.accept(it) }
 
             val subRows = splitSuperSetRows(item).onEach { it.expanded = item.expanded }
