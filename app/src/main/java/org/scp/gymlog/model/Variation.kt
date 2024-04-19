@@ -19,7 +19,7 @@ class Variation(
 	var gymRelation = GymRelation.NO_RELATION
 	var step: BigDecimal = Constants.FIVE
 	var bar: Bar? = null
-	var weightSpec = WeightSpecification.NO_BAR_WEIGHT
+	var weightSpec = WeightSpecification.TOTAL_WEIGHT
 	var restTime: Int = -1
 
 	constructor(variation: Variation, exercise: Exercise) : this(exercise) {

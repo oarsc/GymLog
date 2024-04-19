@@ -180,7 +180,7 @@
 
     <!-- Weight Specifications -->
     <string name="weight_spec_total">Total weight</string>
-    <string name="weight_spec_no_bar">Only weight from plates</string>
+    <string name="weight_spec_no_bar">Weight with no bar</string>
     <string name="weight_spec_one_side">Weight from one extreme</string>
 
     <!-- Preference Default -->

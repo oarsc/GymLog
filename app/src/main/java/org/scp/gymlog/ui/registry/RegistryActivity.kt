@@ -19,6 +19,7 @@ import org.scp.gymlog.model.GymRelation
 import org.scp.gymlog.model.Training
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.model.Weight
+import org.scp.gymlog.model.WeightSpecification
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.service.NotificationService
@@ -267,7 +268,12 @@ class RegistryActivity : DBAppCompatActivity() {
                 resources.getColor(R.color.themedIcon, theme)
 
         weightSpecIcon.setColorFilter(warningColor)
-        weightSpecIcon.setImageResource(variation.weightSpec.icon)
+
+        if (variation.weightSpec === WeightSpecification.TOTAL_WEIGHT) {
+            weightSpecIcon.visibility = View.GONE
+        } else {
+            weightSpecIcon.setImageResource(variation.weightSpec.icon)
+        }
 
         precalculateWeight()
     }
@@ -464,7 +470,13 @@ class RegistryActivity : DBAppCompatActivity() {
                 resources.getColor(R.color.themedIcon, theme)
 
         weightSpecIcon.setColorFilter(warningColor)
-        weightSpecIcon.setImageResource(variation.weightSpec.icon)
+
+        if (variation.weightSpec === WeightSpecification.TOTAL_WEIGHT) {
+            weightSpecIcon.visibility = View.GONE
+        } else {
+            weightSpecIcon.visibility = View.VISIBLE
+            weightSpecIcon.setImageResource(variation.weightSpec.icon)
+        }
     }
 
     private fun updateSuperSetIcon(onInit: Boolean = false) {

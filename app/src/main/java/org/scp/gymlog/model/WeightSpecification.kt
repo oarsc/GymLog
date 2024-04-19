@@ -13,15 +13,18 @@ enum class WeightSpecification(
 ) {
 
     TOTAL_WEIGHT(
-        R.drawable.ic_bar_with_plates_36x24dp,
-        R.string.weight_spec_total),
+        R.drawable.ic_asterisk_36x24dp,
+        R.string.weight_spec_total
+    ),
 
     NO_BAR_WEIGHT(
         R.drawable.ic_plates_36x24dp,
-        R.string.weight_spec_no_bar),
+        R.string.weight_spec_no_bar
+    ),
 
     ONE_SIDE_WEIGHT(
         R.drawable.ic_plate_36x24dp,
         R.string.weight_spec_one_side,
-        Constants.HALF);
+        Constants.HALF
+    );
 }

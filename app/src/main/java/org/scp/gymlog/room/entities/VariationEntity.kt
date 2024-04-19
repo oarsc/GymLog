@@ -47,7 +47,7 @@ class VariationEntity {
     var def = false
 
     // Last configs
-    var lastWeightSpec = WeightSpecification.NO_BAR_WEIGHT
+    var lastWeightSpec = WeightSpecification.TOTAL_WEIGHT
     var lastStep = 500
     var lastRestTime = -1
     var lastBarId: Int? = null

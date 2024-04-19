@@ -161,13 +161,7 @@ class EditWeightFormDialogFragment(
                             incompatibleBar.visibility = View.INVISIBLE
                         }
 
-                        if (initialValue.weightSpec === WeightSpecification.TOTAL_WEIGHT) {
-                            initialValue.weightSpec = WeightSpecification.NO_BAR_WEIGHT
-
-                            updateConfig(WeightSpecification.TOTAL_WEIGHT, lastBar)
-                        } else {
-                            updateConfig(lastBar = lastBar)
-                        }
+                        updateConfig(lastBar = lastBar)
 
                         //updateSelectedBar(lastBar)
                     }
@@ -211,9 +205,18 @@ class EditWeightFormDialogFragment(
             }
             popup.inflate(R.menu.weight_specification_menu)
 
-            if (initialValue.bar == null) {
-                popup.menu.findItem(R.id.total).isVisible = false
-            }
+            val specsOrdinals = initialValue.type.weightModes.map { it.ordinal }
+            WeightSpecification.values().indices
+                .filter { !specsOrdinals.contains(it) }
+                .mapNotNull {
+                    when(it) {
+                        0 -> R.id.total
+                        1 -> R.id.noBar
+                        2 -> R.id.oneSide
+                        else -> null
+                    }
+                }
+                .forEach { popup.menu.findItem(it).isVisible = false }
 
             popup.show()
         }
