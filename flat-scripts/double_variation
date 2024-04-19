@@ -1,0 +1,25 @@
+#!node
+
+const INPUT_FILE = '../bak/output.json';
+
+const fs = require('fs');
+
+const VARIATIONS = [];
+
+fs.readFile(INPUT_FILE, 'UTF-8', async (err, data) => {
+	const json = JSON.parse(data);
+
+	json.bits
+		.filter(bit => VARIATIONS.indexOf(bit.variationId) >= 0)
+		.forEach(bit => bit.totalWeight = bit.totalWeight * 2)
+
+	console.log(json.bits[0]);
+
+	fs.writeFile(INPUT_FILE, JSON.stringify(json, null, 1), err => {
+		if (err) console.log(err);
+	});
+});
+
+
+
+
