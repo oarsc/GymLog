@@ -416,7 +416,11 @@ class RegistryActivity : DBAppCompatActivity() {
                         val newBits = log.map { Bit(it) }
                             .also { this.log.addAll(it) }
 
-                        runOnUiThread { logListView.setListData(newBits) }
+                        runOnUiThread {
+                            logListHandler.fullyLoaded = false
+                            logListView.setListData(newBits)
+                            logListView.notifyDataSetChanged()
+                        }
                     }
                     updateForms()
                 }
