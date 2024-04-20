@@ -449,7 +449,7 @@
 {
 	"tag": "biceps_scott_machine_barbell_hammer_seated",
 	"name": "Scott Machine Hammer Barbell Curl",
-	"type": "machine",
+	"type": "barbell",
 	"primary": [6],
 	"secondary": [],
 	"general": false
