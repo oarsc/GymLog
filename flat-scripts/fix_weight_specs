@@ -1,0 +1,72 @@
+#!node
+
+const INPUT_FILE = '../bak/output.json';
+
+const fs = require('fs');
+
+fs.readFile(INPUT_FILE, 'UTF-8', async (err, data) => {
+	const json = JSON.parse(data);
+
+	const hasBits = json.bits.map(bit => bit.variationId).filter((val, idx, arr) => arr.indexOf(val) === idx);
+
+	const shouldHalve = [];
+
+	json.variations.forEach(variation => {
+		const type = types[variation.type];
+		const availableSpecs = specs[type];
+
+		if (availableSpecs.indexOf(variation.lastWeightSpec) < 0) {
+			if (variation.lastWeightSpec == 1) {
+				variation.lastWeightSpec = 0;
+
+			} else if (variation.lastWeightSpec == 2) {
+				variation.lastWeightSpec = 0
+				shouldHalve.push(variation.variationId);
+
+				if (hasBits.indexOf(variation.variationId) >= 0) {
+					const exercise = json.exercises.find(exercise => exercise.exerciseId === variation.exerciseId);
+					console.log(`${exercise.name} -- ${variation.name}`);
+				}
+			}
+		}
+	});
+
+	json.bits
+		.filter(bit => shouldHalve.indexOf(bit.variationId) >= 0)
+		.forEach(bit => bit.totalWeight = bit.totalWeight / 2)
+
+	//process.exit(0)
+		
+	fs.writeFile(INPUT_FILE, JSON.stringify(json, null, 1), err => {
+		if (err) console.log(err);
+	});
+});
+
+function mapById(array, idName) {
+	return array.reduce((acc, element) => {
+		acc[element[idName]] = element;
+		return acc;
+	}, {});
+}
+
+const types = [
+	'NONE',
+	'DUMBBELL',
+	'BARBELL',
+	'PLATE',
+	'PULLEY_MACHINE',
+	'SMITH_MACHINE',
+	'MACHINE',
+	'CARDIO',
+];
+
+const specs = {
+	'NONE': [0],
+	'DUMBBELL': [0],
+	'BARBELL': [0, 1, 2],
+	'PLATE': [0],
+	'PULLEY_MACHINE': [0],
+	'SMITH_MACHINE': [0, 2],
+	'MACHINE': [0, 2],
+	'CARDIO': [0],
+};
