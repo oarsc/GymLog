@@ -137,6 +137,11 @@ class EditWeightFormDialogFragment(
         updateStep()
 
         val layoutBars = view.findViewById<View>(R.id.barsBox)
+
+        if (initialValue.type != ExerciseType.BARBELL && initialValue.bar == null) {
+            layoutBars.visibility = View.GONE
+        }
+
         layoutBars.setOnClickListener {
             val popup = PopupMenu(activity, layoutBars)
             val menu = popup.menu
@@ -185,6 +190,11 @@ class EditWeightFormDialogFragment(
         }
 
         val layoutWeightSpec = view.findViewById<View>(R.id.weightsConfigBox)
+
+        if (initialValue.type.weightModes.size == 1 && initialValue.type.weightModes.contains(initialValue.weightSpec)) {
+            layoutWeightSpec.visibility = View.GONE
+        }
+
         layoutWeightSpec.setOnClickListener {
             val popup = PopupMenu(activity, layoutWeightSpec)
             popup.setOnMenuItemClickListener { menuItem ->
@@ -234,7 +244,8 @@ class EditWeightFormDialogFragment(
 
     private fun updateConfig(
         lastWeightSpecification: WeightSpecification = initialValue.weightSpec,
-        lastBar: Bar? = initialValue.bar) {
+        lastBar: Bar? = initialValue.bar
+    ) {
 
         // Bar
         val bar = initialValue.bar
