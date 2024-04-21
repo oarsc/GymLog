@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 
 object Constants {
     val TWO = BigDecimal("2")
+    val HALF = BigDecimal("0.5")
     val FIVE = BigDecimal("5")
     val ONE_THOUSAND = BigDecimal("1000")
     val ONE_HUNDRED = BigDecimal("100")

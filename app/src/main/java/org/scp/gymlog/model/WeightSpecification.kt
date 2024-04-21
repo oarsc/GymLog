@@ -23,5 +23,5 @@ enum class WeightSpecification(
     ONE_SIDE_WEIGHT(
         R.drawable.ic_plate_36x24dp,
         R.string.weight_spec_one_side,
-        Constants.TWO);
+        Constants.HALF);
 }

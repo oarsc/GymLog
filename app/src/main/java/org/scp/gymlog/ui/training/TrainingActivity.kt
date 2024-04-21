@@ -29,6 +29,7 @@ import org.scp.gymlog.util.DateUtils.getTimeString
 import org.scp.gymlog.util.DateUtils.minutesToTimeString
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
@@ -124,6 +125,17 @@ class TrainingActivity : DBAppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.training_menu, menu)
+
+        val allTotals = rowsData
+            .flatMap { it.superSet?.run { it.variations } ?: listOf(it.variation) }
+            .map { it.weightSpec }
+            .all { it.weightAffectation == BigDecimal.ONE }
+
+        if (allTotals) {
+            val item = menu.findItem(R.id.totalsButton)
+            item.isChecked = true
+            item.isEnabled = false
+        }
         return true
     }
 

@@ -5,6 +5,7 @@ import org.scp.gymlog.R
 import org.scp.gymlog.model.Bar
 import org.scp.gymlog.model.Weight
 import org.scp.gymlog.model.WeightSpecification
+import org.scp.gymlog.util.extensions.CommonExts.adjustScale
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -87,7 +88,7 @@ object WeightUtils {
             ?: BigDecimal.ZERO
 
         return this.op { it
-            .multiply(weightSpec.weightAffectation)
+            .divide(weightSpec.weightAffectation).adjustScale()
             .add(barWeight)
         }
     }
@@ -106,7 +107,7 @@ object WeightUtils {
 
         return this.op { it
             .subtract(barWeight)
-            .divide(weightSpec.weightAffectation, 2, RoundingMode.HALF_UP)
+            .multiply(weightSpec.weightAffectation).adjustScale()
         }
     }
 
