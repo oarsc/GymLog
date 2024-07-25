@@ -2,20 +2,15 @@ package org.scp.gymlog.service
 
 import android.content.Context
 import androidx.preference.PreferenceManager
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.entities.*
+import org.scp.gymlog.service.dumper.model.JsonDataStructure
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.JsonUtils
-import org.scp.gymlog.util.JsonUtils.map
-import org.scp.gymlog.util.JsonUtils.objectify
-import org.scp.gymlog.util.JsonUtils.toJsonArray
 import java.io.*
 import java.util.stream.Collectors.joining
-import kotlin.reflect.KClass
 
 class DataBaseDumperService {
 
@@ -25,72 +20,24 @@ class DataBaseDumperService {
 
     @Throws(JSONException::class, IOException::class)
     fun save(context: Context, fos: FileOutputStream, database: AppDatabase) {
-        val obj = JSONObject()
-        obj.put("prefs", prefs(context))
-        obj.put("gyms", gyms(database))
-        obj.put("exercises", exercises(database))
-        obj.put("variations", variations(database))
-        obj.put("primaries", primaryMuscles(database))
-        obj.put("secondaries", secondaryMuscles(database))
-        obj.put("trainings", trainings(database))
-        obj.put("bits", bits(database))
+        val dataStructure = JsonDataStructure()
+
+        val bits = database.bitDao().getAllFromAllGyms()
+        val trainings = database.trainingDao().getAll()
+        dataStructure.extractNotes(bits, trainings)
+
+        dataStructure.prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        dataStructure.gyms = database.gymDao().getAll().map { it.name }
+        dataStructure.exercises = database.exerciseDao().getAll()
+        dataStructure.variations = database.variationDao().getAllFromAllGyms()
+        dataStructure.primaries = database.exerciseMuscleCrossRefDao().getAll()
+        dataStructure.secondaries = database.exerciseMuscleCrossRefDao().getAllSecondaryMuscles()
+        dataStructure.trainings = trainings
+        dataStructure.bits = bits
+
         val writer = PrintWriter(BufferedWriter(OutputStreamWriter(fos)), true)
-        writer.println(obj.toString())
+        writer.println(dataStructure.jsonObject)
         writer.close()
-    }
-
-    private fun prefs(context: Context): JSONObject {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        return JSONObject(preferences.all)
-    }
-
-    private fun gyms(database: AppDatabase): JSONArray {
-        return database.gymDao().getAll().map { it.name }.toJsonArray
-    }
-
-    private fun exercises(database: AppDatabase): JSONArray {
-        return convertToJSONArray(database.exerciseDao().getAll())
-    }
-
-    private fun variations(database: AppDatabase): JSONArray {
-        return convertToJSONArray(database.variationDao().getAllFromAllGyms())
-    }
-
-    private fun primaryMuscles(database: AppDatabase): JSONArray {
-        return convertToJSONArray(database.exerciseMuscleCrossRefDao().getAll())
-    }
-
-    private fun secondaryMuscles(database: AppDatabase): JSONArray {
-        return convertToJSONArray(database.exerciseMuscleCrossRefDao().getAllSecondaryMuscles())
-    }
-
-    private fun trainings(database: AppDatabase): JSONArray {
-        val trainings = convertToJSONArray(database.trainingDao().getAll())
-
-        trainings.map(JSONArray::getJSONObject).forEach { training ->
-            if (training.getString("note").trim().isEmpty()) training.remove("note")
-        }
-
-        return trainings
-    }
-
-    private fun bits(database: AppDatabase): JSONArray {
-        val bits = convertToJSONArray(database.bitDao().getAllFromAllGyms())
-
-        bits.map(JSONArray::getJSONObject).forEach { bit ->
-            if (bit.getBoolean("kilos")) bit.remove("kilos")
-            if (bit.getString("note").trim().isEmpty()) bit.remove("note")
-            if (!bit.getBoolean("instant")) bit.remove("instant")
-            if (bit.getInt("superSet") <= 0) bit.remove("superSet")
-        }
-
-        return bits
-    }
-
-    private fun convertToJSONArray(list: List<Any>): JSONArray {
-        return list
-            .map { JsonUtils.jsonify(it) }
-            .toJsonArray
     }
 
     @Throws(JSONException::class, IOException::class)
@@ -98,23 +45,23 @@ class DataBaseDumperService {
         BufferedReader(InputStreamReader(inputStream)).use { br ->
             val line = br.lines().collect(joining(""))
             val obj = JSONObject(line)
+            val dataStructure = JsonDataStructure(obj)
 
             // PREFS
-            prefs(context, obj.getJSONObject("prefs"))
+            prefs(context, dataStructure.jsonObject.getJSONObject("prefs"))
 
             // GYMS
             database.gymDao().clear()
-            obj.getJSONArray("gyms").map(JSONArray::getString)
+            dataStructure.gyms
                 .map { GymEntity(name = it) }
                 .also { database.gymDao().insertAll(it) }
 
             // EXERCISES:
-            val exercises = exercises(obj.getJSONArray("exercises"))
             val exercisesIdMap = mutableMapOf<Int, Int>()
             val addedExercisesIds = mutableListOf<Int>()
             var newIds = Data.exercises.size
 
-            exercises.forEach { exercise ->
+            dataStructure.exercises.forEach { exercise ->
                 val matchingEx = Data.exercises.find {
                         it.name.equals(exercise.name, ignoreCase = true )
                     }
@@ -131,12 +78,12 @@ class DataBaseDumperService {
             }
 
             // PRIMARY AND SECONDARY MUSCLES
-            primaryMuscles(obj.getJSONArray("primaries"))
+            dataStructure.primaries
                 .onEach { it.exerciseId = exercisesIdMap[it.exerciseId]!! }
                 .filter { addedExercisesIds.contains(it.exerciseId) }
                 .also { database.exerciseMuscleCrossRefDao().insertAll(it) }
 
-            secondaryMuscles(obj.getJSONArray("primaries"))
+            dataStructure.secondaries
                 .onEach { it.exerciseId = exercisesIdMap[it.exerciseId]!! }
                 .filter { addedExercisesIds.contains(it.exerciseId) }
                 .also { database.exerciseMuscleCrossRefDao().insertAllSecondaries(it) }
@@ -146,7 +93,7 @@ class DataBaseDumperService {
             val variationsXExerciseIdMap = mutableMapOf<Int, Int>()
             newIds = Data.exercises.flatMap { it.variations }.count()
 
-            variations(obj.getJSONArray("variations"))
+            dataStructure.variations
                 .forEach { variation ->
                     val exerciseId = exercisesIdMap[variation.exerciseId]!!
                     val matchingEx = Data.exercises.find { it.id == exerciseId }
@@ -175,7 +122,7 @@ class DataBaseDumperService {
             // TRAININGS
             val trainingOrig = mutableListOf<Int>()
             val trainingsIdMap = mutableMapOf<Int, Int>()
-            val trainings = trainings(obj.getJSONArray("trainings"))
+            val trainings = dataStructure.trainings
             for (trainingEntity in trainings) {
                 trainingOrig.add(trainingEntity.trainingId)
                 trainingEntity.trainingId = 0
@@ -186,31 +133,24 @@ class DataBaseDumperService {
             }
 
             // BITS
-            //val allVariations = database.variationDao().getAllFromAllGyms()
-            //    .associateBy { it.variationId }
-
-            val bits = bits(obj.getJSONArray("bits"), variationsIdMap, variationsXExerciseIdMap)
-            bits.onEach {
-                    //val variation = allVariations[it.variationId]!!
-                    //if (if (variation.gymGlobal) it.gymId != null else it.gymId == null)
-                    //    throw LoadException("Bit ${it.bitId} gymGlobal flag is incorrect")
+            val bits = dataStructure.bits
+                .onEach {
+                    it.variationId = variationsIdMap[it.variationId]!!
+                    it.trainingId = trainingsIdMap[it.trainingId]!!
                 }
-                .onEach { it.trainingId = trainingsIdMap[it.trainingId]!! }
                 .also { database.bitDao().insertAll(it) }
 
             // Update most recent bit to exercises
-            //*
             database.exerciseDao().getAll()
-                .filter { ex ->
-                    bits.any { bit -> variationsXExerciseIdMap[bit.variationId] == ex.exerciseId }
-                }
-                .onEach { exerciseEntity ->
+                .filter { exerciseEntity ->
                     exerciseEntity.lastTrained = bits
-                        .filter { bit -> variationsXExerciseIdMap[bit.variationId] == exerciseEntity.exerciseId }
-                        .map { bit -> bit.timestamp }
+                        .filter { variationsXExerciseIdMap[it.variationId] == exerciseEntity.exerciseId }
+                        .ifEmpty { return@filter false }
+                        .map { it.timestamp }
                         .fold(Constants.DATE_ZERO) { acc, value -> if (value > acc) value else acc }
+
+                    exerciseEntity.lastTrained > Constants.DATE_ZERO
                 }
-                .filter { exerciseEntity -> exerciseEntity.lastTrained > Constants.DATE_ZERO }
                 .also { database.exerciseDao().update(*it.toTypedArray()) }
         }
     }
@@ -229,58 +169,5 @@ class DataBaseDumperService {
             }
         }
         editor.apply()
-    }
-
-    @Throws(JSONException::class)
-    private fun exercises(list: JSONArray): List<ExerciseEntity> {
-        return convertToObject( list, ExerciseEntity::class)
-    }
-
-    @Throws(JSONException::class)
-    private fun variations(list: JSONArray): List<VariationEntity> {
-        return convertToObject(list, VariationEntity::class)
-    }
-
-    @Throws(JSONException::class)
-    private fun primaryMuscles(list: JSONArray): List<ExerciseMuscleCrossRef> {
-        return convertToObject(list, ExerciseMuscleCrossRef::class)
-    }
-
-    @Throws(JSONException::class)
-    private fun secondaryMuscles(list: JSONArray): List<SecondaryExerciseMuscleCrossRef> {
-        return convertToObject(list, SecondaryExerciseMuscleCrossRef::class)
-    }
-
-    @Throws(JSONException::class)
-    private fun trainings(list: JSONArray): List<TrainingEntity> {
-        list.map(JSONArray::getJSONObject).forEach { training ->
-            if (!training.has("note")) training.put("note", "")
-        }
-        return convertToObject(list, TrainingEntity::class)
-    }
-
-    @Throws(JSONException::class)
-    private fun bits(
-            list: JSONArray,
-            variationsIdMap: MutableMap<Int, Int>,
-            variationsXExerciseIdMap: MutableMap<Int, Int>): List<BitEntity> {
-
-        list.map(JSONArray::getJSONObject).forEach { bit: JSONObject ->
-            val variationId = variationsIdMap[bit.get("variationId")]
-            bit.put("variationId", variationId)
-            bit.put("exerciseId", variationsXExerciseIdMap[variationId]!!)
-
-            if (!bit.has("kilos")) bit.put("kilos", true)
-            if (!bit.has("note")) bit.put("note", "")
-            if (!bit.has("instant")) bit.put("instant", false)
-            if (!bit.has("superSet")) bit.put("superSet", 0)
-        }
-        return convertToObject(list, BitEntity::class)
-    }
-
-    @Throws(JSONException::class)
-    private fun <T : Any> convertToObject(list: JSONArray, cls: KClass<T>): List<T> {
-        return list.map(JSONArray::getJSONObject)
-            .map { it.objectify(cls) }
     }
 }
