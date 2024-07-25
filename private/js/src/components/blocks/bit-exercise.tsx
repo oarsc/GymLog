@@ -203,7 +203,7 @@ class BitTraining extends BitTable<BitTrainingProperties, BitTableState> {
   editAll(variationId: number) {
     setData(data => {
       this.props.bits.forEach(bit => {
-        const index = data.bits.findIndex(b => b.timestamp == bit.timestamp);
+        const index = data.bits.findIndex(b => b.trainingId == bit.trainingId);
         data.bits[index].variationId = variationId;
         bit.variationId = variationId;
       });

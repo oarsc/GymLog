@@ -56,7 +56,7 @@ export default class MainAction extends React.Component<MainActionsProperties, M
   }
 
   async saveFile(data: Output) {
-    await ajax('/save', data, { method: 'POST' })
+    await ajax('/read', data, { method: 'POST' })
       .then(res => res.text())
       .then(content => this.props.addMessage(content));
   }
@@ -147,11 +147,11 @@ export default class MainAction extends React.Component<MainActionsProperties, M
     data.prefs = this.sortObjectKeys(data.prefs);
     data.exercises = data.exercises.map(this.sortObjectKeys);
     data.variations = data.variations.map(this.sortObjectKeys);
-    data.trainings = data.trainings.map(this.sortObjectKeys);
+    //data.trainings = data.trainings.map(this.sortObjectKeys); // done in reader router
     data.primaries = data.primaries.map(this.sortObjectKeys);
     data.secondaries = data.secondaries.map(this.sortObjectKeys);
     data.bits = data.bits.map(bit => {
-      const nBit = this.sortObjectKeys(bit);
+      const nBit = bit;  //this.sortObjectKeys(bit); // done in reader router
       if (nBit.note !== undefined) {
         const note = nBit.note.trim();
         if (note) nBit.note = note

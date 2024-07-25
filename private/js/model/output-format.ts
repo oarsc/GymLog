@@ -1,6 +1,7 @@
 export interface Output {
   prefs: OutputPreferences,
   gyms: string[],
+  notes: string[],
   exercises: OutputExercise[],
   variations: OutputVariation[],
   primaries: OutputMuscleRelation[],
