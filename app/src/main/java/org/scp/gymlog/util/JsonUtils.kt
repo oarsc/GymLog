@@ -18,6 +18,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.createInstance
+import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 
@@ -35,16 +36,19 @@ object JsonUtils {
         }
     }
 
-    fun jsonify(obj: Any): JSONObject {
-        if (obj is Iterable<*> || obj is Map<*, *>) throw RuntimeException("Object is a List or Map")
+    fun Any.jsonify(): JSONObject {
+        if (this is Iterable<*> || this is Map<*, *>) throw RuntimeException("Object is a List or Map")
         return try {
             val json = JSONObject()
-            for (field in obj::class.memberProperties) {
+            for (field in this::class.memberProperties) {
                 if (field.hasAnnotation<NoJsonify>()) continue
-                val value = field.getter.call(obj)
+
+                val value = field.getter.call(this)
                 if (value != null) {
                     val type: KType = field.returnType
-                    val fieldName = field.name
+                    val fieldName = field.findAnnotation<JsonFieldName>()
+                        ?.fieldName
+                        ?: field.name
 
                     when (type.classifier){
                         Int::class -> json.put(fieldName, value as Int)
@@ -81,7 +85,9 @@ object JsonUtils {
                 .map { field -> field as KMutableProperty<*> }
                 .forEach { field ->
                     val type: KType = field.returnType
-                    val fieldName = field.name
+                    val fieldName = field.findAnnotation<JsonFieldName>()
+                        ?.fieldName
+                        ?: field.name
                     if (has(fieldName)) {
                         val fieldValue = when(type.classifier) {
                             Int::class -> getInt(fieldName)
@@ -109,7 +115,11 @@ object JsonUtils {
         }
     }
 
-    @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+    @Retention(AnnotationRetention.RUNTIME)
     @Target(AnnotationTarget.PROPERTY)
     annotation class NoJsonify
+
+    @Retention(AnnotationRetention.RUNTIME)
+    @Target(AnnotationTarget.PROPERTY)
+    annotation class JsonFieldName(val fieldName: String)
 }

@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import org.scp.gymlog.util.Constants
+import org.scp.gymlog.util.JsonUtils.JsonFieldName
 import org.scp.gymlog.util.JsonUtils.NoJsonify
 import java.time.LocalDateTime
 
@@ -36,13 +37,17 @@ class BitEntity {
     @NoJsonify
     @PrimaryKey(autoGenerate = true)
     var bitId = 0
+    @JsonFieldName("v")
     var variationId = 0
+    @JsonFieldName("t")
     var trainingId = 0
     var reps = 0
+    @JsonFieldName("w")
     var totalWeight = 0
     var kilos = false
     var instant = false
     var note: String = ""
+    @JsonFieldName("s")
     var timestamp: LocalDateTime = Constants.DATE_ZERO
     var superSet = 0
 }

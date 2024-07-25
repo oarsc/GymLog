@@ -6,7 +6,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.entities.*
-import org.scp.gymlog.service.dumper.model.JsonDataStructure
+import org.scp.gymlog.service.dumper.DumperDataStructure
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import java.io.*
@@ -20,7 +20,7 @@ class DataBaseDumperService {
 
     @Throws(JSONException::class, IOException::class)
     fun save(context: Context, fos: FileOutputStream, database: AppDatabase) {
-        val dataStructure = JsonDataStructure()
+        val dataStructure = DumperDataStructure()
 
         val bits = database.bitDao().getAllFromAllGyms()
         val trainings = database.trainingDao().getAll()
@@ -43,9 +43,9 @@ class DataBaseDumperService {
     @Throws(JSONException::class, IOException::class)
     fun load(context: Context, inputStream: InputStream, database: AppDatabase) {
         BufferedReader(InputStreamReader(inputStream)).use { br ->
-            val line = br.lines().collect(joining(""))
-            val obj = JSONObject(line)
-            val dataStructure = JsonDataStructure(obj)
+            val dataStructure = br.lines().collect(joining(""))
+                .let(::JSONObject)
+                .let(::DumperDataStructure)
 
             // PREFS
             prefs(context, dataStructure.jsonObject.getJSONObject("prefs"))
