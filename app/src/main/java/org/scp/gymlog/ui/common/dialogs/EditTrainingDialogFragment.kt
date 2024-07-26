@@ -75,7 +75,7 @@ class EditTrainingDialogFragment (
 
     private fun confirmDialog() {
         initialValue.gym = gymValue
-        initialValue.note = editNotes.text.toString()
+        initialValue.note = editNotes.text.toString().trim()
         confirm.accept(initialValue)
     }
 }
