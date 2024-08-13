@@ -104,7 +104,7 @@
                 android:id="@+id/setTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:text="@string/text_set" />
 
@@ -112,7 +112,7 @@
                 android:id="@+id/weightTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center_vertical|end"
                 android:layout_marginEnd="6dp"
                 android:text="@string/text_weight" />
@@ -121,7 +121,7 @@
                 android:id="@+id/repsTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center_vertical|end"
                 android:text="@string/text_reps" />
 
@@ -129,7 +129,7 @@
                 android:id="@+id/notes_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="7"
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingEnd="0dp"
                 android:gravity="start"
