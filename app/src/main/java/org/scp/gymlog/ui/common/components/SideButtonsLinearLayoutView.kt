@@ -26,7 +26,7 @@ import org.scp.gymlog.R.styleable.SideButtonsLinearLayoutView_swipeSensibility
 import org.scp.gymlog.ui.common.animations.BackgroundColorAnimation
 import org.scp.gymlog.ui.common.animations.ResizeWidthAnimation
 import org.scp.gymlog.util.extensions.ComponentsExts.runOnUiThread
-import java.util.function.Supplier
+import java.util.function.Consumer
 import kotlin.math.abs
 
 class SideButtonsLinearLayoutView(
@@ -46,8 +46,8 @@ class SideButtonsLinearLayoutView(
     private val swipeRight: ExpandablePanel
     private val linearLayout: LinearLayout
 
-    private var onSwipeLeftListener: Supplier<Boolean>? = null
-    private var onSwipeRightListener: Supplier<Boolean>? = null
+    private var onSwipeLeftListener: Consumer<(Boolean) -> Unit>? = null
+    private var onSwipeRightListener: Consumer<(Boolean) -> Unit>? = null
 
     @SuppressLint("DiscouragedPrivateApi")
     private var gestureDetector = GestureDetector(context, GestureListener()).apply {
@@ -95,8 +95,12 @@ class SideButtonsLinearLayoutView(
             }
         }
 
-        swipeRight = createSideImage(leftIcon) { onSwipeRightListener }
-        swipeLeft = createSideImage(rightIcon) { onSwipeLeftListener }
+        swipeRight = createSideImage(leftIcon) {
+            onSwipeRightListener?.accept(it) ?: it(false)
+        }
+        swipeLeft = createSideImage(rightIcon) {
+            onSwipeLeftListener?.accept(it) ?: it(false)
+        }
 
         addView(swipeRight, swipeRight.layoutParams)
 
@@ -132,15 +136,15 @@ class SideButtonsLinearLayoutView(
 
     private fun createSideImage(
         imageDrawable: Drawable?,
-        listener: () -> Supplier<Boolean>?
+        listener: ((Boolean) -> Unit) -> Unit
     ): ExpandablePanel {
-        val drawable = imageDrawable
-        return ExpandablePanel(context, drawable).apply {
+        return ExpandablePanel(context, imageDrawable).apply {
             orTriggerListener = {
-                Thread {
-                    if (listener()?.get() == true) animateSuccess()
-                    else animateWrong()
-                }.start()
+                listener {
+                    runOnUiThread {
+                        if (it) animateSuccess() else animateWrong()
+                    }
+                }
             }
         }
     }
@@ -220,12 +224,12 @@ class SideButtonsLinearLayoutView(
         }
     }
 
-    fun setOnSwipeLeftListener(supplier: Supplier<Boolean>) {
-        this.onSwipeLeftListener = supplier
+    fun setOnSwipeLeftListener(consumer: Consumer<(Boolean) -> Unit>) {
+        this.onSwipeLeftListener = consumer
     }
 
-    fun setOnSwipeRightListener(supplier: Supplier<Boolean>) {
-        this.onSwipeRightListener = supplier
+    fun setOnSwipeRightListener(consumer: Consumer<(Boolean) -> Unit>) {
+        this.onSwipeRightListener = consumer
     }
 
 

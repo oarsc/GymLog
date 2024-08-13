@@ -4,15 +4,17 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.net.Uri
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
+import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import org.scp.gymlog.util.DateUtils.diff
 import org.scp.gymlog.util.DateUtils.diffSeconds
 import org.scp.gymlog.util.DateUtils.isPast
 import org.scp.gymlog.util.DateUtils.timeInMillis
 import org.scp.gymlog.util.DateUtils.toLocalDateTime
 import java.time.LocalDateTime
-import java.util.Random
 
 class NotificationLoggingService : Service() {
 
@@ -47,10 +49,16 @@ class NotificationLoggingService : Service() {
 
         return when (intent.action) {
             ACTION_SCHEDULED -> {
-                CountdownNotification.close(this)
-                countdownNotification = null
+                val endTime = intent.getLongExtra("endTime", Long.MIN_VALUE)
 
-                showReadyNotification()
+                if ((System.currentTimeMillis() + 1000) < endTime) {
+                    scheduleNotification(endTime)
+                } else {
+                    CountdownNotification.close(this)
+                    countdownNotification = null
+                    showReadyNotification()
+                }
+
                 super.onStartCommand(intent, flags, startId)
             }
             ACTION_STOP -> {
@@ -191,6 +199,7 @@ class NotificationLoggingService : Service() {
             flags = flags or Intent.FLAG_RECEIVER_FOREGROUND
             putExtra("exerciseName", exerciseName)
             putExtra("startTime", startTime)
+            putExtra("endTime", endTime)
             putExtra("variationId", variationId)
         }
 
@@ -200,7 +209,21 @@ class NotificationLoggingService : Service() {
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, endTime, scheduledIntent)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // android 12
+            if (alarmManager.canScheduleExactAlarms()) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, endTime, scheduledIntent)
+            } else {
+                Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                    .apply {
+                        setData(Uri.parse("package:$packageName"))
+                        startActivity(this)
+                    }
+            }
+
+        } else {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, endTime, scheduledIntent)
+        }
     }
 
     private fun showReadyNotification() {

@@ -63,7 +63,6 @@ import org.scp.gymlog.util.WeightUtils.calculateTotal
 import org.scp.gymlog.util.extensions.ComponentsExts.overridePendingSideTransition
 import org.scp.gymlog.util.extensions.ComponentsExts.startResizeWidthAnimation
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
-import org.scp.gymlog.util.extensions.DatabaseExts.getDbConnection
 import org.scp.gymlog.util.extensions.MessagingExts.snackbar
 import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
@@ -224,22 +223,21 @@ class RegistryActivity : DBAppCompatActivity() {
         }.start()
 
         // Bottom button panel (swipe)
-        bottomButtonPanel.setOnSwipeLeftListener { // forward
-            if (goToNextVariation())
-                true
-            else if (enableSuperSetNavigation)
-                goToNextSuperSetVariation()
-            else false
+        bottomButtonPanel.setOnSwipeLeftListener { buttonAnimate -> // forward
+            dbThread { db ->
+                buttonAnimate(goToNextVariation(db) || goToNextSuperSetVariation(db))
+            }
         }
-        bottomButtonPanel.setOnSwipeRightListener { // back
-            goToNextVariation(true)
+        bottomButtonPanel.setOnSwipeRightListener { buttonAnimate -> // back
+            dbThread { db ->
+                buttonAnimate(goToNextVariation(db, true))
+            }
         }
 
         // Super set button
         superSet.setOnClickListener { toggleSuperSet() }
         superSetPanel.setOnClickListener { toggleSuperSet(false) }
         updateSuperSetIcon(true)
-
 
         // Notes
         notes.setOnClickListener {
@@ -573,15 +571,10 @@ class RegistryActivity : DBAppCompatActivity() {
         }
     }
 
-    private fun goToNextSuperSetVariation(goBack: Boolean = false): Boolean {
+    private fun goToNextSuperSetVariation(db: AppDatabase, goBack: Boolean = false): Boolean {
         if (!enableSuperSetNavigation) return false
         Data.superSet ?: return false
         val trainingId = Data.training?.id ?: return false
-
-        confirmInstantButton.isEnabled = false
-        mainButton.isEnabled = false
-
-        val db = getDbConnection()
 
         val variations = db.bitDao().getHistoryByTrainingId(trainingId)
             .filter { it.superSet == lastSuperSet }
@@ -590,18 +583,21 @@ class RegistryActivity : DBAppCompatActivity() {
             .let { if (goBack) it.reversed() else it }
 
         val idx = variations.indexOf(variation.id) + 1
-        val nextVariationId = if (idx >= variations.size) variations[0]
+        val nextVariationId =
+            if (idx >= variations.size) variations[0]
             else variations[idx]
+
+        runOnUiThread {
+            confirmInstantButton.isEnabled = false
+            mainButton.isEnabled = false
+        }
         val nextVariation = Data.getVariation(nextVariationId)
         switchToVariation(nextVariation, left=!goBack, reloadOnBack=true)
-
         return true
     }
 
-    private fun goToNextVariation(goBack: Boolean = false): Boolean {
+    private fun goToNextVariation(db:AppDatabase, goBack: Boolean = false): Boolean {
         val trainingId = Data.training?.id ?: return false
-
-        val db = getDbConnection()
 
         val variations = db.bitDao().getHistoryByTrainingId(trainingId)
             .map { it.variationId }
@@ -612,11 +608,13 @@ class RegistryActivity : DBAppCompatActivity() {
 
         val idx = variations.indexOf(variation.id) + 1
         if (idx >= variations.size || idx == 0 && !goBack) return false
-        confirmInstantButton.isEnabled = false
-        mainButton.isEnabled = false
-        val nextVariation = Data.getVariation(variations[idx])
-        switchToVariation(nextVariation, left=!goBack, reloadOnBack=true)
 
+        runOnUiThread {
+            confirmInstantButton.isEnabled = false
+            mainButton.isEnabled = false
+        }
+        val nextVariation = Data.getVariation(variations[idx])
+        switchToVariation(nextVariation, left = !goBack, reloadOnBack = true)
         return true
     }
 
