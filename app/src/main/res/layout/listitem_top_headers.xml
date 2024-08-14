@@ -8,21 +8,10 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
+        android:layout_weight="5"
         android:textColor="@color/gray"
         android:textStyle="bold"
-        android:text="@string/text_time"
-        android:textSize="@dimen/slightly_smaller_text" />
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textColor="@color/gray"
-        android:textStyle="bold"
-        android:text="@string/text_weight"
-        android:textSize="@dimen/slightly_smaller_text" />
+        android:text="@string/text_time" />
 
     <TextView
         android:layout_width="0dp"
@@ -31,8 +20,7 @@
         android:gravity="center"
         android:textColor="@color/gray"
         android:textStyle="bold"
-        android:text="@string/text_reps"
-        android:textSize="@dimen/slightly_smaller_text" />
+        android:text="@string/text_weight"/>
 
     <TextView
         android:layout_width="0dp"
@@ -41,7 +29,15 @@
         android:gravity="center"
         android:textColor="@color/gray"
         android:textStyle="bold"
-        android:text="@string/text_notes"
-        android:textSize="@dimen/slightly_smaller_text" />
+        android:text="@string/text_reps"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        android:gravity="center"
+        android:textColor="@color/gray"
+        android:textStyle="bold"
+        android:text="@string/text_notes"/>
 
 </LinearLayout>

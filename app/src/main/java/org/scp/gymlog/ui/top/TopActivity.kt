@@ -175,11 +175,8 @@ open class TopActivity : DBAppCompatActivity() {
 
                     binding.weight.bigDecimal = weight.getValue(internationalSystem)
                     binding.reps.integer = bit.reps
-
-                    @SuppressLint("SetTextI18n")
-                    binding.time.text = bit.timestamp.getDateString() + " (" +
-                        TODAY.getLetterFrom(bit.timestamp) + ")"
-
+                    binding.time.text = bit.timestamp.getDateString()
+                    binding.days.text = TODAY.getLetterFrom(bit.timestamp)
                     binding.note.text = bit.note
 
                     binding.root.setOnClickListener {
