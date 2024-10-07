@@ -10,12 +10,10 @@ import androidx.viewbinding.ViewBinding
 import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemHistoryExerciseHeaderBinding
 import org.scp.gymlog.model.Bit
-import org.scp.gymlog.ui.common.CustomAppCompatActivity
 import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.MultipleListView
 import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
 import org.scp.gymlog.ui.common.dialogs.EditBitLogDialogFragment
-import org.scp.gymlog.ui.common.dialogs.TextSelectDialogFragment
 import org.scp.gymlog.ui.training.rows.ITrainingBitRow
 import org.scp.gymlog.ui.training.rows.TrainingBitHeaderRow
 import org.scp.gymlog.ui.training.rows.TrainingBitRow
@@ -71,18 +69,7 @@ class TrainingListSuperSetHandler(
 
         binding.row.root.setOnClickListener { toggleBits(bitList, item) }
         binding.row.root.setOnLongClickListener {
-            val variations = exercise.gymVariations
-            val context = binding.root.context as CustomAppCompatActivity
-
-            if (variations.size > 1) {
-                TextSelectDialogFragment(variations.map { it.name }) { pos, _ ->
-                    if (pos != TextSelectDialogFragment.DIALOG_CLOSED) {
-                        context.goToVariation(variations[pos])
-                    }
-                }.apply { show(context.supportFragmentManager, null) }
-            } else {
-                context.goToVariation(variations[0])
-            }
+            context.goToVariation(variation)
             true
         }
 
