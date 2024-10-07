@@ -1,5 +1,6 @@
 package org.scp.gymlog.ui.registry
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,15 +18,18 @@ import org.scp.gymlog.util.DateUtils.getTimeString
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.WeightUtils.calculate
+import org.scp.gymlog.util.extensions.CommonExts.getThemeColor
 import java.util.function.BiConsumer
 
 class LogListHandler(
+    val context: Context,
     private val log: List<Bit>,
     private val internationalSystem: Boolean
 ) : SimpleListHandler<Bit, ListitemLogBinding> {
     override val useListState = false
 
     var fullyLoaded = false
+    private val defaultDayColor = context.getThemeColor(R.attr.colorSecondary)
 
     private var onLoadMoreListener: Runnable? = null
     fun setOnLoadMoreListener(onLoadMoreListener: Runnable) {
@@ -58,13 +62,21 @@ class LogListHandler(
 
         if (item.trainingId == Data.training?.id) {
             if (item.instant) {
-                binding.day.setText(R.string.symbol_empty)
+                binding.day.apply {
+                    setText(R.string.symbol_empty)
+                    setTextColor(defaultDayColor)
+                }
                 item.set = lastSet
             } else {
-                binding.day.text = item.timestamp.getTimeString()
+                binding.day.apply {
+                    text = item.timestamp.getTimeString()
+                    setTextColor(context.getColor(R.color.green))
+                }
                 item.set = lastSet + 1
             }
         } else {
+            binding.day.setTextColor(defaultDayColor)
+
             val lastDateDiff = lastDate.diffYearsAndDays(item.timestamp)
 
             if (lastDateDiff.years != 0 || lastDateDiff.days != 0) {

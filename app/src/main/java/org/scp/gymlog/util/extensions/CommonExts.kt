@@ -1,5 +1,7 @@
 package org.scp.gymlog.util.extensions
 
+import android.content.Context
+import android.util.TypedValue
 import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.math.sqrt
@@ -35,5 +37,11 @@ object CommonExts {
         }
 
         return scale() - leftZeroes
+    }
+
+    fun Context.getThemeColor(resId: Int): Int {
+        val typedValue = TypedValue()
+        theme.resolveAttribute(resId, typedValue, true)
+        return typedValue.data
     }
 }

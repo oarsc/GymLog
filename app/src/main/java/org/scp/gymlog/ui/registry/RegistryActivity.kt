@@ -196,7 +196,7 @@ class RegistryActivity : DBAppCompatActivity() {
         logListView = findViewById(R.id.log_list)
         logListView.isNestedScrollingEnabled = true
 
-        logListHandler = LogListHandler(log, internationalSystem)
+        logListHandler = LogListHandler(this, log, internationalSystem)
             .apply { fullyLoaded = log.size < LOG_PAGES_SIZE - 1 }
 
         logListView.init(log, logListHandler)
