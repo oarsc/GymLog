@@ -64,6 +64,7 @@ import org.scp.gymlog.util.extensions.ComponentsExts.overridePendingSideTransiti
 import org.scp.gymlog.util.extensions.ComponentsExts.startResizeWidthAnimation
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.MessagingExts.snackbar
+import org.scp.gymlog.util.extensions.MessagingExts.toast
 import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
 import java.math.BigDecimal
@@ -389,8 +390,29 @@ class RegistryActivity : DBAppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.latestButton -> {
-                val intent = Intent(this, LatestActivity::class.java)
-                startActivity(intent)
+                Data.training?.id
+                    ?.also { trainingId ->
+                        dbThread { db ->
+                            val variationIds = db.bitDao().getHistoryByTrainingIdDesc(trainingId)
+                                .map { it.variationId }
+                                .distinct()
+                            when {
+                                variationIds.isEmpty() ->
+                                    toast(R.string.validation_no_exercise_registered)
+
+                                variationIds[0] == variation.id ->
+                                    Intent(this, LatestActivity::class.java)
+                                        .also { startActivity(it) }
+
+                                else ->
+                                    switchToVariation(
+                                        variation = Data.getVariation(variationIds[0]),
+                                        left = variationIds.contains(variation.id)
+                                    )
+                            }
+                        }
+                    }
+                    ?: toast(R.string.validation_training_not_started)
             }
             R.id.topRanking -> {
                 val intent = Intent(this, TopActivity::class.java)

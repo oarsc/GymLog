@@ -26,13 +26,15 @@ class LatestActivity : DBAppCompatActivity() {
         val trainingId = Data.training?.id
             ?: return R.string.validation_training_not_started
 
-        variations = db.bitDao().getHistoryByTrainingId(trainingId)
+        variations = db.bitDao().getHistoryByTrainingIdDesc(trainingId)
             .map { it.variationId }
-            .reversed()
             .distinct()
             .map { Data.getVariation(it) }
 
-        return CONTINUE
+        return if (variations.isEmpty())
+            R.string.validation_no_exercise_registered
+        else
+            CONTINUE
     }
 
     override fun onDelayedCreate(savedInstanceState: Bundle?) {

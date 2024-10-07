@@ -23,8 +23,10 @@ import org.scp.gymlog.ui.top.TopActivity
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
+import org.scp.gymlog.util.extensions.MessagingExts.toast
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
 import org.scp.gymlog.util.extensions.PreferencesExts.save
+import org.scp.gymlog.util.extensions.RedirectionExts.goToVariation
 
 class ExercisesActivity : CustomAppCompatActivity() {
 
@@ -97,8 +99,17 @@ class ExercisesActivity : CustomAppCompatActivity() {
                 startActivityForResult(intent, IntentReference.CREATE_EXERCISE_FROM_MUSCLE)
             }
             R.id.latestButton -> {
-                val intent = Intent(this, LatestActivity::class.java)
-                startActivity(intent)
+                Data.training?.id
+                    ?.also { trainingId ->
+                        dbThread { db ->
+                            db.bitDao()
+                                .getMostRecentByTrainingId(trainingId)
+                                ?.let { Data.getVariation(it.variationId) }
+                                ?.let { goToVariation(it) }
+                                ?: toast(R.string.validation_no_exercise_registered)
+                        }
+                    }
+                    ?: toast(R.string.validation_training_not_started)
             }
             R.id.sortAlphabetically -> {
                 val order = Order.ALPHABETICALLY

@@ -26,14 +26,15 @@ import org.scp.gymlog.ui.common.dialogs.MenuDialogFragment.Companion.DIALOG_CLOS
 import org.scp.gymlog.ui.common.dialogs.TextSelectDialogFragment
 import org.scp.gymlog.ui.create.CreateExerciseActivity
 import org.scp.gymlog.ui.exercises.ExercisesActivity
-import org.scp.gymlog.ui.exercises.LatestActivity
 import org.scp.gymlog.ui.exercises.SearchActivity
 import org.scp.gymlog.ui.preferences.PreferencesDefinition
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.currentDateTime
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
+import org.scp.gymlog.util.extensions.MessagingExts.toast
 import org.scp.gymlog.util.extensions.PreferencesExts.save
+import org.scp.gymlog.util.extensions.RedirectionExts.goToVariation
 
 
 /**
@@ -71,10 +72,17 @@ class MusclesFragment : CustomFragment() {
 					startActivity(intent, IntentReference.SEARCH_LIST)
 				}
 				R.id.latestButton -> {
-					requireActivity().apply {
-						val intent = Intent(this, LatestActivity::class.java)
-						startActivity(intent)
-					}
+					Data.training?.id
+						?.also { trainingId ->
+							dbThread { db ->
+								db.bitDao()
+									.getMostRecentByTrainingId(trainingId)
+									?.let { Data.getVariation(it.variationId) }
+									?.let { goToVariation(it) }
+									?: toast(R.string.validation_no_exercise_registered)
+							}
+						}
+						?: toast(R.string.validation_training_not_started)
 				}
 				R.id.gymSelectButton -> {
 					val context = requireContext()
