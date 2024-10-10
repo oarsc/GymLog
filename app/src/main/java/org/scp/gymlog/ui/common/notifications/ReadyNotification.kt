@@ -44,6 +44,7 @@ class ReadyNotification (
     private fun build(): Notification {
         return NotificationCompat.Builder(context.applicationContext, NotificationService.READY_CHANNEL)
             .setSmallIcon(R.drawable.ic_logo_24dp)
+            .setContentTitle(context.getString(R.string.app_name))
             .setContentText(context.getString(R.string.notification_rest_finished))
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             .setCustomContentView(remoteView)

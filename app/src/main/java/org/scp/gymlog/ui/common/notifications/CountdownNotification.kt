@@ -124,6 +124,7 @@ open class CountdownNotification (
     private fun build(): Notification {
         return NotificationCompat.Builder(service, NotificationService.COUNTDOWN_CHANNEL)
             .setSmallIcon(R.drawable.ic_logo_24dp)
+            .setContentTitle(service.getString(R.string.app_name))
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             .setCustomContentView(remoteView)
             .setOngoing(true)
