@@ -21,4 +21,6 @@ enum class PreferencesDefinition(
 
 	BITS_DELETION("logDeletion", defaultString = "prompt"),
 	EXERCISES_DELETION("exerciseDeletion", defaultString = "prompt"),
+
+	DROPBOX_CREDENTIAL("dbCredential"),
 }

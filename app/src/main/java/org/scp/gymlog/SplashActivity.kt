@@ -8,40 +8,59 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
+import com.dropbox.core.oauth.DbxCredential
+import kotlinx.coroutines.launch
 import org.scp.gymlog.exceptions.LoadException
-import org.scp.gymlog.model.*
+import org.scp.gymlog.model.Bar
+import org.scp.gymlog.model.Exercise
+import org.scp.gymlog.model.Gym
+import org.scp.gymlog.model.Muscle
+import org.scp.gymlog.model.Training
+import org.scp.gymlog.model.Variation
 import org.scp.gymlog.room.AppDatabase
 import org.scp.gymlog.room.entities.ExerciseEntity.WithMusclesAndVariations
 import org.scp.gymlog.room.entities.MuscleEntity
 import org.scp.gymlog.service.DataBaseDumperService
 import org.scp.gymlog.service.InitialDataService
 import org.scp.gymlog.service.NotificationService
+import org.scp.gymlog.service.dropbox.DropboxApiWrapper
+import org.scp.gymlog.service.dropbox.DropboxOAuthUtil
+import org.scp.gymlog.service.dropbox.DropboxUploadApiResponse
 import org.scp.gymlog.ui.main.MainActivity
 import org.scp.gymlog.ui.preferences.PreferencesDefinition
+import org.scp.gymlog.ui.preferences.PreferencesDefinition.DROPBOX_CREDENTIAL
+import org.scp.gymlog.util.Constants.Dropbox.APP_KEY
 import org.scp.gymlog.util.Data
+import org.scp.gymlog.util.DateUtils.getTimestampString
 import org.scp.gymlog.util.WeightUtils
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.MessagingExts.toast
 import org.scp.gymlog.util.extensions.PreferencesExts.loadBoolean
+import org.scp.gymlog.util.extensions.PreferencesExts.loadDbxCredential
 import org.scp.gymlog.util.extensions.PreferencesExts.loadInteger
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
 import java.io.File
 import java.io.FileOutputStream
+import java.time.LocalDateTime
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
 
     private val dataBaseDumperService by lazy { DataBaseDumperService() }
+    private val dropboxOAuthUtil by lazy { DropboxOAuthUtil(this) }
+    private var onResumeActions = mutableListOf<() -> Unit>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        onResumeActions.clear()
 
         if (loadBoolean(PreferencesDefinition.THEME) &&
                 AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             recreate()
 
-        } else if (!importData() && !exportData()) {
+        } else if (!importData() && !exportData() && !dropboxExportData()) {
             WeightUtils.setConvertParameters(
                 loadBoolean(PreferencesDefinition.UNIT_CONVERSION_EXACT_VALUE),
                 loadString(PreferencesDefinition.UNIT_CONVERSION_STEP))
@@ -92,6 +111,53 @@ class SplashActivity : AppCompatActivity() {
             return true
         }
         return false
+    }
+
+    private fun dropboxExportData() : Boolean {
+        if (intent.action == "dropbox") {
+            val dbxCredential = loadDbxCredential(DROPBOX_CREDENTIAL)
+
+            if (dbxCredential != null) {
+                uploadToDropbox(dbxCredential)
+            } else {
+                onResumeActions.apply {
+                    add { dropboxOAuthUtil.startDropboxAuthorizationOAuth2(this@SplashActivity) }
+                    add {
+                        loadDbxCredential(DROPBOX_CREDENTIAL)
+                            ?.also(this@SplashActivity::uploadToDropbox)
+                            ?: run {
+                                toast("Process cancelled")
+                                goMain()
+                            }
+                    }
+                }
+            }
+            return true
+        }
+        return false
+    }
+
+    private fun uploadToDropbox(dbxCredential: DbxCredential) {
+        dbThread { db ->
+            val inputStream = dataBaseDumperService.save(this, null, db)!!
+            val fileName = "output-${LocalDateTime.now().getTimestampString()}.json"
+
+            lifecycleScope.launch {
+                val dropboxApiWrapper = DropboxApiWrapper(
+                    dbxCredential = dbxCredential,
+                    clientIdentifier = "db-$APP_KEY"
+                )
+
+                val response = dropboxApiWrapper.uploadFile(fileName, inputStream)
+                when (response) {
+                    is DropboxUploadApiResponse.Failure ->
+                        toast("Error uploading file")
+                    is DropboxUploadApiResponse.Success ->
+                        toast("Uploaded \"${response.fileMetadata.name}\"")
+                }
+                goMain()
+            }
+        }
     }
 
     private fun loadData(db: AppDatabase) {
@@ -175,5 +241,11 @@ class SplashActivity : AppCompatActivity() {
         startActivity(intent)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        dropboxOAuthUtil.onResume()
+        onResumeActions.removeFirstOrNull()?.also { it() }
     }
 }

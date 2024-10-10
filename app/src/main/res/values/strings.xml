@@ -56,6 +56,8 @@
     <string name="text_countdown">Countdown</string>
     <string name="text_current_countdown">Current countdown</string>
     <string name="text_default">Default</string>
+    <string name="text_dropbox_export">Export to Dropbox</string>
+    <string name="text_dropbox_revoke">Revoke dropbox creds.</string>
     <string name="text_exercise">Exercise</string>
     <string name="text_expand_all">Expand all</string>
     <string name="text_export">Export</string>

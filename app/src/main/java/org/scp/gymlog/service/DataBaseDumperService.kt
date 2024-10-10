@@ -19,7 +19,7 @@ class DataBaseDumperService {
     }
 
     @Throws(JSONException::class, IOException::class)
-    fun save(context: Context, fos: FileOutputStream, database: AppDatabase) {
+    fun save(context: Context, fos: FileOutputStream?, database: AppDatabase): InputStream? {
         val dataStructure = DumperDataStructure()
 
         val bits = database.bitDao().getAllFromAllGyms()
@@ -35,9 +35,12 @@ class DataBaseDumperService {
         dataStructure.trainings = trainings
         dataStructure.bits = bits
 
-        val writer = PrintWriter(BufferedWriter(OutputStreamWriter(fos)), true)
+        val outputStream = fos ?: ByteArrayOutputStream()
+        val writer = PrintWriter(BufferedWriter(OutputStreamWriter(outputStream)), true)
         writer.println(dataStructure.jsonObject)
         writer.close()
+        return (outputStream as? ByteArrayOutputStream)
+            ?.let { ByteArrayInputStream(it.toByteArray()) }
     }
 
     @Throws(JSONException::class, IOException::class)

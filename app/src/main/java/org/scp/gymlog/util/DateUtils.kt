@@ -1,7 +1,12 @@
 package org.scp.gymlog.util
 
 import org.scp.gymlog.util.Constants.DATE_ZERO
-import java.time.*
+import java.time.DayOfWeek
+import java.time.Duration
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
@@ -47,6 +52,10 @@ object DateUtils {
 
     fun LocalDateTime.getDateString(): String {
         return parseDateToString(this, "yyyy-MM-dd")
+    }
+
+    fun LocalDateTime.getTimestampString(): String {
+        return parseDateToString(this, "yyyyMMdd-HHmmss")
     }
 
     fun Int.minutesToTimeString(): String {

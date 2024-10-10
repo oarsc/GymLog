@@ -27,12 +27,14 @@ import org.scp.gymlog.ui.common.dialogs.TextSelectDialogFragment
 import org.scp.gymlog.ui.create.CreateExerciseActivity
 import org.scp.gymlog.ui.exercises.ExercisesActivity
 import org.scp.gymlog.ui.exercises.SearchActivity
-import org.scp.gymlog.ui.preferences.PreferencesDefinition
+import org.scp.gymlog.ui.preferences.PreferencesDefinition.CURRENT_GYM
+import org.scp.gymlog.ui.preferences.PreferencesDefinition.DROPBOX_CREDENTIAL
 import org.scp.gymlog.util.Constants.IntentReference
 import org.scp.gymlog.util.Data
-import org.scp.gymlog.util.DateUtils.currentDateTime
+import org.scp.gymlog.util.DateUtils.NOW
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.MessagingExts.toast
+import org.scp.gymlog.util.extensions.PreferencesExts.loadDbxCredential
 import org.scp.gymlog.util.extensions.PreferencesExts.save
 import org.scp.gymlog.util.extensions.RedirectionExts.goToVariation
 
@@ -100,7 +102,7 @@ class MusclesFragment : CustomFragment() {
 									context.dbThread { db ->
 										db.gymDao().insert(GymEntity(name = it))
 										val gymId = idx + 1;
-										context.save(PreferencesDefinition.CURRENT_GYM, gymId)
+										context.save(CURRENT_GYM, gymId)
 										Data.gym = Data.getGym(gymId)
 
 										requireActivity().apply {
@@ -114,7 +116,7 @@ class MusclesFragment : CustomFragment() {
 
 							} else {
 								val gymId = idx + 1;
-								context.save(PreferencesDefinition.CURRENT_GYM, gymId)
+								context.save(CURRENT_GYM, gymId)
 								Data.gym = Data.getGym(gymId)
 
 								requireActivity().apply {
@@ -127,13 +129,6 @@ class MusclesFragment : CustomFragment() {
 					}
 					dialog.show(requireActivity().supportFragmentManager, null)
 				}
-				R.id.exportButton -> {
-					val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
-					intent.addCategory(Intent.CATEGORY_OPENABLE)
-					intent.type = "application/json"
-					intent.putExtra(Intent.EXTRA_TITLE, DataBaseDumperService.OUTPUT)
-					startActivityForResult(intent, IntentReference.EXPORT_FILE)
-				}
 				R.id.importButton -> {
 					val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
 					intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -141,9 +136,34 @@ class MusclesFragment : CustomFragment() {
 					intent.putExtra(Intent.EXTRA_TITLE, DataBaseDumperService.OUTPUT)
 					startActivityForResult(intent, IntentReference.IMPORT_FILE)
 				}
+				R.id.exportButton -> {
+					val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+					intent.addCategory(Intent.CATEGORY_OPENABLE)
+					intent.type = "application/json"
+					intent.putExtra(Intent.EXTRA_TITLE, DataBaseDumperService.OUTPUT)
+					startActivityForResult(intent, IntentReference.EXPORT_FILE)
+				}
+				R.id.dropboxExportButton -> {
+					requireActivity().apply {
+						val intent = Intent(this, SplashActivity::class.java)
+						intent.action = "dropbox"
+						startActivity(intent)
+						finish()
+					}
+				}
+				R.id.dropboxRevokeButton -> {
+					context?.apply {
+						loadDbxCredential(DROPBOX_CREDENTIAL)
+							?.also {
+								save(DROPBOX_CREDENTIAL, null)
+								toast("Cleaning dropbox credentials")
+							} ?: toast("Nothing to do")
+					}
+				}
+
 				R.id.testButton -> {
 					val seconds = 10
-					val date = currentDateTime().plusSeconds(seconds.toLong())
+					val date = NOW.plusSeconds(seconds.toLong())
 					NotificationService(requireContext())
 						.startNewNotification(date, seconds, Data.exercises[0].variations[0])
 				}

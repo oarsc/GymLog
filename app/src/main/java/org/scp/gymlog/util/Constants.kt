@@ -31,4 +31,9 @@ object Constants {
         EXPORT_FILE,
         IMPORT_FILE
     }
+
+    object Dropbox {
+        const val APP_KEY = "fts3973avw0k7hq"
+        const val APP_SECRET = "hl64v4u7tz4ngwt"
+    }
 }
