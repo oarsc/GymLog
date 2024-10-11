@@ -1,39 +1,23 @@
 package org.scp.gymlog.util
 
-import org.scp.gymlog.R
 import org.scp.gymlog.exceptions.LoadException
-import org.scp.gymlog.model.*
+import org.scp.gymlog.model.Bar
+import org.scp.gymlog.model.Exercise
+import org.scp.gymlog.model.Gym
+import org.scp.gymlog.model.Muscle
+import org.scp.gymlog.model.Training
+import org.scp.gymlog.model.Variation
 
 object Data {
 	val STEPS_KG = intArrayOf(50, 100, 125, 200, 250, 500, 1000, 1500, 2000, 2500)
 
 	val exercises =  mutableListOf<Exercise>()
-	val muscles: List<Muscle>
+	val muscles: List<Muscle> = Muscle.values().toList()
 	val bars = mutableListOf<Bar>()
 	val gyms =  mutableListOf<Gym>()
 	var gym: Gym? = null
 	var training: Training? = null
 	var superSet: Int? = null
-
-	init {
-		var muscleId = 0
-		muscles = listOf(
-			Muscle(++muscleId, R.string.group_pectoral, R.drawable.muscle_pectoral, R.color.pectoral),
-			Muscle(++muscleId, R.string.group_upper_back, R.drawable.muscle_upper_back, R.color.upper_back),
-			Muscle(++muscleId, R.string.group_lower_back, R.drawable.muscle_lower_back, R.color.lower_back),
-			Muscle(++muscleId, R.string.group_deltoid, R.drawable.muscle_deltoid, R.color.deltoid),
-			Muscle(++muscleId, R.string.group_trapezius, R.drawable.muscle_trapezius, R.color.trapezius),
-			Muscle(++muscleId, R.string.group_biceps, R.drawable.muscle_biceps, R.color.biceps),
-			Muscle(++muscleId, R.string.group_triceps, R.drawable.muscle_triceps, R.color.triceps),
-			Muscle(++muscleId, R.string.group_forearm, R.drawable.muscle_forearm, R.color.forearm),
-			Muscle(++muscleId, R.string.group_quadriceps, R.drawable.muscle_quadriceps, R.color.quadriceps),
-			Muscle(++muscleId, R.string.group_hamstrings, R.drawable.muscle_hamstring, R.color.hamstrings),
-			Muscle(++muscleId, R.string.group_glutes, R.drawable.muscle_glutes, R.color.glutes),
-			Muscle(++muscleId, R.string.group_calves, R.drawable.muscle_calves, R.color.calves),
-			Muscle(++muscleId, R.string.group_abdominals, R.drawable.muscle_abdominals, R.color.abdominals),
-			Muscle(++muscleId, R.string.group_cardio, R.drawable.muscle_cardio, R.color.cardio),
-		)
-	}
 
 	fun getGym(gymId: Int): Gym {
 		return gyms

@@ -50,7 +50,7 @@ class HistoryTrainingListHandler(
 		binding.notesImage.visibility = if (training.note.isEmpty()) View.GONE else View.VISIBLE
 
 		binding.subtitle.text = item.mostUsedMuscles
-			.map(Muscle::text)
+			.map(Muscle::textShort)
 			.map { resText -> context.resources.getString(resText) }
 			.joinToString { it }
 

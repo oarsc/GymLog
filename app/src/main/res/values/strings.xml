@@ -29,6 +29,21 @@
     <string name="group_triceps">Triceps</string>
     <string name="group_upper_back">Back</string>
 
+    <string name="group_short_abdominals">Abs</string>
+    <string name="group_short_biceps">Biceps</string>
+    <string name="group_short_calves">Calves</string>
+    <string name="group_short_cardio">Cardio</string>
+    <string name="group_short_deltoid">Shoulders</string>
+    <string name="group_short_forearm">Forearm</string>
+    <string name="group_short_glutes">Glutes</string>
+    <string name="group_short_hamstrings">Hams</string>
+    <string name="group_short_lower_back">Lower Back</string>
+    <string name="group_short_pectoral">Chest</string>
+    <string name="group_short_quadriceps">Quads</string>
+    <string name="group_short_trapezius">Traps</string>
+    <string name="group_short_triceps">Triceps</string>
+    <string name="group_short_upper_back">Back</string>
+
     <string name="compound_training_start_date">Training #%1$d started at %2$s</string>
     <string name="compound_training_date">Training #%1$d on %2$s</string>
     <string name="compound_training_duration">Training #%1$d. %2$s duration</string>
