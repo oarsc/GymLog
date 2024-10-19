@@ -11,6 +11,7 @@ import org.scp.gymlog.R
 import org.scp.gymlog.databinding.ListitemHistoryExerciseHeaderBinding
 import org.scp.gymlog.databinding.ListitemHistorySupersetContainerBinding
 import org.scp.gymlog.model.Bit
+import org.scp.gymlog.room.DatabaseSnippets.insertBitAndNotes
 import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.MultipleListHandler
 import org.scp.gymlog.ui.common.components.listView.MultipleListView
@@ -167,7 +168,7 @@ class TrainingListHandler(
                 bit,
                 { editedBit ->
                     context.dbThread { db ->
-                        db.bitDao().update(editedBit.toEntity())
+                        db.insertBitAndNotes(editedBit, insert = false)
                         context.runOnUiThread { bitList.notifyItemChanged(index) }
                         onBitChangedListener?.accept(editedBit)
                     }

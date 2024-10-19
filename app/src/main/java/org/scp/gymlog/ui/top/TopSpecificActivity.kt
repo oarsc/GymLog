@@ -41,7 +41,7 @@ class TopSpecificActivity : TopActivity() {
                         if (max.reps < bit.reps)
                             this[day] = bit
 
-                        else if (max.reps == bit.reps && max.note.isBlank())
+                        else if (max.reps == bit.reps)
                             this[day] = bit
 
                     } else {

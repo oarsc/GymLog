@@ -2,6 +2,7 @@ package org.scp.gymlog.model
 
 import org.scp.gymlog.room.EntityMappable
 import org.scp.gymlog.room.entities.BitEntity
+import org.scp.gymlog.room.entities.BitNoteCrossRef
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.currentDateTime
@@ -16,7 +17,7 @@ class Bit : EntityMappable<BitEntity> {
 	var trainingId = 0
 	var reps = 0
 	var weight = Weight.INVALID
-	var note: String = ""
+	var notes: MutableList<Note> = mutableListOf()
 	var timestamp: LocalDateTime
 	var instant = false
 	var set = 0 // used in logRecyclerViewAdapter
@@ -35,7 +36,6 @@ class Bit : EntityMappable<BitEntity> {
 
 		id = entity.bitId
 		trainingId = entity.trainingId
-		note = entity.note
 		reps = entity.reps
 		timestamp = entity.timestamp
 		instant = entity.instant
@@ -46,12 +46,17 @@ class Bit : EntityMappable<BitEntity> {
 		)
 	}
 
+	constructor(entity: BitEntity.BitEntityWithNotes): this(entity.bit!!) {
+		entity.notes
+			.map { Data.getNote(it.content) }
+			.apply(notes::addAll)
+	}
+
 	override fun toEntity(): BitEntity {
 		val entity = BitEntity()
 		entity.bitId = id
 		entity.variationId = variation.id
 		entity.trainingId = trainingId
-		entity.note = note
 		entity.timestamp = timestamp
 		entity.reps = reps
 		entity.instant = instant
@@ -59,5 +64,16 @@ class Bit : EntityMappable<BitEntity> {
 		entity.superSet = superSet
 		entity.kilos = weight.internationalSystem
 		return entity
+	}
+
+	fun toNotesEntity(): List<BitNoteCrossRef> {
+		return notes
+			.map(Note::id)
+			.map {
+				BitNoteCrossRef().apply {
+					bitId = id
+					noteId = it
+				}
+			}
 	}
 }

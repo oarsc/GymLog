@@ -1,9 +1,12 @@
 package org.scp.gymlog.room.entities
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import androidx.room.Junction
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.JsonUtils.JsonFieldName
 import org.scp.gymlog.util.JsonUtils.NoJsonify
@@ -46,8 +49,20 @@ class BitEntity {
     var totalWeight = 0
     var kilos = false
     var instant = false
-    var note: String = ""
     @JsonFieldName("s")
     var timestamp: LocalDateTime = Constants.DATE_ZERO
     var superSet = 0
+
+    class BitEntityWithNotes {
+        @Embedded
+        var bit: BitEntity? = null
+
+        @NoJsonify
+        @Relation(
+            parentColumn = "bitId",
+            entityColumn = "noteId",
+            associateBy = Junction(BitNoteCrossRef::class)
+        )
+        var notes: List<NoteEntity> = emptyList()
+    }
 }

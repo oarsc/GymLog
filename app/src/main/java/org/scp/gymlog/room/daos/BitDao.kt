@@ -1,38 +1,43 @@
 package org.scp.gymlog.room.daos
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import org.scp.gymlog.room.entities.BitEntity
+import org.scp.gymlog.room.entities.BitEntity.BitEntityWithNotes
 import java.time.LocalDateTime
 
 @Dao
 interface BitDao {
     @Query("SELECT * FROM bit")
-    fun getAllFromAllGyms(): List<BitEntity>
+    fun getAllFromAllGyms(): List<BitEntityWithNotes>
 
     // GET REGISTRY FIRST PAGE
     @Query("SELECT * FROM bit WHERE " +
             "variationId = :variationId ORDER BY trainingId DESC, timestamp LIMIT :limit")
-    fun getHistory(variationId: Int, limit: Int): List<BitEntity>
+    fun getHistory(variationId: Int, limit: Int): List<BitEntityWithNotes>
 
     @Query("SELECT bit.* FROM bit " +
         "JOIN training ON bit.trainingId = training.trainingId " +
         "WHERE gymId = :gymId AND variationId = :variationId " +
         "ORDER BY trainingId DESC, timestamp LIMIT :limit")
-    fun getHistory(gymId: Int, variationId: Int, limit: Int): List<BitEntity>
+    fun getHistory(gymId: Int, variationId: Int, limit: Int): List<BitEntityWithNotes>
 
     // GET REGISTRY NEXT PAGES
     @Query("SELECT * FROM bit WHERE " +
         "variationId = :variationId AND " +
         "(trainingId = :trainingId AND timestamp > :date OR trainingId < :trainingId) " +
         "ORDER BY trainingId DESC, timestamp LIMIT :limit")
-    fun getHistory(variationId: Int, trainingId: Int, date: LocalDateTime, limit: Int): List<BitEntity>
+    fun getHistory(variationId: Int, trainingId: Int, date: LocalDateTime, limit: Int): List<BitEntityWithNotes>
 
     @Query("SELECT bit.* FROM bit " +
         "JOIN training ON bit.trainingId = training.trainingId WHERE " +
         "gymId = :gymId AND variationId = :variationId AND " +
         "(bit.trainingId = :trainingId AND timestamp > :date OR bit.trainingId < :trainingId) " +
         "ORDER BY bit.trainingId DESC, timestamp LIMIT :limit")
-    fun getHistory(gymId: Int, variationId: Int, trainingId: Int, date: LocalDateTime, limit: Int): List<BitEntity>
+    fun getHistory(gymId: Int, variationId: Int, trainingId: Int, date: LocalDateTime, limit: Int): List<BitEntityWithNotes>
 
     // CALENDAR REGISTRY
     @Query("SELECT * FROM bit WHERE :dateStart <= timestamp AND timestamp < :dateEnd ORDER BY timestamp")
@@ -59,18 +64,6 @@ interface BitDao {
 
     @Query("SELECT MAX(superSet) FROM bit WHERE trainingId = :trainingId")
     fun getMaxSuperSet(trainingId: Int): Int?
-
-
-    // NOTES
-    @Query("SELECT DISTINCT note FROM bit WHERE " +
-            "variationId = :variationId AND note <> '' ORDER BY timestamp DESC LIMIT :limit")
-    fun getNotesHistory(variationId: Int, limit: Int): List<String>
-
-    @Query("SELECT DISTINCT bit.note FROM bit " +
-        "JOIN training ON bit.trainingId = training.trainingId " +
-        "WHERE gymId = :gymId AND variationId = :variationId AND bit.note <> '' " +
-        "ORDER BY timestamp DESC LIMIT :limit")
-    fun getNotesHistory(gymId: Int, variationId: Int, limit: Int): List<String>
 
     // TOPS PAGES
     @Query("SELECT MAX(reps) AS reps, bit.* FROM bit " +

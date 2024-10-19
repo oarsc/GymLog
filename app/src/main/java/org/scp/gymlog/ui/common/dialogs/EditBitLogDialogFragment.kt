@@ -12,6 +12,7 @@ import androidx.annotation.StringRes
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.scp.gymlog.R
 import org.scp.gymlog.model.Bit
+import org.scp.gymlog.model.Note.Companion.toNotes
 import org.scp.gymlog.model.Weight
 import org.scp.gymlog.room.daos.BitDao
 import org.scp.gymlog.ui.common.components.NumberModifierView
@@ -50,7 +51,9 @@ class EditBitLogDialogFragment (
     private val instantSwitch: SwitchMaterial by lazy { dialogView.findViewById(R.id.instantSwitch) }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        editNotes.setText(initialValue.note)
+        editNotes.setText(
+            initialValue.notes.joinToString(", ") { it.content }
+        )
 
         val unit = dialogView.findViewById<TextView>(R.id.unit)
         unit.setText(WeightUtils.unit(internationalSystem))
@@ -180,7 +183,11 @@ class EditBitLogDialogFragment (
     private fun confirmDialog() {
         initialValue.superSet = editSuperSet.integer
         initialValue.reps = editReps.integer
-        initialValue.note = editNotes.text.toString()
+        initialValue.notes.apply {
+            clear()
+            addAll(editNotes.text.toString().toNotes())
+        }
+
         initialValue.instant = instantSwitch.isChecked
         initialValue.weight = Weight(editWeight.bigDecimal, internationalSystem).calculateTotal(
             initialValue.variation.weightSpec,

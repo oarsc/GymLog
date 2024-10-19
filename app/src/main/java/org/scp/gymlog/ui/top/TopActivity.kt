@@ -1,6 +1,5 @@
 package org.scp.gymlog.ui.top
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,7 +22,11 @@ import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.MultipleListHandler
 import org.scp.gymlog.ui.common.components.listView.MultipleListView
 import org.scp.gymlog.ui.preferences.PreferencesDefinition
-import org.scp.gymlog.ui.top.rows.*
+import org.scp.gymlog.ui.top.rows.ITopRow
+import org.scp.gymlog.ui.top.rows.TopBitRow
+import org.scp.gymlog.ui.top.rows.TopEmptySpaceRow
+import org.scp.gymlog.ui.top.rows.TopHeaderRow
+import org.scp.gymlog.ui.top.rows.TopVariationRow
 import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Constants.IntentReference
@@ -177,7 +180,7 @@ open class TopActivity : DBAppCompatActivity() {
                     binding.reps.integer = bit.reps
                     binding.time.text = bit.timestamp.getDateString()
                     binding.days.text = TODAY.getLetterFrom(bit.timestamp)
-                    binding.note.text = bit.note
+                    binding.note.text = bit.notes.joinToString(", ") { it.content }
 
                     binding.root.setOnClickListener {
                         onElementClicked(item.bit)

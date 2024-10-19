@@ -4,8 +4,10 @@ import android.content.SharedPreferences
 import org.json.JSONArray
 import org.json.JSONObject
 import org.scp.gymlog.room.entities.BitEntity
+import org.scp.gymlog.room.entities.BitEntity.BitEntityWithNotes
 import org.scp.gymlog.room.entities.ExerciseEntity
 import org.scp.gymlog.room.entities.ExerciseMuscleCrossRef
+import org.scp.gymlog.room.entities.NoteEntity
 import org.scp.gymlog.room.entities.SecondaryExerciseMuscleCrossRef
 import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.room.entities.VariationEntity
@@ -61,105 +63,95 @@ class DumperDataStructure(
     var trainings: List<TrainingEntity>
         get() {
             val trainings = jsonObject.getJSONArray(DumperDataStructure::trainings.name)
-
-            trainings.loopAll {
-                transformNoteToString()
-            }
-
             return trainings.transformToObject(TrainingEntity::class)
         }
         set(value) {
             val trainings = value.transformToJson()
-
-            trainings.loopAll {
-                transformNoteToIdx()
-            }
-
             jsonObject.put(DumperDataStructure::trainings.name, trainings)
         }
 
-    var bits: List<BitEntity>
+    var bits: List<BitEntityWithNotes>
         get() {
             val bits = jsonObject.getJSONArray(DumperDataStructure::bits.name)
 
-            bits.loopAll {
-                transformNoteToString()
-                addFieldIfEmpty(
-                    BitEntity::superSet.name,
-                    BitEntity::kilos.name,
-                    BitEntity::instant.name
-                ) {
-                    when(it) {
-                        BitEntity::superSet.name -> 0
-                        BitEntity::kilos.name -> true
-                        BitEntity::instant.name -> false
-                        else -> throw IllegalStateException("Can't set default value for $it")
-                    }
+            return bits.map(JSONArray::getJSONObject)
+                .map { obj ->
+                    obj.addDefaultValues(
+                        BitEntity::superSet.name to 0,
+                        BitEntity::kilos.name to true,
+                        BitEntity::instant.name to false
+                    )
+                    obj.objectify(BitEntity::class)
+                        .let {
+                            BitEntityWithNotes().apply {
+                                bit = it
+                                if (obj.has("n")) {
+                                    notes = obj.getString("n")
+                                        .split(",")
+                                        .map(String::toInt)
+                                        .map { NoteEntity().apply {
+                                            noteId = it + 1
+                                            content = notesIndexes[it]
+                                        }}
+                                }
+                            }
+                        }
                 }
-            }
-
-            return bits.transformToObject(BitEntity::class)
         }
         set(value) {
-            val bits = value.transformToJson()
+            val content = value.map { entity ->
+                val json = entity.bit!!.jsonify()
 
-            bits.loopAll {
-                transformNoteToIdx()
-                removeFieldIf(
-                    BitEntity::superSet.name,
-                    BitEntity::kilos.name,
-                    BitEntity::instant.name
-                ) {
-                    when(it) {
-                        BitEntity::superSet.name -> getInt(it) <= 0
-                        BitEntity::kilos.name -> getBoolean(it)
-                        BitEntity::instant.name -> !getBoolean(it)
-                        else -> throw IllegalStateException("Can't chose removal for $it")
-                    }
+                if (entity.notes.isNotEmpty()) {
+                    json.put("n",
+                        entity.notes
+                            .map { it.content }
+                            .map { notesIndexes.indexOf(it) }
+                            .joinToString(",")
+                    )
+                }
+
+                json.removeFieldIf(
+                    BitEntity::superSet.name to { json.getInt(it) <= 0 /* value is <= 0 */},
+                    BitEntity::kilos.name to { json.getBoolean(it) /* value is true */ },
+                    BitEntity::instant.name to { !json.getBoolean(it) /* value is false */}
+                )
+
+                json
+            }
+
+            jsonObject.put(DumperDataStructure::bits.name, content.toJsonArray)
+        }
+
+    private val notesIndexes =
+        if (jsonObject.has(DumperDataStructure::notes.name)) {
+            jsonObject.getJSONArray(DumperDataStructure::notes.name).map(JSONArray::getString)
+        } else {
+            emptyList()
+        }.toMutableList()
+
+    var notes: List<NoteEntity>
+        get() {
+            val bitNotes = jsonObject.getJSONArray(DumperDataStructure::notes.name)
+            return bitNotes.map { value, index ->
+                NoteEntity().apply {
+                    noteId = index + 1
+                    content = value.getString(index)
                 }
             }
-
-            jsonObject.put(DumperDataStructure::bits.name, bits)
         }
-
-    private var notes: List<String>
-
-    init {
-        this.notes =
-            if (jsonObject.has(DumperDataStructure::notes.name)) {
-                jsonObject.getJSONArray(DumperDataStructure::notes.name).map(JSONArray::getString)
-            } else {
-                emptyList()
-            }
-    }
-
-    fun extractNotes(bits: List<BitEntity>, trainings: List<TrainingEntity>) {
-        val notes = bits.map { it.note }.toSet() + trainings.map { it.note }.toSet()
-        this.notes = notes.filter { it.isNotBlank() }.sorted()
-        jsonObject.put(DumperDataStructure::notes.name, this.notes.toJsonArray)
-    }
-
-    private fun JSONObject.transformNoteToString() {
-        if (has("n")) {
-            val noteIdx = getInt("n")
-            remove("n")
-            put("note", notes[noteIdx])
-        } else {
-            put("note", "")
+        set(value) {
+            value
+                .map { it.content }
+                .distinct()
+                .filter(String::isNotBlank)
+                .sorted()
+                .also {
+                    notesIndexes.clear()
+                    notesIndexes.addAll(it)
+                    jsonObject.put(DumperDataStructure::notes.name, it.toJsonArray)
+                }
         }
-    }
-
-    private fun JSONObject.transformNoteToIdx() {
-        if (has("note")) {
-            val note = getString("note")
-            remove("note")
-            if (note.isNotBlank()) {
-                val idx = notes.indexOf(note)
-                if (idx < 0) throw IllegalStateException("Wrong note index \"$note\"")
-                put("n", idx)
-            }
-        }
-    }
 
     private fun List<Any>.transformToJson(): JSONArray =
         this.map { it.jsonify() }
@@ -170,32 +162,26 @@ class DumperDataStructure(
             .map { it.objectify(cls) }
 
     private fun JSONArray.loopAll(
-        function: JSONObject.() -> Unit
+        function: JSONObject.(Int) -> Unit
     ) {
         this
             .map(JSONArray::getJSONObject)
-            .forEach { it.function() }
+            .forEachIndexed { idx, it -> it.function(idx) }
     }
 
     private fun JSONObject.removeFieldIf(
-        vararg fields: String,
-        predicate: (String) -> Boolean
+        vararg fields: Pair<String, (String) -> Boolean>,
     ) {
-        fields.forEach { field ->
+        fields.forEach { (field, predicate) ->
             if (predicate(field)) {
                 remove(field)
             }
         }
     }
 
-    private fun JSONObject.addFieldIfEmpty(
-        vararg fields: String,
-        emtpyValueGenerator: (String) -> Any
-    ) {
-        fields.forEach { field ->
-            if (!has(field)) {
-                put(field, emtpyValueGenerator(field))
-            }
+    private fun JSONObject.addDefaultValues(vararg fields: Pair<String, Any>) {
+        fields.forEach { (field, value) ->
+            if (!has(field)) put(field, value)
         }
     }
 }

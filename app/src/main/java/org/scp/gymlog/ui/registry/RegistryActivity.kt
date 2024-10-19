@@ -16,11 +16,13 @@ import org.scp.gymlog.model.Bit
 import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.model.ExerciseType
 import org.scp.gymlog.model.GymRelation
+import org.scp.gymlog.model.Note.Companion.toNotes
 import org.scp.gymlog.model.Training
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.model.Weight
 import org.scp.gymlog.model.WeightSpecification
 import org.scp.gymlog.room.AppDatabase
+import org.scp.gymlog.room.DatabaseSnippets.insertBitAndNotes
 import org.scp.gymlog.room.entities.TrainingEntity
 import org.scp.gymlog.service.NotificationService
 import org.scp.gymlog.service.NotificationService.Companion.lastEndTime
@@ -668,7 +670,11 @@ class RegistryActivity : DBAppCompatActivity() {
                     variation.bar)
 
                 bit.weight = totalWeight
-                bit.note = notes.text.toString()
+
+                bit.notes = notes.text.toString()
+                    .toNotes()
+                    .toMutableList()
+
                 bit.reps = reps.integer
                 bit.trainingId = trainingId
                 bit.instant = instant
@@ -677,7 +683,7 @@ class RegistryActivity : DBAppCompatActivity() {
                 exercise.lastTrained = NOW
 
                 // SAVE TO DB:
-                bit.id = db.bitDao().insert(bit.toEntity()).toInt()
+                db.insertBitAndNotes(bit, insert = true)
                 db.exerciseDao().update(exercise.toEntity())
                 prepareExerciseListToRefreshWhenFinish()
 
@@ -789,7 +795,7 @@ class RegistryActivity : DBAppCompatActivity() {
 
     private fun updateBitLog(bit: Bit, updateTrainingId: Boolean) {
         dbThread { db ->
-            db.bitDao().update(bit.toEntity())
+            db.insertBitAndNotes(bit, insert = false)
             val index = log.indexOf(bit)
             runOnUiThread {
                 if (updateTrainingId)

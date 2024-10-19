@@ -23,16 +23,15 @@ class DataBaseDumperService {
         val dataStructure = DumperDataStructure()
 
         val bits = database.bitDao().getAllFromAllGyms()
-        val trainings = database.trainingDao().getAll()
-        dataStructure.extractNotes(bits, trainings)
 
+        dataStructure.notes = database.noteDao().getAll()
         dataStructure.prefs = PreferenceManager.getDefaultSharedPreferences(context)
         dataStructure.gyms = database.gymDao().getAll().map { it.name }
         dataStructure.exercises = database.exerciseDao().getAll()
         dataStructure.variations = database.variationDao().getAllFromAllGyms()
         dataStructure.primaries = database.exerciseMuscleCrossRefDao().getAll()
         dataStructure.secondaries = database.exerciseMuscleCrossRefDao().getAllSecondaryMuscles()
-        dataStructure.trainings = trainings
+        dataStructure.trainings = database.trainingDao().getAll()
         dataStructure.bits = bits
 
         val outputStream = fos ?: ByteArrayOutputStream()
@@ -135,21 +134,42 @@ class DataBaseDumperService {
                 trainingsIdMap[trainingOrig[i]] = newTrIds[i].toInt()
             }
 
+            // NOTES
+            database.noteDao().insertAll(dataStructure.notes)
+
             // BITS
             val bits = dataStructure.bits
                 .onEach {
-                    it.variationId = variationsIdMap[it.variationId]!!
-                    it.trainingId = trainingsIdMap[it.trainingId]!!
+                    val bit = it.bit!!
+                    bit.variationId = variationsIdMap[bit.variationId]!!
+                    bit.trainingId = trainingsIdMap[bit.trainingId]!!
                 }
-                .also { database.bitDao().insertAll(it) }
+                .also { entity ->
+                    val notes = mutableListOf<BitNoteCrossRef>()
+                    database.bitDao().insertAll(
+                        entity.mapNotNull {
+                            it.bit?.also { bit ->
+                                it.notes
+                                    .mapIndexed { idx, it ->
+                                        BitNoteCrossRef().apply {
+                                            bitId = bit.bitId
+                                            noteId = it.noteId
+                                        }
+                                    }
+                                    .apply(notes::addAll)
+                            }
+                        }
+                    )
+                    database.bitNoteCrossRefDao().insertAll(notes)
+                }
 
             // Update most recent bit to exercises
             database.exerciseDao().getAll()
                 .filter { exerciseEntity ->
                     exerciseEntity.lastTrained = bits
-                        .filter { variationsXExerciseIdMap[it.variationId] == exerciseEntity.exerciseId }
+                        .filter { variationsXExerciseIdMap[it.bit!!.variationId] == exerciseEntity.exerciseId }
                         .ifEmpty { return@filter false }
-                        .map { it.timestamp }
+                        .map { it.bit!!.timestamp }
                         .fold(Constants.DATE_ZERO) { acc, value -> if (value > acc) value else acc }
 
                     exerciseEntity.lastTrained > Constants.DATE_ZERO

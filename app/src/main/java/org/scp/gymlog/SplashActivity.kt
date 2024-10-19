@@ -16,6 +16,7 @@ import org.scp.gymlog.model.Bar
 import org.scp.gymlog.model.Exercise
 import org.scp.gymlog.model.Gym
 import org.scp.gymlog.model.Muscle
+import org.scp.gymlog.model.Note
 import org.scp.gymlog.model.Training
 import org.scp.gymlog.model.Variation
 import org.scp.gymlog.room.AppDatabase
@@ -170,6 +171,11 @@ class SplashActivity : AppCompatActivity() {
         db.gymDao().getAll()
             .map { Gym(it) }
             .also { Data.gyms.addAll(it) }
+
+        Data.notes.clear()
+        db.noteDao().getAll()
+            .map { Note(it) }
+            .also { Data.notes.addAll(it) }
 
         Data.exercises.clear()
 

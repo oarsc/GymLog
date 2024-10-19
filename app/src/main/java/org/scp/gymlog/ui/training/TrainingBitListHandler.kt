@@ -74,7 +74,7 @@ class TrainingBitListHandler(
 
                 binding.weight.bigDecimal = weight.getValue(internationalSystem)
                 binding.reps.text = bit.reps.toString()
-                binding.note.text = bit.note
+                binding.note.text = bit.notes.joinToString(", ") { it.content }
 
                 if (bit.instant) {
                     binding.time.setText(R.string.symbol_empty)

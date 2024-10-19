@@ -104,7 +104,7 @@ class LogListHandler(
         }
 
         binding.reps.integer = item.reps
-        binding.notes.text = item.note
+        binding.notes.text = item.notes.joinToString(", ") { it.content }
 
         //binding.element.setPadding(0, 0, 0, 0)
         //binding.root.setPadding(0, 0, 0, 0)
