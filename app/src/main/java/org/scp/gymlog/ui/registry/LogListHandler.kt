@@ -10,6 +10,7 @@ import org.scp.gymlog.model.Bit
 import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.SimpleListHandler
 import org.scp.gymlog.util.Constants
+import org.scp.gymlog.util.Constants.NOTES_VISUAL_SEPARATOR
 import org.scp.gymlog.util.Constants.TODAY
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.diffYearsAndDays
@@ -104,7 +105,7 @@ class LogListHandler(
         }
 
         binding.reps.integer = item.reps
-        binding.notes.text = item.notes.joinToString(", ") { it.content }
+        binding.notes.text = item.notes.joinToString(NOTES_VISUAL_SEPARATOR) { it.content }
 
         //binding.element.setPadding(0, 0, 0, 0)
         //binding.root.setPadding(0, 0, 0, 0)

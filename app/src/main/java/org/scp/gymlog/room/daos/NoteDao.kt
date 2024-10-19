@@ -10,18 +10,23 @@ import org.scp.gymlog.room.entities.NoteEntity
 @Dao
 interface NoteDao {
     // NOTES HISTORY
-    @Query("SELECT DISTINCT content FROM note " +
-        "JOIN bit_x_note ON note.noteId = bit_x_note.noteId " +
-        "JOIN bit ON bit_x_note.bitId = bit.bitId " +
-        "WHERE variationId = :variationId ORDER BY timestamp DESC LIMIT :limit")
+    @Query("""
+        SELECT DISTINCT note.content FROM bit
+        LEFT JOIN bit_x_note ON bit.bitId = bit_x_note.bitId
+        JOIN note ON bit_x_note.noteId = note.noteId
+        WHERE variationId = :variationId
+        ORDER BY timestamp DESC LIMIT :limit
+    """)
     fun getNotesHistory(variationId: Int, limit: Int): List<String>
 
-    @Query("SELECT DISTINCT content FROM note " +
-        "JOIN bit_x_note ON note.noteId = bit_x_note.noteId " +
-        "JOIN bit ON bit_x_note.bitId = bit.bitId " +
-        "JOIN training ON bit.trainingId = training.trainingId " +
-        "WHERE gymId = :gymId AND variationId = :variationId " +
-        "ORDER BY timestamp DESC LIMIT :limit")
+    @Query("""
+        SELECT DISTINCT note.content FROM bit
+        LEFT JOIN bit_x_note ON bit.bitId = bit_x_note.bitId
+        JOIN note ON bit_x_note.noteId = note.noteId
+        JOIN training ON bit.trainingId = training.trainingId
+        WHERE gymId = :gymId AND variationId = :variationId
+        ORDER BY timestamp DESC LIMIT :limit
+    """)
     fun getNotesHistory(gymId: Int, variationId: Int, limit: Int): List<String>
 
     @Query("SELECT * FROM note")

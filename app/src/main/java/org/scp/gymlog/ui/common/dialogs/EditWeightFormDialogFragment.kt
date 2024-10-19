@@ -3,10 +3,8 @@ package org.scp.gymlog.ui.common.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.text.Editable
 import android.text.InputFilter
 import android.text.InputType
-import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
@@ -31,6 +29,7 @@ import org.scp.gymlog.util.WeightUtils.calculateTotal
 import org.scp.gymlog.util.WeightUtils.convertWeight
 import org.scp.gymlog.util.WeightUtils.toKilograms
 import org.scp.gymlog.util.WeightUtils.toPounds
+import org.scp.gymlog.util.extensions.ComponentsExts.setOnChangeListener
 import org.scp.gymlog.util.extensions.MessagingExts.toast
 import java.math.BigDecimal
 import java.util.function.Consumer
@@ -102,15 +101,11 @@ class EditWeightFormDialogFragment(
                 else
                     ""
             })
-        input.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val newWeight = s.toString().safeBigDecimal()
-                updateConvertedUnit(newWeight)
-                updateTotalWeight(newWeight)
-            }
-        })
+        input.setOnChangeListener {
+            val newWeight = it.safeBigDecimal()
+            updateConvertedUnit(newWeight)
+            updateTotalWeight(newWeight)
+        }
 
         val layoutStep = view.findViewById<View>(R.id.stepBox)
         layoutStep.setOnClickListener {

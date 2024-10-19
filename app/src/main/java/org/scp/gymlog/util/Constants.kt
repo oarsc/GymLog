@@ -5,6 +5,9 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 object Constants {
+    const val NOTES_SEPARATOR = ","
+    const val NOTES_VISUAL_SEPARATOR = "$NOTES_SEPARATOR "
+
     val TWO = BigDecimal("2")
     val HALF = BigDecimal("0.5")
     val FIVE = BigDecimal("5")

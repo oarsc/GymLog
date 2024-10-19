@@ -3,8 +3,6 @@ package org.scp.gymlog.ui.common.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -16,6 +14,7 @@ import org.scp.gymlog.model.Note.Companion.toNotes
 import org.scp.gymlog.model.Weight
 import org.scp.gymlog.room.daos.BitDao
 import org.scp.gymlog.ui.common.components.NumberModifierView
+import org.scp.gymlog.util.Constants.NOTES_VISUAL_SEPARATOR
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.FormatUtils.integer
@@ -26,6 +25,7 @@ import org.scp.gymlog.util.WeightUtils.calculateTotal
 import org.scp.gymlog.util.WeightUtils.defaultScaled
 import org.scp.gymlog.util.WeightUtils.toKilograms
 import org.scp.gymlog.util.WeightUtils.toPounds
+import org.scp.gymlog.util.extensions.ComponentsExts.setOnChangeListener
 import org.scp.gymlog.util.extensions.DatabaseExts.dbThread
 import org.scp.gymlog.util.extensions.MessagingExts.toast
 import java.math.BigDecimal
@@ -52,7 +52,7 @@ class EditBitLogDialogFragment (
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         editNotes.setText(
-            initialValue.notes.joinToString(", ") { it.content }
+            initialValue.notes.joinToString(NOTES_VISUAL_SEPARATOR) { it.content }
         )
 
         val unit = dialogView.findViewById<TextView>(R.id.unit)
@@ -85,14 +85,10 @@ class EditBitLogDialogFragment (
             updateConvertedWeight(weight, converted)
         }
 
-        editWeight.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val newWeight = s.toString().safeBigDecimal()
-                updateConvertedWeight(newWeight, converted)
-            }
-        })
+        editWeight.setOnChangeListener {
+            val newWeight = it.safeBigDecimal()
+            updateConvertedWeight(newWeight, converted)
+        }
 
         val modifier = dialogView.findViewById<NumberModifierView>(R.id.weightModifier)
         modifier.setStep(initialValue.variation.step)

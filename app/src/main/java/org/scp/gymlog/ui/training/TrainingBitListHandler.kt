@@ -14,6 +14,7 @@ import org.scp.gymlog.ui.common.components.listView.CommonListView
 import org.scp.gymlog.ui.common.components.listView.MultipleListHandler
 import org.scp.gymlog.ui.training.rows.ITrainingBitRow
 import org.scp.gymlog.ui.training.rows.TrainingBitRow
+import org.scp.gymlog.util.Constants.NOTES_VISUAL_SEPARATOR
 import org.scp.gymlog.util.DateUtils.getTimeString
 import org.scp.gymlog.util.FormatUtils.bigDecimal
 import org.scp.gymlog.util.WeightUtils.calculate
@@ -74,7 +75,7 @@ class TrainingBitListHandler(
 
                 binding.weight.bigDecimal = weight.getValue(internationalSystem)
                 binding.reps.text = bit.reps.toString()
-                binding.note.text = bit.notes.joinToString(", ") { it.content }
+                binding.note.text = bit.notes.joinToString(NOTES_VISUAL_SEPARATOR) { it.content }
 
                 if (bit.instant) {
                     binding.time.setText(R.string.symbol_empty)

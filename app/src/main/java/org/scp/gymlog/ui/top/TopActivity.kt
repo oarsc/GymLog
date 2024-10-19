@@ -30,6 +30,7 @@ import org.scp.gymlog.ui.top.rows.TopVariationRow
 import org.scp.gymlog.ui.training.TrainingActivity
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Constants.IntentReference
+import org.scp.gymlog.util.Constants.NOTES_VISUAL_SEPARATOR
 import org.scp.gymlog.util.Constants.TODAY
 import org.scp.gymlog.util.Data
 import org.scp.gymlog.util.DateUtils.getDateString
@@ -180,7 +181,7 @@ open class TopActivity : DBAppCompatActivity() {
                     binding.reps.integer = bit.reps
                     binding.time.text = bit.timestamp.getDateString()
                     binding.days.text = TODAY.getLetterFrom(bit.timestamp)
-                    binding.note.text = bit.notes.joinToString(", ") { it.content }
+                    binding.note.text = bit.notes.joinToString(NOTES_VISUAL_SEPARATOR) { it.content }
 
                     binding.root.setOnClickListener {
                         onElementClicked(item.bit)

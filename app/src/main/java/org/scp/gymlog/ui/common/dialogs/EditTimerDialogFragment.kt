@@ -6,8 +6,6 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -23,6 +21,7 @@ import org.scp.gymlog.util.DateUtils.isPast
 import org.scp.gymlog.util.DateUtils.isSet
 import org.scp.gymlog.util.FormatUtils.integer
 import org.scp.gymlog.util.SecondTickThread
+import org.scp.gymlog.util.extensions.ComponentsExts.setOnChangeListener
 import org.scp.gymlog.util.extensions.PreferencesExts.loadString
 import java.time.LocalDateTime
 import java.util.Locale
@@ -96,16 +95,13 @@ class EditTimerDialogFragment(
 
         val editNotes = view.findViewById<EditText>(R.id.editTimer)
         editNotes.setText(initialValue.toString())
-        editNotes.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (isDefaultValue) {
-                    isDefaultValue = false
-                    setInputAlpha(view, 1f)
-                }
+        editNotes.setOnChangeListener {
+            if (isDefaultValue) {
+                isDefaultValue = false
+                setInputAlpha(view, 1f)
             }
-        })
+        }
+
         if (isDefaultValue) setInputAlpha(view, 0.4f)
 
         stopButton.setOnClickListener {

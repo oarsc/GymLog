@@ -4,6 +4,7 @@ import org.scp.gymlog.exceptions.SaveException
 import org.scp.gymlog.room.EntityMappable
 
 import org.scp.gymlog.room.entities.NoteEntity
+import org.scp.gymlog.util.Constants.NOTES_SEPARATOR
 import org.scp.gymlog.util.Data
 
 data class Note (
@@ -26,7 +27,7 @@ data class Note (
 
     companion object {
         fun String.toNotes(): List<Note> =
-            this.split(",")
+            this.split(NOTES_SEPARATOR)
                 .map(String::trim)
                 .filter(String::isNotEmpty)
                 .map { Data.getNoteOrCreate(it) }

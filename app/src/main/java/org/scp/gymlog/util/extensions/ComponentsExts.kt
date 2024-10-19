@@ -1,7 +1,10 @@
 package org.scp.gymlog.util.extensions
 
 import android.app.Activity
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import org.scp.gymlog.R
 import org.scp.gymlog.ui.common.animations.ResizeHeightAnimation
@@ -32,4 +35,15 @@ object ComponentsExts {
         toDp: Boolean = false,
         animLauncher: View = this
     ) = animLauncher.startAnimation(ResizeHeightAnimation(this, height, duration, toDp))
+
+
+    fun EditText.setOnChangeListener(callback: (String) -> Unit) {
+        addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                callback(s.toString())
+            }
+        })
+    }
 }
