@@ -138,6 +138,7 @@ class RegistryActivity : DBAppCompatActivity() {
             lastSuperSet = mostRecentTraining.superSet
             if (lastSuperSet > 0 && Data.superSet == lastSuperSet) {
                 enableSuperSetNavigation = bitDao.getHistoryByTrainingId(training.id)
+                    .map { it.bit }
                     .filter { it.superSet == lastSuperSet }
                     .map { it.variationId }
                     .distinct()
@@ -396,7 +397,7 @@ class RegistryActivity : DBAppCompatActivity() {
                     ?.also { trainingId ->
                         dbThread { db ->
                             val variationIds = db.bitDao().getHistoryByTrainingIdDesc(trainingId)
-                                .map { it.variationId }
+                                .map { it.bit.variationId }
                                 .distinct()
                             when {
                                 variationIds.isEmpty() ->
@@ -601,6 +602,7 @@ class RegistryActivity : DBAppCompatActivity() {
         val trainingId = Data.training?.id ?: return false
 
         val variations = db.bitDao().getHistoryByTrainingId(trainingId)
+            .map { it.bit }
             .filter { it.superSet == lastSuperSet }
             .map { it.variationId }
             .distinct()
@@ -624,7 +626,7 @@ class RegistryActivity : DBAppCompatActivity() {
         val trainingId = Data.training?.id ?: return false
 
         val variations = db.bitDao().getHistoryByTrainingId(trainingId)
-            .map { it.variationId }
+            .map { it.bit.variationId }
             .reversed()
             .distinct()
             .let { if (goBack) it else it.reversed() }

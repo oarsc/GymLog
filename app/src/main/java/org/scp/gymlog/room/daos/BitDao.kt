@@ -44,10 +44,10 @@ interface BitDao {
     fun getCalendarHistory(dateStart: LocalDateTime, dateEnd: LocalDateTime): List<BitEntity>
 
     @Query("SELECT * FROM bit WHERE trainingId = :trainingId ORDER BY timestamp")
-    fun getHistoryByTrainingId(trainingId: Int): List<BitEntity>
+    fun getHistoryByTrainingId(trainingId: Int): List<BitEntityWithNotes>
 
     @Query("SELECT * FROM bit WHERE trainingId = :trainingId ORDER BY timestamp DESC")
-    fun getHistoryByTrainingIdDesc(trainingId: Int): List<BitEntity>
+    fun getHistoryByTrainingIdDesc(trainingId: Int): List<BitEntityWithNotes>
 
     // MOST/LEAST RECENT
     @Query("SELECT * FROM bit WHERE trainingId == :trainingId AND timestamp < :timestamp ORDER BY timestamp DESC LIMIT 1")

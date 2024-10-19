@@ -89,10 +89,12 @@ class DumperDataStructure(
                                     notes = obj.getString("n")
                                         .split(",")
                                         .map(String::toInt)
-                                        .map { NoteEntity().apply {
-                                            noteId = it + 1
-                                            content = notesIndexes[it]
-                                        }}
+                                        .map {
+                                            NoteEntity().apply {
+                                                noteId = it + 1
+                                                content = notesIndexes[it]
+                                            }
+                                        }
                                 }
                             }
                         }
@@ -100,7 +102,7 @@ class DumperDataStructure(
         }
         set(value) {
             val content = value.map { entity ->
-                val json = entity.bit!!.jsonify()
+                val json = entity.bit.jsonify()
 
                 if (entity.notes.isNotEmpty()) {
                     json.put("n",

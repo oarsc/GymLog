@@ -27,7 +27,6 @@ import androidx.room.Index
     ]
 )
 class BitNoteCrossRef {
-    var order = 0
     var bitId = 0
     var noteId = 0
 }

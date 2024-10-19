@@ -53,7 +53,7 @@ class TrainingActivity : DBAppCompatActivity() {
         val training = trainingDao.getTraining(trainingId)
             ?: throw LoadException("Cannot find trainingId: $trainingId")
         val bitEntities = db.bitDao().getHistoryByTrainingId(trainingId)
-        trainingData = getTrainingData(training, bitEntities)
+        trainingData = getTrainingData(training, bitEntities.map { it.bit })
 
         val bits = bitEntities.map { Bit(it) }
         generateTrainingBitRows(bits)

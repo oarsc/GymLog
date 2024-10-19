@@ -1,6 +1,10 @@
 package org.scp.gymlog.room.entities
 
-import androidx.room.*
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.Junction
+import androidx.room.PrimaryKey
+import androidx.room.Relation
 
 @Entity(tableName = "muscle")
 class MuscleEntity {
@@ -9,7 +13,7 @@ class MuscleEntity {
 
     class WithExercises {
         @Embedded
-        var muscle: MuscleEntity? = null
+        lateinit var muscle: MuscleEntity
 
         @Relation(
             parentColumn = "muscleId",

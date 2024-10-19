@@ -55,7 +55,7 @@ class BitEntity {
 
     class BitEntityWithNotes {
         @Embedded
-        var bit: BitEntity? = null
+        lateinit var bit: BitEntity
 
         @NoJsonify
         @Relation(

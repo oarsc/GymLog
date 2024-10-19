@@ -27,7 +27,7 @@ class LatestActivity : DBAppCompatActivity() {
             ?: return R.string.validation_training_not_started
 
         variations = db.bitDao().getHistoryByTrainingIdDesc(trainingId)
-            .map { it.variationId }
+            .map { it.bit.variationId }
             .distinct()
             .map { Data.getVariation(it) }
 

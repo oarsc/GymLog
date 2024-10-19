@@ -143,11 +143,11 @@ class EditBitLogDialogFragment (
         val superSet = editSuperSet.integer
         val trainingBits = bitDao.getHistoryByTrainingId(initialValue.trainingId)
 
-        val index = trainingBits.indices.find { trainingBits[it].bitId == initialValue.id }
+        val index = trainingBits.indices.find { trainingBits[it].bit.bitId == initialValue.id }
             ?: throw RuntimeException("Bit not found on its own training... Id:${initialValue.id} #${initialValue.trainingId}")
 
-        val nextSs = if (index < trainingBits.size - 1) trainingBits[index + 1].superSet else 0
-        val prevSs = if (index > 0) trainingBits[index - 1].superSet else 0
+        val nextSs = if (index < trainingBits.size - 1) trainingBits[index + 1].bit.superSet else 0
+        val prevSs = if (index > 0) trainingBits[index - 1].bit.superSet else 0
 
         if (superSet == 0) {
             if (nextSs == prevSs && nextSs != 0) {
@@ -156,7 +156,7 @@ class EditBitLogDialogFragment (
             }
         } else {
 
-            if (trainingBits.any { it.superSet == superSet }) {
+            if (trainingBits.any { it.bit.superSet == superSet }) {
                 if (nextSs != superSet && prevSs != superSet) {
                     toast(R.string.validation_super_set_must_be_in_touch)
                     return false

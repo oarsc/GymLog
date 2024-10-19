@@ -114,7 +114,7 @@ class HistoryFragment : CustomFragment() {
 			val newTrainings = trainings.mapNotNull {
 				val bits = db.bitDao().getHistoryByTrainingId(it.trainingId)
 				if (bits.isNotEmpty()) {
-					getTrainingData(it, bits)
+					getTrainingData(it, bits.map { it.bit })
 				} else {
 					null
 				}

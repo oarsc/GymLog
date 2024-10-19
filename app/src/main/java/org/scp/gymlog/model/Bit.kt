@@ -2,6 +2,7 @@ package org.scp.gymlog.model
 
 import org.scp.gymlog.room.EntityMappable
 import org.scp.gymlog.room.entities.BitEntity
+import org.scp.gymlog.room.entities.BitEntity.BitEntityWithNotes
 import org.scp.gymlog.room.entities.BitNoteCrossRef
 import org.scp.gymlog.util.Constants
 import org.scp.gymlog.util.Data
@@ -46,7 +47,7 @@ class Bit : EntityMappable<BitEntity> {
 		)
 	}
 
-	constructor(entity: BitEntity.BitEntityWithNotes): this(entity.bit!!) {
+	constructor(entity: BitEntityWithNotes): this(entity.bit) {
 		entity.notes
 			.map { Data.getNote(it.content) }
 			.apply(notes::addAll)

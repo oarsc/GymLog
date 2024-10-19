@@ -140,17 +140,17 @@ class DataBaseDumperService {
             // BITS
             val bits = dataStructure.bits
                 .onEach {
-                    val bit = it.bit!!
+                    val bit = it.bit
                     bit.variationId = variationsIdMap[bit.variationId]!!
                     bit.trainingId = trainingsIdMap[bit.trainingId]!!
                 }
                 .also { entity ->
                     val notes = mutableListOf<BitNoteCrossRef>()
                     database.bitDao().insertAll(
-                        entity.mapNotNull {
-                            it.bit?.also { bit ->
+                        entity.map {
+                            it.bit.also { bit ->
                                 it.notes
-                                    .mapIndexed { idx, it ->
+                                    .map {
                                         BitNoteCrossRef().apply {
                                             bitId = bit.bitId
                                             noteId = it.noteId
@@ -167,9 +167,9 @@ class DataBaseDumperService {
             database.exerciseDao().getAll()
                 .filter { exerciseEntity ->
                     exerciseEntity.lastTrained = bits
-                        .filter { variationsXExerciseIdMap[it.bit!!.variationId] == exerciseEntity.exerciseId }
+                        .filter { variationsXExerciseIdMap[it.bit.variationId] == exerciseEntity.exerciseId }
                         .ifEmpty { return@filter false }
-                        .map { it.bit!!.timestamp }
+                        .map { it.bit.timestamp }
                         .fold(Constants.DATE_ZERO) { acc, value -> if (value > acc) value else acc }
 
                     exerciseEntity.lastTrained > Constants.DATE_ZERO

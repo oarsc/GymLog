@@ -52,13 +52,13 @@ object Data {
 			.firstOrNull { it.id == variationId }
 			?: throw LoadException("NO VARIATION $variationId FOUND")
 
-	fun getNoteOrNull(content: String): Note? =
+	fun getNoteOrCreate(content: String): Note =
 		notes
 			.firstOrNull { it.content == content }
+			?: Note(content = content)
 
-	fun getNoteOrCreate(content: String): Note = getNoteOrNull(content)
-		?: Note(content = content)
-
-	fun getNote(content: String): Note = getNoteOrNull(content)
-		?: throw LoadException("NO NOTE \"$content\" FOUND")
+	fun getNote(content: String): Note =
+		notes
+			.firstOrNull { it.content == content }
+			?: throw LoadException("NO NOTE \"$content\" FOUND")
 }

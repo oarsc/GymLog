@@ -65,8 +65,8 @@ class TrainingFloatingActionButton : FloatingActionButton {
                         { result ->
                             notificationService.hideNotification()
                             context.dbThread { db ->
-                                result.start = bitEntities.map { it.timestamp }.minOf { it }
-                                result.end = bitEntities.map { it.timestamp }.maxOf { it }
+                                result.start = bitEntities.map { it.bit.timestamp }.minOf { it }
+                                result.end = bitEntities.map { it.bit.timestamp }.maxOf { it }
 
                                 db.trainingDao().update(result.toEntity())
 
