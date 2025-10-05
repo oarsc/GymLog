@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.registry.RegistryActivity"
+    android:fitsSystemWindows="true">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:title="@string/title_registry"
+        app:menu="@menu/registry_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_back_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/activeSuperset"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:background="@color/cyan_light"
+        android:textColor="@color/dark"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:text="@string/text_active_superset"/>
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/activeSuperset"
+        android:orientation="horizontal">
+
+        <include
+            android:id="@+id/fragmentExercise"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            layout="@layout/listitem_variation"/>
+
+        <LinearLayout
+            android:id="@+id/timerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_timer_24dp"
+                android:paddingEnd="6dp"
+                android:contentDescription="@string/symbol_empty" />
+
+            <TextView
+                android:id="@+id/timerSeconds"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/symbol_zero" />
+
+            <TextView
+                android:id="@+id/secondsText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/symbol_s" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/backgroundAccent"
+        app:layout_constraintBottom_toTopOf="@id/fragmentHistoryBits"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/fragmentHistoryBits"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
+        app:layout_constraintBottom_toTopOf="@id/editNotes"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+
+        android:background="#1000"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/headers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/list_text_margin">
+
+            <TextView
+                android:id="@+id/setDay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="end" />
+
+            <TextView
+                android:id="@+id/setTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="@string/text_set" />
+
+            <TextView
+                android:id="@+id/weightTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center_vertical|end"
+                android:layout_marginEnd="6dp"
+                android:text="@string/text_weight" />
+
+            <TextView
+                android:id="@+id/repsTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center_vertical|end"
+                android:text="@string/text_reps" />
+
+            <TextView
+                android:id="@+id/notes_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="7"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="0dp"
+                android:gravity="start"
+                android:text="@string/text_notes" />
+        </LinearLayout>
+
+        <org.oar.gymlog.ui.common.components.listView.SimpleListView
+            android:id="@+id/log_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/listitem_log" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/backgroundAccent"
+        app:layout_constraintTop_toBottomOf="@id/fragmentHistoryBits"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/labelNotes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_registry_horizontal_margin"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/editNotes"
+        app:layout_constraintTop_toTopOf="@id/editNotes"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/text_notes" />
+
+    <EditText
+        android:id="@+id/editNotes"
+        android:inputType="text"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:ems="7"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:focusable="false"
+        app:layout_constraintBottom_toTopOf="@id/editWeight"
+        app:layout_constraintLeft_toRightOf="@id/labelNotes"
+        app:layout_constraintRight_toLeftOf="@id/clearNote" />
+
+    <ImageView
+        android:id="@+id/clearNote"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_cross_24dp"
+        app:layout_constraintTop_toTopOf="@id/lock"
+        app:layout_constraintRight_toLeftOf="@id/lock"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
+        app:tint="@color/themedIcon" />
+
+    <ImageView
+        android:id="@+id/lock"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_unlock_24dp"
+        app:layout_constraintTop_toTopOf="@id/superSet"
+        app:layout_constraintRight_toLeftOf="@id/superSet"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
+        app:tint="@color/themedIcon" />
+
+    <ImageView
+        android:id="@+id/superSet"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_super_set_24dp"
+        android:layout_marginEnd="@dimen/activity_registry_horizontal_margin"
+        app:layout_constraintTop_toTopOf="@id/editNotes"
+        app:layout_constraintBottom_toBottomOf="@id/editNotes"
+        app:layout_constraintRight_toRightOf="parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
+        app:tint="@color/themedIcon" />
+
+    <TextView
+        android:id="@+id/labelWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_registry_horizontal_margin"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/weightModifier"
+        app:layout_constraintTop_toTopOf="@id/weightModifier"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/text_weight" />
+
+    <EditText
+        android:id="@+id/editWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:ems="5"
+        android:textAlignment="viewEnd"
+        android:paddingEnd="30dp"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toBottomOf="@id/weightModifier"
+        app:layout_constraintLeft_toLeftOf="@id/editReps"
+        android:focusable="false"
+        tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/weightModifier"
+        app:layout_constraintTop_toTopOf="@id/weightModifier"
+        app:layout_constraintRight_toRightOf="@id/editWeight"
+        android:layout_marginEnd="6dp"
+        android:text="@string/text_kg" />
+
+
+    <ImageView
+        android:id="@+id/weightSpecIcon"
+        android:layout_width="36dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_bar_with_plates_36x24dp"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        app:layout_constraintBottom_toBottomOf="@id/weightModifier"
+        app:layout_constraintLeft_toRightOf="@id/editWeight"
+        app:layout_constraintTop_toTopOf="@id/weightModifier"
+        app:tint="@color/themedIcon" />
+
+    <org.oar.gymlog.ui.common.components.NumberModifierView
+        android:id="@+id/weightModifier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginEnd="@dimen/activity_registry_horizontal_margin"
+        app:target="@id/editWeight"
+        app:layout_constraintBottom_toTopOf="@id/repsModifier"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/labelReps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_registry_horizontal_margin"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/repsModifier"
+        app:layout_constraintTop_toTopOf="@id/repsModifier"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/text_reps" />
+
+    <EditText
+        android:id="@+id/editReps"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:ems="5"
+        android:textAlignment="viewEnd"
+        android:paddingEnd="30dp"
+        app:layout_constraintBottom_toBottomOf="@id/repsModifier"
+        app:layout_constraintLeft_toLeftOf="@id/editNotes"
+        android:focusable="false"
+        tools:ignore="RtlSymmetry" />
+
+    <org.oar.gymlog.ui.common.components.NumberModifierView
+        android:id="@+id/repsModifier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginEnd="@dimen/activity_registry_horizontal_margin"
+        app:target="@id/editReps"
+        app:layout_constraintBottom_toTopOf="@id/bottomButtonPanel"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/backgroundAccent"
+        app:layout_constraintBottom_toTopOf="@id/bottomButtonPanel"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <org.oar.gymlog.ui.common.components.SideButtonsLinearLayoutView
+        android:id="@+id/bottomButtonPanel"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:orientation="horizontal"
+        app:minWidth="0dp"
+        app:maxWidth="90dp"
+        app:activationWidth="60dp"
+        app:iconWidth="30dp"
+        app:leftIcon="@drawable/ic_arrow_left_24dp"
+        app:rightIcon="@drawable/ic_arrow_right_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" >
+
+        <ImageView
+            android:id="@+id/confirmInstantButton"
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:paddingVertical="30dp"
+            android:src="@drawable/ic_fast_done_24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <ImageView
+            android:id="@+id/mainButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingVertical="30dp"
+            android:src="@drawable/ic_done_24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+
+    </org.oar.gymlog.ui.common.components.SideButtonsLinearLayoutView>
+</androidx.constraintlayout.widget.ConstraintLayout>

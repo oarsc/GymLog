@@ -1,0 +1,141 @@
+kotlin version: 2.0.21
+error message: org.jetbrains.kotlin.backend.common.BackendException: Backend Internal error: Exception during IR lowering
+File being compiled: /home/oar/pro/git/StockLog/app/src/main/java/org/oar/stocklog/clients/yahoo/YahooClientHandler.kt
+The root cause java.lang.RuntimeException was thrown at: org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:47)
+	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException(CodegenUtil.kt:253)
+	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException$default(CodegenUtil.kt:236)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invokeSequential(performByIrFile.kt:65)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invoke(performByIrFile.kt:52)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invoke(performByIrFile.kt:38)
+	at org.jetbrains.kotlin.backend.common.phaser.NamedCompilerPhase.phaseBody(CompilerPhase.kt:166)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.CompositePhase.invoke(PhaseBuilders.kt:27)
+	at org.jetbrains.kotlin.backend.common.phaser.CompositePhase.invoke(PhaseBuilders.kt:14)
+	at org.jetbrains.kotlin.backend.common.phaser.NamedCompilerPhase.phaseBody(CompilerPhase.kt:166)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.CompilerPhaseKt.invokeToplevel(CompilerPhase.kt:62)
+	at org.jetbrains.kotlin.backend.jvm.JvmIrCodegenFactory.invokeCodegen(JvmIrCodegenFactory.kt:371)
+	at org.jetbrains.kotlin.codegen.CodegenFactory.generateModule(CodegenFactory.kt:47)
+	at org.jetbrains.kotlin.backend.jvm.JvmIrCodegenFactory.generateModuleInFrontendIRMode(JvmIrCodegenFactory.kt:433)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.generateCodeFromIr(jvmCompilerPipeline.kt:246)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.compileModulesUsingFrontendIrAndLightTree(jvmCompilerPipeline.kt:142)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:148)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:43)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:103)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:49)
+	at org.jetbrains.kotlin.cli.common.CLITool.exec(CLITool.kt:101)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:464)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:73)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.doCompile(IncrementalCompilerRunner.kt:506)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileImpl(IncrementalCompilerRunner.kt:423)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.tryCompileIncrementally$lambda$9$compile(IncrementalCompilerRunner.kt:249)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.tryCompileIncrementally(IncrementalCompilerRunner.kt:267)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:120)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:675)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:92)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1660)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.RuntimeException: Exception while generating code for:
+FUN name:start visibility:public modality:OPEN <> ($this:org.oar.stocklog.clients.yahoo.YahooClientHandler, context:android.content.Context) returnType:kotlin.Unit
+  overridden:
+    public abstract fun start (context: android.content.Context): kotlin.Unit declared in org.oar.stocklog.clients.ClientHandler
+  $this: VALUE_PARAMETER name:<this> type:org.oar.stocklog.clients.yahoo.YahooClientHandler
+  VALUE_PARAMETER name:context index:0 type:android.content.Context
+  BLOCK_BODY
+    VAR name:shares type:kotlin.collections.List<org.oar.stocklog.model.Share> [val]
+      CALL 'public final fun <get-shares> (): kotlin.collections.List<org.oar.stocklog.model.Share> declared in org.oar.stocklog.utils.DataHandler' type=kotlin.collections.List<org.oar.stocklog.model.Share> origin=GET_PROPERTY
+        $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:INSTANCE type:org.oar.stocklog.utils.DataHandler visibility:public [final,static] declared in org.oar.stocklog.utils.DataHandler' type=org.oar.stocklog.utils.DataHandler origin=null
+    VAR name:sources type:kotlin.collections.List<org.oar.stocklog.clients.yahoo.model.YahooSource> [val]
+      CALL 'public final fun filterIsInstance <R> (): kotlin.collections.List<R of kotlin.collections.CollectionsKt.filterIsInstance> [inline] declared in kotlin.collections.CollectionsKt' type=kotlin.collections.List<org.oar.stocklog.clients.yahoo.model.YahooSource> origin=null
+        <R>: org.oar.stocklog.clients.yahoo.model.YahooSource
+        $receiver: CALL 'public final fun flatMap <T, R> (transform: kotlin.Function1<T of kotlin.collections.CollectionsKt.flatMap, kotlin.collections.Iterable<R of kotlin.collections.CollectionsKt.flatMap>>): kotlin.collections.List<R of kotlin.collections.CollectionsKt.flatMap> [inline] declared in kotlin.collections.CollectionsKt' type=kotlin.collections.List<org.oar.stocklog.model.ShareSource> origin=null
+          <T>: org.oar.stocklog.model.Share
+          <R>: org.oar.stocklog.model.ShareSource
+          $receiver: GET_VAR 'val shares: kotlin.collections.List<org.oar.stocklog.model.Share> [val] declared in org.oar.stocklog.clients.yahoo.YahooClientHandler.start' type=kotlin.collections.List<org.oar.stocklog.model.Share> origin=null
+          transform: BLOCK type=kotlin.Function1<org.oar.stocklog.model.Share, kotlin.collections.Iterable<org.oar.stocklog.model.ShareSource>> origin=LAMBDA
+            COMPOSITE type=kotlin.Unit origin=null
+            FUNCTION_REFERENCE 'private final fun start$lambda$0 (it: org.oar.stocklog.model.Share): kotlin.collections.Iterable<org.oar.stocklog.model.ShareSource> declared in org.oar.stocklog.clients.yahoo.YahooClientHandler' type=kotlin.Function1<org.oar.stocklog.model.Share, kotlin.collections.Iterable<org.oar.stocklog.model.ShareSource>> origin=INLINE_LAMBDA reflectionTarget=null
+    WHEN type=kotlin.Unit origin=IF
+      BRANCH
+        if: CALL 'public final fun OROR (arg0: kotlin.Boolean, arg1: kotlin.Boolean): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=null
+          arg0: CALL 'public abstract fun isEmpty (): kotlin.Boolean declared in kotlin.collections.List' type=kotlin.Boolean origin=null
+            $this: GET_VAR 'val sources: kotlin.collections.List<org.oar.stocklog.clients.yahoo.model.YahooSource> [val] declared in org.oar.stocklog.clients.yahoo.YahooClientHandler.start' type=kotlin.collections.List<org.oar.stocklog.clients.yahoo.model.YahooSource> origin=null
+          arg1: CALL 'public final fun not (): kotlin.Boolean [operator] declared in kotlin.Boolean' type=kotlin.Boolean origin=EXCLEQ
+            $this: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EXCLEQ
+              arg0: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:executor type:@[FlexibleNullability] java.util.concurrent.ExecutorService? visibility:private [final]' type=@[FlexibleNullability] java.util.concurrent.ExecutorService? origin=null
+                receiver: GET_VAR '<this>: org.oar.stocklog.clients.yahoo.YahooClientHandler declared in org.oar.stocklog.clients.yahoo.YahooClientHandler.start' type=org.oar.stocklog.clients.yahoo.YahooClientHandler origin=null
+              arg1: CONST Null type=kotlin.Nothing? value=null
+        then: RETURN type=kotlin.Nothing from='public open fun start (context: android.content.Context): kotlin.Unit declared in org.oar.stocklog.clients.yahoo.YahooClientHandler'
+          GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:INSTANCE type:kotlin.Unit visibility:public [final,static] declared in kotlin.Unit' type=kotlin.Unit origin=null
+    CALL 'public abstract fun execute (p0: @[FlexibleNullability] java.lang.Runnable?): kotlin.Unit [fake_override] declared in kotlin.Nothing' type=kotlin.Unit origin=null
+      $this: BLOCK type=kotlin.Nothing origin=null
+        CALL 'public final fun CHECK_NOT_NULL <T0> (arg0: T0 of kotlin.internal.ir.CHECK_NOT_NULL?): {T0 of kotlin.internal.ir.CHECK_NOT_NULL & Any} declared in kotlin.internal.ir' type=kotlin.Nothing origin=EXCLEXCL
+          <T0>: kotlin.Nothing
+          arg0: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:executor type:@[FlexibleNullability] java.util.concurrent.ExecutorService? visibility:private [final]' type=@[FlexibleNullability] java.util.concurrent.ExecutorService? origin=null
+            receiver: GET_VAR '<this>: org.oar.stocklog.clients.yahoo.YahooClientHandler declared in org.oar.stocklog.clients.yahoo.YahooClientHandler.start' type=org.oar.stocklog.clients.yahoo.YahooClientHandler origin=null
+        CALL 'public final fun throwKotlinNothingValueException (): kotlin.Nothing declared in kotlin.jvm.internal.Intrinsics' type=kotlin.Nothing origin=null
+      p0: BLOCK type=java.lang.Runnable origin=LAMBDA
+        COMPOSITE type=kotlin.Unit origin=null
+        CALL 'public final fun <jvm-indy> <T> (dynamicCall: T of kotlin.jvm.internal.<jvm-indy>, bootstrapMethodHandle: kotlin.Any, vararg bootstrapMethodArguments: kotlin.Any): T of kotlin.jvm.internal.<jvm-indy> declared in kotlin.jvm.internal' type=java.lang.Runnable origin=null
+          <T>: java.lang.Runnable
+          dynamicCall: CALL 'public final fun run (p0: org.oar.stocklog.clients.yahoo.YahooClientHandler, p1: kotlin.collections.List<org.oar.stocklog.clients.yahoo.model.YahooSource>, p2: kotlin.collections.List<org.oar.stocklog.model.Share>, p3: android.content.Context): java.lang.Runnable declared in kotlin.jvm.internal.invokeDynamic' type=java.lang.Runnable origin=null
+            p0: GET_VAR '<this>: org.oar.stocklog.clients.yahoo.YahooClientHandler declared in org.oar.stocklog.clients.yahoo.YahooClientHandler.start' type=org.oar.stocklog.clients.yahoo.YahooClientHandler origin=null
+            p1: GET_VAR 'val sources: kotlin.collections.List<org.oar.stocklog.clients.yahoo.model.YahooSource> [val] declared in org.oar.stocklog.clients.yahoo.YahooClientHandler.start' type=kotlin.collections.List<org.oar.stocklog.clients.yahoo.model.YahooSource> origin=null
+            p2: GET_VAR 'val shares: kotlin.collections.List<org.oar.stocklog.model.Share> [val] declared in org.oar.stocklog.clients.yahoo.YahooClientHandler.start' type=kotlin.collections.List<org.oar.stocklog.model.Share> origin=null
+            p3: GET_VAR 'context: android.content.Context declared in org.oar.stocklog.clients.yahoo.YahooClientHandler.start' type=android.content.Context origin=null
+          bootstrapMethodHandle: CALL 'public final fun <jvm-method-handle> (tag: kotlin.Int, owner: kotlin.String, name: kotlin.String, descriptor: kotlin.String, isInterface: kotlin.Boolean): kotlin.Any declared in kotlin.jvm.internal' type=kotlin.Any origin=null
+            tag: CONST Int type=kotlin.Int value=6
+            owner: CONST String type=kotlin.String value="java/lang/invoke/LambdaMetafactory"
+            name: CONST String type=kotlin.String value="metafactory"
+            descriptor: CONST String type=kotlin.String value="(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;"
+            isInterface: CONST Boolean type=kotlin.Boolean value=false
+          bootstrapMethodArguments: VARARG type=kotlin.Array<kotlin.Any> varargElementType=kotlin.Any
+            CALL 'public final fun <jvm-original-method-type> (method: kotlin.Any): kotlin.Any declared in kotlin.jvm.internal' type=kotlin.Any origin=null
+              method: RAW_FUNCTION_REFERENCE 'public abstract fun run (): kotlin.Unit declared in java.lang.Runnable' type=kotlin.Any
+            RAW_FUNCTION_REFERENCE 'private final fun start$lambda$1 (this$0: org.oar.stocklog.clients.yahoo.YahooClientHandler, $sources: kotlin.collections.List<org.oar.stocklog.clients.yahoo.model.YahooSource>, $shares: kotlin.collections.List<org.oar.stocklog.model.Share>, $context: android.content.Context): kotlin.Unit declared in org.oar.stocklog.clients.yahoo.YahooClientHandler' type=kotlin.Any
+            CALL 'public final fun <jvm-original-method-type> (method: kotlin.Any): kotlin.Any declared in kotlin.jvm.internal' type=kotlin.Any origin=null
+              method: RAW_FUNCTION_REFERENCE 'public abstract fun run (): kotlin.Unit [fake_override] declared in kotlin.jvm.internal.invokeDynamic.<fake>' type=kotlin.Any
+
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:47)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate$default(FunctionCodegen.kt:40)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethodNode(ClassCodegen.kt:406)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethod(ClassCodegen.kt:423)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generate(ClassCodegen.kt:168)
+	at org.jetbrains.kotlin.backend.jvm.FileCodegen.lower(JvmPhases.kt:39)
+	at org.jetbrains.kotlin.backend.common.phaser.PhaseFactoriesKt.createFilePhase$lambda$4(PhaseFactories.kt:71)
+	at org.jetbrains.kotlin.backend.common.phaser.PhaseBuildersKt$createSimpleNamedCompilerPhase$1.phaseBody(PhaseBuilders.kt:69)
+	at org.jetbrains.kotlin.backend.common.phaser.SimpleNamedCompilerPhase.phaseBody(CompilerPhase.kt:226)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invokeSequential(performByIrFile.kt:62)
+	... 44 more
+Caused by: java.lang.IllegalStateException: Fake override should have at least one overridden descriptor: FUN FAKE_OVERRIDE name:execute visibility:public modality:ABSTRACT <> ($this:kotlin.Nothing, p0:@[FlexibleNullability] java.lang.Runnable?) returnType:kotlin.Unit [fake_override]
+	at org.jetbrains.kotlin.backend.jvm.ir.JvmIrUtilsKt.findSuperDeclaration(JvmIrUtils.kt:408)
+	at org.jetbrains.kotlin.backend.jvm.mapping.MethodSignatureMapper.findSuperDeclaration(MethodSignatureMapper.kt:443)
+	at org.jetbrains.kotlin.backend.jvm.mapping.MethodSignatureMapper.mapToCallableMethod(MethodSignatureMapper.kt:412)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:605)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrCall.accept(IrCall.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:579)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:584)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrBlockBody.accept(IrBlockBody.kt:20)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.generate(ExpressionCodegen.kt:240)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.doGenerate(FunctionCodegen.kt:123)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:44)
+	... 54 more
+
+

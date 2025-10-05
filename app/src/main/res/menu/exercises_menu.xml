@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/searchButton"
+        android:icon="@drawable/ic_search_24dp"
+        android:title="@string/title_search"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/latestButton"
+        android:icon="@drawable/ic_latest_24dp"
+        android:title="@string/title_latest"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/create_button"
+        android:icon="@drawable/ic_add_24dp"
+        android:title="@string/title_create_exercise"
+        app:showAsAction="never" />
+
+    <group
+        android:id="@+id/sortGroup"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/sortAlphabetically"
+            android:title="@string/sort_alphabetically" />
+        <item
+            android:id="@+id/sortLastUsed"
+            android:title="@string/sort_last_used" />
+    </group>
+
+</menu>

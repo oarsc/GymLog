@@ -1,0 +1,17 @@
+<resources>
+    <declare-styleable name="NumberModifierView">
+        <attr name="target" format="reference" />
+        <attr name="step" format="float" />
+        <attr name="negatives" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="SideButtonsLinearLayoutView">
+        <attr name="leftIcon" format="reference" />
+        <attr name="rightIcon" format="reference" />
+        <attr name="minWidth" format="dimension" />
+        <attr name="maxWidth" format="dimension" />
+        <attr name="activationWidth" format="dimension" />
+        <attr name="iconWidth" format="dimension" />
+        <attr name="swipeSensibility" format="dimension" />
+    </declare-styleable>
+</resources>

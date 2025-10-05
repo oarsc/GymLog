@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobileNavigation"
+    app:startDestination="@id/navigationExercises">
+
+    <fragment
+        android:id="@+id/navigationWorkout"
+        android:name="org.oar.gymlog.ui.main.routines.RoutineFragment"
+        android:label="@string/title_workout"
+        tools:layout="@layout/fragment_list_routines" />
+
+    <fragment
+        android:id="@+id/navigationExercises"
+        android:name="org.oar.gymlog.ui.main.muscles.MusclesFragment"
+        android:label="@string/title_exercises"
+        tools:layout="@layout/fragment_list_muscles" />
+
+    <fragment
+        android:id="@+id/navigationHistory"
+        android:name="org.oar.gymlog.ui.main.history.HistoryFragment"
+        android:label="@string/title_history"
+        tools:layout="@layout/fragment_history" />
+
+    <fragment
+        android:id="@+id/navigationPreferences"
+        android:name="org.oar.gymlog.ui.main.preferences.PreferencesFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_preferences" />
+</navigation>

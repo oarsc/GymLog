@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/dialog_margin">
+
+    <LinearLayout
+        android:id="@+id/stepBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp"
+        android:layout_marginTop="@dimen/list_text_margin"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackground"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/support_step_2" />
+
+        <TextView
+            android:id="@+id/step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:text="@string/symbol_hyphen" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/barsBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackground"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/support_bar_2" />
+
+        <TextView
+            android:id="@+id/barUsed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:text="@string/symbol_hyphen" />
+
+        <ImageView
+            android:id="@+id/incompatibleBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_warning_24dp"
+            app:tint="@color/orange_light"
+            android:contentDescription="@string/symbol_empty"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/weightsConfigBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackground"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/support_input_type_2"/>
+
+        <ImageView
+            android:id="@+id/weightSpecIcon"
+            android:layout_width="36dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_bar_with_plates_36x24dp"
+            app:tint="@color/themedIcon"
+            android:contentDescription="@string/symbol_empty" />
+
+        <TextView
+            android:id="@+id/weightSpec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp" />
+
+    </LinearLayout>
+</LinearLayout>

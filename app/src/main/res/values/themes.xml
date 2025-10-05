@@ -1,0 +1,43 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.GymLog" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Background color. -->
+        <!--<item name="android:windowBackground">@color/windowBackground</item>-->
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/dark</item>
+        <item name="colorPrimaryVariant">@color/gray</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/orange_light</item>
+        <item name="colorSecondaryVariant">@color/orange_dark</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/actionBarBackground</item>
+        <!-- Light theme -->
+        <item name="android:windowLightStatusBar">true</item>
+        <!-- Customize your theme here. -->
+<!--        <item name="preferenceTheme">@style/PrefsTheme</item>-->
+    </style>
+
+    <style name="Theme.GymLog.NoActionBar" parent="Theme.GymLog">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+    <style name="Theme.GymLog.NoActionBar.Dark" parent="Theme.GymLog.NoActionBar">
+        <item name="android:windowBackground">@color/darker</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenBackground">@color/darker</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.GymLog.NoActionBar</item>
+    </style>
+<!--
+    <style name="PrefsTheme" parent="PreferenceThemeOverlay.v14.Material">
+        <item name="android:layout">@layout/fragment_preferences</item>
+        <item name="android:listPreferredItemPaddingStart">@dimen/activity_horizontal_margin</item>
+        <item name="android:listPreferredItemPaddingEnd">@dimen/activity_horizontal_margin</item>
+    </style>
+    -->
+</resources>

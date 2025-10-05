@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/dialog_margin">
+
+    <LinearLayout
+        android:id="@+id/weightBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center"
+        android:gravity="start|center"
+        android:orientation="horizontal">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/weightValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:ems="5"
+                android:textAlignment="viewEnd"
+                android:paddingEnd="30dp"
+                android:inputType="numberDecimal"
+                tools:ignore="LabelFor,RtlSymmetry"
+                android:imeOptions="actionDone"
+                android:autofillHints="false" />
+
+            <TextView
+                android:id="@+id/unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="@id/weightValue"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginEnd="6dp"
+                android:gravity="start|center"
+                android:maxLines="1"
+                android:text="@string/text_lb"
+                android:scrollHorizontally="false" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="start|center"
+            android:maxLines="1"
+            android:text="@string/symbol_bar"
+            android:scrollHorizontally="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="start|center"
+            android:maxLines="1"
+            android:text="@string/symbol_space"
+            android:scrollHorizontally="false" />
+
+        <TextView
+            android:id="@+id/converted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="3dp"
+            android:gravity="start|center"
+            android:maxLines="1"
+            android:scrollHorizontally="false" />
+
+        <TextView
+            android:id="@+id/convertUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="start|center"
+            android:maxLines="1"
+            android:scrollHorizontally="false" />
+
+        <org.oar.gymlog.ui.common.components.NumberModifierView
+            android:id="@+id/modifier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            app:target="@id/weightValue"
+            tools:ignore="RtlHardcoded"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/stepBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp"
+        android:layout_marginTop="@dimen/list_text_margin"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackground"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/support_step_2" />
+
+        <TextView
+            android:id="@+id/step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:text="@string/symbol_hyphen" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/barsBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackground"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/support_bar_2" />
+
+        <TextView
+            android:id="@+id/barUsed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:text="@string/symbol_hyphen" />
+
+        <ImageView
+            android:id="@+id/incompatibleBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_warning_24dp"
+            app:tint="@color/orange_light"
+            android:contentDescription="@string/symbol_empty"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/weightsConfigBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackground"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/support_input_type_2"/>
+
+        <ImageView
+            android:id="@+id/weightSpecIcon"
+            android:layout_width="36dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_bar_with_plates_36x24dp"
+            app:tint="@color/themedIcon"
+            android:contentDescription="@string/symbol_empty" />
+
+        <TextView
+            android:id="@+id/weightSpec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/backgroundAccent"/>
+
+    <LinearLayout
+        android:id="@+id/totalBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="@string/support_total_weight_2"/>
+
+        <TextView
+            android:id="@+id/totalWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="@string/symbol_empty" />
+
+        <TextView
+            android:id="@+id/totalUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="@string/symbol_space" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="start|center"
+            android:maxLines="1"
+            android:text="@string/symbol_bar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="start|center"
+            android:maxLines="1"
+            android:text="@string/symbol_space" />
+
+        <TextView
+            android:id="@+id/convertedTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="3dp"
+            android:gravity="start|center"
+            android:maxLines="1"
+            android:scrollHorizontally="false" />
+
+        <TextView
+            android:id="@+id/convertTotalUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="start|center"
+            android:maxLines="1"
+            android:scrollHorizontally="false" />
+
+    </LinearLayout>
+
+</LinearLayout>

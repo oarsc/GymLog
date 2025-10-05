@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/searchButton"
+        android:icon="@drawable/ic_search_24dp"
+        android:title="@string/title_search"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/latestButton"
+        android:icon="@drawable/ic_latest_24dp"
+        android:title="@string/title_latest"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/createButton"
+        android:icon="@drawable/ic_add_24dp"
+        android:title="@string/title_create_exercise"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/gymSelectButton"
+        android:icon="@drawable/ic_gym_building_24dp"
+        android:title="@string/title_select_gym"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/importButton"
+        android:title="@string/text_import"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/exportButton"
+        android:title="@string/text_export"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/dropboxExportButton"
+        android:title="@string/text_dropbox_export"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/dropboxRevokeButton"
+        android:title="@string/text_dropbox_revoke"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/testButton"
+        android:title="@string/text_test"
+        app:showAsAction="never"/>
+
+</menu>

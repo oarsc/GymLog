@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/listitem_variation" />
+
+    <org.oar.gymlog.ui.common.components.listView.SimpleListView
+        android:id="@+id/variationsList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/darken"
+        tools:listitem="@layout/listitem_exercises_variation" />
+
+</LinearLayout>

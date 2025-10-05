@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/dialog_margin">
+
+    <TextView
+        android:id="@+id/labelNotes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/editNotes"
+        app:layout_constraintTop_toTopOf="@id/editNotes"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/text_notes" />
+
+    <EditText
+        android:id="@+id/editNotes"
+        android:inputType="text"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginEnd="6dp"
+        android:focusable="false"
+        app:layout_constraintBottom_toTopOf="@id/editWeight"
+        app:layout_constraintLeft_toLeftOf="@id/editWeight"
+        app:layout_constraintRight_toLeftOf="@id/clearButton"/>
+
+    <ImageView
+        android:id="@+id/clearButton"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_cross_24dp"
+        app:layout_constraintBottom_toBottomOf="@id/editNotes"
+        app:layout_constraintTop_toTopOf="@id/editNotes"
+        app:layout_constraintRight_toRightOf="parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground" />
+
+    <TextView
+        android:id="@+id/labelWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/weightModifier"
+        app:layout_constraintTop_toTopOf="@id/weightModifier"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/text_weight" />
+
+
+    <EditText
+        android:id="@+id/editWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:ems="5"
+        android:textAlignment="viewEnd"
+        android:paddingEnd="30dp"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toBottomOf="@id/weightModifier"
+        app:layout_constraintLeft_toLeftOf="@id/editReps"
+        tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/weightModifier"
+        app:layout_constraintTop_toTopOf="@id/weightModifier"
+        app:layout_constraintRight_toRightOf="@id/editWeight"
+        android:layout_marginEnd="6dp"
+        android:text="@string/text_kg" />
+
+    <org.oar.gymlog.ui.common.components.NumberModifierView
+        android:id="@+id/weightModifier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:target="@id/editWeight"
+        app:layout_constraintBottom_toTopOf="@id/repsModifier"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/converted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewEnd"
+        android:paddingEnd="24dp"
+        android:text="@string/symbol_zero"
+        app:layout_constraintTop_toBottomOf="@id/weightModifier"
+        app:layout_constraintRight_toRightOf="@id/unit"
+        tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/convertUnit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/weightModifier"
+        app:layout_constraintRight_toRightOf="@id/editWeight"
+        android:layout_marginEnd="6dp"
+        android:text="@string/text_lb" />
+
+    <TextView
+        android:id="@+id/labelReps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/repsModifier"
+        app:layout_constraintTop_toTopOf="@id/repsModifier"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/text_reps" />
+
+    <EditText
+        android:id="@+id/editReps"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:ems="5"
+        android:textAlignment="viewEnd"
+        android:paddingEnd="30dp"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@id/repsModifier"
+        app:layout_constraintRight_toLeftOf="@id/repsModifier"
+        app:layout_constraintLeft_toRightOf="@id/labelReps"
+        tools:ignore="RtlSymmetry" />
+
+    <org.oar.gymlog.ui.common.components.NumberModifierView
+        android:id="@+id/repsModifier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginTop="30dp"
+        app:target="@id/editReps"
+
+        app:layout_constraintTop_toBottomOf="@id/weightModifier"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/labelSuperSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/text_margin"
+        app:layout_constraintBottom_toBottomOf="@id/editSuperSet"
+        app:layout_constraintTop_toTopOf="@id/editSuperSet"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/text_superset" />
+
+    <EditText
+        android:id="@+id/editSuperSet"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:ems="2"
+        android:textAlignment="center"
+        android:layout_marginTop="30dp"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/repsModifier"
+        app:layout_constraintLeft_toLeftOf="@id/editReps"
+        app:layout_constraintRight_toRightOf="@id/editReps"
+        tools:ignore="RtlSymmetry" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/instantSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:paddingVertical="@dimen/text_margin"
+        android:text="@string/text_instantly"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

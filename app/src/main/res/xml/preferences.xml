@@ -1,0 +1,78 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/default_header">
+        <EditTextPreference
+            android:key="restTime"
+            android:title="@string/default_rest_time"
+            android:inputType="numberDecimal"
+            android:defaultValue="90" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/units_header">
+        <SwitchPreferenceCompat
+            android:key="internationalSystem"
+            android:title="@string/international_system_title"
+            android:summaryOff="@string/international_system_off"
+            android:summaryOn="@string/international_system_on"
+            android:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            android:key="conversionExactValue"
+            android:title="@string/exact_value_title"
+            android:defaultValue="false"
+            android:disableDependentsState="true" />
+
+        <EditTextPreference
+            android:key="conversionStep"
+            android:title="@string/value_step_title"
+            android:inputType="numberDecimal"
+            android:defaultValue="1"
+            android:dependency="conversionExactValue" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/customization_header">
+        <SwitchPreferenceCompat
+            android:key="nightTheme"
+            android:title="@string/night_theme_title"/>
+
+        <ListPreference
+            android:key="exercisesSortLastUsed"
+            android:title="@string/exercise_sorting_title"
+            android:entries="@array/exercise_sort_entries"
+            android:entryValues="@array/exercise_sort_values"
+            app:useSimpleSummaryProvider="true"
+            android:defaultValue="alphabetically" />
+
+        <ListPreference
+            android:key="trainingBitsSort"
+            android:title="@string/training_bits_sorting_title"
+            app:isPreferenceVisible="false"
+            android:entries="@array/training_bit_sort_entries"
+            android:entryValues="@array/training_bit_sort_values"
+            app:useSimpleSummaryProvider="true"
+            android:defaultValue="chronologically" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/permissions_header">
+        <ListPreference
+            android:key="logDeletion"
+            android:title="@string/ability_remove_logs"
+            android:entries="@array/permission_1p0_entries"
+            android:entryValues="@array/permission_1p0_values"
+            app:useSimpleSummaryProvider="true"
+            android:defaultValue="prompt" />
+
+        <ListPreference
+            android:key="exerciseDeletion"
+            android:title="@string/ability_remove_exercises"
+            android:entries="@array/permission_p0_entries"
+            android:entryValues="@array/permission_p0_values"
+            app:useSimpleSummaryProvider="true"
+            android:defaultValue="prompt" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:title="@string/title_top_records"
+        app:navigationIcon="@drawable/ic_arrow_back_24dp" />
+
+    <include
+        android:id="@+id/fragmentExercise"
+        layout="@layout/listitem_variation" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/backgroundAccent"
+        app:layout_constraintBottom_toTopOf="@id/variantTopList"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <org.oar.gymlog.ui.common.components.listView.MultipleListView
+        android:id="@+id/variantTopList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".ui.top.TopActivity"
+        tools:listitem="@layout/listitem_top_variation" />
+
+</LinearLayout>

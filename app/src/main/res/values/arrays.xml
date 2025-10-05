@@ -1,0 +1,46 @@
+<resources>
+    <!-- Exercise sorting Preference -->
+    <string-array name="exercise_sort_entries">
+        <item>@string/exercise_sorting_alphabetically</item>
+        <item>@string/exercise_sorting_last_used</item>
+    </string-array>
+
+    <string-array name="exercise_sort_values">
+        <item>alphabetically</item>
+        <item>last_used</item>
+    </string-array>
+
+    <!-- Training bits sorting Preference -->
+    <string-array name="training_bit_sort_entries">
+        <item>@string/training_bits_chronologically</item>
+        <item>@string/training_bits_group_exercises</item>
+    </string-array>
+
+    <string-array name="training_bit_sort_values">
+        <item>chronologically</item>
+        <item>group_exercises</item>
+    </string-array>
+
+    <!-- Permissions Preference -->
+    <string-array name="permission_1p0_entries">
+        <item>@string/permission_enabled</item>
+        <item>@string/permission_confirmation</item>
+        <item>@string/permission_disabled</item>
+    </string-array>
+
+    <string-array name="permission_1p0_values">
+        <item>1</item>
+        <item>prompt</item>
+        <item>0</item>
+    </string-array>
+
+    <string-array name="permission_p0_entries">
+        <item>@string/permission_confirmation</item>
+        <item>@string/permission_disabled</item>
+    </string-array>
+
+    <string-array name="permission_p0_values">
+        <item>prompt</item>
+        <item>0</item>
+    </string-array>
+</resources>

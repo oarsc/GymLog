@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dark">#F222</color>
+    <color name="gray">#F888</color>
+    <color name="light">#FDDD</color>
+
+    <color name="themedIcon">@color/light</color>
+    <color name="backgroundAccent">#F444</color>
+    <color name="windowBackground">#303030</color>
+
+    <color name="actionBarText">#E2E2E2</color>
+    <color name="actionBarIcon">#A7A7A7</color>
+
+    <color name="pulseWrongAnimation">#FF653030</color>
+    <color name="pulseSuccessAnimation">#FF494949</color>
+</resources>

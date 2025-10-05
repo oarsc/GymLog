@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="orange_light">#DAA403</color>
+    <color name="orange_dark">#875A01</color>
+    <color name="cyan_light">#03DADA</color>
+    <color name="cyan_dark">#068686</color>
+    <color name="green">#7CBA08</color>
+    <color name="red">#E5410F</color>
+    <color name="black">#F000</color>
+    <color name="darker">#F222</color>
+    <color name="dark">#F333</color>
+    <color name="gray">#F777</color>
+    <color name="grayAlpha">#B777</color>
+    <color name="light">#FFE2E2E2</color>
+    <color name="white">#FFFF</color>
+    <color name="darken">#20000000</color>
+
+    <color name="themedIcon">@color/dark</color>
+    <color name="backgroundAccent">@color/light</color>
+    <color name="windowBackground">@color/white</color>
+
+    <color name="actionBarBackground">@color/dark</color>
+    <color name="actionBarText">@color/white</color>
+    <color name="actionBarIcon">@color/white</color>
+
+    <color name="pulseWrongAnimation">#FFFFD0D0</color>
+    <color name="pulseSuccessAnimation">#FFE0E0E0</color>
+
+    <color name="pectoral">#9675CE</color>
+    <color name="upper_back">#1073AE</color>
+    <color name="lower_back">#4DD0E2</color>
+    <color name="deltoid">#E05E55</color>
+    <color name="trapezius">#F05F92</color>
+    <color name="biceps">#8DCA1A</color>
+    <color name="triceps">#01BFA5</color>
+    <color name="forearm">#71BA6E</color>
+    <color name="quadriceps">#FFD700</color>
+    <color name="hamstrings">#FFA200</color>
+    <color name="glutes">#F96825</color>
+    <color name="calves">#B7AB6E</color>
+    <color name="abdominals">#CA62F0</color>
+    <color name="cardio">#AAABAA</color>
+</resources>
