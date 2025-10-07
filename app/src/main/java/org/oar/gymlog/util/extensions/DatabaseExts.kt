@@ -18,7 +18,7 @@ object DatabaseExts {
     var dbLooper = SafeLooper("database-thread")
 
     private var _db: AppDatabase? = null
-    private val Context.db : AppDatabase
+    val Context.db : AppDatabase
         get() = _db ?: Room.databaseBuilder(this, AppDatabase::class.java, "gymlog-db")
             .build()
             .also { _db = it }

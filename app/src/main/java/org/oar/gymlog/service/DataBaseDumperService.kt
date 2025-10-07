@@ -1,12 +1,14 @@
 package org.oar.gymlog.service
 
 import android.content.Context
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import org.json.JSONException
 import org.json.JSONObject
 import org.oar.gymlog.room.AppDatabase
 import org.oar.gymlog.room.entities.GymEntity
 import org.oar.gymlog.service.dumper.DumperDataStructure
+import org.oar.gymlog.ui.RangedProgress
 import org.oar.gymlog.util.Constants
 import org.oar.gymlog.util.Data
 import java.io.BufferedReader
@@ -28,47 +30,59 @@ class DataBaseDumperService {
     }
 
     @Throws(JSONException::class, IOException::class)
-    fun save(context: Context, fos: FileOutputStream?, database: AppDatabase): InputStream? {
-        val dataStructure = DumperDataStructure()
+    fun save(context: Context, fos: FileOutputStream?, database: AppDatabase, progressNotify: RangedProgress): InputStream? {
+        val dataStructure = DumperDataStructure(progressNotify = progressNotify)
 
         val bits = database.bitDao().getAllFromAllGyms()
         val trainings = database.trainingDao().getAll()
         dataStructure.extractNotes(bits, trainings)
 
+        progressNotify.setRange(0, 2, "Preferences")
         dataStructure.prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        progressNotify.replaceRange(2, 3, "Gyms")
         dataStructure.gyms = database.gymDao().getAll().map { it.name }
+        progressNotify.replaceRange(3, 7, "Exercises")
         dataStructure.exercises = database.exerciseDao().getAll()
+        progressNotify.replaceRange(7, 20, "Variations")
         dataStructure.variations = database.variationDao().getAllFromAllGyms()
         dataStructure.primaries = database.exerciseMuscleCrossRefDao().getAll()
         dataStructure.secondaries = database.exerciseMuscleCrossRefDao().getAllSecondaryMuscles()
+        progressNotify.replaceRange(20, 30, "Trainings")
         dataStructure.trainings = trainings
+        progressNotify.replaceRange(30, 90, "Bits")
         dataStructure.bits = bits
 
+        progressNotify.replaceRange(90, 100, "Writing file")
         val outputStream = fos ?: ByteArrayOutputStream()
         val writer = PrintWriter(BufferedWriter(OutputStreamWriter(outputStream)), true)
         writer.println(dataStructure.jsonObject)
         writer.close()
-        return (outputStream as? ByteArrayOutputStream)
-            ?.let { ByteArrayInputStream(it.toByteArray()) }
+        val output =
+            if (outputStream is ByteArrayOutputStream) ByteArrayInputStream(outputStream.toByteArray())
+            else null
+        progressNotify.removeRange()
+        return output
     }
 
     @Throws(JSONException::class, IOException::class)
-    fun load(context: Context, inputStream: InputStream, database: AppDatabase) {
+    fun load(context: Context, inputStream: InputStream, database: AppDatabase, progressNotify: RangedProgress) {
         BufferedReader(InputStreamReader(inputStream)).use { br ->
             val dataStructure = br.lines().collect(joining(""))
-                .let(::JSONObject)
-                .let(::DumperDataStructure)
+                .let { DumperDataStructure(JSONObject(it), progressNotify) }
 
             // PREFS
+            progressNotify.setRange(0, 2, "Preferences")
             prefs(context, dataStructure.jsonObject.getJSONObject("prefs"))
 
             // GYMS
+            progressNotify.replaceRange(2, 3, "Gyms")
             database.gymDao().clear()
             dataStructure.gyms
                 .map { GymEntity(name = it) }
                 .also { database.gymDao().insertAll(it) }
 
             // EXERCISES:
+            progressNotify.replaceRange(3, 7, "Exercises")
             val exercisesIdMap = mutableMapOf<Int, Int>()
             val addedExercisesIds = mutableListOf<Int>()
             var newIds = Data.exercises.size
@@ -90,6 +104,7 @@ class DataBaseDumperService {
             }
 
             // PRIMARY AND SECONDARY MUSCLES
+            progressNotify.replaceRange(7, 20, "Variations")
             dataStructure.primaries
                 .onEach { it.exerciseId = exercisesIdMap[it.exerciseId]!! }
                 .filter { addedExercisesIds.contains(it.exerciseId) }
@@ -132,6 +147,7 @@ class DataBaseDumperService {
                 }
 
             // TRAININGS
+            progressNotify.replaceRange(20, 30, "Trainings")
             val trainingOrig = mutableListOf<Int>()
             val trainingsIdMap = mutableMapOf<Int, Int>()
             val trainings = dataStructure.trainings
@@ -145,41 +161,53 @@ class DataBaseDumperService {
             }
 
             // BITS
+            progressNotify.replaceRange(30, 90, "Bits")
             val bits = dataStructure.bits
                 .onEach {
                     it.variationId = variationsIdMap[it.variationId]!!
                     it.trainingId = trainingsIdMap[it.trainingId]!!
                 }
-                .also { database.bitDao().insertAll(it) }
+                .also {
+                    progressNotify.update(100, "Database inserting bits")
+                    database.bitDao().insertAll(it)
+                }
 
             // Update most recent bit to exercises
-            database.exerciseDao().getAll()
-                .filter { exerciseEntity ->
-                    exerciseEntity.lastTrained = bits
-                        .filter { variationsXExerciseIdMap[it.variationId] == exerciseEntity.exerciseId }
-                        .ifEmpty { return@filter false }
-                        .map { it.timestamp }
-                        .fold(Constants.DATE_ZERO) { acc, value -> if (value > acc) value else acc }
+            val mostRecents = bits
+                .groupBy { it.variationId }
+                .mapNotNull { (variationId, group) ->
+                    variationsXExerciseIdMap[variationId]?.let { exerciseId ->
+                        exerciseId to group.maxOf { it.timestamp }
+                    }
+                }
+                .toMap()
 
+            val exercises = database.exerciseDao().getAll()
+            exercises
+                .filter { exerciseEntity ->
+                    exerciseEntity.lastTrained = mostRecents[exerciseEntity.exerciseId] ?: return@filter false
                     exerciseEntity.lastTrained > Constants.DATE_ZERO
                 }
                 .also { database.exerciseDao().update(*it.toTypedArray()) }
+
+            progressNotify.removeRange()
         }
     }
 
     @Throws(JSONException::class)
     private fun prefs(context: Context, prefs: JSONObject) {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val editor = preferences.edit()
         val keys = prefs.keys()
-        while (keys.hasNext()) {
-            val key = keys.next()
-            when (prefs[key]) {
-                is String -> { editor.putString(key, prefs.getString(key)) }
-                is Int -> { editor.putInt(key, prefs.getInt(key)) }
-                is Boolean -> { editor.putBoolean(key, prefs.getBoolean(key)) }
+
+        preferences.edit {
+            while (keys.hasNext()) {
+                val key = keys.next()
+                when (prefs[key]) {
+                    is String -> putString(key, prefs.getString(key))
+                    is Int -> putInt(key, prefs.getInt(key))
+                    is Boolean -> putBoolean(key, prefs.getBoolean(key))
+                }
             }
         }
-        editor.apply()
     }
 }

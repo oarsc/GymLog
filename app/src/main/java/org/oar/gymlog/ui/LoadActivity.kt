@@ -1,5 +1,6 @@
 package org.oar.gymlog.ui
 
+import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.ContentResolver
 import android.content.Intent
@@ -8,7 +9,9 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import androidx.lifecycle.lifecycleScope
 import com.dropbox.core.oauth.DbxCredential
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.oar.gymlog.databinding.ActivityLoadBinding
 import org.oar.gymlog.service.DataBaseDumperService
 import org.oar.gymlog.service.dropbox.DropboxApiWrapper
@@ -21,8 +24,8 @@ import org.oar.gymlog.util.Constants
 import org.oar.gymlog.util.Data
 import org.oar.gymlog.util.DateUtils.getTimestampString
 import org.oar.gymlog.util.WeightUtils
+import org.oar.gymlog.util.extensions.DatabaseExts.db
 import org.oar.gymlog.util.extensions.DatabaseExts.dbThread
-import org.oar.gymlog.util.extensions.DatabaseExts.dbThreadSuspend
 import org.oar.gymlog.util.extensions.MessagingExts.toast
 import org.oar.gymlog.util.extensions.PreferencesExts.loadBoolean
 import org.oar.gymlog.util.extensions.PreferencesExts.loadDbxCredential
@@ -37,32 +40,35 @@ class LoadActivity : BindingAppCompatActivity<ActivityLoadBinding>(ActivityLoadB
     private val dropboxOAuthUtil by lazy { DropboxOAuthUtil(this) }
     private var onResumeActions = mutableListOf<() -> Unit>()
 
+    private val progressHandler = RangedProgress(this::updateProgress)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onResumeActions.clear()
 
         lifecycleScope.launch {
-            if (importData() || exportData()) {
-                goMain()
-            } else if (!dropboxExportData()) {
-                WeightUtils.setConvertParameters(
-                    loadBoolean(PreferencesDefinition.UNIT_CONVERSION_EXACT_VALUE),
-                    loadString(PreferencesDefinition.UNIT_CONVERSION_STEP))
-                if (intent.action != "keep") goMain()
+            withContext(Dispatchers.IO) {
+                if (importData()) goMain()
+                else if (exportData()) goMain()
+                else if (!dropboxExportData()) {
+                    WeightUtils.setConvertParameters(
+                        loadBoolean(PreferencesDefinition.UNIT_CONVERSION_EXACT_VALUE),
+                        loadString(PreferencesDefinition.UNIT_CONVERSION_STEP))
+                    if (intent.action != "keep") goMain()
+                }
             }
         }
     }
 
-    private suspend fun importData(): Boolean {
+    private fun importData(): Boolean {
         val importUri = intent.extras?.getParcelable("import", Uri::class.java)
         if (importUri != null) {
+            progressHandler.clear()
             intent.removeExtra("import")
 
-            dbThreadSuspend { db ->
-                contentResolver.openInputStream(importUri).use { inputStream ->
-                    dataBaseDumperService.load(this, inputStream!!, db)
-                    Data.exercises.clear()
-                }
+            contentResolver.openInputStream(importUri).use { inputStream ->
+                dataBaseDumperService.load(this, inputStream!!, db, progressHandler)
+                Data.exercises.clear()
             }
             return true
         } else {
@@ -70,18 +76,16 @@ class LoadActivity : BindingAppCompatActivity<ActivityLoadBinding>(ActivityLoadB
         }
     }
 
-    private suspend fun exportData(): Boolean {
+    private fun exportData(): Boolean {
         val exportUri = intent.extras?.getParcelable("export", Uri::class.java)
         if (exportUri != null) {
+            progressHandler.clear()
             intent.removeExtra("export")
             val fileName = getFileName(exportUri)
 
-            dbThreadSuspend { db ->
-                (contentResolver.openOutputStream(exportUri) as FileOutputStream)
-                    .use { fileOutputStream ->
-                        dataBaseDumperService.save(this, fileOutputStream, db)
-                        toast("Saved \"$fileName\"")
-                    }
+            contentResolver.openOutputStream(exportUri).use { fileOutputStream ->
+                dataBaseDumperService.save(this, fileOutputStream as FileOutputStream, db, progressHandler)
+                toast("Saved \"$fileName\"")
             }
             return true
         }
@@ -114,7 +118,18 @@ class LoadActivity : BindingAppCompatActivity<ActivityLoadBinding>(ActivityLoadB
 
     private fun uploadToDropbox(dbxCredential: DbxCredential) {
         dbThread { db ->
-            val inputStream = dataBaseDumperService.save(this, null, db)!!
+            progressHandler.clear()
+            progressHandler.setRange(0, 80)
+
+            val inputStream = dataBaseDumperService.save(
+                context = this,
+                fos = null,
+                database = db,
+                progressNotify = progressHandler
+            )!!
+
+            updateProgress(80, "Upload")
+
             val fileName = "output-${LocalDateTime.now().getTimestampString()}.json"
 
             lifecycleScope.launch {
@@ -155,9 +170,42 @@ class LoadActivity : BindingAppCompatActivity<ActivityLoadBinding>(ActivityLoadB
         finish()
     }
 
+    @SuppressLint("SetTextI18n")
+    private fun updateProgress(progress: Int, message: String? = null) {
+        runOnUiThread {
+            binding.progressBar.progress = progress
+            message?.let {
+                binding.message.text = "$it..."
+            }
+        }
+    }
     override fun onResume() {
         super.onResume()
         dropboxOAuthUtil.onResume()
         onResumeActions.removeFirstOrNull()?.also { it() }
+    }
+}
+
+class RangedProgress(private val updateCallback: (Int, String?) -> Unit) {
+    private val ranges = mutableListOf<Pair<Int, Int>>()
+
+    fun clear() = ranges.clear()
+    fun setRange(min: Int, max: Int, message: String? = null) {
+        ranges.add(0, min to max)
+        update(0, message)
+    }
+    fun removeRange() = ranges.removeAt(0)
+    fun replaceRange(min: Int, max: Int, message: String? = null) {
+        removeRange()
+        setRange(min, max, message)
+    }
+
+    fun update(progress: Int, message: String? = null) {
+        val progressValue = ranges.fold(progress) { value, (min, max) ->
+            val value = (max - min) * (value / 100f) + min
+            value.toInt()
+        }
+
+        updateCallback(progressValue, message)
     }
 }

@@ -9,6 +9,7 @@ import org.oar.gymlog.room.entities.ExerciseMuscleCrossRef
 import org.oar.gymlog.room.entities.SecondaryExerciseMuscleCrossRef
 import org.oar.gymlog.room.entities.TrainingEntity
 import org.oar.gymlog.room.entities.VariationEntity
+import org.oar.gymlog.ui.RangedProgress
 import org.oar.gymlog.util.JsonUtils.jsonify
 import org.oar.gymlog.util.JsonUtils.map
 import org.oar.gymlog.util.JsonUtils.objectify
@@ -16,7 +17,8 @@ import org.oar.gymlog.util.JsonUtils.toJsonArray
 import kotlin.reflect.KClass
 
 class DumperDataStructure(
-    val jsonObject: JSONObject = JSONObject()
+    val jsonObject: JSONObject = JSONObject(),
+    val progressNotify: RangedProgress
 ) {
     var prefs: SharedPreferences
         get() = throw UnsupportedOperationException("Getter not implemented")
@@ -62,18 +64,38 @@ class DumperDataStructure(
         get() {
             val trainings = jsonObject.getJSONArray(DumperDataStructure::trainings.name)
 
-            trainings.loopAll {
+            val length = trainings.length().toDouble()
+            progressNotify.setRange(0, 10)
+
+            trainings.loopAllIndexed { index ->
                 transformNoteToString()
+                if (index % 25 == 0) {
+                    progressNotify.update((index / length * 100).toInt())
+                }
             }
 
-            return trainings.transformToObject(TrainingEntity::class)
+            progressNotify.replaceRange(10, 100)
+
+            return trainings.transformToObject(TrainingEntity::class, progressNotify).apply {
+                progressNotify.removeRange()
+            }
         }
         set(value) {
-            val trainings = value.transformToJson()
+            progressNotify.setRange(0, 90)
+            val trainings = value.transformToJson(progressNotify)
 
-            trainings.loopAll {
+            val length = trainings.length().toDouble()
+
+            progressNotify.replaceRange(90, 100)
+
+            trainings.loopAllIndexed { index ->
                 transformNoteToIdx()
+                if (index % 25 == 0) {
+                    progressNotify.update((index / length * 100).toInt())
+                }
             }
+
+            progressNotify.removeRange()
 
             jsonObject.put(DumperDataStructure::trainings.name, trainings)
         }
@@ -82,7 +104,10 @@ class DumperDataStructure(
         get() {
             val bits = jsonObject.getJSONArray(DumperDataStructure::bits.name)
 
-            bits.loopAll {
+            val length = bits.length().toDouble()
+            progressNotify.setRange(0, 10)
+
+            bits.loopAllIndexed { index ->
                 transformNoteToString()
                 addFieldIfEmpty(
                     BitEntity::superSet.name,
@@ -96,14 +121,26 @@ class DumperDataStructure(
                         else -> throw IllegalStateException("Can't set default value for $it")
                     }
                 }
+                if (index % 100 == 0) {
+                    progressNotify.update((index / length * 100).toInt())
+                }
             }
 
-            return bits.transformToObject(BitEntity::class)
+            progressNotify.replaceRange(10, 100)
+
+            return bits.transformToObject(BitEntity::class, progressNotify).apply {
+                progressNotify.removeRange()
+            }
         }
         set(value) {
-            val bits = value.transformToJson()
+            progressNotify.setRange(0, 90)
+            val bits = value.transformToJson(progressNotify)
 
-            bits.loopAll {
+            val length = bits.length().toDouble()
+
+            progressNotify.replaceRange(90, 100)
+
+            bits.loopAllIndexed { index ->
                 transformNoteToIdx()
                 removeFieldIf(
                     BitEntity::superSet.name,
@@ -117,7 +154,12 @@ class DumperDataStructure(
                         else -> throw IllegalStateException("Can't chose removal for $it")
                     }
                 }
+                if (index % 100 == 0) {
+                    progressNotify.update((index / length * 100).toInt())
+                }
             }
+
+            progressNotify.removeRange()
 
             jsonObject.put(DumperDataStructure::bits.name, bits)
         }
@@ -165,9 +207,30 @@ class DumperDataStructure(
         this.map { it.jsonify() }
         .toJsonArray
 
+    private fun List<Any>.transformToJson(progressNotify: RangedProgress): JSONArray {
+        val length = size.toDouble()
+        return this.mapIndexed { index, it ->
+            if (index % 100 == 0) {
+                progressNotify.update((index / length * 100).toInt())
+            }
+            it.jsonify()
+        }.toJsonArray
+    }
+
     private fun <T : Any> JSONArray.transformToObject(cls: KClass<T>): List<T> =
         this.map(JSONArray::getJSONObject)
             .map { it.objectify(cls) }
+
+    private fun <T : Any> JSONArray.transformToObject(cls: KClass<T>, progressNotify: RangedProgress): List<T> {
+        val length = length().toDouble()
+        return this.map(JSONArray::getJSONObject)
+            .mapIndexed { index, it ->
+                if (index % 100 == 0) {
+                    progressNotify.update((index / length * 100).toInt())
+                }
+                it.objectify(cls)
+            }
+    }
 
     private fun JSONArray.loopAll(
         function: JSONObject.() -> Unit
@@ -175,6 +238,14 @@ class DumperDataStructure(
         this
             .map(JSONArray::getJSONObject)
             .forEach { it.function() }
+    }
+
+    private fun JSONArray.loopAllIndexed(
+        function: JSONObject.(Int) -> Unit
+    ) {
+        this
+            .map(JSONArray::getJSONObject)
+            .forEachIndexed { index, it -> it.function(index) }
     }
 
     private fun JSONObject.removeFieldIf(
