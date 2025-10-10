@@ -48,7 +48,7 @@ class DataBaseDumperService {
         dataStructure.primaries = database.exerciseMuscleCrossRefDao().getAll()
         dataStructure.secondaries = database.exerciseMuscleCrossRefDao().getAllSecondaryMuscles()
         progressNotify.replaceRange(20, 30, "Trainings")
-        dataStructure.trainings = trainings
+        dataStructure.setTrainingsAndUpdateTimes(trainings, bits)
         progressNotify.replaceRange(30, 90, "Logs")
         dataStructure.bits = bits
 

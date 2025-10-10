@@ -14,6 +14,7 @@ import org.oar.gymlog.util.JsonUtils.jsonify
 import org.oar.gymlog.util.JsonUtils.map
 import org.oar.gymlog.util.JsonUtils.objectify
 import org.oar.gymlog.util.JsonUtils.toJsonArray
+import java.time.LocalDateTime
 import kotlin.reflect.KClass
 
 class DumperDataStructure(
@@ -60,7 +61,7 @@ class DumperDataStructure(
             jsonObject.put(DumperDataStructure::secondaries.name, value.transformToJson())
         }
 
-    var trainings: List<TrainingEntity>
+    val trainings: List<TrainingEntity>
         get() {
             val trainings = jsonObject.getJSONArray(DumperDataStructure::trainings.name)
 
@@ -79,25 +80,6 @@ class DumperDataStructure(
             return trainings.transformToObject(TrainingEntity::class, progressNotify).apply {
                 progressNotify.removeRange()
             }
-        }
-        set(value) {
-            progressNotify.setRange(0, 90)
-            val trainings = value.transformToJson(progressNotify)
-
-            val length = trainings.length().toDouble()
-
-            progressNotify.replaceRange(90, 100)
-
-            trainings.loopAllIndexed { index ->
-                transformNoteToIdx()
-                if (index % 25 == 0) {
-                    progressNotify.update((index / length * 100).toInt())
-                }
-            }
-
-            progressNotify.removeRange()
-
-            jsonObject.put(DumperDataStructure::trainings.name, trainings)
         }
 
     var bits: List<BitEntity>
@@ -173,6 +155,42 @@ class DumperDataStructure(
             } else {
                 emptyList()
             }
+    }
+
+    fun setTrainingsAndUpdateTimes(trainings: List<TrainingEntity>, bits: List<BitEntity>) {
+
+        val trainingDurations = bits
+            .groupBy { it.trainingId }
+            .mapValues { (_, bitsList) ->
+                bitsList.fold(LocalDateTime.MAX to LocalDateTime.MIN) { duration, bit ->
+                    minOf(duration.first, bit.timestamp) to maxOf(duration.second, bit.timestamp)
+                }
+            }
+
+        trainings.forEach {
+            val duration = trainingDurations[it.trainingId]!!
+            it.start = duration.first
+            it.end = duration.second
+        }
+
+        progressNotify.setRange(10, 90)
+
+        val jsonTrainings = trainings.transformToJson(progressNotify)
+
+        val length = jsonTrainings.length().toDouble()
+
+        progressNotify.replaceRange(90, 100)
+
+        jsonTrainings.loopAllIndexed { index ->
+            transformNoteToIdx()
+            if (index % 25 == 0) {
+                progressNotify.update((index / length * 100).toInt())
+            }
+        }
+
+        progressNotify.removeRange()
+
+        jsonObject.put(DumperDataStructure::trainings.name, jsonTrainings)
     }
 
     fun extractNotes(bits: List<BitEntity>, trainings: List<TrainingEntity>) {
