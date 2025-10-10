@@ -49,7 +49,7 @@ class DataBaseDumperService {
         dataStructure.secondaries = database.exerciseMuscleCrossRefDao().getAllSecondaryMuscles()
         progressNotify.replaceRange(20, 30, "Trainings")
         dataStructure.trainings = trainings
-        progressNotify.replaceRange(30, 90, "Bits")
+        progressNotify.replaceRange(30, 90, "Logs")
         dataStructure.bits = bits
 
         progressNotify.replaceRange(90, 100, "Writing file")
@@ -161,14 +161,14 @@ class DataBaseDumperService {
             }
 
             // BITS
-            progressNotify.replaceRange(30, 90, "Bits")
+            progressNotify.replaceRange(30, 90, "Logs")
             val bits = dataStructure.bits
                 .onEach {
                     it.variationId = variationsIdMap[it.variationId]!!
                     it.trainingId = trainingsIdMap[it.trainingId]!!
                 }
                 .also {
-                    progressNotify.update(100, "Database inserting bits")
+                    progressNotify.update(100, "Database inserting logs")
                     database.bitDao().insertAll(it)
                 }
 

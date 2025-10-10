@@ -118,8 +118,7 @@
         android:paddingEnd="30dp"
         android:inputType="number"
         app:layout_constraintBottom_toBottomOf="@id/repsModifier"
-        app:layout_constraintRight_toLeftOf="@id/repsModifier"
-        app:layout_constraintLeft_toRightOf="@id/labelReps"
+        app:layout_constraintLeft_toLeftOf="@id/editTimestamp"
         tools:ignore="RtlSymmetry" />
 
     <org.oar.gymlog.ui.common.components.NumberModifierView
@@ -160,12 +159,34 @@
         android:id="@+id/instantSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/editSuperSet"
         app:layout_constraintRight_toRightOf="parent"
         android:paddingVertical="@dimen/text_margin"
         android:text="@string/text_instantly"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
+    <TextView
+        android:id="@+id/labelTimestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/text_margin"
+        app:layout_constraintBottom_toBottomOf="@id/editTimestamp"
+        app:layout_constraintTop_toTopOf="@id/editTimestamp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/text_timestamp" />
 
+    <EditText
+        android:id="@+id/editTimestamp"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="8dp"
+        android:textAlignment="center"
+        android:focusable="false"
+        app:layout_constraintTop_toBottomOf="@id/instantSwitch"
+        app:layout_constraintLeft_toRightOf="@id/labelTimestamp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/gray"
+        android:textSize="16sp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

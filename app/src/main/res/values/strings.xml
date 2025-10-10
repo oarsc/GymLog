@@ -81,6 +81,7 @@
     <string name="text_active_superset">Active Superset #%1$d</string>
     <string name="text_test">-TEST-</string>
     <string name="text_time">Time</string>
+    <string name="text_timestamp">Timestamp</string>
     <string name="text_title">Title</string>
     <string name="text_variations">Variations</string>
     <string name="text_weight">Weight</string>
@@ -114,6 +115,7 @@
     <string name="dialog_confirm_init_training_text">There is no training currently ongoing.
     Do you want to start training #%1$d?</string>
     <string name="dialog_title_select_month">Select month</string>
+    <string name="dialog_title_select_time">Select time</string>
 
     <string name="dialog_show_bit_training">Show complete training</string>
 
@@ -125,7 +127,9 @@
     <string name="form_gym_individual_relation">Not shared between gyms</string>
     <string name="form_gym_strict_relation">Related to current gym</string>
 
+    <string name="symbol_2_dots">:</string>
     <string name="symbol_3_middle_points">···</string>
+    <string name="symbol_dot">.</string>
     <string name="symbol_bar">/</string>
     <string name="symbol_empty"/>
     <string name="symbol_hash">&#35;</string>
@@ -144,6 +148,7 @@
 
     <string name="button_confirm">OK</string>
     <string name="button_cancel">Cancel</string>
+    <string name="button_clone">Clone</string>
 
     <string name="form_end_training">End Training</string>
     <string name="form_edit_training">Edit Training</string>
@@ -168,6 +173,7 @@
     <string name="validation_super_set_active">You must stop current superset first</string>
     <string name="validation_training_not_started">A training session must be started first</string>
     <string name="validation_no_exercise_registered">At least an registry is needed on this training session</string>
+    <string name="validation_cannot_clone">Cannot clone log. There isn\'t enough time.</string>
 
     <!-- Date -->
     <string name="day_monday_short">Mon</string>

@@ -33,7 +33,7 @@ object DateUtils {
         get() = this < System.currentTimeMillis()
 
     fun LocalDateTime.getTimeString(): String = parseDateToString("HH:mm")
-    fun LocalDateTime.getDateTimeString(): String = parseDateToString("yyyy-MM-dd HH:mm")
+    fun LocalDateTime.getTimeMillisString(): String = parseDateToString("HH:mm:ss.SSS")
     fun LocalDateTime.getDateString(): String = parseDateToString("yyyy-MM-dd")
     fun LocalDateTime.getTimestampString(): String = parseDateToString("yyyyMMdd-HHmmss")
 

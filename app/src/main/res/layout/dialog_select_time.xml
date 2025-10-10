@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:paddingHorizontal="@dimen/dialog_margin">
+
+    <NumberPicker
+        android:id="@+id/hourSelector"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:theme="@style/NumberPickerText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/symbol_2_dots"
+        android:textStyle="bold"
+        android:textSize="24sp" />
+
+    <NumberPicker
+        android:id="@+id/minuteSelector"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:theme="@style/NumberPickerText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/symbol_2_dots"
+        android:textStyle="bold"
+        android:textSize="24sp" />
+
+    <NumberPicker
+        android:id="@+id/secondSelector"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:theme="@style/NumberPickerText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/symbol_dot"
+        android:textStyle="bold"
+        android:textSize="24sp" />
+
+    <NumberPicker
+        android:id="@+id/milliSelector"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:theme="@style/NumberPickerText" />
+</LinearLayout>

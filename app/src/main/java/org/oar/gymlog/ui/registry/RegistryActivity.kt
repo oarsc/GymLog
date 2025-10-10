@@ -772,16 +772,18 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
     }
 
     private fun updateBitLog(bit: Bit, updateTrainingId: Boolean) {
-        dbThread { db ->
-            db.bitDao().update(bit.toEntity())
-            val index = log.indexOf(bit)
-            runOnUiThread {
-                if (updateTrainingId)
-                    binding.logList.notifyItemChanged(index)
-                else
-                    notifyTrainingIdChanged(bit.trainingId, index)
-            }
+        val index = log.indexOf(bit)
+        if (updateTrainingId) {
+            binding.logList.notifyItemChanged(index)
+        } else {
+            notifyTrainingIdChanged(bit.trainingId, index)
         }
+    }
+
+    private fun cloneBitLog(originalBit: Bit, bit: Bit) {
+        val index = log.indexOf(originalBit)
+        log.add(index + 1, bit)
+        binding.logList.insert(index + 1, bit)
     }
 
     private fun notifyTrainingIdChanged(trainingId: Int, preIndex: Int) {
@@ -870,11 +872,19 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
                         val initialInstant = enableInstantSwitch && bit.instant
 
                         val editDialog = EditBitLogDialogFragment(
-                            R.string.title_registry,
-                            enableInstantSwitch,
-                            internationalSystem,
-                            bit,
-                            { b -> updateBitLog(b, initialInstant == b.instant) })
+                            title = R.string.title_registry,
+                            enableInstantSwitch = enableInstantSwitch,
+                            internationalSystem = internationalSystem,
+                            initialValue = bit,
+                            confirmListener = { it, cloned ->
+                                runOnUiThread {
+                                    if (cloned) {
+                                        cloneBitLog(bit, it)
+                                    } else {
+                                        updateBitLog(it, initialInstant == it.instant)
+                                    }
+                                }
+                            })
 
                         runOnUiThread {
                             editDialog.show(supportFragmentManager, null)

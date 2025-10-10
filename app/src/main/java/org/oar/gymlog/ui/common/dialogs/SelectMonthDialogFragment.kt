@@ -14,7 +14,7 @@ import java.time.Month
 import java.util.function.BiConsumer
 
 class SelectMonthDialogFragment(
-    @StringRes private val title: Int,
+    @StringRes private val title: Int = R.string.dialog_title_select_month,
     private val startMonth: Int,
     private val startYear: Int,
     private val confirm: BiConsumer<Month, Int>,

@@ -14,6 +14,9 @@ object Constants {
     val DATE_ZERO: LocalDateTime = 0L.toLocalDateTime
     val TODAY by lazy { DateUtils.NOW }
 
+    const val NANO_MILLI = 1000000
+    const val NANO_MILLI_L = NANO_MILLI.toLong()
+
     enum class IntentReference {
         NONE,
         REGISTRY,

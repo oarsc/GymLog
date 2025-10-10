@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 
 @Dao
 interface BitDao {
-    @Query("SELECT * FROM bit")
+    @Query("SELECT * FROM bit ORDER BY timestamp")
     fun getAllFromAllGyms(): List<BitEntity>
 
     // GET REGISTRY FIRST PAGE
@@ -52,8 +52,14 @@ interface BitDao {
     @Query("SELECT * FROM bit WHERE trainingId == :trainingId AND timestamp < :timestamp ORDER BY timestamp DESC LIMIT 1")
     fun getPreviousByTraining(trainingId: Int, timestamp: LocalDateTime): BitEntity?
 
+    @Query("SELECT * FROM bit WHERE timestamp < :timestamp ORDER BY timestamp DESC LIMIT 1")
+    fun getPrevious(timestamp: LocalDateTime): BitEntity?
+
     @Query("SELECT * FROM bit WHERE trainingId == :trainingId AND timestamp > :timestamp ORDER BY timestamp ASC LIMIT 1")
     fun getNextByTraining(trainingId: Int, timestamp: LocalDateTime): BitEntity?
+
+    @Query("SELECT * FROM bit WHERE timestamp > :timestamp ORDER BY timestamp ASC LIMIT 1")
+    fun getNext(timestamp: LocalDateTime): BitEntity?
 
     @Query("SELECT * FROM bit WHERE trainingId = :trainingId ORDER BY timestamp DESC LIMIT 1")
     fun getMostRecentByTrainingId(trainingId: Int): BitEntity?

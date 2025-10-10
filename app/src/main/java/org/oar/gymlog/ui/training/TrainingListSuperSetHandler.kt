@@ -102,15 +102,19 @@ class TrainingListSuperSetHandler(
             context as Activity
 
             val editDialog = EditBitLogDialogFragment(
-                R.string.title_registry,
-                enableInstantSwitch,
-                internationalSystem,
-                bit,
-                { editedBit ->
-                    context.dbThread { db ->
-                        db.bitDao().update(editedBit.toEntity())
-                        context.runOnUiThread { bitList.notifyItemChanged(index) }
-                        onBitChangedListener?.accept(editedBit)
+                title = R.string.title_registry,
+                enableInstantSwitch = enableInstantSwitch,
+                internationalSystem = internationalSystem,
+                initialValue = bit,
+                confirmListener = { editedBit, cloned ->
+                    context.runOnUiThread {
+                        if (cloned) {
+                            bitList.insert(index + 1, TrainingBitRow(editedBit))
+                            onBitChangedListener?.accept(editedBit)
+                        } else {
+                            bitList.notifyItemChanged(index)
+                            onBitChangedListener?.accept(editedBit)
+                        }
                     }
                 }
             )
