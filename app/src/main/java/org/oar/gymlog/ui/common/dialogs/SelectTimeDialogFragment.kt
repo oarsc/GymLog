@@ -8,6 +8,7 @@ import android.widget.NumberPicker
 import androidx.annotation.StringRes
 import androidx.fragment.app.DialogFragment
 import org.oar.gymlog.R
+import org.oar.gymlog.databinding.DialogSelectTimeBinding
 import org.oar.gymlog.util.Constants.NANO_MILLI
 import java.time.LocalTime
 import java.util.function.Consumer
@@ -22,41 +23,34 @@ class SelectTimeDialogFragment(
 ) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val inflater = requireActivity().layoutInflater
-        val view = inflater.inflate(R.layout.dialog_select_time, null)
-
-        val hourSelector = view.findViewById<NumberPicker>(R.id.hourSelector)
-        val minuteSelector = view.findViewById<NumberPicker>(R.id.minuteSelector)
-        val secondSelector = view.findViewById<NumberPicker>(R.id.secondSelector)
-        val milliSelector = view.findViewById<NumberPicker>(R.id.milliSelector)
+        val binding = DialogSelectTimeBinding.inflate(layoutInflater)
 
         if (!showSeconds) {
-            secondSelector.visibility = View.GONE
+            binding.secondSelector.visibility = View.GONE
         }
         if (!showMillis) {
-            milliSelector.visibility = View.GONE
+            binding.milliSelector.visibility = View.GONE
         }
 
-        hourSelector.setStyle(23, 2, time.hour)
-        minuteSelector.setStyle(59, 2, time.minute)
-        secondSelector.setStyle(59, 2, time.second)
-        milliSelector.setStyle(999, 3, time.nano / NANO_MILLI)
+        binding.hourSelector.setStyle(23, 2, time.hour)
+        binding.minuteSelector.setStyle(59, 2, time.minute)
+        binding.secondSelector.setStyle(59, 2, time.second)
+        binding.milliSelector.setStyle(999, 3, time.nano / NANO_MILLI)
 
-        val builder = AlertDialog.Builder(activity)
-        builder.setMessage(title)
-            .setView(view)
+        return AlertDialog.Builder(activity)
+            .setTitle(title)
+            .setView(binding.root)
             .setPositiveButton(R.string.button_confirm) { _, _ ->
                 val time = LocalTime.of(
-                    hourSelector.value,
-                    minuteSelector.value,
-                    secondSelector.value,
-                    milliSelector.value * NANO_MILLI
+                    binding.hourSelector.value,
+                    binding.minuteSelector.value,
+                    binding.secondSelector.value,
+                    binding.milliSelector.value * NANO_MILLI
                 )
                 confirm.accept(time)
             }
             .setNegativeButton(R.string.button_cancel) { _, _ -> cancel.run() }
-
-        return builder.create()
+            .create()
     }
 
     private fun NumberPicker.setStyle(max: Int, digits: Int, value: Int) {

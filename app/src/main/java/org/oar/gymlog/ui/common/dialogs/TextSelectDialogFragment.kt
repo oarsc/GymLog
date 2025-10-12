@@ -6,8 +6,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import org.oar.gymlog.R
+import org.oar.gymlog.databinding.DialogMenuBinding
 import java.util.function.BiConsumer
 
 class TextSelectDialogFragment(
@@ -16,25 +15,23 @@ class TextSelectDialogFragment(
     private val callback: BiConsumer<Int, String>,
 ) : DialogFragment() {
 
-    companion object {
-        const val DIALOG_CLOSED = -1
-    }
-
     private var callbackCalled = false
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val inflater = requireActivity().layoutInflater
-        val view = inflater.inflate(R.layout.dialog_menu, null)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.parentLayout)
+        val binding = DialogMenuBinding.inflate(layoutInflater)
 
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = TextSelectRecyclerViewAdapter(texts, selectedOption) { idx, text ->
-            onMenuElementClicked(idx, text)
+        binding.parentLayout.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = TextSelectRecyclerViewAdapter(
+                texts = texts,
+                selectedOption = selectedOption,
+                onClick = ::onMenuElementClicked
+            )
         }
 
-        val builder = AlertDialog.Builder(activity).setView(view)
-
-        return builder.create()
+        return AlertDialog.Builder(activity)
+            .setView(binding.root)
+            .create()
     }
 
     private fun onMenuElementClicked(index: Int, text: String) {
@@ -48,5 +45,9 @@ class TextSelectDialogFragment(
             callback.accept(DIALOG_CLOSED, "")
         }
         super.onDismiss(dialog)
+    }
+
+    companion object {
+        const val DIALOG_CLOSED = -1
     }
 }

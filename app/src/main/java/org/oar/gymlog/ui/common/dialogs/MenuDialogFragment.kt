@@ -7,8 +7,7 @@ import android.os.Bundle
 import androidx.annotation.MenuRes
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import org.oar.gymlog.R
+import org.oar.gymlog.databinding.DialogMenuBinding
 import java.util.function.Consumer
 
 class MenuDialogFragment(
@@ -17,24 +16,24 @@ class MenuDialogFragment(
     private val callback: Consumer<Int>
 ) : DialogFragment() {
 
-    companion object {
-        const val DIALOG_CLOSED = -1
-    }
-
     private var callbackCalled = false
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val inflater = requireActivity().layoutInflater
-        val view = inflater.inflate(R.layout.dialog_menu, null)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.parentLayout)
+        val binding = DialogMenuBinding.inflate(layoutInflater)
 
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = MenuRecyclerViewAdapter(requireContext(), menuId, removedActions) { menuItemId ->
-            onMenuElementClicked(menuItemId)
+        binding.parentLayout.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = MenuRecyclerViewAdapter(
+                context = requireContext(),
+                menuId = menuId,
+                removedActions = removedActions,
+                onClick = ::onMenuElementClicked
+            )
         }
 
-        val builder = AlertDialog.Builder(activity).setView(view)
-        return builder.create()
+        return AlertDialog.Builder(activity)
+            .setView(binding.root)
+            .create()
     }
 
     private fun onMenuElementClicked(menuItemId: Int) {
@@ -48,5 +47,9 @@ class MenuDialogFragment(
             callback.accept(DIALOG_CLOSED)
         }
         super.onDismiss(dialog)
+    }
+
+    companion object {
+        const val DIALOG_CLOSED = -1
     }
 }

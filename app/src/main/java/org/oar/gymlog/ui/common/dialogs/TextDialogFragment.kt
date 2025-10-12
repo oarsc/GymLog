@@ -3,15 +3,15 @@ package org.oar.gymlog.ui.common.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.fragment.app.DialogFragment
 import org.oar.gymlog.R
+import org.oar.gymlog.databinding.DialogShowTextBinding
 import java.util.function.Consumer
 
 class TextDialogFragment(
     @param:StringRes private val title: Int,
-    @param:StringRes private val text: Int,
+    @param:StringRes private val textId: Int,
     private val callback: Consumer<Boolean>
 ) : DialogFragment() {
 
@@ -26,19 +26,15 @@ class TextDialogFragment(
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val inflater = requireActivity().layoutInflater
-        val view = inflater.inflate(R.layout.dialog_show_text, null)
-        val textView = view.findViewById<TextView>(R.id.text)
-        customText
-            ?.also { textView.text = it }
-            ?: textView.setText(text)
+        val binding = DialogShowTextBinding.inflate(layoutInflater)
 
-        val builder = AlertDialog.Builder(activity)
-        builder.setMessage(title)
-            .setView(view)
+        binding.text.text = customText ?: getString(textId)
+
+        return AlertDialog.Builder(activity)
+            .setTitle(title)
+            .setView(binding.root)
             .setPositiveButton(R.string.button_confirm) { _,_ -> callback.accept(true) }
             .setNegativeButton(R.string.button_cancel) { _,_ -> callback.accept(false) }
-
-        return builder.create()
+            .create()
     }
 }

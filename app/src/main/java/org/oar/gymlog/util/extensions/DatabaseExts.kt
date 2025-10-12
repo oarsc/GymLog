@@ -36,7 +36,7 @@ object DatabaseExts {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun Context.dbThreadSuspend(process: (AppDatabase) -> Unit) =
-        suspendCancellableCoroutine<Unit> { cont ->
+        suspendCancellableCoroutine { cont ->
 
             fun execute() {
                 try {
@@ -56,7 +56,7 @@ object DatabaseExts {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun Context.dbThreadSuspendable(process: suspend (AppDatabase) -> Unit) =
-        suspendCancellableCoroutine<Unit> { cont ->
+        suspendCancellableCoroutine { cont ->
 
             fun execute() {
                 CoroutineScope(cont.context).launch {

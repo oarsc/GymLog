@@ -8,6 +8,8 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.annotation.MenuRes
+import androidx.core.view.get
+import androidx.core.view.size
 import androidx.recyclerview.widget.RecyclerView
 import org.oar.gymlog.databinding.ListitemDialogMenuBinding
 import java.util.function.Consumer
@@ -28,24 +30,20 @@ class MenuRecyclerViewAdapter(
         removedActions.forEach(menu::removeItem)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            ListitemDialogMenuBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false
-            )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
+        ListitemDialogMenuBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
         )
-    }
+    )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val element = menu.getItem(position)
+        val element = menu[position]
         holder.mContentView.text = element.title
         holder.mImageView.setImageDrawable(element.icon)
         holder.id = element.itemId
     }
 
-    override fun getItemCount(): Int {
-        return menu.size()
-    }
+    override fun getItemCount(): Int = menu.size
 
     inner class ViewHolder(binding: ListitemDialogMenuBinding) :
         RecyclerView.ViewHolder(binding.root) {

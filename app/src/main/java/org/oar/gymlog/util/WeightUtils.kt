@@ -111,9 +111,8 @@ object WeightUtils {
         }
     }
 
-    fun Weight.defaultScaled(internationalSystem: Boolean): BigDecimal {
-        return this.getValue(internationalSystem, WeightFormatter.TWO_DECS_FORMATTER)
-    }
+    fun Weight.defaultScaled(internationalSystem: Boolean): BigDecimal =
+        this.getValue(internationalSystem, WeightFormatter.TWO_DECS_FORMATTER)
 
     fun convertWeight(
         weight: Weight,

@@ -3,10 +3,10 @@ package org.oar.gymlog.ui.common.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.NumberPicker
 import androidx.annotation.StringRes
 import androidx.fragment.app.DialogFragment
 import org.oar.gymlog.R
+import org.oar.gymlog.databinding.DialogSelectMonthBinding
 import org.oar.gymlog.ui.common.components.HistoryCalendarView.Companion.MONTH_NAMES
 import org.oar.gymlog.util.DateUtils.NOW
 import org.oar.gymlog.util.extensions.DatabaseExts.dbThread
@@ -22,39 +22,37 @@ class SelectMonthDialogFragment(
 ) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val inflater = requireActivity().layoutInflater
-        val view = inflater.inflate(R.layout.dialog_select_month, null)
+        val binding = DialogSelectMonthBinding.inflate(layoutInflater)
 
-        val monthSelector = view.findViewById<NumberPicker>(R.id.monthSelector)
-        val yearSelector = view.findViewById<NumberPicker>(R.id.yearSelector)
+        binding.monthSelector.apply {
+            wrapSelectorWheel = false
+            minValue = 1
+            maxValue = 12
+            value = startMonth
 
-        monthSelector.wrapSelectorWheel = false
-        yearSelector.wrapSelectorWheel = false
-
-        dbThread { db ->
-            yearSelector.minValue = (db.trainingDao().getFirstTrainingStartDate() ?: NOW).year
-            yearSelector.maxValue = NOW.year
-            yearSelector.value = startYear
-
-            monthSelector.minValue = 1
-            monthSelector.maxValue = 12
-            monthSelector.value = startMonth
-
-            context?.also { context ->
-                monthSelector.displayedValues = MONTH_NAMES.values
-                    .map(context::getString)
-                    .toTypedArray()
-            }
+            val context = requireContext()
+            displayedValues = MONTH_NAMES.values
+                .map(context::getString)
+                .toTypedArray()
         }
 
-        val builder = AlertDialog.Builder(activity)
-        builder.setMessage(title)
-            .setView(view)
+        binding.yearSelector.apply {
+            wrapSelectorWheel = false
+            maxValue = NOW.year
+            value = startYear
+        }
+
+        dbThread { db ->
+            binding.yearSelector.minValue = (db.trainingDao().getFirstTrainingStartDate() ?: NOW).year
+        }
+
+        return AlertDialog.Builder(activity)
+            .setTitle(title)
+            .setView(binding.root)
             .setPositiveButton(R.string.button_confirm) { _, _ ->
-                confirm.accept(Month.of(monthSelector.value), yearSelector.value)
+                confirm.accept(Month.of(binding.monthSelector.value), binding.yearSelector.value)
             }
             .setNegativeButton(R.string.button_cancel) { _, _ -> cancel.run() }
-
-        return builder.create()
+            .create()
     }
 }

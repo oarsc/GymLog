@@ -13,6 +13,5 @@ abstract class CustomDialogFragment<T>(
 ) : DialogFragment() {
 
     protected abstract var initialValue: T
-
     abstract override fun onCreateDialog(savedInstanceState: Bundle?): Dialog
 }

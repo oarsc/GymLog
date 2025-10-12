@@ -12,21 +12,17 @@ class EditNotesRecyclerViewAdapter(
     private val onClick: Consumer<String>
 ) : RecyclerView.Adapter<EditNotesRecyclerViewAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            ListitemTextBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false
-            )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
+        ListitemTextBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
         )
-    }
+    )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.mContentView.text = values[position]
     }
 
-    override fun getItemCount(): Int {
-        return values.size
-    }
+    override fun getItemCount(): Int = values.size
 
     inner class ViewHolder(
         binding: ListitemTextBinding

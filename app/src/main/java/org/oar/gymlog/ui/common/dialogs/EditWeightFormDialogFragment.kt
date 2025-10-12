@@ -9,17 +9,14 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.PopupMenu
-import android.widget.TextView
 import androidx.annotation.StringRes
 import org.oar.gymlog.R
+import org.oar.gymlog.databinding.DialogEditWeightBinding
 import org.oar.gymlog.model.Bar
 import org.oar.gymlog.model.ExerciseType
 import org.oar.gymlog.model.Weight
 import org.oar.gymlog.model.WeightSpecification
-import org.oar.gymlog.ui.common.components.NumberModifierView
 import org.oar.gymlog.ui.common.dialogs.model.WeightFormData
 import org.oar.gymlog.util.Constants
 import org.oar.gymlog.util.Data
@@ -41,68 +38,44 @@ class EditWeightFormDialogFragment(
     cancel: Runnable = Runnable {}
 ) : CustomDialogFragment<WeightFormData>(title, confirm, cancel) {
 
-    private lateinit var input: EditText
-    private lateinit var convertValue: TextView
-    private lateinit var totalValue: TextView
-    private lateinit var totalConvertValue: TextView
-    private lateinit var barUsed: TextView
-    private lateinit var weightSpec: TextView
-    private lateinit var weightSpecIcon: ImageView
-    private lateinit var incompatibleBar: View
-    private lateinit var step: TextView
-    private lateinit var modifier: NumberModifierView
-    private var weight: Weight = initialValue.weight!!
+    private lateinit var binding: DialogEditWeightBinding
+    private val initialWeight: Weight = initialValue.weight!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val inflater = requireActivity().layoutInflater
-        val view = inflater.inflate(R.layout.dialog_edit_weight, null)
+        binding = DialogEditWeightBinding.inflate(layoutInflater)
+        binding.setInitialData()
 
-        setInitialData(view)
-
-        val builder = AlertDialog.Builder(activity)
-        builder.setMessage(title)
-            .setView(view)
+        return AlertDialog.Builder(activity)
+            .setTitle(title)
+            .setView(binding.root)
             .setPositiveButton(R.string.button_confirm) { _,_ -> confirm.accept(confirmData()) }
             .setNegativeButton(R.string.button_cancel) { _,_ -> cancel.run() }
-        return builder.create()
+            .create()
     }
 
-    private fun setInitialData(view: View) {
-        input = view.findViewById(R.id.weightValue)
-        convertValue = view.findViewById(R.id.converted)
-        totalValue = view.findViewById(R.id.totalWeight)
-        totalConvertValue = view.findViewById(R.id.convertedTotal)
-        barUsed = view.findViewById(R.id.barUsed)
-        weightSpec = view.findViewById(R.id.weightSpec)
-        weightSpecIcon = view.findViewById(R.id.weightSpecIcon)
-        incompatibleBar = view.findViewById(R.id.incompatibleBar)
-        step = view.findViewById(R.id.step)
-        modifier = view.findViewById(R.id.modifier)
-
-        if (weight.value.compareTo(BigDecimal.ZERO) != 0) {
-            input.bigDecimal = weight.value
+    private fun DialogEditWeightBinding.setInitialData() {
+        if (initialWeight.value.compareTo(BigDecimal.ZERO) != 0) {
+            weightValue.bigDecimal = initialWeight.value
         }
-        updateConvertedUnit(weight.value)
+        updateConvertedUnit(initialWeight.value)
 
-        val unitResString = WeightUtils.unit(weight.internationalSystem)
-        listOf(R.id.unit, R.id.totalUnit)
-            .map { id -> view.findViewById<TextView>(id) }
-            .forEach { it.setText(unitResString) }
+        val unitResString = WeightUtils.unit(initialWeight.internationalSystem)
+        unit.setText(unitResString)
+        totalUnit.setText(unitResString)
 
-        val unitResConvertString = WeightUtils.unit(!weight.internationalSystem)
-        listOf(R.id.convertUnit, R.id.convertTotalUnit)
-            .map { id -> view.findViewById<TextView>(id) }
-            .forEach { it.setText(unitResConvertString) }
+        val unitResConvertString = WeightUtils.unit(!initialWeight.internationalSystem)
+        convertUnit.setText(unitResConvertString)
+        convertTotalUnit.setText(unitResConvertString)
 
-        input.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-        input.filters = arrayOf(InputFilter { source, _, _, dest, _, _ ->
+        weightValue.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+        weightValue.filters = arrayOf(InputFilter { source, _, _, dest, _, _ ->
                 val input = (dest.toString() + source.toString()).safeBigDecimal()
                 if (input < Constants.ONE_THOUSAND && input.scale() < 3)
                     null
                 else
                     ""
             })
-        input.addTextChangedListener(object : TextWatcher {
+        weightValue.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -112,9 +85,9 @@ class EditWeightFormDialogFragment(
             }
         })
 
-        val layoutStep = view.findViewById<View>(R.id.stepBox)
-        layoutStep.setOnClickListener {
-            val popup = PopupMenu(activity, layoutStep)
+        // STEP SELECTABLE
+        stepBox.setOnClickListener {
+            val popup = PopupMenu(activity, stepBox)
             val menu = popup.menu
             Data.STEPS_KG.forEach { size: Int ->
                 menu.add(0, size, size,
@@ -136,14 +109,13 @@ class EditWeightFormDialogFragment(
         }
         updateStep()
 
-        val layoutBars = view.findViewById<View>(R.id.barsBox)
-
+        // BARS SELECTABLE
         if (initialValue.type != ExerciseType.BARBELL && initialValue.bar == null) {
-            layoutBars.visibility = View.GONE
+            barsBox.visibility = View.GONE
         }
 
-        layoutBars.setOnClickListener {
-            val popup = PopupMenu(activity, layoutBars)
+        barsBox.setOnClickListener {
+            val popup = PopupMenu(activity, barsBox)
             val menu = popup.menu
 
             var order = 0
@@ -189,14 +161,13 @@ class EditWeightFormDialogFragment(
             popup.show()
         }
 
-        val layoutWeightSpec = view.findViewById<View>(R.id.weightsConfigBox)
-
+        // WEIGHTS CONFIG SELECTABLE
         if (initialValue.type.weightModes.size == 1 && initialValue.type.weightModes.contains(initialValue.weightSpec)) {
-            layoutWeightSpec.visibility = View.GONE
+            weightsConfigBox.visibility = View.GONE
         }
 
-        layoutWeightSpec.setOnClickListener {
-            val popup = PopupMenu(activity, layoutWeightSpec)
+        weightsConfigBox.setOnClickListener {
+            val popup = PopupMenu(activity, weightsConfigBox)
             popup.setOnMenuItemClickListener { menuItem ->
                 val newWeightSpec = when(menuItem.itemId) {
                     R.id.total -> WeightSpecification.TOTAL_WEIGHT
@@ -216,7 +187,7 @@ class EditWeightFormDialogFragment(
             popup.inflate(R.menu.weight_specification_menu)
 
             val specsOrdinals = initialValue.type.weightModes.map { it.ordinal }
-            WeightSpecification.values().indices
+            WeightSpecification.entries.indices
                 .filter { !specsOrdinals.contains(it) }
                 .mapNotNull {
                     when(it) {
@@ -234,19 +205,18 @@ class EditWeightFormDialogFragment(
         updateConfig()
     }
 
-    private fun updateStep() {
+    private fun DialogEditWeightBinding.updateStep() {
         step.bigDecimal = initialValue.step!!.also { step ->
             step.divide(Constants.TWO).also {
-                modifier.setStep(if (it.scale() > 2) step else it)
+                binding.modifier.setStep(if (it.scale() > 2) step else it)
             }
         }
     }
 
-    private fun updateConfig(
+    private fun DialogEditWeightBinding.updateConfig(
         lastWeightSpecification: WeightSpecification = initialValue.weightSpec,
         lastBar: Bar? = initialValue.bar
     ) {
-
         // Bar
         val bar = initialValue.bar
         if (bar == null) {
@@ -265,47 +235,46 @@ class EditWeightFormDialogFragment(
         weightSpecIcon.setImageResource(weightSpecification.icon)
 
         // Recalcs
-        input.bigDecimal = convertWeight(
-            Weight(input.bigDecimal, true),
-            lastWeightSpecification,
-            lastBar,
-            weightSpecification,
-            bar
+        weightValue.bigDecimal = convertWeight(
+            weight = Weight(weightValue.bigDecimal, true),
+            iWeightSpec = lastWeightSpecification,
+            iBar = lastBar,
+            fWeightSpec = weightSpecification,
+            fBar = bar
         ).getValue(true)
 
         updateTotalWeight()
     }
 
     private fun getWeightLabel(weight: Weight): StringBuilder {
-        return if (this.weight.internationalSystem)
+        return if (weight.internationalSystem)
             StringBuilder(weight.toKg().toLocaleString()).append(" kg")
         else
             StringBuilder(weight.toLbs().toLocaleString()).append(" lbs")
     }
 
     private fun updateConvertedUnit(value: BigDecimal) {
-        val convertedValue = if (weight.internationalSystem)
+        val convertedValue = if (initialWeight.internationalSystem)
                 value.toPounds()
             else
                 value.toKilograms()
 
-        convertValue.bigDecimal = convertedValue
+        binding.converted.bigDecimal = convertedValue
     }
 
-    private fun updateTotalWeight(totalValue: BigDecimal = input.bigDecimal) {
-        val totalWeight = Weight(totalValue, weight.internationalSystem).calculateTotal(
+    private fun updateTotalWeight(totalValue: BigDecimal = binding.weightValue.bigDecimal) {
+        val totalWeight = Weight(totalValue, initialWeight.internationalSystem).calculateTotal(
             initialValue.weightSpec,
             initialValue.bar)
 
-        this.totalValue.bigDecimal = totalWeight.getValue(weight.internationalSystem)
-        this.totalConvertValue.bigDecimal = totalWeight.getValue(!weight.internationalSystem)
+        binding.totalWeight.bigDecimal = totalWeight.getValue(initialWeight.internationalSystem)
+        binding.convertedTotal.bigDecimal = totalWeight.getValue(!initialWeight.internationalSystem)
     }
 
-    private fun confirmData(): WeightFormData {
-        initialValue.weight = Weight(
-            input.bigDecimal,
-            weight.internationalSystem
-        ).also { weight = it }
-        return initialValue
-    }
+    private fun confirmData(): WeightFormData = initialValue.apply {
+            weight = Weight(
+                value = binding.weightValue.bigDecimal,
+                internationalSystem = initialWeight.internationalSystem
+            )
+        }
 }

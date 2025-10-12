@@ -19,18 +19,18 @@ object FormatUtils {
         FORMAT = decimalFormat
     }
 
-    fun String.safeBigDecimal(): BigDecimal {
+    fun String.safeBigDecimal(default: BigDecimal = BigDecimal.ZERO): BigDecimal {
         return if (this.isBlank())
-            BigDecimal.ZERO
+            default
         else {
             try {
                 FORMAT.parseObject(this) as BigDecimal
             } catch (e: NumberFormatException) {
                 e.printStackTrace()
-                BigDecimal.ZERO
+                default
             } catch (e: ParseException) {
                 e.printStackTrace()
-                BigDecimal.ZERO
+                default
             }
         }
     }

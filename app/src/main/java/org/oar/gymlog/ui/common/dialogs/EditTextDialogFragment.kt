@@ -4,12 +4,13 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.view.WindowManager
-import android.widget.EditText
 import androidx.annotation.StringRes
 import org.oar.gymlog.R
+import org.oar.gymlog.databinding.DialogEditTextBinding
 import java.util.function.Consumer
 
-class EditTextDialogFragment constructor(
+
+class EditTextDialogFragment(
     @StringRes title: Int,
     override var initialValue: String = "",
     confirm: Consumer<String>,
@@ -17,23 +18,24 @@ class EditTextDialogFragment constructor(
 ) : CustomDialogFragment<String>(title, confirm, cancel) {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val inflater = requireActivity().layoutInflater
-        val view = inflater.inflate(R.layout.dialog_edit_text, null)
-        val input = view.findViewById<EditText>(R.id.dialogText)
-        input.setText(initialValue)
+        val binding = DialogEditTextBinding.inflate(layoutInflater)
 
-        val builder = AlertDialog.Builder(activity)
-        builder.setMessage(title)
-            .setView(view)
+        binding.dialogText.setText(initialValue)
+
+        return AlertDialog.Builder(activity)
+            .setTitle(title)
+            .setView(binding.root)
             .setPositiveButton(R.string.button_confirm) { _,_ ->
-                val text = input.text.toString()
+                val text = binding.dialogText.text.toString()
                 confirm.accept(text)
             }
             .setNegativeButton(R.string.button_cancel) { _,_ -> cancel.run() }
-
-        val dialog: Dialog = builder.create()
-        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        input.requestFocus()
-        return dialog
+            .create()
+            .apply {
+                window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            }
+            .also {
+                binding.dialogText.requestFocus()
+            }
     }
 }

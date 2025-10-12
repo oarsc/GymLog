@@ -173,7 +173,7 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
         defaultTimeColor = binding.timerSeconds.textColors.defaultColor
 
         binding.timerButton.setOnClickListener {
-            val dialog = EditTimerDialogFragment(this, R.string.text_notes, variation) { result ->
+            val dialog = EditTimerDialogFragment(R.string.text_notes, variation) { result ->
                 if (variation.restTime != result) {
                     variation.restTime = result
                     dbThread { db -> db.variationDao().update(variation.toEntity()) }
