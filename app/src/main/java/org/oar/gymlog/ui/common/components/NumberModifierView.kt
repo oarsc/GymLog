@@ -17,18 +17,13 @@ import org.oar.gymlog.util.FormatUtils.bigDecimal
 import java.math.BigDecimal
 
 class NumberModifierView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
-
-    companion object {
-        private const val NAMESPACE = "http://schemas.android.com/apk/res-auto"
-    }
-
     private val targetId: Int
     private var step: BigDecimal
     private var allowNegatives: Boolean
     private var autoExecuted = false
     private var autoCount = 0
-    private val autoAdd: Runnable
-    private val autoSub: Runnable
+    private val autoAdd = autoStep(add = true)
+    private val autoSub = autoStep(add = false)
 
     init {
         targetId = attrs.getAttributeResourceValue(
@@ -41,22 +36,20 @@ class NumberModifierView(context: Context, attrs: AttributeSet) : LinearLayout(c
             NAMESPACE, "step", 1f)
             .toBigDecimal()
 
-        autoAdd = autoStep()
-        autoSub = autoStep(false)
-
         addView()
     }
 
-    private fun autoStep(add: Boolean = true) : Runnable {
+    private fun autoStep(add: Boolean) : Runnable {
         var runnable: Runnable? = null
         runnable = Runnable {
             autoExecuted = true
             onAction(add)
-            postDelayed(runnable, if (++autoCount > 30) 25 else 55.toLong())
+            postDelayed(runnable, repeatSpeed())
         }
         return runnable
     }
 
+    private fun repeatSpeed(): Long = if (autoCount > INCREASE_SPEED) 25 else 55
 
     fun setStep(step: BigDecimal): NumberModifierView {
         this.step = step
@@ -162,5 +155,10 @@ class NumberModifierView(context: Context, attrs: AttributeSet) : LinearLayout(c
             editText.bigDecimal = value
             editText.setSelection(editText.text.length)
         }
+    }
+
+    companion object {
+        private const val NAMESPACE = "http://schemas.android.com/apk/res-auto"
+        private const val INCREASE_SPEED = 12
     }
 }
