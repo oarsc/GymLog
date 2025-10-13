@@ -3,7 +3,6 @@ package org.oar.gymlog.service.dropbox
 import android.content.Context
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.android.Auth
-import org.oar.gymlog.ui.main.preferences.PreferencesDefinition.DROPBOX_CREDENTIAL
 import org.oar.gymlog.util.Constants.Dropbox.APP_KEY
 import org.oar.gymlog.util.extensions.PreferencesExts.save
 
@@ -53,12 +52,12 @@ class DropboxOAuthUtil(
      *
      * Returns true if an auth process did start
      */
-    fun onResume(): Boolean {
+    fun retrieveAndSaveDbxCredential(): Boolean {
         if (isAwaitingResult) {
             val authDbxCredential = Auth.getDbxCredential() //fetch the result from the AuthActivity
             isAwaitingResult = false
             if (authDbxCredential != null) {
-                context.save(DROPBOX_CREDENTIAL, authDbxCredential)
+                context.save(authDbxCredential)
             }
             return true
         }

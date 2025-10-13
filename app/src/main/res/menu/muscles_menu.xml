@@ -41,14 +41,4 @@
         android:title="@string/text_dropbox_export"
         app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/dropboxRevokeButton"
-        android:title="@string/text_dropbox_revoke"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/testButton"
-        android:title="@string/text_test"
-        app:showAsAction="never"/>
-
 </menu>

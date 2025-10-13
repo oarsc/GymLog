@@ -57,7 +57,6 @@
     <string name="text_current_countdown">Current countdown</string>
     <string name="text_default">Default</string>
     <string name="text_dropbox_export">Export to Dropbox</string>
-    <string name="text_dropbox_revoke">Revoke dropbox creds.</string>
     <string name="text_exercise">Exercise</string>
     <string name="text_expand_all">Expand all</string>
     <string name="text_export">Export</string>
@@ -241,5 +240,11 @@
     <string name="permission_enabled">Enable without prompting</string>
     <string name="permission_confirmation">Prompt</string>
     <string name="permission_disabled">Disabled</string>
+
+    <!-- Dropbox Preferences -->
+    <string name="dropbox_title">Dropbox</string>
+
+    <string name="dropbox_revoke">Revoke dropbox credentials</string>
+    <string name="dropbox_revoke_sum">Synchronizations will be required next time you export the data using Dropbox</string>
 
 </resources>

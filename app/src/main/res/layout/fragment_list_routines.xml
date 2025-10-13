@@ -11,5 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         app:navigationIcon="@drawable/ic_arrow_back_24dp"
-        app:title="@string/title_workout" />
+        app:title="@string/title_workout"
+        app:menu="@menu/routines_menu" />
 </LinearLayout>

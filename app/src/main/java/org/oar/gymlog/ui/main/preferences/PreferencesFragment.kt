@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.EditTextPreference
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import org.oar.gymlog.R
@@ -18,6 +19,9 @@ import org.oar.gymlog.ui.main.preferences.PreferencesDefinition.THEME
 import org.oar.gymlog.ui.main.preferences.PreferencesDefinition.UNIT_CONVERSION_EXACT_VALUE
 import org.oar.gymlog.ui.main.preferences.PreferencesDefinition.UNIT_CONVERSION_STEP
 import org.oar.gymlog.util.WeightUtils
+import org.oar.gymlog.util.extensions.MessagingExts.toast
+import org.oar.gymlog.util.extensions.PreferencesExts.clearDbxCredential
+import org.oar.gymlog.util.extensions.PreferencesExts.loadDbxCredential
 import java.util.Locale
 
 class PreferencesFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
@@ -39,6 +43,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), OnSharedPreferenceChange
 
 	override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 		setPreferencesFromResource(R.xml.preferences, rootKey)
+
 		loadNumberedEditText(DEFAULT_REST_TIME.key,
 			InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED,
 			getString(R.string.text_seconds).lowercase(Locale.getDefault()))
@@ -48,6 +53,17 @@ class PreferencesFragment : PreferenceFragmentCompat(), OnSharedPreferenceChange
 			InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED or
 					InputType.TYPE_NUMBER_FLAG_DECIMAL,
 			null)
+
+		findPreference<Preference>("dropboxButton")!!.setOnPreferenceClickListener {
+			context?.apply {
+				loadDbxCredential()
+					?.also {
+						clearDbxCredential()
+						toast("Cleaning dropbox credentials")
+					} ?: toast("Nothing to do")
+			}
+			true
+		}
 	}
 
 	private fun loadNumberedEditText(key: String, inputType: Int, summarySuffix: String?) {

@@ -75,4 +75,11 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/dropbox_title">
+        <Preference
+            android:key="dropboxButton"
+            android:title="@string/dropbox_revoke"
+            android:summary="@string/dropbox_revoke_sum" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

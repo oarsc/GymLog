@@ -19,17 +19,13 @@ import org.oar.gymlog.service.dropbox.DropboxOAuthUtil
 import org.oar.gymlog.service.dropbox.DropboxUploadApiResponse
 import org.oar.gymlog.ui.common.BindingAppCompatActivity
 import org.oar.gymlog.ui.main.MainActivity
-import org.oar.gymlog.ui.main.preferences.PreferencesDefinition
 import org.oar.gymlog.util.Constants
 import org.oar.gymlog.util.Data
 import org.oar.gymlog.util.DateUtils.getTimestampString
-import org.oar.gymlog.util.WeightUtils
 import org.oar.gymlog.util.extensions.DatabaseExts.db
 import org.oar.gymlog.util.extensions.DatabaseExts.dbThread
 import org.oar.gymlog.util.extensions.MessagingExts.toast
-import org.oar.gymlog.util.extensions.PreferencesExts.loadBoolean
 import org.oar.gymlog.util.extensions.PreferencesExts.loadDbxCredential
-import org.oar.gymlog.util.extensions.PreferencesExts.loadString
 import java.io.File
 import java.io.FileOutputStream
 import java.time.LocalDateTime
@@ -50,12 +46,8 @@ class LoadActivity : BindingAppCompatActivity<ActivityLoadBinding>(ActivityLoadB
             withContext(Dispatchers.IO) {
                 if (importData()) goMain()
                 else if (exportData()) goMain()
-                else if (!dropboxExportData()) {
-                    WeightUtils.setConvertParameters(
-                        loadBoolean(PreferencesDefinition.UNIT_CONVERSION_EXACT_VALUE),
-                        loadString(PreferencesDefinition.UNIT_CONVERSION_STEP))
-                    if (intent.action != "keep") goMain()
-                }
+                else if (dropboxExportData()) return@withContext
+                else if (intent.action != "keep") goMain()
             }
         }
     }
@@ -94,16 +86,16 @@ class LoadActivity : BindingAppCompatActivity<ActivityLoadBinding>(ActivityLoadB
 
     private fun dropboxExportData() : Boolean {
         if (intent.action == "dropbox") {
-            val dbxCredential = loadDbxCredential(PreferencesDefinition.DROPBOX_CREDENTIAL)
+            val dbxCredential = loadDbxCredential()
 
             if (dbxCredential != null) {
                 uploadToDropbox(dbxCredential)
             } else {
                 onResumeActions.apply {
-                    add { dropboxOAuthUtil.startDropboxAuthorizationOAuth2(this@LoadActivity) }
+                    add { dropboxOAuthUtil.startDropboxAuthorization2PKCE(this@LoadActivity) }
                     add {
-                        loadDbxCredential(PreferencesDefinition.DROPBOX_CREDENTIAL)
-                            ?.also(this@LoadActivity::uploadToDropbox)
+                        loadDbxCredential()
+                            ?.also(::uploadToDropbox)
                             ?: run {
                                 toast("Process cancelled")
                                 goMain()
@@ -181,7 +173,7 @@ class LoadActivity : BindingAppCompatActivity<ActivityLoadBinding>(ActivityLoadB
     }
     override fun onResume() {
         super.onResume()
-        dropboxOAuthUtil.onResume()
+        dropboxOAuthUtil.retrieveAndSaveDbxCredential()
         onResumeActions.removeFirstOrNull()?.also { it() }
     }
 }

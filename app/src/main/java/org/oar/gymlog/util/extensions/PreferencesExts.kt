@@ -5,15 +5,18 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.dropbox.core.oauth.DbxCredential
 import org.oar.gymlog.ui.main.preferences.PreferencesDefinition
+import org.oar.gymlog.ui.main.preferences.PreferencesDefinition.DROPBOX_CREDENTIAL
 
 object PreferencesExts {
 
     private val Context.preferences: SharedPreferences
         get() = PreferenceManager.getDefaultSharedPreferences(this)
 
+    private val Context.dropboxPreferences: SharedPreferences
+        get() = getSharedPreferences("dropbox_prefs", Context.MODE_PRIVATE)
+
     private val Context.preferencesEditor: SharedPreferences.Editor
         get() = preferences.edit()
-
 
     private fun Context.save(name: String, content: String?) {
         preferencesEditor.apply {
@@ -45,8 +48,23 @@ object PreferencesExts {
     fun Context.save(preferenceDef: PreferencesDefinition, content: Boolean) =
         save(preferenceDef.key, content)
 
-    fun Context.save(preferenceDef: PreferencesDefinition, dbxCredential: DbxCredential) =
-        save(preferenceDef.key, DbxCredential.Writer.writeToString(dbxCredential))
+    fun Context.save(dbxCredential: DbxCredential) {
+        dropboxPreferences
+            .edit()
+            .apply {
+                putString(DROPBOX_CREDENTIAL.key, DbxCredential.Writer.writeToString(dbxCredential))
+                apply()
+            }
+    }
+
+    fun Context.clearDbxCredential() {
+        dropboxPreferences
+            .edit()
+            .apply {
+                remove(DROPBOX_CREDENTIAL.key)
+                apply()
+            }
+    }
 
     private fun Context.loadString(name: String, def: String = ""): String {
         return preferences.getString(name, def) ?: def
@@ -86,14 +104,20 @@ object PreferencesExts {
         return loadBoolean(preferenceDef.key, def)
     }
 
-    fun Context.loadDbxCredential(preferenceDef: PreferencesDefinition): DbxCredential? {
-        val serializedCredentialJson = loadNullableString(preferenceDef.key, preferenceDef.defaultString)
-        return try {
-            DbxCredential.Reader.readFully(serializedCredentialJson)
-        } catch (e: Exception) {
-            // Something went wrong parsing the credential, clearing it
-            save(preferenceDef.key, null)
-            null
+    fun Context.loadDbxCredential(): DbxCredential? {
+        dropboxPreferences.apply {
+            return if (dropboxPreferences.contains(DROPBOX_CREDENTIAL.key)) {
+                try {
+                    DbxCredential.Reader.readFully(dropboxPreferences.getString(DROPBOX_CREDENTIAL.key, null))
+                } catch (_: Exception) {
+                    // Something went wrong parsing the credential, clearing it
+                    dropboxPreferences.edit().apply {
+                        remove(DROPBOX_CREDENTIAL.key)
+                        apply()
+                    }
+                    null
+                }
+            } else null
         }
     }
 }

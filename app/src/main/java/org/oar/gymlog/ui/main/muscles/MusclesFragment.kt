@@ -26,12 +26,10 @@ import org.oar.gymlog.ui.create.CreateExerciseActivity
 import org.oar.gymlog.ui.exercises.ExercisesActivity
 import org.oar.gymlog.ui.exercises.SearchActivity
 import org.oar.gymlog.ui.main.preferences.PreferencesDefinition.CURRENT_GYM
-import org.oar.gymlog.ui.main.preferences.PreferencesDefinition.DROPBOX_CREDENTIAL
 import org.oar.gymlog.util.Constants.IntentReference
 import org.oar.gymlog.util.Data
 import org.oar.gymlog.util.extensions.DatabaseExts.dbThread
 import org.oar.gymlog.util.extensions.MessagingExts.toast
-import org.oar.gymlog.util.extensions.PreferencesExts.loadDbxCredential
 import org.oar.gymlog.util.extensions.PreferencesExts.save
 import org.oar.gymlog.util.extensions.RedirectionExts.goToVariation
 
@@ -144,27 +142,6 @@ class MusclesFragment : ResultLauncherFragment() {
                             startActivity(intent)
                             finish()
                         }
-                    }
-                    R.id.dropboxRevokeButton -> {
-                        context?.apply {
-                            loadDbxCredential(DROPBOX_CREDENTIAL)
-                                ?.also {
-                                    save(DROPBOX_CREDENTIAL, null)
-                                    toast("Cleaning dropbox credentials")
-                                } ?: toast("Nothing to do")
-                        }
-                    }
-
-                    R.id.testButton -> {
-                        requireActivity().apply {
-                            val intent = Intent(this, LoadActivity::class.java)
-                            intent.action = "keep"
-                            startActivity(intent)
-                        }
-//                        val seconds = 10
-//                        val date = NOW.plusSeconds(seconds.toLong())
-//                        NotificationService(requireContext())
-//                            .startNewNotification(date, seconds, Data.exercises[0].variations[0])
                     }
                 }
                 false
