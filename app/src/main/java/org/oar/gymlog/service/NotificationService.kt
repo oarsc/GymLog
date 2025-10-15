@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import org.oar.gymlog.R
 import org.oar.gymlog.model.Variation
 import org.oar.gymlog.ui.common.notifications.NotificationLoggingService
@@ -76,6 +77,9 @@ class NotificationService(private val context: Context) {
             .apply {
                 enableLights(true)
                 lightColor = Color.MAGENTA
+
+                val soundUri = ("android.resource://${context.packageName}/${R.raw.notification}").toUri()
+                setSound(soundUri, audioAttributes)
             }
 
         notificationManager.createNotificationChannel(readyChannel)
