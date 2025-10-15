@@ -25,7 +25,8 @@ import kotlin.math.ceil
 
 class HistoryFragment : ResultLauncherFragment() {
 
-	private lateinit var binding: FragmentHistoryBinding
+	private var _binding: FragmentHistoryBinding? = null
+	private val binding get() = _binding!!
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +34,7 @@ class HistoryFragment : ResultLauncherFragment() {
 	): View = FragmentHistoryBinding.inflate(inflater, container, false)
         .apply {
             val context = requireContext()
-            binding = this
+            _binding = this
 
             // LEGEND LIST
             legend.apply {
@@ -237,5 +238,10 @@ class HistoryFragment : ResultLauncherFragment() {
 			result = 31 * result + count
 			return result
 		}
+	}
+
+	override fun onDestroyView() {
+		super.onDestroyView()
+		_binding = null
 	}
 }
