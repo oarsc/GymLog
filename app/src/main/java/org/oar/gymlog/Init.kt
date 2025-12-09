@@ -11,6 +11,8 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleCoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,10 +43,7 @@ import org.oar.gymlog.util.extensions.PreferencesExts.loadString
 
 object Init {
     fun Activity.startUp(lifecycleScope: LifecycleCoroutineScope, onEnd: () -> Unit) {
-        if (loadBoolean(THEME) &&
-            AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        }
+        AppCompatDelegate.setDefaultNightMode(if (loadBoolean(THEME)) MODE_NIGHT_YES else MODE_NIGHT_NO)
 
         lifecycleScope.launch {
             // Load permissions
