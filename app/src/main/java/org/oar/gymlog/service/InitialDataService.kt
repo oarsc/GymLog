@@ -8,6 +8,7 @@ import org.oar.gymlog.exceptions.LoadException
 import org.oar.gymlog.model.Bar
 import org.oar.gymlog.model.ExerciseType
 import org.oar.gymlog.model.GymRelation
+import org.oar.gymlog.model.Muscle
 import org.oar.gymlog.model.Weight
 import org.oar.gymlog.model.WeightSpecification
 import org.oar.gymlog.room.AppDatabase
@@ -29,14 +30,19 @@ object InitialDataService {
         loadExercises(assets, db)
     }
 
+    fun createDefaults(db: AppDatabase) {
+        persistMuscles(Data, db)
+        createAndPersistBars(Data, db)
+    }
+
     private fun persistMuscles(data: Data, db: AppDatabase) {
-        db.muscleDao().insertAll(
-            data.muscles.map { muscle -> muscle.toEntity() })
+        data.muscles
+            .map(Muscle::toEntity)
+            .apply(db.muscleDao()::insertAll)
     }
 
     private fun createAndPersistBars(data: Data, db: AppDatabase) {
-        val bars = data.bars
-        bars.clear()
+        data.bars.clear()
         var barId = 0
         listOf(
             Bar(++barId, Weight(BigDecimal("7.5"), true)),
@@ -45,11 +51,10 @@ object InitialDataService {
             Bar(++barId, Weight(BigDecimal("15"), true)),
             Bar(++barId, Weight(BigDecimal("20"), true)),
             Bar(++barId, Weight(BigDecimal("25"), true)),
-        ).also { bars.addAll(it) }
-
-        data.bars
-            .map { it.toEntity() }
-            .also { db.barDao().insertAll(it) }
+        )
+            .also(data.bars::addAll)
+            .map(Bar::toEntity)
+            .apply(db.barDao()::insertAll)
     }
 
     private fun loadExercises(assets: AssetManager, db: AppDatabase) {

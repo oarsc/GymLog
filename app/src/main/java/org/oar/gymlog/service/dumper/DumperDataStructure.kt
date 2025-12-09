@@ -61,91 +61,6 @@ class DumperDataStructure(
             jsonObject.put(DumperDataStructure::secondaries.name, value.transformToJson())
         }
 
-    val trainings: List<TrainingEntity>
-        get() {
-            val trainings = jsonObject.getJSONArray(DumperDataStructure::trainings.name)
-
-            val length = trainings.length().toDouble()
-            progressNotify.setRange(0, 10)
-
-            trainings.loopAllIndexed { index ->
-                transformNoteToString()
-                if (index % 25 == 0) {
-                    progressNotify.update((index / length * 100).toInt())
-                }
-            }
-
-            progressNotify.replaceRange(10, 100)
-
-            return trainings.transformToObject(TrainingEntity::class, progressNotify).apply {
-                progressNotify.removeRange()
-            }
-        }
-
-    var bits: List<BitEntity>
-        get() {
-            val bits = jsonObject.getJSONArray(DumperDataStructure::bits.name)
-
-            val length = bits.length().toDouble()
-            progressNotify.setRange(0, 10)
-
-            bits.loopAllIndexed { index ->
-                transformNoteToString()
-                addFieldIfEmpty(
-                    BitEntity::superSet.name,
-                    BitEntity::kilos.name,
-                    BitEntity::instant.name
-                ) {
-                    when(it) {
-                        BitEntity::superSet.name -> 0
-                        BitEntity::kilos.name -> true
-                        BitEntity::instant.name -> false
-                        else -> throw IllegalStateException("Can't set default value for $it")
-                    }
-                }
-                if (index % 100 == 0) {
-                    progressNotify.update((index / length * 100).toInt())
-                }
-            }
-
-            progressNotify.replaceRange(10, 100)
-
-            return bits.transformToObject(BitEntity::class, progressNotify).apply {
-                progressNotify.removeRange()
-            }
-        }
-        set(value) {
-            progressNotify.setRange(0, 90)
-            val bits = value.transformToJson(progressNotify)
-
-            val length = bits.length().toDouble()
-
-            progressNotify.replaceRange(90, 100)
-
-            bits.loopAllIndexed { index ->
-                transformNoteToIdx()
-                removeFieldIf(
-                    BitEntity::superSet.name,
-                    BitEntity::kilos.name,
-                    BitEntity::instant.name
-                ) {
-                    when(it) {
-                        BitEntity::superSet.name -> getInt(it) <= 0
-                        BitEntity::kilos.name -> getBoolean(it)
-                        BitEntity::instant.name -> !getBoolean(it)
-                        else -> throw IllegalStateException("Can't chose removal for $it")
-                    }
-                }
-                if (index % 100 == 0) {
-                    progressNotify.update((index / length * 100).toInt())
-                }
-            }
-
-            progressNotify.removeRange()
-
-            jsonObject.put(DumperDataStructure::bits.name, bits)
-        }
-
     private var notes: List<String>
 
     init {
@@ -157,8 +72,91 @@ class DumperDataStructure(
             }
     }
 
-    fun setTrainingsAndUpdateTimes(trainings: List<TrainingEntity>, bits: List<BitEntity>) {
+    fun getBits(): List<BitEntity> {
+        val bits = jsonObject.getJSONArray(BITS)
 
+        val length = bits.length().toDouble()
+        progressNotify.setRange(0, 10)
+
+        bits.loopAllIndexed { index ->
+            transformNoteToString()
+            addFieldIfEmpty(
+                BitEntity::superSet.name,
+                BitEntity::kilos.name,
+                BitEntity::instant.name
+            ) {
+                when(it) {
+                    BitEntity::superSet.name -> 0
+                    BitEntity::kilos.name -> true
+                    BitEntity::instant.name -> false
+                    else -> throw IllegalStateException("Can't set default value for $it")
+                }
+            }
+            if (index % 100 == 0) {
+                progressNotify.update((index / length * 100).toInt())
+            }
+        }
+
+        progressNotify.replaceRange(10, 100)
+
+        return bits.transformToObject(BitEntity::class, progressNotify).apply {
+            progressNotify.removeRange()
+        }
+    }
+
+    fun setBits(value: List<BitEntity>) {
+        progressNotify.setRange(0, 90)
+        val bits = value.transformToJson(progressNotify)
+
+        val length = bits.length().toDouble()
+
+        progressNotify.replaceRange(90, 100)
+
+        bits.loopAllIndexed { index ->
+            transformNoteToIdx()
+            removeFieldIf(
+                BitEntity::superSet.name,
+                BitEntity::kilos.name,
+                BitEntity::instant.name
+            ) {
+                when(it) {
+                    BitEntity::superSet.name -> getInt(it) <= 0
+                    BitEntity::kilos.name -> getBoolean(it)
+                    BitEntity::instant.name -> !getBoolean(it)
+                    else -> throw IllegalStateException("Can't chose removal for $it")
+                }
+            }
+            if (index % 100 == 0) {
+                progressNotify.update((index / length * 100).toInt())
+            }
+        }
+
+        progressNotify.removeRange()
+
+        jsonObject.put(BITS, bits)
+    }
+
+    fun getTrainings(): List<TrainingEntity> {
+        val trainings = jsonObject.getJSONArray(TRAININGS)
+
+        val length = trainings.length().toDouble()
+        progressNotify.setRange(0, 10)
+
+        trainings.loopAllIndexed { index ->
+            transformNoteToString()
+            if (index % 25 == 0) {
+                progressNotify.update((index / length * 100).toInt())
+            }
+        }
+
+        progressNotify.replaceRange(10, 100)
+
+        return trainings.transformToObject(TrainingEntity::class, progressNotify).apply {
+            progressNotify.removeRange()
+        }
+    }
+
+    fun setTrainingsAndUpdateTimes(trainings: List<TrainingEntity>, bits: List<BitEntity>) {
         val trainingDurations = bits
             .groupBy { it.trainingId }
             .mapValues { (_, bitsList) ->
@@ -190,7 +188,7 @@ class DumperDataStructure(
 
         progressNotify.removeRange()
 
-        jsonObject.put(DumperDataStructure::trainings.name, jsonTrainings)
+        jsonObject.put(TRAININGS, jsonTrainings)
     }
 
     fun extractNotes(bits: List<BitEntity>, trainings: List<TrainingEntity>) {
@@ -286,5 +284,10 @@ class DumperDataStructure(
                 put(field, emtpyValueGenerator(field))
             }
         }
+    }
+
+    companion object {
+        private const val TRAININGS = "trainings"
+        private const val BITS = "bits"
     }
 }

@@ -35,7 +35,8 @@
     <PreferenceCategory android:title="@string/customization_header">
         <SwitchPreferenceCompat
             android:key="nightTheme"
-            android:title="@string/night_theme_title"/>
+            android:title="@string/night_theme_title"
+            android:defaultValue="true" />
 
         <ListPreference
             android:key="exercisesSortLastUsed"

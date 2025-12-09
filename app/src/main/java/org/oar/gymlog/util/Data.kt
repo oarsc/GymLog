@@ -12,7 +12,7 @@ object Data {
 	val STEPS_KG = intArrayOf(50, 100, 125, 200, 250, 500, 1000, 1500, 2000, 2500)
 
 	val exercises =  mutableListOf<Exercise>()
-	val muscles: List<Muscle> = Muscle.values().toList()
+	val muscles: List<Muscle> = Muscle.entries
 	val bars = mutableListOf<Bar>()
 	val gyms =  mutableListOf<Gym>()
 	var gym: Gym? = null

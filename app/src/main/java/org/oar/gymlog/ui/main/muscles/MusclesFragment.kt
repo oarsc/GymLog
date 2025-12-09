@@ -33,7 +33,6 @@ import org.oar.gymlog.util.extensions.MessagingExts.toast
 import org.oar.gymlog.util.extensions.PreferencesExts.save
 import org.oar.gymlog.util.extensions.RedirectionExts.goToVariation
 
-
 /**
  * A fragment representing a list of Items.
  */
@@ -92,10 +91,15 @@ class MusclesFragment : ResultLauncherFragment() {
                                 if (idx == Data.gyms.size) {
                                     val dialog = EditTextDialogFragment(R.string.dialog_write_new_gym, confirm = {
                                         context.dbThread { db ->
-                                            db.gymDao().insert(GymEntity(name = it))
-                                            val gymId = idx + 1;
-                                            context.save(CURRENT_GYM, gymId)
-                                            Data.gym = Data.getGym(gymId)
+                                            val gym = GymEntity(name = it)
+                                                .apply {
+                                                    gymId = db.gymDao().insert(this).toInt()
+                                                }
+                                                .let(::Gym)
+
+                                            Data.gyms.add(gym)
+                                            Data.gym = gym
+                                            context.save(CURRENT_GYM, gym.id)
 
                                             requireActivity().apply {
                                                 val intent = Intent(this, LoadActivity::class.java)
@@ -120,13 +124,6 @@ class MusclesFragment : ResultLauncherFragment() {
                             }
                         }
                         dialog.show(requireActivity().supportFragmentManager, null)
-                    }
-                    R.id.importButton -> {
-                        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                        intent.addCategory(Intent.CATEGORY_OPENABLE)
-                        intent.type = "application/json"
-                        intent.putExtra(Intent.EXTRA_TITLE, DataBaseDumperService.OUTPUT)
-                        startActivityForResult(intent, IntentReference.IMPORT_FILE)
                     }
                     R.id.exportButton -> {
                         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
@@ -162,14 +159,6 @@ class MusclesFragment : ResultLauncherFragment() {
 				requireActivity().apply {
 					val intent = Intent(this, LoadActivity::class.java)
 					intent.putExtra("export", data.data!!)
-					startActivity(intent)
-					finish()
-				}
-
-			intentReference === IntentReference.IMPORT_FILE ->
-				requireActivity().apply {
-					val intent = Intent(this, LoadActivity::class.java)
-					intent.putExtra("import", data.data!!)
 					startActivity(intent)
 					finish()
 				}

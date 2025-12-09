@@ -5,6 +5,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
+import org.oar.gymlog.Init.FilePickerHandler
+import org.oar.gymlog.Init.firstLoad
 import org.oar.gymlog.Init.startUp
 import org.oar.gymlog.R
 import org.oar.gymlog.databinding.ActivityMainBinding
@@ -24,9 +26,19 @@ class MainActivity : ResultLauncherAppCompatActivity() {
 		val splashScreen = installSplashScreen()
 		splashScreen.setKeepOnScreenCondition { !ready }
 
-		startUp(lifecycleScope) {
+		// Launcher should be instantiated inside of "onCreate"
+		val filePickerHandler = FilePickerHandler(this)
+
+		startUp(lifecycleScope) { firstOpen ->
 			ready = true
-			init()
+			if (firstOpen) {
+				// Should not be executed when the splash screen is active, because the notification will not appear
+				firstLoad(filePickerHandler) {
+					init()
+				}
+			} else {
+				init()
+			}
 		}
 	}
 

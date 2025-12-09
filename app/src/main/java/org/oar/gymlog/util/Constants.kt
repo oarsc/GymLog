@@ -31,8 +31,7 @@ object Constants {
         TRAINING,
         TOP_RECORDS,
 
-        EXPORT_FILE,
-        IMPORT_FILE
+        EXPORT_FILE
     }
 
     object Dropbox {

@@ -27,11 +27,6 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/importButton"
-        android:title="@string/text_import"
-        app:showAsAction="never"/>
-
-    <item
         android:id="@+id/exportButton"
         android:title="@string/text_export"
         app:showAsAction="never"/>

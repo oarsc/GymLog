@@ -2,6 +2,7 @@ package org.oar.gymlog.ui.common.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.fragment.app.DialogFragment
@@ -16,6 +17,7 @@ class TextDialogFragment(
 ) : DialogFragment() {
 
     var customText: String? = null
+    private var callbackCalled = false
 
     constructor(
         @StringRes title: Int,
@@ -33,8 +35,18 @@ class TextDialogFragment(
         return AlertDialog.Builder(activity)
             .setTitle(title)
             .setView(binding.root)
-            .setPositiveButton(R.string.button_confirm) { _,_ -> callback.accept(true) }
-            .setNegativeButton(R.string.button_cancel) { _,_ -> callback.accept(false) }
+            .setPositiveButton(R.string.button_confirm) { _,_ ->
+                callbackCalled = true
+                callback.accept(true)
+            }
+            .setNegativeButton(R.string.button_cancel) { _,_ -> }
             .create()
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        if (!callbackCalled) {
+            callback.accept(false)
+        }
     }
 }

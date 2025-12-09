@@ -113,6 +113,9 @@
     <string name="dialog_confirm_init_training_title">Training not started</string>
     <string name="dialog_confirm_init_training_text">There is no training currently ongoing.
     Do you want to start training #%1$d?</string>
+    <string name="dialog_confirm_import_title">Import data</string>
+    <string name="dialog_confirm_import_text">The App data is empty. Import data from file?
+    Default data will be used otherwise.</string>
     <string name="dialog_title_select_month">Select month</string>
     <string name="dialog_title_select_time">Select time</string>
 

@@ -28,10 +28,13 @@ interface ExerciseDao {
     fun insert(exercise: ExerciseEntity): Long
 
     @Insert
-    fun insertAll(vararg exercises: ExerciseEntity): LongArray
+    fun insertAll(exercises: List<ExerciseEntity>): LongArray
 
     @Delete
     fun delete(vararg exercises: ExerciseEntity): Int
+
+    @Update
+    fun update(exercises: List<ExerciseEntity>)
 
     @Update
     fun update(vararg exercises: ExerciseEntity)

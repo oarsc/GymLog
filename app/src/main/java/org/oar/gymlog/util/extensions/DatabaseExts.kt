@@ -35,13 +35,13 @@ object DatabaseExts {
     fun View.dbThread(process: Consumer<AppDatabase>) = (context as Activity).dbThread(process)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    suspend fun Context.dbThreadSuspend(process: (AppDatabase) -> Unit) =
+    suspend fun <T> Context.dbThreadSuspend(process: AppDatabase.() -> T): T =
         suspendCancellableCoroutine { cont ->
 
             fun execute() {
                 try {
-                    process(db)
-                    cont.resume(Unit) {}
+                    val result = db.process()
+                    cont.resume(result) {}
                 } catch (e: Exception) {
                     cont.cancel(e)
                 }

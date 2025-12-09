@@ -16,7 +16,7 @@ enum class PreferencesDefinition(
 	UNIT_CONVERSION_EXACT_VALUE("conversionExactValue", defaultBoolean = false),
 	UNIT_INTERNATIONAL_SYSTEM("internationalSystem", defaultBoolean = true),
 
-	THEME("nightTheme", defaultBoolean = false),
+	THEME("nightTheme", defaultBoolean = true),
 	CURRENT_GYM("gym", defaultInteger = 0),
 
 	BITS_DELETION("logDeletion", defaultString = "prompt"),
