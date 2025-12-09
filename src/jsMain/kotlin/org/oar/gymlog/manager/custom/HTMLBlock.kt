@@ -6,8 +6,6 @@ import kotlinx.dom.clear
 import org.oar.gymlog.manager.constants.ExportId.ExportId
 import org.oar.gymlog.manager.constants.NotifierId.NotifierId
 import org.oar.gymlog.manager.custom.DefinitionConstants.HTMLDefinition
-import org.oar.gymlog.manager.custom.DefinitionConstants.toDefinition
-import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.w3c.dom.HTMLBodyElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLHeadElement
@@ -52,23 +50,12 @@ abstract class HTMLBlock<E : HTMLElement> private constructor(val element: E) {
         }
     }
 
-    @Deprecated("Use apply instead")
-    fun append(build: ElementBuilder<E>.() -> Unit): HTMLBlock<E> {
-        ElementBuilder(this, element).build()
-        return this
-    }
-
     fun append(block:  HTMLBlock<*>): HTMLBlock<E> {
         _children.add(block)
         element.appendChild(block.element)
         block.parent = this
         return this
     }
-
-//    @Deprecated("Use append(HTMLBlock) instead", ReplaceWith("append(block)"))
-//    fun append(element: Element) {
-//        this@HTMLBlock.element.appendChild(element)
-//    }
 
     fun append(text: String): HTMLBlock<E> {
         this@HTMLBlock.element.appendChild(document.createTextNode(text))
@@ -101,11 +88,6 @@ abstract class HTMLBlock<E : HTMLElement> private constructor(val element: E) {
         element.clear()
     }
 
-//    @Deprecated("Use remove(HTMLBlock) instead", ReplaceWith("remove(block)"))
-//    fun remove(element: Element) {
-//        this@HTMLBlock.element.removeChild(element)
-//    }
-
     fun detachAll(exposes: Boolean = true, listeners: Boolean = true) {
         if (exposes)
         exposeMap.iterator().apply {
@@ -126,70 +108,14 @@ abstract class HTMLBlock<E : HTMLElement> private constructor(val element: E) {
         }
     }
 
-
-    // NEW
-    operator fun <T : HTMLElement> HTMLDefinition<T>.invoke(className: String? = null, id: String? = null, build: HTMLBlock<T>.() -> Unit): HTMLBlock<T> =
-        createBlock(this).apply {
-            if (className != null) element.className = className
-            if (id != null) element.id = id
-            build()
-        }
-
+    @Suppress("LABEL_RESOLVE_WILL_CHANGE")
     operator fun HTMLBlock<*>.unaryPlus() = this@HTMLBlock.append(this)
-    operator fun HTMLBlock<*>.inc() = this@HTMLBlock.append(this)
     operator fun String.unaryPlus() = append(this)
     operator fun String.unaryMinus() {
         element.textContent = this
     }
     operator fun String.not() {
         element.innerHTML = this
-    }
-
-    @Deprecated("")
-    class ElementBuilder<E : HTMLElement> internal constructor(
-        val block: HTMLBlock<E>,
-        _element: HTMLElement
-    ) {
-        val element: E = _element as E
-        @Deprecated("")
-        var id: String
-            get() = element.id
-            set(id) { element.id = id }
-        @Deprecated("")
-        var className: String
-            get() = element.className
-            set(className) { element.className = className }
-
-        @Deprecated("")
-        operator fun String.invoke(build: ElementBuilder<*>.() -> Unit) {
-            val subBlock = createBlock(this.toDefinition())
-            block.append(subBlock)
-
-            ElementBuilder(subBlock, subBlock.element).build()
-        }
-
-        @Deprecated("")
-        operator fun <T : HTMLElement> HTMLDefinition<T>.invoke(build: ElementBuilder<T>.() -> Unit) {
-            val subBlock = createBlock(this)
-            block.append(subBlock)
-
-            ElementBuilder(subBlock, subBlock.element).build()
-        }
-
-        @Suppress("LABEL_RESOLVE_WILL_CHANGE")
-        operator fun HTMLBlock<*>.unaryPlus() = this@ElementBuilder.block.append(this)
-        @Deprecated("")
-        fun add(block: HTMLBlock<*>) = this.block.append(block)
-        @Deprecated("")
-        operator fun String.unaryPlus() = block.append(this)
-        @Deprecated("")
-        operator fun String.unaryMinus() {
-            element.textContent = this
-        }
-        @Deprecated("")
-        operator fun String.not() {
-            element.innerHTML = this
-        }
     }
 
     private fun update(identifier: Int) = render(identifier)

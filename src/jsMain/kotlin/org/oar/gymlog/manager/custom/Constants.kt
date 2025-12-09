@@ -1,6 +1,7 @@
 package org.oar.gymlog.manager.custom
 
 import kotlinx.browser.document
+import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.w3c.dom.HTMLAnchorElement
 import org.w3c.dom.HTMLBRElement
 import org.w3c.dom.HTMLButtonElement
@@ -54,8 +55,11 @@ object DefinitionConstants {
         }
         fun create(): T = document.createElement(tagName) as T
 
-//        operator fun invoke(build: ElementBuilder<T>.() -> Unit): HTMLBlock<T> = createBlock(this).apply {
-//            ElementBuilder(this, element).build()
-//        }
+        operator fun invoke(className: String? = null, id: String? = null, build: HTMLBlock<T>.() -> Unit): HTMLBlock<T> =
+            createBlock(this).apply {
+                if (className != null) element.className = className
+                if (id != null) element.id = id
+                build()
+            }
     }
 }
