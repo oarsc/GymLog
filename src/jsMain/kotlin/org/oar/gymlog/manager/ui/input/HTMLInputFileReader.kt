@@ -1,13 +1,13 @@
 package org.oar.gymlog.manager.ui.input
 
 import kotlinx.serialization.json.Json
-import org.oar.gymlog.manager.constants.ExportId
-import org.oar.gymlog.manager.constants.NotifierId
-import org.oar.gymlog.manager.custom.DefinitionConstants.INPUT
-import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.style
+import org.oar.gymlog.manager.lib.HTMLBlock
+import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.INPUT
+import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.model.Muscle
 import org.oar.gymlog.manager.model.Output
+import org.oar.gymlog.manager.utils.Export
+import org.oar.gymlog.manager.utils.Notifier
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLParagraphElement
 import org.w3c.files.FileReader
@@ -18,7 +18,7 @@ class HTMLInputFileReader : HTMLBlock<HTMLInputElement>(INPUT, id = ID) {
     private var output: Output? = null
 
     init {
-        expose(ExportId.output) { output }
+        expose(Export.output) { output }
 
         element.apply {
             type = "file"
@@ -37,7 +37,7 @@ class HTMLInputFileReader : HTMLBlock<HTMLInputElement>(INPUT, id = ID) {
                             output = Json.decodeFromString(Output.serializer(), content)
                             addIndexes(output!!)
                             loadingElement.style.display = "none"
-                            notify(NotifierId.fileLoaded)
+                            notify(Notifier.fileLoaded)
                         }
                         readAsText(file)
                     }

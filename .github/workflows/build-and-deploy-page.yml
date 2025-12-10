@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-deploy-4:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -59,6 +59,7 @@ jobs:
           mkdir -p docs/masks
           cp -r main_branch/app/src/main/assets/previews/* docs/previews/ || echo "No assets found"
           cp -r main_branch/app/src/main/assets/masks/* docs/masks/ || echo "No assets found"
+          ls docs/previews > docs/preview.indexes
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

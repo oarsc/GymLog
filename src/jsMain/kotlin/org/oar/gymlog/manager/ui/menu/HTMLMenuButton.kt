@@ -1,8 +1,8 @@
 package org.oar.gymlog.manager.ui.menu
 
-import org.oar.gymlog.manager.custom.DefinitionConstants.DIV
-import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.style
+import org.oar.gymlog.manager.lib.HTMLBlock
+import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
+import org.oar.gymlog.manager.lib.style
 import org.w3c.dom.HTMLDivElement
 
 open class HTMLMenuButton(

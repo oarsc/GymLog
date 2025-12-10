@@ -1,22 +1,21 @@
 package org.oar.gymlog.manager.ui.calendar.v1
 
 import kotlinx.browser.window
-import org.oar.gymlog.manager.constants.ExportId
-import org.oar.gymlog.manager.constants.NotifierId
-import org.oar.gymlog.manager.custom.DefinitionConstants.DIV
-import org.oar.gymlog.manager.custom.DefinitionConstants.H2
-import org.oar.gymlog.manager.custom.DefinitionConstants.SPAN
-import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.Utils.createBlock
-import org.oar.gymlog.manager.custom.style
+import org.oar.gymlog.manager.lib.HTMLBlock
+import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
+import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.H2
+import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.SPAN
+import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.model.OutputBit
 import org.oar.gymlog.manager.model.OutputTraining
-import org.oar.gymlog.manager.ui.calendar.model.ExerciseBits
-import org.oar.gymlog.manager.ui.common.HTMLInputEditBind
+import org.oar.gymlog.manager.ui._common.model.ExerciseBits
+import org.oar.gymlog.manager.ui.support.HTMLInputEditBind
+import org.oar.gymlog.manager.utils.Export
+import org.oar.gymlog.manager.utils.Notifier
 import org.w3c.dom.HTMLDivElement
 
 class HTMLTrainingSummary: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
-    private var output = read(ExportId.output)!!
+    private var output = read(Export.output)!!
 
     private var trainingId: Int by renderProperty(
         initial = output.bits.lastOrNull()?.trainingId ?: 0,
@@ -24,15 +23,15 @@ class HTMLTrainingSummary: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
     )
     private var bits = output.bits.filter { it.trainingId == trainingId }.toMutableList()
 
-    private val content = createBlock(DIV)
+    private val content = DIV()
 
     init {
-        listen(NotifierId.trainingIdUpdated) {
+        listen(Notifier.trainingIdUpdated) {
             bits = output.bits.filter { bit -> bit.trainingId == it }.toMutableList()
             trainingId = it
         }
 
-        listen(NotifierId.reload) {
+        listen(Notifier.reload) {
             val scroll = window.scrollY
             bits = output.bits.filter { it.trainingId == trainingId }.toMutableList()
             render(1)
@@ -46,7 +45,7 @@ class HTMLTrainingSummary: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
     override fun render(identifier: Int) {
         when (identifier) {
             -1, 1 -> {
-                content.clear(detach = true)
+                content.clear(detachMode = DetachMode.DETACH_ONLY_CHILDREN)
                 content.apply {
                     +H2("training-title") {
                         +SPAN { -"Training #$trainingId" }
@@ -75,7 +74,7 @@ class HTMLTrainingSummary: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
                     }
                     +DIV(id = "bit-variation") {
                         bits.perVariation.forEach {
-                            +HTMLTrainingExercise(it, output)
+                            +HTMLCalendarExerciseHistory(output, it)
                         }
                     }
                 }

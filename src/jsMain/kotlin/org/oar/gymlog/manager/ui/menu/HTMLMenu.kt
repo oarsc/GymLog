@@ -1,11 +1,11 @@
 package org.oar.gymlog.manager.ui.menu
 
-import org.oar.gymlog.manager.constants.ExportId
-import org.oar.gymlog.manager.constants.NotifierId
-import org.oar.gymlog.manager.custom.DefinitionConstants.DIV
-import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.style
-import org.oar.gymlog.manager.process.Export
+import org.oar.gymlog.manager.lib.HTMLBlock
+import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
+import org.oar.gymlog.manager.lib.style
+import org.oar.gymlog.manager.process.ExportProcess
+import org.oar.gymlog.manager.utils.Export
+import org.oar.gymlog.manager.utils.Notifier
 import org.w3c.dom.HTMLDivElement
 
 class HTMLMenu: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
@@ -17,8 +17,8 @@ class HTMLMenu: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
     )
 
     init {
-        listen(NotifierId.menuIdChanged) { selectedOption = it }
-        expose(ExportId.menuId) { selectedOption }
+        listen(Notifier.menuIdChanged) { selectedOption = it }
+        expose(Export.menuId) { selectedOption }
 
         menuItems.forEach {
             +it.value
@@ -35,12 +35,12 @@ class HTMLMenu: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
         text = "Load file",
         onClick = {
             classList.toggle("selected")
-            notify(NotifierId.showLoadFile, true)
+            notify(Notifier.showLoadFile, true)
         }
     ).apply {
         classList.add("selected")
 
-        listen(NotifierId.fileLoaded) {
+        listen(Notifier.fileLoaded) {
             classList.toggle("selected", false)
         }
     }
@@ -48,8 +48,8 @@ class HTMLMenu: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
     private fun createExportButton() = HTMLMenuButton(
         text = "Export",
         onClick = {
-            read(ExportId.output)?.also(Export::export)
-            notify(NotifierId.reload)
+            read(Export.output)?.also(ExportProcess::export)
+            notify(Notifier.reload)
         }
     )
 

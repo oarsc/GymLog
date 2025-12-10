@@ -1,16 +1,16 @@
 package org.oar.gymlog.manager.ui.calendar.v1
 
 import org.oar.gymlog.manager.Style.BUTTON_STYLE
-import org.oar.gymlog.manager.constants.ExportId
-import org.oar.gymlog.manager.constants.NotifierId
-import org.oar.gymlog.manager.custom.DefinitionConstants.BUTTON
-import org.oar.gymlog.manager.custom.DefinitionConstants.DIV
-import org.oar.gymlog.manager.custom.DefinitionConstants.INPUT
-import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.Utils.createBlock
-import org.oar.gymlog.manager.custom.style
-import org.oar.gymlog.manager.utils.DateExt.compareTo
-import org.oar.gymlog.manager.utils.DateExt.toLocaleISODateString
+import org.oar.gymlog.manager.lib.HTMLBlock
+import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.BUTTON
+import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
+import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.INPUT
+import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.INPUT_NUMBER
+import org.oar.gymlog.manager.lib.style
+import org.oar.gymlog.manager.utils.Export
+import org.oar.gymlog.manager.utils.Notifier
+import org.oar.gymlog.manager.utils.extensions.DateExt.compareTo
+import org.oar.gymlog.manager.utils.extensions.DateExt.toLocaleISODateString
 import org.w3c.dom.HTMLDivElement
 import kotlin.js.Date
 
@@ -18,12 +18,12 @@ class HTMLFilter(
     trainingId: Int
 ): HTMLBlock<HTMLDivElement>(DIV, id = ID) {
 
-    private var output = read(ExportId.output)!!
+    private var output = read(Export.output)!!
 
-    private val dateInput = createBlock(INPUT)
-    private val trainingInput = createBlock(INPUT)
-    private val nextButton = createBlock(BUTTON, className = BUTTON_STYLE)
-    private val prevButton = createBlock(BUTTON, className = BUTTON_STYLE)
+    private val dateInput = INPUT("date subtle")
+    private val trainingInput = INPUT_NUMBER("training-id")
+    private val nextButton = BUTTON(className = BUTTON_STYLE)
+    private val prevButton = BUTTON(className = BUTTON_STYLE)
 
     private var currentTrainingId by renderProperty(
         initial = trainingId,
@@ -33,29 +33,22 @@ class HTMLFilter(
     private val maxTrainingId = output.trainings.maxOf { it.trainingId }
 
     init {
-        nextButton.element.apply {
-            textContent = ">"
-            onclick = { setTrainingId(currentTrainingId + 1) }
-        }
-
         prevButton.element.apply {
             textContent = "<"
             onclick = { setTrainingId(currentTrainingId - 1) }
         }
 
+        nextButton.element.apply {
+            textContent = ">"
+            onclick = { setTrainingId(currentTrainingId + 1) }
+        }
+
         trainingInput.element.apply {
-            type = "number"
             this.max = maxTrainingId.toString()
             this.min = "1"
 
-            onblur = {
+            onchange = {
                 setTrainingId(value.toIntOrNull())
-            }
-
-            onkeyup = {
-                if (it.keyCode == 13 || it.keyCode == 27) { // Enter / Escape
-                    blur()
-                }
             }
         }
 
@@ -74,8 +67,8 @@ class HTMLFilter(
 
         +dateInput
         +prevButton
-        +nextButton
         +trainingInput
+        +nextButton
     }
 
     override fun render(identifier: Int) {
@@ -89,7 +82,7 @@ class HTMLFilter(
 
     private fun setTrainingId(trainingId: Int?) {
         currentTrainingId = trainingId?.coerceIn(1, maxTrainingId) ?: maxTrainingId
-        notify(NotifierId.trainingIdUpdated, currentTrainingId)
+        notify(Notifier.trainingIdUpdated, currentTrainingId)
         updateInputs()
     }
 
@@ -107,6 +100,15 @@ class HTMLFilter(
         init {
             style {
                 "#$ID" {
+                    "text-align" to "center"
+
+                    ".date" {
+                        "margin-right" to "20px"
+                    }
+
+                    ".training-id" {
+                        "text-align" to "center"
+                    }
                 }
             }
         }

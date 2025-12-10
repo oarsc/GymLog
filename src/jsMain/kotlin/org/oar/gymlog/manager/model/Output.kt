@@ -53,15 +53,15 @@ data class OutputPreferences(
 
 @Serializable
 data class OutputExercise(
-    val exerciseId: Int,
-    val image: String,
+    var exerciseId: Int,
+    var image: String,
     var name: String
 )
 
 @Serializable
 data class OutputVariation(
     var def: Boolean,
-    val exerciseId: Int,
+    var exerciseId: Int,
     var gymId: Int? = null,
     var gymRelation: GymRelation,
     var lastBarId: BarId? = null,
@@ -75,7 +75,7 @@ data class OutputVariation(
 
 @Serializable
 data class OutputMuscleRelation(
-    val exerciseId: Int,
+    var exerciseId: Int,
     var muscleId: Int
 )
 
