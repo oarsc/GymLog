@@ -110,6 +110,7 @@ abstract class HTMLBlock<E : HTMLElement> private constructor(val element: E) {
 
     @Suppress("LABEL_RESOLVE_WILL_CHANGE")
     operator fun HTMLBlock<*>.unaryPlus() = this@HTMLBlock.append(this)
+    operator fun HTMLBlock<*>.unaryMinus() = this@HTMLBlock.remove(this)
     operator fun String.unaryPlus() = append(this)
     operator fun String.unaryMinus() {
         element.textContent = this

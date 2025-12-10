@@ -1,8 +1,7 @@
-package org.oar.gymlog.manager.ui.common
+package org.oar.gymlog.manager.ui.support
 
 import org.oar.gymlog.manager.custom.DefinitionConstants.DIV
 import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.oar.gymlog.manager.custom.style
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
@@ -12,7 +11,7 @@ open class HTMLPopup(
     className: String? = null,
 ): HTMLBlock<HTMLDivElement>(DIV, id = id, className = "$CLASS_NAME closeable") {
 
-    protected val content = createBlock(DIV, className = "content")
+    protected val content = DIV(className = "content")
 
     init {
         element.apply {

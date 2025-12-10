@@ -18,8 +18,10 @@ object Export {
     }
 
     private fun Output.sort() {
+        exercisesSort()
+        variationsSort()
+
         bits.sortBy { it.timestamp.getTime() }
-        exercises.sortBy { it.exerciseId }
         trainings.sortBy { it.trainingId }
         primaries.sortWith(compareBy(
             { it.muscleId },
@@ -29,27 +31,40 @@ object Export {
             { it.muscleId },
             { it.exerciseId }
         ))
-        variationsSort()
+    }
+
+    private fun Output.exercisesSort() {
+        exercises.sortBy { it.exerciseId }
+        if (exercises.last().exerciseId == exercises.size) return
+
+        val exerciseIdMap = exercises.map { it.exerciseId }
+            .zip(1..exercises.size)
+            .toMap()
+
+        exercises.forEach { it.exerciseId = exerciseIdMap[it.exerciseId]!! }
+        primaries.forEach { it.exerciseId = exerciseIdMap[it.exerciseId]!! }
+        secondaries.forEach { it.exerciseId = exerciseIdMap[it.exerciseId]!! }
+        variations.forEach { it.exerciseId = exerciseIdMap[it.exerciseId]!! }
+
+        exercise = exercises.associateBy { it.exerciseId }.toMutableMap()
     }
 
     private fun Output.variationsSort() {
-        val variationsIdMap = variations // old -> new
-            .filter { it.def }
-            .associate {
-                val oldVariationId = it.variationId
-                it.variationId = it.exerciseId
-                oldVariationId to it.exerciseId
-            }
-            .toMutableMap()
-        var lastId = variationsIdMap.values.maxOf { it }
+        val variationsIdMap = buildMap {
+            val (defaultVariations, nonDefaultVariations) = variations.partition { it.def }
 
-        exercises
-            .flatMap { ex -> variations.filter { !it.def && it.exerciseId == ex.exerciseId } }
-            .forEach {
-                variationsIdMap[it.variationId] = ++lastId
-                it.variationId = lastId
+            var lastId = defaultVariations.maxOf {
+                this[it.variationId] = it.exerciseId
+                it.exerciseId
             }
 
+            val variationsByExercise = nonDefaultVariations.groupBy { it.exerciseId }
+            exercises
+                .flatMap { variationsByExercise[it.exerciseId].orEmpty() }
+                .forEach { this[it.variationId] = ++lastId }
+        }
+
+        variations.forEach { it.variationId = variationsIdMap[it.variationId]!! }
         variations.sortWith(compareBy(
             { it.exerciseId },
             { it.variationId }

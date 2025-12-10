@@ -8,11 +8,10 @@ import org.oar.gymlog.manager.custom.DefinitionConstants.TH
 import org.oar.gymlog.manager.custom.DefinitionConstants.THEAD
 import org.oar.gymlog.manager.custom.DefinitionConstants.TR
 import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.oar.gymlog.manager.custom.style
 import org.oar.gymlog.manager.model.Output
 import org.oar.gymlog.manager.ui.calendar.model.ExerciseBits
-import org.oar.gymlog.manager.ui.common.HTMLExerciseIcon
+import org.oar.gymlog.manager.ui.support.HTMLExerciseIcon
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLTableCellElement
 import org.w3c.dom.HTMLTableElement
@@ -48,7 +47,7 @@ class HTMLTrainingExercise(
     }
 
     private fun generateTableBlock(): HTMLBlock<HTMLTableElement> =
-        createBlock(TABLE).apply {
+        TABLE {
             +THEAD {
                 +TR {
                     +columnTitle("#")
@@ -82,12 +81,10 @@ class HTMLTrainingExercise(
             }
         }
 
-    private fun columnTitle(text: String, title: String? = null): HTMLBlock<HTMLTableCellElement> =
-        createBlock(TH).apply {
-            title?.also { element.title = it }
-
-            +SPAN { -text }
-        }
+    private fun columnTitle(text: String, title: String? = null): HTMLBlock<HTMLTableCellElement> = TH {
+        if (title != null) element.title = title
+        +SPAN { -text }
+    }
 
     private fun updateIndexes() {
         var instants = 0

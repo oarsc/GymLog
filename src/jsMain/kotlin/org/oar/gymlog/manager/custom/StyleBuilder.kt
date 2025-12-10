@@ -2,11 +2,9 @@ package org.oar.gymlog.manager.custom
 
 import org.oar.gymlog.manager.custom.DefinitionConstants.STYLE
 import org.oar.gymlog.manager.custom.HTMLBlock.Companion.HTMLHeadBlock
-import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.w3c.dom.css.CSSStyleSheet
 
-private val styleElement = createBlock(STYLE)
-    .apply(HTMLHeadBlock::append)
+private val styleElement = STYLE(build = HTMLHeadBlock::append)
     .element
     .apply { type = "text/css" }
 

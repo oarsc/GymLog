@@ -7,7 +7,6 @@ import org.oar.gymlog.manager.custom.DefinitionConstants.BUTTON
 import org.oar.gymlog.manager.custom.DefinitionConstants.DIV
 import org.oar.gymlog.manager.custom.DefinitionConstants.INPUT
 import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.oar.gymlog.manager.custom.style
 import org.oar.gymlog.manager.utils.DateExt.compareTo
 import org.oar.gymlog.manager.utils.DateExt.toLocaleISODateString
@@ -20,10 +19,10 @@ class HTMLFilter(
 
     private var output = read(ExportId.output)!!
 
-    private val dateInput = createBlock(INPUT)
-    private val trainingInput = createBlock(INPUT)
-    private val nextButton = createBlock(BUTTON, className = BUTTON_STYLE)
-    private val prevButton = createBlock(BUTTON, className = BUTTON_STYLE)
+    private val dateInput = INPUT()
+    private val trainingInput = INPUT()
+    private val nextButton = BUTTON(className = BUTTON_STYLE)
+    private val prevButton = BUTTON(className = BUTTON_STYLE)
 
     private var currentTrainingId by renderProperty(
         initial = trainingId,

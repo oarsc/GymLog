@@ -1,4 +1,4 @@
-package org.oar.gymlog.manager.ui.editor.v1
+package org.oar.gymlog.manager.ui.editor.exerciseEditor.v1
 
 import org.oar.gymlog.manager.constants.ExportId
 import org.oar.gymlog.manager.constants.NotifierId
@@ -11,12 +11,11 @@ import org.oar.gymlog.manager.custom.DefinitionConstants.TH
 import org.oar.gymlog.manager.custom.DefinitionConstants.THEAD
 import org.oar.gymlog.manager.custom.DefinitionConstants.TR
 import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.oar.gymlog.manager.custom.style
 import org.oar.gymlog.manager.model.Output
 import org.oar.gymlog.manager.model.OutputExercise
-import org.oar.gymlog.manager.ui.common.HTMLExerciseIcon
-import org.oar.gymlog.manager.ui.common.HTMLInputEditBind
+import org.oar.gymlog.manager.ui.support.HTMLExerciseIcon
+import org.oar.gymlog.manager.ui.support.HTMLInputEditBind
 import org.w3c.dom.HTMLDivElement
 
 class HTMLExerciseEditor: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
@@ -43,7 +42,7 @@ class HTMLExerciseEditor: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
         }
     }
 
-    private fun createExerciseBox(exercise: OutputExercise) = createBlock(DIV).apply {
+    private fun createExerciseBox(exercise: OutputExercise) = DIV {
         +H1 { -"Exercise #${exercise.exerciseId}" }
 
         +HTMLExerciseIcon(source = exercise.image, size = 64)
@@ -74,7 +73,7 @@ class HTMLExerciseEditor: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
         }
     }
 
-    private fun addVariations(exercise: OutputExercise)  = createBlock(DIV).apply {
+    private fun addVariations(exercise: OutputExercise)  = DIV {
         output.variations
             .filter { it.exerciseId == exercise.exerciseId }
             .forEach {
@@ -87,6 +86,10 @@ class HTMLExerciseEditor: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
         init {
             style {
                 "#$ID" {
+                    "h1" {
+                        "margin-top" to 0
+                    }
+
                     ".muscle-cell" {
                         "vertical-align" to "top"
                     }

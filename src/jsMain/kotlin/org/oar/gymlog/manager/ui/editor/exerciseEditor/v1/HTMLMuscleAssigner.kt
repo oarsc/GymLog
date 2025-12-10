@@ -1,4 +1,4 @@
-package org.oar.gymlog.manager.ui.editor.v1
+package org.oar.gymlog.manager.ui.editor.exerciseEditor.v1
 
 import org.oar.gymlog.manager.Style.BUTTON_STYLE
 import org.oar.gymlog.manager.custom.DefinitionConstants.BUTTON
@@ -6,7 +6,6 @@ import org.oar.gymlog.manager.custom.DefinitionConstants.DIV
 import org.oar.gymlog.manager.custom.DefinitionConstants.OPTION
 import org.oar.gymlog.manager.custom.DefinitionConstants.SELECT
 import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.oar.gymlog.manager.custom.style
 import org.oar.gymlog.manager.model.Output
 import org.oar.gymlog.manager.model.OutputExercise
@@ -24,7 +23,7 @@ class HTMLMuscleAssigner(
         musclesRelation.filter { it.exerciseId == exercise.exerciseId }.map { it.muscleId }
 
     init {
-        val muscleList = createBlock(DIV).apply {
+        val muscleList = DIV {
             muscles.forEach { muscleId ->
                 +muscleRow(muscleId)
             }
@@ -44,21 +43,21 @@ class HTMLMuscleAssigner(
         }
     }
 
-    private fun muscleRow(muscleId: Int) = createBlock(DIV).apply {
+    private fun muscleRow(muscleId: Int) = DIV {
         val select = createMuscleSelect(muscleId)
         +BUTTON("$BUTTON_STYLE transparent") {
             -"-"
             element.onclick = {
                 val selectedMuscleId = select.element.value.toInt()
                 if (removeMuscleRelation(selectedMuscleId)) {
-                    this@apply.remove()
+                    this@DIV.remove()
                 }
             }
         }
         +select
     }
 
-    private fun createMuscleSelect(muscleId: Int) = createBlock(SELECT).apply {
+    private fun createMuscleSelect(muscleId: Int) = SELECT {
         var prevMuscleId = muscleId
         element.apply {
             fun updateColor(muscleId: Int) {

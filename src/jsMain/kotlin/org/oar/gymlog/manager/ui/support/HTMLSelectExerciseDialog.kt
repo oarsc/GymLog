@@ -1,11 +1,10 @@
-package org.oar.gymlog.manager.ui.common
+package org.oar.gymlog.manager.ui.support
 
 import org.oar.gymlog.manager.constants.ExportId
 import org.oar.gymlog.manager.custom.DefinitionConstants.DIV
 import org.oar.gymlog.manager.custom.DefinitionConstants.INPUT
 import org.oar.gymlog.manager.custom.DefinitionConstants.SPAN
 import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.oar.gymlog.manager.custom.style
 import org.oar.gymlog.manager.model.OutputExercise
 import org.w3c.dom.HTMLDivElement
@@ -18,8 +17,8 @@ open class HTMLSelectExerciseDialog(
 
     private val output = read(ExportId.output)!!
 
-    private val filter = createBlock(INPUT, className = "exercise-filter")
-    private val list = createBlock(DIV, className = "exercise-list")
+    private val filter = INPUT(className = "exercise-filter")
+    private val list = DIV(className = "exercise-list")
     private val muscles = mutableMapOf<Int, MuscleElement>()
 
     init {
@@ -124,7 +123,7 @@ open class HTMLSelectExerciseDialog(
     }
 
     private fun createExerciseListItem(muscle: MuscleElement, exercise: OutputExercise): HTMLBlock<HTMLDivElement> =
-        createBlock(DIV, className = "exercise-item").apply {
+        DIV(className = "exercise-item") {
                 muscle.exercises.add(ExerciseElement(exercise.exerciseId, this))
 
                 element.apply {
@@ -223,21 +222,20 @@ open class HTMLSelectExerciseDialog(
                         "&.hide" {
                             "display" to "none"
                         }
+
+                        "> *" {
+                            "vertical-align" to "middle"
+                        }
                     }
 
                     ".exe-id" {
                         "display" to "inline-block"
                         "text-align" to "right"
-                        "width" to "30px"
-                    }
-                    ".ex::before" {
-                        "content" to "\" - \""
-                    }
-                    ".exe" {
+                        "width" to "40px"
                         "color" to "gray"
-                        "&::before" {
-                            "content" to "\" - \""
-                        }
+                    }
+                    ".ex::before, .exe::before" {
+                        "content" to "\" - \""
                     }
                 }
             }

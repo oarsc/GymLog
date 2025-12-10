@@ -1,9 +1,8 @@
-package org.oar.gymlog.manager.ui.common
+package org.oar.gymlog.manager.ui.support
 
 import org.oar.gymlog.manager.custom.DefinitionConstants.DIV
 import org.oar.gymlog.manager.custom.DefinitionConstants.IMG
 import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.oar.gymlog.manager.custom.style
 import org.w3c.dom.HTMLDivElement
 
@@ -13,8 +12,8 @@ class HTMLExerciseIcon(
     size: Int = 64
 ): HTMLBlock<HTMLDivElement>(DIV, className = CLASS_NAME) {
 
-    private val preview = createBlock(IMG)
-    private val mask by lazy { createBlock(IMG, className = "mask") }
+    private val preview = IMG()
+    private val mask by lazy { IMG(className = "mask") }
 
     init {
         val sizePx = "${size}px"

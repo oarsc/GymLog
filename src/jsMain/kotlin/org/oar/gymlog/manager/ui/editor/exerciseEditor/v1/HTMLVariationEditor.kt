@@ -1,4 +1,4 @@
-package org.oar.gymlog.manager.ui.editor.v1
+package org.oar.gymlog.manager.ui.editor.exerciseEditor.v1
 
 import org.oar.gymlog.manager.Style.BUTTON_STYLE
 import org.oar.gymlog.manager.constants.NotifierId
@@ -21,8 +21,8 @@ import org.oar.gymlog.manager.model.OutputExercise
 import org.oar.gymlog.manager.model.OutputVariation
 import org.oar.gymlog.manager.model.Step
 import org.oar.gymlog.manager.model.WeightSpec
-import org.oar.gymlog.manager.ui.common.HTMLInputEditBind
-import org.oar.gymlog.manager.ui.common.HTMLSelectEditBind
+import org.oar.gymlog.manager.ui.support.HTMLInputEditBind
+import org.oar.gymlog.manager.ui.support.HTMLSelectEditBind
 import org.w3c.dom.HTMLDivElement
 
 class HTMLVariationEditor(
@@ -194,6 +194,7 @@ class HTMLVariationEditor(
                     -"×"
                 }
             }
+
             +BUTTON("$BUTTON_STYLE big green") {
                 element.onclick = {
                     val newVariationId = output.variations.maxOf { it.variationId } + 1
@@ -206,7 +207,16 @@ class HTMLVariationEditor(
                     output.variation[newVariationId] = exercise to newVariation
                     notify(NotifierId.reload)
                 }
-                -"+↓"
+//                -"+↓"
+                -"Clone"
+            }
+
+            +BUTTON("$BUTTON_STYLE big") {
+                element.onclick = {
+                    notify(NotifierId.editorBitsPanel, variation)
+                }
+//                -"↓↓"
+                -"Find registries"
             }
         }
     }

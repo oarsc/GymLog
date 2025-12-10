@@ -7,7 +7,6 @@ import org.oar.gymlog.manager.custom.HTMLBlock
 import org.oar.gymlog.manager.custom.HTMLBlock.Companion.HTMLBodyBlock
 import org.oar.gymlog.manager.custom.HTMLBlock.Companion.listen
 import org.oar.gymlog.manager.custom.HTMLBlock.Companion.read
-import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.oar.gymlog.manager.ui.calendar.HTMLCalendarContainer
 import org.oar.gymlog.manager.ui.editor.HTMLEditorContainer
 import org.oar.gymlog.manager.ui.input.HTMLInputContainer
@@ -19,7 +18,7 @@ import org.w3c.dom.HTMLDivElement
 fun main() {
     Style.load()
 
-    val divContainer = createBlock(DIV)
+    val divContainer = DIV()
 
     HTMLBodyBlock.apply {
         +HTMLMenu()

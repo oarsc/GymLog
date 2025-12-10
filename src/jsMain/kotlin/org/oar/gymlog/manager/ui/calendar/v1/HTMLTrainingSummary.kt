@@ -7,12 +7,11 @@ import org.oar.gymlog.manager.custom.DefinitionConstants.DIV
 import org.oar.gymlog.manager.custom.DefinitionConstants.H2
 import org.oar.gymlog.manager.custom.DefinitionConstants.SPAN
 import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.oar.gymlog.manager.custom.style
 import org.oar.gymlog.manager.model.OutputBit
 import org.oar.gymlog.manager.model.OutputTraining
 import org.oar.gymlog.manager.ui.calendar.model.ExerciseBits
-import org.oar.gymlog.manager.ui.common.HTMLInputEditBind
+import org.oar.gymlog.manager.ui.support.HTMLInputEditBind
 import org.w3c.dom.HTMLDivElement
 
 class HTMLTrainingSummary: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
@@ -24,7 +23,7 @@ class HTMLTrainingSummary: HTMLBlock<HTMLDivElement>(DIV, id = ID) {
     )
     private var bits = output.bits.filter { it.trainingId == trainingId }.toMutableList()
 
-    private val content = createBlock(DIV)
+    private val content = DIV()
 
     init {
         listen(NotifierId.trainingIdUpdated) {

@@ -1,4 +1,4 @@
-package org.oar.gymlog.manager.ui.common
+package org.oar.gymlog.manager.ui.support
 
 import org.oar.gymlog.manager.custom.DefinitionConstants.OPTION
 import org.oar.gymlog.manager.custom.DefinitionConstants.SELECT

@@ -1,11 +1,10 @@
-package org.oar.gymlog.manager.ui.common
+package org.oar.gymlog.manager.ui.support
 
 import org.oar.gymlog.manager.constants.ExportId
 import org.oar.gymlog.manager.custom.DefinitionConstants.DIV
 import org.oar.gymlog.manager.custom.DefinitionConstants.INPUT
 import org.oar.gymlog.manager.custom.DefinitionConstants.SPAN
 import org.oar.gymlog.manager.custom.HTMLBlock
-import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.oar.gymlog.manager.custom.style
 import org.oar.gymlog.manager.model.OutputExercise
 import org.oar.gymlog.manager.model.OutputMuscleRelation
@@ -20,8 +19,8 @@ open class HTMLSelectVariationDialog(
 
     private val output = read(ExportId.output)!!
 
-    private val filter = createBlock(INPUT, className = "variation-filter")
-    private val list = createBlock(DIV, className = "variation-list")
+    private val filter = INPUT(className = "variation-filter")
+    private val list = DIV(className = "variation-list")
     private val muscles = mutableMapOf<Int, MuscleElementWrapper>()
 
     init {
@@ -171,7 +170,7 @@ open class HTMLSelectVariationDialog(
         exercise: OutputExercise,
         defaultVariation: OutputVariation,
         variations: List<OutputVariation>
-    ): HTMLBlock<HTMLDivElement> = createBlock(DIV, className = "exercise-item").apply {
+    ): HTMLBlock<HTMLDivElement> = DIV(className = "exercise-item") {
         muscleWrapper.exercises.add(ExerciseElement(exercise, defaultVariation, variations, this))
 
         +DIV("default-variation-item") {
@@ -183,10 +182,10 @@ open class HTMLSelectVariationDialog(
             +HTMLExerciseIcon(
                 source = exercise.image,
                 hue = output.muscles[muscleWrapper.muscleId]!!.colorHue,
-                size = 48,
+                size = 48
             )
 
-            +SPAN("var-id") {
+            +SPAN("def-var-id") {
                 -defaultVariation.variationId.toString()
             }
 
@@ -279,13 +278,22 @@ open class HTMLSelectVariationDialog(
                         "display" to "none"
                     }
 
+                    ".variation-item" {
+                        "padding" to "5px 10px 5px 68px"
+                        "font-size" to "0.9em"
+                    }
+
                     ".default-variation-item" {
                         "border" to "dotted gray"
                         "border-width" to "1px 0 0"
+                        "padding" to "2px 10px"
+
+                        "> *" {
+                            "vertical-align" to "middle"
+                        }
                     }
 
                     ".variation-item, .default-variation-item" {
-                        "padding" to "2px 10px"
                         "user-select" to "none"
                         "cursor" to "pointer"
                         "transition" to "background-color 0.3s"
@@ -299,19 +307,19 @@ open class HTMLSelectVariationDialog(
                         }
                     }
 
-                    ".var-id" {
+                    ".var-id::before" {
+                        "content" to "\"· \""
+                        "color" to "gray"
+                    }
+
+                    ".def-var-id, .var-id" {
                         "display" to "inline-block"
                         "text-align" to "right"
-                        "width" to "30px"
-                    }
-                    ".ex::before" {
-                        "content" to "\" - \""
-                    }
-                    ".var" {
+                        "width" to "40px"
                         "color" to "gray"
-                        "&::before" {
-                            "content" to "\" - \""
-                        }
+                    }
+                    ".ex::before, .var::before" {
+                        "content" to "\" - \""
                     }
                 }
             }

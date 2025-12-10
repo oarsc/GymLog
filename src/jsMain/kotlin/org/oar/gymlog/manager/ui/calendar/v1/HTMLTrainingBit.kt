@@ -10,13 +10,12 @@ import org.oar.gymlog.manager.custom.DefinitionConstants.TR
 import org.oar.gymlog.manager.custom.HTMLBlock
 import org.oar.gymlog.manager.custom.HTMLBlock.Companion.HTMLBodyBlock
 import org.oar.gymlog.manager.custom.Utils.confirm
-import org.oar.gymlog.manager.custom.Utils.createBlock
 import org.oar.gymlog.manager.custom.style
 import org.oar.gymlog.manager.model.Output
 import org.oar.gymlog.manager.model.OutputBit
-import org.oar.gymlog.manager.ui.common.HTMLCheckboxEditBind
-import org.oar.gymlog.manager.ui.common.HTMLInputEditBind
-import org.oar.gymlog.manager.ui.common.HTMLSelectVariationDialog
+import org.oar.gymlog.manager.ui.support.HTMLCheckboxEditBind
+import org.oar.gymlog.manager.ui.support.HTMLInputEditBind
+import org.oar.gymlog.manager.ui.support.HTMLSelectVariationDialog
 import org.oar.gymlog.manager.utils.DateExt.compareTo
 import org.oar.gymlog.manager.utils.DateExt.middleDate
 import org.oar.gymlog.manager.utils.DateExt.toLocaleISODateString
@@ -29,7 +28,7 @@ class HTMLTrainingBit(
     private val output: Output,
 ): HTMLBlock<HTMLTableRowElement>(TR, className = CLASS_NAME) {
 
-    private val indexElement = createBlock(TD)
+    private val indexElement = TD()
     var index: Int = -1
         set(value) {
             if (field != value) {
