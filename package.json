@@ -1,0 +1,11 @@
+{
+  "name": "imageeditor-gymlog",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "image-pixels": "^2.2.2",
+    "jimp": "^0.22.10",
+    "sharp": "^0.32.5"
+  }
+}
