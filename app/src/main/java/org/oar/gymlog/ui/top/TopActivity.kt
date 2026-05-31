@@ -25,7 +25,6 @@ import org.oar.gymlog.ui.top.rows.TopEmptySpaceRow
 import org.oar.gymlog.ui.top.rows.TopHeaderRow
 import org.oar.gymlog.ui.top.rows.TopVariationRow
 import org.oar.gymlog.ui.training.TrainingActivity
-import org.oar.gymlog.util.Constants
 import org.oar.gymlog.util.Constants.IntentReference
 import org.oar.gymlog.util.Constants.TODAY
 import org.oar.gymlog.util.Data
@@ -34,6 +33,7 @@ import org.oar.gymlog.util.DateUtils.getLetterFrom
 import org.oar.gymlog.util.FormatUtils.bigDecimal
 import org.oar.gymlog.util.FormatUtils.integer
 import org.oar.gymlog.util.WeightUtils.calculate
+import org.oar.gymlog.util.extensions.CommonExts.multiplyByHundred
 import org.oar.gymlog.util.extensions.DatabaseExts.dbThread
 import org.oar.gymlog.util.extensions.PreferencesExts.loadBoolean
 
@@ -100,7 +100,7 @@ open class TopActivity : DatabaseAppCompatActivity<ActivityTopsBinding>(Activity
     protected open fun onElementLongClicked(topBit: Bit) {
         val intent = Intent(this, TopSpecificActivity::class.java)
         intent.putExtra("exerciseId", topBit.variation.exercise.id)
-        intent.putExtra("weight", topBit.weight.value.multiply(Constants.ONE_HUNDRED).toInt())
+        intent.putExtra("weight", topBit.weight.value.multiplyByHundred())
         intent.putExtra("variationId", topBit.variation.id)
         startActivityForResult(intent, IntentReference.TOP_RECORDS)
     }

@@ -3,12 +3,14 @@ package org.oar.gymlog.model
 import org.oar.gymlog.room.EntityMappable
 import org.oar.gymlog.room.entities.GymEntity
 
-class Gym(
-	entity: GymEntity
+data class Gym(
+	var id: Int,
+	var name: String,
 ) : EntityMappable<GymEntity> {
-
-	var id = entity.gymId
-	var name = entity.name
+	constructor(entity: GymEntity) : this(
+		id = entity.gymId,
+		name = entity.name,
+	)
 
 	override fun toEntity() = GymEntity(id, name)
 }

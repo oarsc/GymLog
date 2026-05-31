@@ -26,6 +26,7 @@ import org.oar.gymlog.util.extensions.MessagingExts.toast
 import org.oar.gymlog.util.extensions.PreferencesExts.loadString
 import org.oar.gymlog.util.extensions.PreferencesExts.save
 import org.oar.gymlog.util.extensions.RedirectionExts.goToVariation
+import org.oar.gymlog.util.extensions.model.ExerciseExts.gymVariations
 
 class ExercisesActivity : BindingAppCompatActivity<ActivityExercisesBinding>(ActivityExercisesBinding::inflate) {
     private lateinit var muscle: Muscle

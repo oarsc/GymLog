@@ -29,29 +29,16 @@ object WeightUtils {
         formatter: WeightFormatter = WeightFormatter.DEFAULT_WEIGHT_FORMATTER
     ) :BigDecimal {
         if (formatter.exactScale)
-            return this.divide(
-                Constants.LBS_RATIO,
-                Constants.LBS_RATIO.scale(),
-                RoundingMode.HALF_UP
-            )
+            return this.divide(Constants.LBS_RATIO, Constants.LBS_RATIO.scale(), RoundingMode.HALF_UP)
 
         if (formatter.forceScale)
-            return this.divide(
-                Constants.LBS_RATIO,
-                formatter.scale,
-                RoundingMode.HALF_UP
-            )
+            return this.divide(Constants.LBS_RATIO, formatter.scale, RoundingMode.HALF_UP)
 
         return if (exactConversion)
-            this.divide(
-                Constants.LBS_RATIO,
-                DEFAULT_SCALE,
-                RoundingMode.HALF_UP)
+            this.divide(Constants.LBS_RATIO, DEFAULT_SCALE, RoundingMode.HALF_UP)
+
         else
-            this.divide(
-                Constants.LBS_RATIO,
-                Constants.LBS_RATIO.scale(),
-                RoundingMode.HALF_UP)
+            this.divide(Constants.LBS_RATIO, Constants.LBS_RATIO.scale(), RoundingMode.HALF_UP)
                 .divide(conversionStep, conversionStep.scale(), RoundingMode.HALF_UP)
                 .multiply(conversionStep)
     }

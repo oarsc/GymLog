@@ -7,12 +7,6 @@ import java.math.BigDecimal
 import java.util.function.Function
 
 class Weight(val value: BigDecimal, val internationalSystem: Boolean) : Comparable<Weight> {
-
-    companion object {
-        val INVALID = Weight(BigDecimal(-1), true)
-        val ZERO = Weight(BigDecimal(0), true)
-    }
-
     val valid: Boolean get() = value < BigDecimal.ZERO
 
     fun getValue(internationalSystem: Boolean): BigDecimal {
@@ -76,5 +70,10 @@ class Weight(val value: BigDecimal, val internationalSystem: Boolean) : Comparab
 
     override fun compareTo(other: Weight): Int {
         return value.compareTo(other.value)
+    }
+
+    companion object {
+        val INVALID = Weight(BigDecimal(-1), true)
+        val ZERO = Weight(BigDecimal(0), true)
     }
 }

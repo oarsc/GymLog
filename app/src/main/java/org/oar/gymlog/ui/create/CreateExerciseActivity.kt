@@ -25,6 +25,10 @@ import org.oar.gymlog.util.Constants.IntentReference
 import org.oar.gymlog.util.Data
 import org.oar.gymlog.util.extensions.DatabaseExts.dbThread
 import org.oar.gymlog.util.extensions.MessagingExts.snackbar
+import org.oar.gymlog.util.extensions.model.ExerciseExts.copy
+import org.oar.gymlog.util.extensions.model.ExerciseExts.defaultVariation
+import org.oar.gymlog.util.extensions.model.ExerciseExts.gymVariations
+import org.oar.gymlog.util.extensions.model.VariationExts.copy
 import java.io.IOException
 import java.util.regex.Pattern
 
@@ -46,12 +50,24 @@ class CreateExerciseActivity : BindingAppCompatActivity<ActivityCreateBinding>(A
 		if (caller === IntentReference.EDIT_EXERCISE) {
 			exercise = intent.extras!!.getInt("exerciseId")
 				.let { Data.getExercise(it) }
-				.let { Exercise(it) }
+				.let { ex ->
+					ex.copy(
+						primaryMuscles = ex.primaryMuscles.toMutableList(),
+						secondaryMuscles = ex.secondaryMuscles.toMutableList(),
+						variations = mutableListOf()
+					).apply {
+						ex.variations
+							.map { it.copy(exercise = this) }
+							.forEach(variations::add)
+					}
+				}
 
 		} else {
 			exercise = Exercise()
-			val defaultVariation = Variation(exercise)
-			defaultVariation.default = true
+			val defaultVariation = Variation(
+				default = true,
+				exercise = exercise
+			)
 			exercise.variations.add(defaultVariation)
 
 			if (caller === IntentReference.CREATE_EXERCISE_FROM_MUSCLE) {
@@ -133,7 +149,7 @@ class CreateExerciseActivity : BindingAppCompatActivity<ActivityCreateBinding>(A
 					}
 
 					exercise.variations
-						.map { Variation(it, original) } // update exercise references
+						.map { it.copy(exercise = original) } // update exercise references
 						.also {
 							original.variations.apply {
 								clear()
@@ -256,14 +272,16 @@ class CreateExerciseActivity : BindingAppCompatActivity<ActivityCreateBinding>(A
 				}
 			}
 			IntentReference.CREATE_VARIATION -> {
-				val variation = Variation(exercise)
-				variation.name = data.getStringExtra("name")!!
-				variation.type = ExerciseType.valueOf(data.getStringExtra("type")!!)
-				val relation = data.getIntExtra("gymRelation", 0)
-				variation.gymRelation = Converters.toGymRelation(relation.toShort())
-				if (variation.gymRelation == GymRelation.STRICT_RELATION) {
-					variation.gymId = Data.gym?.id
-				}
+				val gymRelation = data.getIntExtra("gymRelation", 0).toShort().let(Converters::toGymRelation)
+
+				val variation = Variation(
+					name = data.getStringExtra("name")!!,
+					type = ExerciseType.valueOf(data.getStringExtra("type")!!),
+					gymRelation = gymRelation,
+					gymId = if (gymRelation == GymRelation.STRICT_RELATION) Data.gym?.id else null,
+					exercise = exercise
+				)
+
 				exercise.variations.add(variation)
 			}
 			IntentReference.IMAGE_SELECTOR -> {

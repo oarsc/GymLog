@@ -14,7 +14,6 @@ import org.oar.gymlog.model.Bit
 import org.oar.gymlog.model.Weight
 import org.oar.gymlog.room.daos.BitDao
 import org.oar.gymlog.room.entities.BitEntity
-import org.oar.gymlog.util.Constants
 import org.oar.gymlog.util.Constants.NANO_MILLI_L
 import org.oar.gymlog.util.Data
 import org.oar.gymlog.util.DateUtils.NOW
@@ -28,6 +27,7 @@ import org.oar.gymlog.util.WeightUtils.calculateTotal
 import org.oar.gymlog.util.WeightUtils.defaultScaled
 import org.oar.gymlog.util.WeightUtils.toKilograms
 import org.oar.gymlog.util.WeightUtils.toPounds
+import org.oar.gymlog.util.extensions.CommonExts.multiplyByHundred
 import org.oar.gymlog.util.extensions.ComponentsExts.runOnUiThread
 import org.oar.gymlog.util.extensions.DatabaseExts.dbThread
 import org.oar.gymlog.util.extensions.MessagingExts.toast
@@ -281,7 +281,7 @@ class EditBitLogDialogFragment (
             totalWeight = Weight(editWeight.bigDecimal, internationalSystem)
                 .calculateTotal(variation.weightSpec, variation.bar)
                 .value
-                .multiply(Constants.ONE_HUNDRED).toInt()
+                .multiplyByHundred()
             kilos = internationalSystem
         }
     }

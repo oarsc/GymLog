@@ -5,12 +5,10 @@ enum class TrainingOrder(val code: String) {
     GROUP_EXERCISES("group_exercises");
 
     companion object {
-        fun getByCode(code: String): TrainingOrder {
-            return values()
-                .filter { order -> order.code == code }
-                .getOrElse(0) {
-                    throw IllegalArgumentException("No order found for name \"$code\"") }
-        }
+        fun getByCode(code: String): TrainingOrder = TrainingOrder.entries
+            .filter { order -> order.code == code }
+            .getOrElse(0) {
+                throw IllegalArgumentException("No order found for name \"$code\"") }
     }
 }
 

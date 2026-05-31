@@ -28,6 +28,8 @@ import org.oar.gymlog.util.WeightUtils.calculateTotal
 import org.oar.gymlog.util.WeightUtils.convertWeight
 import org.oar.gymlog.util.WeightUtils.toKilograms
 import org.oar.gymlog.util.WeightUtils.toPounds
+import org.oar.gymlog.util.extensions.CommonExts.divideByHundred
+import org.oar.gymlog.util.extensions.CommonExts.multiplyByHundred
 import org.oar.gymlog.util.extensions.MessagingExts.toast
 import java.math.BigDecimal
 import java.util.function.Consumer
@@ -90,14 +92,12 @@ class EditWeightFormDialogFragment(
             val popup = PopupMenu(activity, stepBox)
             val menu = popup.menu
             Data.STEPS_KG.forEach { size: Int ->
-                menu.add(0, size, size,
-                    BigDecimal.valueOf(size.toLong()).divide(Constants.ONE_HUNDRED).toLocaleString()
-                )
+                menu.add(0, size, size, size.divideByHundred().toLocaleString())
             }
 
             popup.setOnMenuItemClickListener { menuItem ->
                 val id = menuItem.itemId
-                val newStep = BigDecimal.valueOf(id.toLong()).divide(Constants.ONE_HUNDRED)
+                val newStep = id.divideByHundred()
                 if (newStep.compareTo(initialValue.step) != 0) {
                     initialValue.step = newStep
                     initialValue.exerciseUpdated = true
@@ -207,8 +207,10 @@ class EditWeightFormDialogFragment(
 
     private fun DialogEditWeightBinding.updateStep() {
         step.bigDecimal = initialValue.step!!.also { step ->
-            step.divide(Constants.TWO).also {
-                binding.modifier.setStep(if (it.scale() > 2) step else it)
+            if (step.multiplyByHundred() % 10 == 0) {
+                binding.modifier.setStep(step.divide(Constants.TWO))
+            } else {
+                binding.modifier.setStep(step)
             }
         }
     }

@@ -60,6 +60,8 @@ import org.oar.gymlog.util.extensions.MessagingExts.snackbar
 import org.oar.gymlog.util.extensions.MessagingExts.toast
 import org.oar.gymlog.util.extensions.PreferencesExts.loadBoolean
 import org.oar.gymlog.util.extensions.PreferencesExts.loadString
+import org.oar.gymlog.util.extensions.model.ExerciseExts.defaultVariation
+import org.oar.gymlog.util.extensions.model.ExerciseExts.gymVariations
 import java.math.BigDecimal
 
 class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(ActivityRegistryBinding::inflate) {

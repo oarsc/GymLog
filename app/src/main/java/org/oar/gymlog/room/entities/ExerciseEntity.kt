@@ -43,8 +43,7 @@ class ExerciseEntity {
 
         @Relation(
             parentColumn = "exerciseId",
-            entityColumn = "variationId",
-            associateBy = Junction(VariationEntity::class))
+            entityColumn = "exerciseId")
         var variations: List<VariationEntity>? = null
     }
 }

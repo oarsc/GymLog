@@ -18,6 +18,7 @@ import org.oar.gymlog.ui.main.preferences.PreferencesDefinition
 import org.oar.gymlog.util.Constants.TODAY
 import org.oar.gymlog.util.DateUtils.getLetterFrom
 import org.oar.gymlog.util.extensions.PreferencesExts.loadString
+import org.oar.gymlog.util.extensions.model.ExerciseExts.gymVariations
 import java.util.Locale
 import java.util.function.BiConsumer
 import java.util.function.Consumer

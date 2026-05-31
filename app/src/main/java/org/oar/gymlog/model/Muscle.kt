@@ -13,7 +13,6 @@ enum class Muscle(
 	@DrawableRes val icon: Int,
 	@ColorRes val color: Int
 ) : EntityMappable<MuscleEntity> {
-
 	PECTORAL (
 		text = R.string.group_pectoral,
 		textShort = R.string.group_short_pectoral,

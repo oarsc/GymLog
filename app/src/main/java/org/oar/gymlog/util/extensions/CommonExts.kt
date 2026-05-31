@@ -2,6 +2,7 @@ package org.oar.gymlog.util.extensions
 
 import android.content.Context
 import android.util.TypedValue
+import org.oar.gymlog.util.Constants.ONE_HUNDRED
 import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.math.sqrt
@@ -12,6 +13,9 @@ object CommonExts {
         val dy = second - other.second
         return sqrt(dx * dx + dy * dy)
     }
+
+    fun Int.divideByHundred(): BigDecimal = toBigDecimal().divide(ONE_HUNDRED)
+    fun BigDecimal.multiplyByHundred(): Int = (this * ONE_HUNDRED).toInt()
 
     fun BigDecimal.adjustScale(maxScale: Int = 2): BigDecimal {
         val realScale = realScale()

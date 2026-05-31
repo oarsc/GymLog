@@ -11,20 +11,19 @@ enum class WeightSpecification(
     @StringRes val literal: Int,
     val weightAffectation: BigDecimal = BigDecimal.ONE
 ) {
-
     TOTAL_WEIGHT(
-        R.drawable.ic_asterisk_36x24dp,
-        R.string.weight_spec_total
+        icon = R.drawable.ic_asterisk_36x24dp,
+        literal = R.string.weight_spec_total
     ),
 
     NO_BAR_WEIGHT(
-        R.drawable.ic_plates_36x24dp,
-        R.string.weight_spec_no_bar
+        icon = R.drawable.ic_plates_36x24dp,
+        literal = R.string.weight_spec_no_bar
     ),
 
     ONE_SIDE_WEIGHT(
-        R.drawable.ic_plate_36x24dp,
-        R.string.weight_spec_one_side,
-        Constants.HALF
+        icon = R.drawable.ic_plate_36x24dp,
+        literal = R.string.weight_spec_one_side,
+        weightAffectation = Constants.HALF
     );
 }
