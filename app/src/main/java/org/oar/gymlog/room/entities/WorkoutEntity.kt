@@ -10,6 +10,7 @@ class WorkoutEntity {
     @PrimaryKey(autoGenerate = true)
     var workoutId = 0
     var name = ""
+    var color = ""
 
     class WithWorkoutExercises {
         @Embedded
