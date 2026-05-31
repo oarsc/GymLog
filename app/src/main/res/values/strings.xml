@@ -72,6 +72,7 @@
     <string name="text_notes">Notes</string>
     <string name="text_open">Open</string>
     <string name="text_reps">Reps</string>
+    <string name="text_reps_lowercase">reps</string>
     <string name="text_seconds">Seconds</string>
     <string name="text_set">Set</string>
     <string name="text_show_totals">Show total weight</string>
@@ -83,6 +84,7 @@
     <string name="text_timestamp">Timestamp</string>
     <string name="text_title">Title</string>
     <string name="text_variations">Variations</string>
+    <string name="text_warm_up">Warm up</string>
     <string name="text_weight">Weight</string>
     <string name="text_yes">Yes</string>
 

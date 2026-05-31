@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigationWorkout"
-        android:name="org.oar.gymlog.ui.main.routines.RoutineFragment"
+        android:name="org.oar.gymlog.ui.main.workouts.WorkoutsFragment"
         android:label="@string/title_workout"
-        tools:layout="@layout/fragment_list_routines" />
+        tools:layout="@layout/fragment_list_workouts" />
 
     <fragment
         android:id="@+id/navigationExercises"

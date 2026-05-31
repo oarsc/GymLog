@@ -11,6 +11,9 @@ import org.oar.gymlog.room.daos.GymDao
 import org.oar.gymlog.room.daos.MuscleDao
 import org.oar.gymlog.room.daos.TrainingDao
 import org.oar.gymlog.room.daos.VariationDao
+import org.oar.gymlog.room.daos.WorkoutDao
+import org.oar.gymlog.room.daos.WorkoutExerciseDao
+import org.oar.gymlog.room.daos.WorkoutSetDao
 import org.oar.gymlog.room.entities.BarEntity
 import org.oar.gymlog.room.entities.BitEntity
 import org.oar.gymlog.room.entities.ExerciseEntity
@@ -20,6 +23,9 @@ import org.oar.gymlog.room.entities.MuscleEntity
 import org.oar.gymlog.room.entities.SecondaryExerciseMuscleCrossRef
 import org.oar.gymlog.room.entities.TrainingEntity
 import org.oar.gymlog.room.entities.VariationEntity
+import org.oar.gymlog.room.entities.WorkoutEntity
+import org.oar.gymlog.room.entities.WorkoutExerciseEntity
+import org.oar.gymlog.room.entities.WorkoutSetEntity
 
 @TypeConverters(Converters::class)
 @Database(
@@ -32,7 +38,10 @@ import org.oar.gymlog.room.entities.VariationEntity
         SecondaryExerciseMuscleCrossRef::class,
         BitEntity::class,
         BarEntity::class,
-        TrainingEntity::class
+        TrainingEntity::class,
+        WorkoutEntity::class,
+        WorkoutExerciseEntity::class,
+        WorkoutSetEntity::class,
     ],
     version = 1,
     exportSchema = false
@@ -46,4 +55,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun barDao(): BarDao
     abstract fun trainingDao(): TrainingDao
     abstract fun variationDao(): VariationDao
+    abstract fun workoutDao(): WorkoutDao
+    abstract fun workoutExerciseDao(): WorkoutExerciseDao
+    abstract fun workoutSetDao(): WorkoutSetDao
 }

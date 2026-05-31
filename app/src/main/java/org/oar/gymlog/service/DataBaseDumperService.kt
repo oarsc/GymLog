@@ -42,8 +42,12 @@ class DataBaseDumperService {
         dataStructure.variations = database.variationDao().getAllFromAllGyms()
         dataStructure.primaries = database.exerciseMuscleCrossRefDao().getAll()
         dataStructure.secondaries = database.exerciseMuscleCrossRefDao().getAllSecondaryMuscles()
-        progressNotify.replaceRange(20, 30, "Trainings")
+        progressNotify.replaceRange(20, 28, "Trainings")
         dataStructure.setTrainingsAndUpdateTimes(trainings, bits)
+        progressNotify.replaceRange(28, 30, "Workouts")
+        dataStructure.workouts = database.workoutDao().getAll()
+        dataStructure.workoutExercises = database.workoutExerciseDao().getAll()
+        dataStructure.workoutSets = database.workoutSetDao().getAll()
         progressNotify.replaceRange(30, 90, "Logs")
         dataStructure.setBits(bits)
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+    android:orientation="horizontal"
+    tools:ignore="RtlSymmetry">
+
+    <TextView
+        android:id="@+id/imageTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textStyle="bold"
+        android:textColor="@color/gray"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/index"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:textStyle="bold"
+        android:textColor="@color/gray"
+        android:text="@string/text_set"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:textStyle="bold"
+        android:textColor="@color/gray"
+        android:text="@string/text_reps"
+        android:paddingEnd="6dp"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/note"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="7"
+        android:textStyle="bold"
+        android:textColor="@color/gray"
+        android:text="@string/text_notes"
+        android:paddingStart="20dp"
+        android:gravity="start" />
+
+</LinearLayout>

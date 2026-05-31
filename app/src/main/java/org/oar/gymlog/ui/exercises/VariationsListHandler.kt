@@ -9,7 +9,6 @@ import org.oar.gymlog.ui.common.components.listView.SimpleListHandler
 import java.util.function.Consumer
 
 object VariationsListHandler: SimpleListHandler<Variation, ListitemExercisesVariationBinding> {
-
     private var onVariationClickListener: Consumer<Variation>? = null
     fun onVariationClicked(listener: Consumer<Variation>) {
         onVariationClickListener = listener

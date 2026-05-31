@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -12,5 +13,12 @@
         android:layout_height="?actionBarSize"
         app:navigationIcon="@drawable/ic_arrow_back_24dp"
         app:title="@string/title_workout"
-        app:menu="@menu/routines_menu" />
+        app:menu="@menu/workouts_menu" />
+
+    <org.oar.gymlog.ui.common.components.listView.SimpleListView
+        android:id="@+id/workoutsList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.main.workouts.WorkoutsFragment"
+        tools:listitem="@layout/listitem_workout" />
 </LinearLayout>

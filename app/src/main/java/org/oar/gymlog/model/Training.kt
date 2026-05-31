@@ -8,6 +8,7 @@ import java.time.LocalDateTime
 data class Training(
 	var id: Int,
 	var gym: Gym,
+	var workout: Workout? = null,
 	var start: LocalDateTime,
 	var end: LocalDateTime?,
 	var note: String,
@@ -15,6 +16,7 @@ data class Training(
 	constructor(entity: TrainingEntity) : this(
 		id = entity.trainingId,
 		gym = Data.getGym(entity.gymId),
+		workout = entity.workoutId?.let(Data::getWorkout),
 		start = entity.start,
 		end = entity.end,
 		note = entity.note,
@@ -23,6 +25,7 @@ data class Training(
 	override fun toEntity() = TrainingEntity().apply {
 		trainingId = id
 		gymId = gym.id
+		workoutId = workout?.id
 		start = this@Training.start
 		end = this@Training.end
 		note = this@Training.note
