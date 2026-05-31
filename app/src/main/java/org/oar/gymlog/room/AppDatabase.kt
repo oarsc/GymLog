@@ -20,6 +20,9 @@ import org.oar.gymlog.room.entities.MuscleEntity
 import org.oar.gymlog.room.entities.SecondaryExerciseMuscleCrossRef
 import org.oar.gymlog.room.entities.TrainingEntity
 import org.oar.gymlog.room.entities.VariationEntity
+import org.oar.gymlog.room.entities.WorkoutEntity
+import org.oar.gymlog.room.entities.WorkoutExerciseEntity
+import org.oar.gymlog.room.entities.WorkoutSetEntity
 
 @TypeConverters(Converters::class)
 @Database(
@@ -32,7 +35,10 @@ import org.oar.gymlog.room.entities.VariationEntity
         SecondaryExerciseMuscleCrossRef::class,
         BitEntity::class,
         BarEntity::class,
-        TrainingEntity::class
+        TrainingEntity::class,
+        WorkoutEntity::class,
+        WorkoutExerciseEntity::class,
+        WorkoutSetEntity::class,
     ],
     version = 1,
     exportSchema = false

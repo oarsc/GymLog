@@ -1,0 +1,44 @@
+[{
+	"name": "Upper body",
+	"exercises": [{
+		"variation": 123,
+		"superSet": 0,
+		"sets": [
+			{
+				"warmUp": true,
+				"totalWeight": 4000,
+				"reps": 7,
+				"restTime": 60
+			},
+			{
+				"warmUp": true,
+				"totalWeight": 6500,
+				"reps": 4
+			},
+			{
+				"warmUp": true,
+				"totalWeight": 9000,
+				"reps": 3
+			},
+			{
+				"totalWeight": 11500,
+				"reps": 10
+			}
+		]
+	},{
+		"variation": 370,
+		"superSet": 0,
+		"sets": [
+			{
+				"totalWeight": 6750,
+				"reps": 10,
+				"note": "45º"
+			},
+			{
+				"totalWeight": 6250,
+				"reps": 10,
+				"note": "1 sec pause"
+			}
+		]
+	}]
+}]
