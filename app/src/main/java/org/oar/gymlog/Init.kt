@@ -30,6 +30,9 @@ import org.oar.gymlog.model.Gym
 import org.oar.gymlog.model.Muscle
 import org.oar.gymlog.model.Training
 import org.oar.gymlog.model.Variation
+import org.oar.gymlog.model.Workout
+import org.oar.gymlog.model.WorkoutExercise
+import org.oar.gymlog.model.WorkoutSet
 import org.oar.gymlog.room.AppDatabase
 import org.oar.gymlog.room.entities.ExerciseEntity
 import org.oar.gymlog.room.entities.MuscleEntity
@@ -176,57 +179,72 @@ object Init {
     private fun Context.loadData(db: AppDatabase) {
         Data.bars.clear()
         db.barDao().getAll()
-            .map { Bar(it) }
-            .also { Data.bars.addAll(it) }
+            .forEach { Bar(it).also(Data.bars::add) }
 
         Data.gyms.clear()
         db.gymDao().getAll()
-            .map { Gym(it) }
-            .also { Data.gyms.addAll(it) }
+            .forEach { Gym(it).also(Data.gyms::add) }
 
         Data.exercises.clear()
 
         val defaultVariationName = resources.getString(R.string.text_default)
 
         db.exerciseDao().getAllWithMusclesAndVariations()
-            .map { x: ExerciseEntity.WithMusclesAndVariations ->
+            .forEach { x: ExerciseEntity.WithMusclesAndVariations ->
                 val exercise = Exercise(x.exercise!!)
 
                 x.primaryMuscles!!
                     .map(MuscleEntity::muscleId)
-                    .map { muscleId ->
+                    .forEach { muscleId ->
                         Data.muscles
                             .filter { group: Muscle -> group.id == muscleId }
                             .getOrElse(0) {
                                 throw LoadException("Muscle $muscleId not found in local structure")
                             }
+                            .also(exercise.primaryMuscles::add)
                     }
-                    .also { exercise.primaryMuscles.addAll(it) }
 
                 x.secondaryMuscles!!
                     .map(MuscleEntity::muscleId)
-                    .map { muscleId ->
+                    .forEach { muscleId ->
                         Data.muscles
                             .filter { group: Muscle -> group.id == muscleId }
                             .getOrElse(0) {
                                 throw LoadException("Muscle $muscleId not found in local structure")
                             }
+                            .also(exercise.secondaryMuscles::add)
                     }
-                    .also { exercise.secondaryMuscles.addAll(it) }
 
                 x.variations!!
                     .map { Variation(it, exercise) }
                     .onEach { if (it.default) it.name = defaultVariationName }
-                    .sortedWith { a,b -> if (a.default) -1 else if (b.default) 1 else 0 }
+                    .sortedWith { a, b -> if (a.default) -1 else if (b.default) 1 else 0 }
                     .also { exercise.variations.addAll(it) }
 
-                exercise
+                Data.exercises.add(exercise)
             }
-            .also { Data.exercises.addAll(it) }
 
         db.trainingDao().getCurrentTraining()?.also {
             Data.training = Training(it)
         }
+
+        Data.workouts.clear()
+        val workoutExercisesMap = db.workoutExerciseDao().getAll().groupBy { it.workoutId }
+        val workoutSetsMap = db.workoutSetDao().getAll().groupBy { it.workoutExerciseId }
+        db.workoutDao().getAll()
+            .forEach { we ->
+                val workout = Workout(we)
+
+                workout.exercises = workoutExercisesMap[workout.id]
+                    ?.map { wee ->
+                        WorkoutExercise(wee, workout, Data.getVariation(wee.variationId)).apply {
+                            sets = workoutSetsMap[id]?.map { wse -> WorkoutSet(wse, this) }.orEmpty()
+                        }
+                    }
+                    .orEmpty()
+
+                Data.workouts.add(workout)
+            }
 
         val gymId = loadInteger(CURRENT_GYM)
         if (gymId > 0) {

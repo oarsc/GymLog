@@ -12,6 +12,7 @@ import com.dropbox.core.oauth.DbxCredential
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.oar.gymlog.TmpLoadWorkoutTest.persistTmpWorkouts
 import org.oar.gymlog.databinding.ActivityLoadBinding
 import org.oar.gymlog.service.DataBaseDumperService
 import org.oar.gymlog.service.dropbox.DropboxApiWrapper
@@ -60,6 +61,7 @@ class LoadActivity : BindingAppCompatActivity<ActivityLoadBinding>(ActivityLoadB
 
             contentResolver.openInputStream(importUri).use { inputStream ->
                 dataBaseDumperService.load(this, inputStream!!, db, progressHandler)
+                persistTmpWorkouts(db)
                 Data.exercises.clear()
             }
             return true

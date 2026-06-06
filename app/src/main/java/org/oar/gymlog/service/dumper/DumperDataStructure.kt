@@ -9,6 +9,9 @@ import org.oar.gymlog.room.entities.ExerciseMuscleCrossRef
 import org.oar.gymlog.room.entities.SecondaryExerciseMuscleCrossRef
 import org.oar.gymlog.room.entities.TrainingEntity
 import org.oar.gymlog.room.entities.VariationEntity
+import org.oar.gymlog.room.entities.WorkoutEntity
+import org.oar.gymlog.room.entities.WorkoutExerciseEntity
+import org.oar.gymlog.room.entities.WorkoutSetEntity
 import org.oar.gymlog.ui.RangedProgress
 import org.oar.gymlog.util.JsonUtils.jsonify
 import org.oar.gymlog.util.JsonUtils.map
@@ -59,6 +62,27 @@ class DumperDataStructure(
             .transformToObject(SecondaryExerciseMuscleCrossRef::class)
         set(value) {
             jsonObject.put(DumperDataStructure::secondaries.name, value.transformToJson())
+        }
+
+    var workouts: List<WorkoutEntity>
+        get() = jsonObject.getJSONArray(DumperDataStructure::workouts.name)
+            .transformToObject(WorkoutEntity::class)
+        set(value) {
+            jsonObject.put(DumperDataStructure::workouts.name, value.transformToJson())
+        }
+
+    var workoutExercises: List<WorkoutExerciseEntity>
+        get() = jsonObject.getJSONArray(DumperDataStructure::workoutExercises.name)
+            .transformToObject(WorkoutExerciseEntity::class)
+        set(value) {
+            jsonObject.put(DumperDataStructure::workoutExercises.name, value.transformToJson())
+        }
+
+    var workoutSets: List<WorkoutSetEntity>
+        get() = jsonObject.getJSONArray(DumperDataStructure::workoutSets.name)
+            .transformToObject(WorkoutSetEntity::class)
+        set(value) {
+            jsonObject.put(DumperDataStructure::workoutSets.name, value.transformToJson())
         }
 
     private var notes: List<String>
