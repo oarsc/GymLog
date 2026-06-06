@@ -2,6 +2,7 @@ package org.oar.gymlog.util.extensions
 
 import android.content.Context
 import android.content.Intent
+import org.oar.gymlog.R
 import org.oar.gymlog.model.Muscle
 import org.oar.gymlog.model.Variation
 import org.oar.gymlog.ui.common.ResultLauncherAppCompatActivity
@@ -38,6 +39,7 @@ object RedirectionExts {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            putExtra("navigate", R.id.navigationExercises)
             startActivity(this)
         }
 

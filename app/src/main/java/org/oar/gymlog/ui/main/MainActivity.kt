@@ -1,5 +1,6 @@
 package org.oar.gymlog.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
@@ -49,9 +50,19 @@ class MainActivity : ResultLauncherAppCompatActivity() {
 		val navController = findNavController(R.id.navHostFragmentActivityMain)
 		NavigationUI.setupWithNavController(binding.navView, navController)
 
-		val variationId = intent.extras?.getInt("variationId", -1) ?: -1
+		val variationId = intent.getIntExtra("variationId", -1)
 		if (variationId >= 0) {
 			goToVariation(Data.getVariation(variationId))
+		}
+	}
+
+	override fun onNewIntent(intent: Intent) {
+		super.onNewIntent(intent)
+		setIntent(intent)
+
+		val navigateToId = intent.getIntExtra("navigate", 0)
+		if (navigateToId != 0) {
+			findNavController(R.id.navHostFragmentActivityMain).navigate(navigateToId)
 		}
 	}
 }
