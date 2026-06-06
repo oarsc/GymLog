@@ -2,15 +2,14 @@ package org.oar.gymlog.ui.workoutDetails
 
 import android.os.Bundle
 import org.oar.gymlog.databinding.ActivityWorkoutDetailsBinding
-import org.oar.gymlog.databinding.ListitemExercisesRowBinding
-import org.oar.gymlog.model.Exercise
-import org.oar.gymlog.model.Variation
+import org.oar.gymlog.databinding.ListitemWorkoutDetailsRowBinding
 import org.oar.gymlog.model.Workout
 import org.oar.gymlog.model.WorkoutExercise
 import org.oar.gymlog.model.WorkoutSet
 import org.oar.gymlog.ui.common.BindingAppCompatActivity
 import org.oar.gymlog.ui.common.components.listView.SimpleListView
 import org.oar.gymlog.util.Data
+import org.oar.gymlog.util.extensions.RedirectionExts.goToVariation
 
 class WorkoutDetailsActivity : BindingAppCompatActivity<ActivityWorkoutDetailsBinding>(ActivityWorkoutDetailsBinding::inflate) {
     private lateinit var workout: Workout
@@ -32,19 +31,19 @@ class WorkoutDetailsActivity : BindingAppCompatActivity<ActivityWorkoutDetailsBi
             onSetClicked(::itemClicked)
         }
 
-        val workoutDetailsListView = binding.workoutDetailsList as SimpleListView<WorkoutExercise, ListitemExercisesRowBinding>
+        val workoutDetailsListView = binding.workoutDetailsList as SimpleListView<WorkoutExercise, ListitemWorkoutDetailsRowBinding>
         workoutDetailsListView.init(workout.exercises, handler)
     }
 
-    private fun itemClicked(exercise: WorkoutExercise, long: Boolean) {
+    private fun itemClicked(workoutExercise: WorkoutExercise, long: Boolean) {
         if (long) {
 
         } else {
-
+            goToVariation(workoutExercise.variation)
         }
     }
 
-    private fun itemClicked(variation: WorkoutSet) {
+    private fun itemClicked(set: WorkoutSet) {
 
     }
 }

@@ -4,36 +4,20 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import org.oar.gymlog.databinding.ListitemExercisesRowBinding
-import org.oar.gymlog.databinding.ListitemExercisesVariationBinding
-import org.oar.gymlog.model.Exercise
-import org.oar.gymlog.model.Order
-import org.oar.gymlog.model.Variation
-import org.oar.gymlog.model.Workout
+import org.oar.gymlog.databinding.ListitemWorkoutDetailsRowBinding
+import org.oar.gymlog.databinding.ListitemWorkoutDetailsSetBinding
 import org.oar.gymlog.model.WorkoutExercise
 import org.oar.gymlog.model.WorkoutSet
-import org.oar.gymlog.ui.common.animations.ResizeHeightAnimation
 import org.oar.gymlog.ui.common.components.listView.CommonListView.ListElementState
 import org.oar.gymlog.ui.common.components.listView.SimpleListHandler
 import org.oar.gymlog.ui.common.components.listView.SimpleListView
-import org.oar.gymlog.ui.exercises.VariationsListHandler
-import org.oar.gymlog.ui.main.preferences.PreferencesDefinition
-import org.oar.gymlog.util.Constants.TODAY
-import org.oar.gymlog.util.DateUtils.getLetterFrom
-import org.oar.gymlog.util.extensions.PreferencesExts.loadString
-import org.oar.gymlog.util.extensions.model.ExerciseExts.gymVariations
-import java.util.Locale
-import java.util.function.BiConsumer
-import java.util.function.Consumer
-
 
 class WorkoutDetailsListHandler(
     val context: Context
-): SimpleListHandler<WorkoutExercise, ListitemExercisesRowBinding> {
-
+): SimpleListHandler<WorkoutExercise, ListitemWorkoutDetailsRowBinding> {
     override val useListState = false
-    override val itemInflater: (LayoutInflater, ViewGroup?, Boolean) -> ListitemExercisesRowBinding
-            = ListitemExercisesRowBinding::inflate
+    override val itemInflater: (LayoutInflater, ViewGroup?, Boolean) -> ListitemWorkoutDetailsRowBinding
+            = ListitemWorkoutDetailsRowBinding::inflate
 
     private var onExerciseClickListener: ((WorkoutExercise, Boolean) -> Unit)? = null
 
@@ -41,11 +25,11 @@ class WorkoutDetailsListHandler(
         onExerciseClickListener = listener
     }
     fun onSetClicked(listener: (WorkoutSet) -> Unit) {
-
+        //WorkoutDetailsSetListHandler.onSetClicked(listener)
     }
 
     override fun buildListView(
-        binding: ListitemExercisesRowBinding,
+        binding: ListitemWorkoutDetailsRowBinding,
         item: WorkoutExercise,
         index: Int,
         state: ListElementState?
@@ -65,13 +49,20 @@ class WorkoutDetailsListHandler(
             image.setImage(exercise.image, exercise.primaryMuscles[0].color)
         }
 
-        binding.variationsList.visibility = View.GONE
+        val variationList =
+            binding.setsList as SimpleListView<WorkoutSet, ListitemWorkoutDetailsSetBinding>
+
+        val handler = WorkoutDetailsSetListHandler(item)
+        variationList.init(item.sets, handler)
 
         onExerciseClickListener?.also { listener ->
             binding.header.root.setOnLongClickListener {
                 listener(item, true)
                 true
             }
+        }
+        onExerciseClickListener?.also { listener ->
+            binding.header.root.setOnClickListener { listener(item, false) }
         }
     }
 }
