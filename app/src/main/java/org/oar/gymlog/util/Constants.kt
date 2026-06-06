@@ -21,6 +21,7 @@ object Constants {
         NONE,
         REGISTRY,
         EXERCISE_LIST,
+        WORKOUT_DETAILS,
         SEARCH_LIST,
         CREATE_EXERCISE,
         CREATE_EXERCISE_FROM_MUSCLE,
