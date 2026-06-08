@@ -56,10 +56,6 @@
             android:exported="false"
             android:theme="@style/Theme.GymLog.NoActionBar" />
         <activity
-            android:name=".ui.exercises.LatestActivity"
-            android:exported="false"
-            android:theme="@style/Theme.GymLog.NoActionBar" />
-        <activity
             android:name=".ui.exercises.SearchActivity"
             android:exported="false"
             android:theme="@style/Theme.GymLog.NoActionBar" />

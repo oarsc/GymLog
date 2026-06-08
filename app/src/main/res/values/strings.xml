@@ -174,7 +174,7 @@
     <string name="validation_super_set_must_be_in_touch">Super sets must be consecutive</string>
     <string name="validation_super_set_active">You must stop current superset first</string>
     <string name="validation_training_not_started">A training session must be started first</string>
-    <string name="validation_no_exercise_registered">At least an registry is needed on this training session</string>
+    <string name="validation_no_exercise_registered">At least a registry is needed on this training session</string>
     <string name="validation_cannot_clone">Cannot clone log. There isn\'t enough time.</string>
 
     <!-- Date -->

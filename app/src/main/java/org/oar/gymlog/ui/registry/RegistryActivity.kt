@@ -34,7 +34,6 @@ import org.oar.gymlog.ui.common.dialogs.TextDialogFragment
 import org.oar.gymlog.ui.common.dialogs.TextSelectDialogFragment
 import org.oar.gymlog.ui.common.dialogs.model.WeightFormData
 import org.oar.gymlog.ui.exercises.ExercisesActivity
-import org.oar.gymlog.ui.exercises.LatestActivity
 import org.oar.gymlog.ui.main.MainActivity
 import org.oar.gymlog.ui.main.preferences.PreferencesDefinition
 import org.oar.gymlog.ui.top.TopActivity
@@ -65,11 +64,6 @@ import org.oar.gymlog.util.extensions.model.ExerciseExts.gymVariations
 import java.math.BigDecimal
 
 class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(ActivityRegistryBinding::inflate) {
-
-    companion object {
-        private const val LOG_PAGES_SIZE = 20
-    }
-
     private lateinit var exercise: Exercise
     private lateinit var variation: Variation
     private var defaultTimeColor = 0
@@ -85,6 +79,7 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
     private var defaultTimer = 0
     private var countdownThread: CountdownThread? = null
     private var reloadOnBack = false
+    private var latestVariationIds = emptyList<Int>()
 
     override fun preLoad(savedInstanceState: Bundle?) {
         // Set initial size for hidden views
@@ -119,13 +114,19 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
                 mostRecentTraining.superSet != (Data.superSet ?: 0)
 
             lastSuperSet = mostRecentTraining.superSet
+
+            val trainingHistory = bitDao.getHistoryByTrainingId(training.id)
             if (lastSuperSet > 0 && Data.superSet == lastSuperSet) {
-                enableSuperSetNavigation = bitDao.getHistoryByTrainingId(training.id)
+                enableSuperSetNavigation = trainingHistory
                     .filter { it.superSet == lastSuperSet }
                     .map { it.variationId }
                     .distinct()
                     .size > 1
             }
+
+            latestVariationIds = trainingHistory.reversed()
+                .map { it.variationId }
+                .distinct()
         }
 
         return CONTINUE
@@ -169,6 +170,9 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
         binding.toolbar.apply {
             setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
             setOnMenuItemClickListener(::onOptionsItemSelected)
+
+            val latestButtonItem = menu.findItem(R.id.latestButton)
+            latestButtonItem.isEnabled = latestVariationIds.getOrNull(0) != variation.id
         }
 
         // Timer button:
@@ -372,31 +376,21 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.latestButton -> {
-                val trainingId = Data.training?.id
-                    ?: run {
-                        toast(R.string.validation_training_not_started)
-                        return true
-                    }
-                dbThread { db ->
-                    val variationIds = db.bitDao().getHistoryByTrainingIdDesc(trainingId)
-                        .map { it.variationId }
-                        .distinct()
-                    when {
-                        variationIds.isEmpty() ->
-                            toast(R.string.validation_no_exercise_registered)
+                if (Data.training == null) {
+                    toast(R.string.validation_training_not_started)
+                    return true
+                }
+                when {
+                    latestVariationIds.isEmpty() ->
+                        toast(R.string.validation_no_exercise_registered)
 
-                        variationIds[0] == variation.id ->
-                            Intent(this, LatestActivity::class.java)
-                                .also { startActivity(it) }
-
-                        else ->
+                    else ->
 //                            goToVariation(Data.getVariation(variationIds[0]))
-                            switchToVariation(
-                                variation = Data.getVariation(variationIds[0]),
-                                left = variationIds.contains(variation.id),
-                                true
-                            )
-                    }
+                        switchToVariation(
+                            variation = Data.getVariation(latestVariationIds[0]),
+                            left = latestVariationIds.contains(variation.id),
+                            true
+                        )
                 }
             }
             R.id.topRanking -> {
@@ -645,7 +639,6 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
 
     private fun saveBitLog(instant: Boolean) {
         requireActiveTraining { trainingId ->
-
             dbThread { db ->
                 val bit = Bit(variation)
 
@@ -699,6 +692,9 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
                     if (!locked)
                         precalculateWeight()
                 }
+            }
+            if (!instant) {
+                binding.toolbar.menu.findItem(R.id.latestButton).isEnabled = false
             }
         }
     }
@@ -979,5 +975,9 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
                 binding.secondsText.setTextColor(defaultTimeColor)
             }
         }
+    }
+
+    companion object {
+        private const val LOG_PAGES_SIZE = 20
     }
 }
