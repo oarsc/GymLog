@@ -18,6 +18,12 @@
         tools:layout="@layout/fragment_list_muscles" />
 
     <fragment
+        android:id="@+id/navigationStats"
+        android:name="org.oar.gymlog.ui.main.stats.StatsFragment"
+        android:label="@string/title_stats"
+        tools:layout="@layout/fragment_stats" />
+
+    <fragment
         android:id="@+id/navigationHistory"
         android:name="org.oar.gymlog.ui.main.history.HistoryFragment"
         android:label="@string/title_history"

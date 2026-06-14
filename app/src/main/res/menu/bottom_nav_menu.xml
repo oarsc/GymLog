@@ -11,8 +11,13 @@
         android:title="@string/title_exercises" />
 
     <item
+        android:id="@+id/navigationStats"
+        android:icon="@drawable/ic_bar_chart_24dp"
+        android:title="@string/title_stats" />
+
+    <item
         android:id="@+id/navigationHistory"
-        android:icon="@drawable/ic_history_24dp"
+        android:icon="@drawable/ic_calendar_24dp"
         android:title="@string/title_history" />
 
     <item
