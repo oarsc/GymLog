@@ -1,11 +1,5 @@
 package org.oar.gymlog.manager
 
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLBlock.Companion.HTMLBodyBlock
-import org.oar.gymlog.manager.lib.HTMLBlock.Companion.listen
-import org.oar.gymlog.manager.lib.HTMLBlock.Companion.read
-import org.oar.gymlog.manager.lib.HTMLBlock.DetachMode
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
 import org.oar.gymlog.manager.ui.calendar.HTMLCalendarContainer
 import org.oar.gymlog.manager.ui.editor.HTMLEditorContainer
 import org.oar.gymlog.manager.ui.input.HTMLInputContainer
@@ -14,6 +8,12 @@ import org.oar.gymlog.manager.ui.menu.HTMLMenu.Companion.CALENDAR_OPTION
 import org.oar.gymlog.manager.ui.menu.HTMLMenu.Companion.EDITOR_OPTION
 import org.oar.gymlog.manager.utils.Export
 import org.oar.gymlog.manager.utils.Notifier
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLBlock.Companion.HTMLBodyBlock
+import org.oar.lib.HTMLBlock.Companion.listen
+import org.oar.lib.HTMLBlock.Companion.read
+import org.oar.lib.HTMLBlock.DetachMode
+import org.oar.lib.HTMLDefinitionConstants.DIV
 import org.w3c.dom.HTMLDivElement
 
 fun main() {

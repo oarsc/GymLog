@@ -1,14 +1,14 @@
 package org.oar.gymlog.manager.ui.editor
 
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
-import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.model.OutputExercise
 import org.oar.gymlog.manager.ui.editor.bitsEditor.v1.HTMLBitsEditor
 import org.oar.gymlog.manager.ui.editor.exerciseEditor.HTMLSelector
 import org.oar.gymlog.manager.ui.editor.exerciseEditor.v1.HTMLExerciseEditor
 import org.oar.gymlog.manager.utils.Export
 import org.oar.gymlog.manager.utils.Notifier
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLDefinitionConstants.DIV
+import org.oar.lib.style
 import org.w3c.dom.HTMLDivElement
 
 class HTMLEditorContainer: HTMLBlock<HTMLDivElement>(DIV, id = ID) {

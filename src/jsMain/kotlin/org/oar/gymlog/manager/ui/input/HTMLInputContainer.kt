@@ -1,9 +1,9 @@
 package org.oar.gymlog.manager.ui.input
 
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
-import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.utils.Notifier
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLDefinitionConstants.DIV
+import org.oar.lib.style
 import org.w3c.dom.HTMLDivElement
 
 class HTMLInputContainer: HTMLBlock<HTMLDivElement>(DIV, id = ID) {

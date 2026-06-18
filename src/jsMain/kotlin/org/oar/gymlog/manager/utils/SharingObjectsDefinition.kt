@@ -1,9 +1,9 @@
 package org.oar.gymlog.manager.utils
 
-import org.oar.gymlog.manager.lib.ExportId
-import org.oar.gymlog.manager.lib.NotifierId
 import org.oar.gymlog.manager.model.Output
 import org.oar.gymlog.manager.model.OutputExercise
+import org.oar.lib.ExportId
+import org.oar.lib.NotifierId
 
 object Export {
     val output = object : ExportId<Output>() {}

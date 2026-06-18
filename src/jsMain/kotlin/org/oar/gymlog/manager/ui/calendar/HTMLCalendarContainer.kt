@@ -1,11 +1,10 @@
 package org.oar.gymlog.manager.ui.calendar
 
-
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
-import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.ui.calendar.v1.HTMLTrainingSummary
 import org.oar.gymlog.manager.utils.Export
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLDefinitionConstants.DIV
+import org.oar.lib.style
 import org.w3c.dom.HTMLDivElement
 
 class HTMLCalendarContainer: HTMLBlock<HTMLDivElement>(DIV, id = ID) {

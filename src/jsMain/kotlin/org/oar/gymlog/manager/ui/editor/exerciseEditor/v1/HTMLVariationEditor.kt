@@ -1,15 +1,6 @@
 package org.oar.gymlog.manager.ui.editor.exerciseEditor.v1
 
 import org.oar.gymlog.manager.Style.BUTTON_STYLE
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.BUTTON
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.H3
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.TABLE
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.TBODY
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.TD
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.TR
-import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.model.BarId
 import org.oar.gymlog.manager.model.ExerciseType
 import org.oar.gymlog.manager.model.GymRelation
@@ -23,6 +14,15 @@ import org.oar.gymlog.manager.ui.support.HTMLInputEditBind
 import org.oar.gymlog.manager.ui.support.HTMLSelectEditBind
 import org.oar.gymlog.manager.utils.Notifier
 import org.oar.gymlog.manager.utils.Utils.confirm
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLDefinitionConstants.BUTTON
+import org.oar.lib.HTMLDefinitionConstants.DIV
+import org.oar.lib.HTMLDefinitionConstants.H3
+import org.oar.lib.HTMLDefinitionConstants.TABLE
+import org.oar.lib.HTMLDefinitionConstants.TBODY
+import org.oar.lib.HTMLDefinitionConstants.TD
+import org.oar.lib.HTMLDefinitionConstants.TR
+import org.oar.lib.style
 import org.w3c.dom.HTMLDivElement
 
 class HTMLVariationEditor(

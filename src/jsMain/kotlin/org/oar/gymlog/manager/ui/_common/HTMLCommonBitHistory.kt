@@ -1,14 +1,6 @@
 package org.oar.gymlog.manager.ui._common
 
 import org.oar.gymlog.manager.Style.BUTTON_STYLE
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLBlock.Companion.HTMLBodyBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.BUTTON
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.INPUT
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.SPAN
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.TD
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.TR
-import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.model.Output
 import org.oar.gymlog.manager.model.OutputBit
 import org.oar.gymlog.manager.ui._common.HTMLCommonExerciseHistory.Column
@@ -31,6 +23,14 @@ import org.oar.gymlog.manager.utils.extensions.DateExt.compareTo
 import org.oar.gymlog.manager.utils.extensions.DateExt.middleDate
 import org.oar.gymlog.manager.utils.extensions.DateExt.toLocaleISODateString
 import org.oar.gymlog.manager.utils.extensions.DateExt.toLocaleISOTimeString
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLBlock.Companion.HTMLBodyBlock
+import org.oar.lib.HTMLDefinitionConstants.BUTTON
+import org.oar.lib.HTMLDefinitionConstants.INPUT
+import org.oar.lib.HTMLDefinitionConstants.SPAN
+import org.oar.lib.HTMLDefinitionConstants.TD
+import org.oar.lib.HTMLDefinitionConstants.TR
+import org.oar.lib.style
 import org.w3c.dom.HTMLTableCellElement
 import org.w3c.dom.HTMLTableRowElement
 import kotlin.js.Date

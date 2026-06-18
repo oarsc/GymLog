@@ -1,8 +1,8 @@
 package org.oar.gymlog.manager.ui.support
 
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.INPUT
-import org.oar.gymlog.manager.lib.style
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLDefinitionConstants.INPUT
+import org.oar.lib.style
 import org.w3c.dom.HTMLInputElement
 import kotlin.reflect.KMutableProperty1
 

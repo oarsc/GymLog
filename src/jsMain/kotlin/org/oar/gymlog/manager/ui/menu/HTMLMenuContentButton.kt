@@ -1,7 +1,7 @@
 package org.oar.gymlog.manager.ui.menu
 
-import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.utils.Notifier
+import org.oar.lib.style
 
 class HTMLMenuContentButton(
     text: String,

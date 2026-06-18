@@ -1,13 +1,13 @@
 package org.oar.gymlog.manager.ui.input
 
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.INPUT
-import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.model.Muscle
 import org.oar.gymlog.manager.model.Output
 import org.oar.gymlog.manager.utils.Export
 import org.oar.gymlog.manager.utils.Notifier
 import org.oar.gymlog.manager.utils.Utils.JSON
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLDefinitionConstants.INPUT
+import org.oar.lib.style
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLParagraphElement
 import org.w3c.files.FileReader

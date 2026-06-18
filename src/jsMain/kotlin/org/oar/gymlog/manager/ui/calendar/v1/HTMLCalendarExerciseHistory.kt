@@ -1,10 +1,10 @@
 package org.oar.gymlog.manager.ui.calendar.v1
 
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.SPAN
 import org.oar.gymlog.manager.model.Output
 import org.oar.gymlog.manager.ui._common.HTMLCommonExerciseHistory
 import org.oar.gymlog.manager.ui._common.model.ExerciseBits
 import org.oar.gymlog.manager.ui.support.HTMLExerciseIcon
+import org.oar.lib.HTMLDefinitionConstants.SPAN
 
 
 class HTMLCalendarExerciseHistory(

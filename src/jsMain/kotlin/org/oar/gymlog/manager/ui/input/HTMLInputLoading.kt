@@ -1,8 +1,8 @@
 package org.oar.gymlog.manager.ui.input
 
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.P
-import org.oar.gymlog.manager.lib.style
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLDefinitionConstants.P
+import org.oar.lib.style
 import org.w3c.dom.HTMLParagraphElement
 
 class HTMLInputLoading: HTMLBlock<HTMLParagraphElement>(P, id = ID) {

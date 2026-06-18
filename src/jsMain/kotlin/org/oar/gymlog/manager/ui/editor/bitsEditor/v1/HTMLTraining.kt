@@ -1,12 +1,12 @@
 package org.oar.gymlog.manager.ui.editor.bitsEditor.v1
 
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.H2
-import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.model.Output
 import org.oar.gymlog.manager.model.OutputBit
 import org.oar.gymlog.manager.model.OutputExercise
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLDefinitionConstants.DIV
+import org.oar.lib.HTMLDefinitionConstants.H2
+import org.oar.lib.style
 import org.w3c.dom.HTMLDivElement
 
 class HTMLTraining(

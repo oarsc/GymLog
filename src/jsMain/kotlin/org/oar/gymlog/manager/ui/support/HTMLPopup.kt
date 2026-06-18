@@ -1,8 +1,8 @@
 package org.oar.gymlog.manager.ui.support
 
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
-import org.oar.gymlog.manager.lib.style
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLDefinitionConstants.DIV
+import org.oar.lib.style
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 

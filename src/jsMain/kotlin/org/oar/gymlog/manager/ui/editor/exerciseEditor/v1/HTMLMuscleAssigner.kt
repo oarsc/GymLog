@@ -1,15 +1,15 @@
 package org.oar.gymlog.manager.ui.editor.exerciseEditor.v1
 
 import org.oar.gymlog.manager.Style.BUTTON_STYLE
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.BUTTON
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.OPTION
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.SELECT
-import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.model.Output
 import org.oar.gymlog.manager.model.OutputExercise
 import org.oar.gymlog.manager.model.OutputMuscleRelation
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLDefinitionConstants.BUTTON
+import org.oar.lib.HTMLDefinitionConstants.DIV
+import org.oar.lib.HTMLDefinitionConstants.OPTION
+import org.oar.lib.HTMLDefinitionConstants.SELECT
+import org.oar.lib.style
 import org.w3c.dom.HTMLDivElement
 
 class HTMLMuscleAssigner(

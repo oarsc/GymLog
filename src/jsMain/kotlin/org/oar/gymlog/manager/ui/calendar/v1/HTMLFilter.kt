@@ -1,16 +1,16 @@
 package org.oar.gymlog.manager.ui.calendar.v1
 
 import org.oar.gymlog.manager.Style.BUTTON_STYLE
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.BUTTON
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.INPUT
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.INPUT_NUMBER
-import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.utils.Export
 import org.oar.gymlog.manager.utils.Notifier
 import org.oar.gymlog.manager.utils.extensions.DateExt.compareTo
 import org.oar.gymlog.manager.utils.extensions.DateExt.toLocaleISODateString
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLDefinitionConstants.BUTTON
+import org.oar.lib.HTMLDefinitionConstants.DIV
+import org.oar.lib.HTMLDefinitionConstants.INPUT
+import org.oar.lib.HTMLDefinitionConstants.INPUT_NUMBER
+import org.oar.lib.style
 import org.w3c.dom.HTMLDivElement
 import kotlin.js.Date
 

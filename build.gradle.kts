@@ -8,6 +8,7 @@ group = "org.oar.gymlog.manager"
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://jitpack.io") }
 }
 
 kotlin {
@@ -21,24 +22,11 @@ kotlin {
     }
 
     sourceSets {
-        val coroutinesVersion = "1.7.3"
-        val serializationVersion = "1.6.0"
-//        val kotlinxHtmlVersion = "0.12.0"
-        val doodleVersion = "0.10.4"
-
         val jsMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
-//                implementation("org.jetbrains.kotlinx:kotlinx-html-js:$kotlinxHtmlVersion")
-
-                implementation("io.nacular.doodle:core:$doodleVersion")
-                //implementation("io.nacular.doodle:browser:$doodleVersion")
-
-                // Optional dependencies:
-                // implementation("io.nacular.doodle:controls:$doodleVersion")
-                // implementation("io.nacular.doodle:animation:$doodleVersion")
-                // implementation("io.nacular.doodle:themes:$doodleVersion")
+                implementation("com.github.oarsc:kotlin-js-blocks:v1.0.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+//                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
             }
         }
     }

@@ -1,7 +1,7 @@
 package org.oar.gymlog.manager.process
 
-import org.oar.gymlog.manager.lib.HTMLBlock.Companion.HTMLBodyBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.A
+import org.oar.lib.HTMLBlock.Companion.HTMLBodyBlock
+import org.oar.lib.HTMLDefinitionConstants.A
 import org.w3c.dom.url.URL
 import org.w3c.files.Blob
 import org.w3c.files.BlobPropertyBag

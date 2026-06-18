@@ -1,17 +1,17 @@
 package org.oar.gymlog.manager.ui.calendar.v1
 
 import kotlinx.browser.window
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.H2
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.SPAN
-import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.model.OutputBit
 import org.oar.gymlog.manager.model.OutputTraining
 import org.oar.gymlog.manager.ui._common.model.ExerciseBits
 import org.oar.gymlog.manager.ui.support.HTMLInputEditBind
 import org.oar.gymlog.manager.utils.Export
 import org.oar.gymlog.manager.utils.Notifier
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLDefinitionConstants.DIV
+import org.oar.lib.HTMLDefinitionConstants.H2
+import org.oar.lib.HTMLDefinitionConstants.SPAN
+import org.oar.lib.style
 import org.w3c.dom.HTMLDivElement
 
 class HTMLTrainingSummary: HTMLBlock<HTMLDivElement>(DIV, id = ID) {

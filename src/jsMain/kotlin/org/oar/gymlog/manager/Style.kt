@@ -1,6 +1,6 @@
 package org.oar.gymlog.manager
 
-import org.oar.gymlog.manager.lib.style
+import org.oar.lib.style
 
 object Style {
     fun load() {

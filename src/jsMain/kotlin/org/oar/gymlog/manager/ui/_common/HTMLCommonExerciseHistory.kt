@@ -1,14 +1,5 @@
 package org.oar.gymlog.manager.ui._common
 
-import org.oar.gymlog.manager.lib.HTMLBlock
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.DIV
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.SPAN
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.TABLE
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.TBODY
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.TH
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.THEAD
-import org.oar.gymlog.manager.lib.HTMLDefinitionConstants.TR
-import org.oar.gymlog.manager.lib.style
 import org.oar.gymlog.manager.model.Output
 import org.oar.gymlog.manager.model.OutputBit
 import org.oar.gymlog.manager.ui._common.HTMLCommonExerciseHistory.Column.ACTION
@@ -20,6 +11,15 @@ import org.oar.gymlog.manager.ui._common.HTMLCommonExerciseHistory.Column.SUPER_
 import org.oar.gymlog.manager.ui._common.HTMLCommonExerciseHistory.Column.TIMESTAMP
 import org.oar.gymlog.manager.ui._common.HTMLCommonExerciseHistory.Column.VARIATION
 import org.oar.gymlog.manager.ui._common.HTMLCommonExerciseHistory.Column.WEIGHT
+import org.oar.lib.HTMLBlock
+import org.oar.lib.HTMLDefinitionConstants.DIV
+import org.oar.lib.HTMLDefinitionConstants.SPAN
+import org.oar.lib.HTMLDefinitionConstants.TABLE
+import org.oar.lib.HTMLDefinitionConstants.TBODY
+import org.oar.lib.HTMLDefinitionConstants.TH
+import org.oar.lib.HTMLDefinitionConstants.THEAD
+import org.oar.lib.HTMLDefinitionConstants.TR
+import org.oar.lib.style
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLTableCellElement
 import org.w3c.dom.HTMLTableElement
