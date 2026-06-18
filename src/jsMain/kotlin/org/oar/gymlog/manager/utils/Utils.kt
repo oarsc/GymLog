@@ -1,6 +1,7 @@
 package org.oar.gymlog.manager.utils
 
 import kotlinx.browser.window
+import kotlinx.serialization.json.Json
 import kotlin.js.Promise
 
 object Utils {
@@ -17,4 +18,8 @@ object Utils {
 
     fun <T> fetchJson(url: String, callback: (T) -> Unit) =
         window.fetch(url).then { it.json() as Promise<T> }.then(callback)
+
+    val JSON = Json {
+        ignoreUnknownKeys = true
+    }
 }
