@@ -22,6 +22,9 @@ object DateUtils {
     val LocalDateTime.timeInMillis : Long
         get() = atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
+    val Long.toLocalDate : LocalDate
+        get() = Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
+
     val Long.toLocalDateTime : LocalDateTime
         get() = Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDateTime()
 

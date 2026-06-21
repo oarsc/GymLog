@@ -5,7 +5,9 @@ import org.oar.gymlog.model.ExerciseType
 import org.oar.gymlog.model.GymRelation
 import org.oar.gymlog.model.WeightSpecification
 import org.oar.gymlog.util.DateUtils.timeInMillis
+import org.oar.gymlog.util.DateUtils.toLocalDate
 import org.oar.gymlog.util.DateUtils.toLocalDateTime
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 object Converters {
@@ -15,6 +17,14 @@ object Converters {
 
     @TypeConverter
     fun fromDate(localDate: LocalDateTime?): Long? =
+        localDate?.timeInMillis
+
+    @TypeConverter
+    fun toLocalDate(millis: Long?): LocalDate? =
+        millis?.toLocalDate
+
+    @TypeConverter
+    fun fromLocalDate(localDate: LocalDate?): Long? =
         localDate?.timeInMillis
 
     @TypeConverter

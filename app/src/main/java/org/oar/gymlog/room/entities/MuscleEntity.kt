@@ -19,6 +19,6 @@ class MuscleEntity {
             parentColumn = "muscleId",
             entityColumn = "exerciseId",
             associateBy = Junction(ExerciseMuscleCrossRef::class))
-        var exercises: List<ExerciseEntity> = ArrayList()
+        var exercises: List<ExerciseEntity> = emptyList()
     }
 }

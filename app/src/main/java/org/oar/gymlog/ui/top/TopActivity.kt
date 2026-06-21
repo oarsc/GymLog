@@ -38,9 +38,8 @@ import org.oar.gymlog.util.extensions.DatabaseExts.dbThread
 import org.oar.gymlog.util.extensions.PreferencesExts.loadBoolean
 
 open class TopActivity : DatabaseAppCompatActivity<ActivityTopsBinding>(ActivityTopsBinding::inflate) {
-
     private lateinit var exercise: Exercise
-    private val listData: MutableList<ITopRow> = ArrayList()
+    private val listData = mutableListOf<ITopRow>()
     private var internationalSystem = false
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {

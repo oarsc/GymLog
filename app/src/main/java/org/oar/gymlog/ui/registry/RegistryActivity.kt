@@ -72,7 +72,7 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
     private var lastSuperSet = 0
     private lateinit var logListHandler: LogListHandler
     private var internationalSystem = false
-    private val log: MutableList<Bit> = ArrayList()
+    private val log = mutableListOf<Bit>()
     private var locked = false
     private var sendRefreshList = false
     private val notificationService: NotificationService by lazy { NotificationService(this) }

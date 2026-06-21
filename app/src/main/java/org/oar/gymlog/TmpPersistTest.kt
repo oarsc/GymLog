@@ -6,16 +6,19 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.oar.gymlog.exceptions.LoadException
 import org.oar.gymlog.room.AppDatabase
+import org.oar.gymlog.room.entities.WeightPeriodEntity
 import org.oar.gymlog.room.entities.WorkoutEntity
 import org.oar.gymlog.room.entities.WorkoutExerciseEntity
 import org.oar.gymlog.room.entities.WorkoutSetEntity
 import org.oar.gymlog.util.JsonUtils.map
 import java.io.IOException
+import java.time.LocalDate
 
-object TmpLoadWorkoutTest {
+object TmpPersistTest {
     fun Context.persistTmpWorkouts(db: AppDatabase) {
         val workoutTestData = assets.fromJsonArrayFile("workoutTestData.json")
         db.persistWorkouts(workoutTestData)
+        db.persistWeightPeriod()
     }
 
     private fun AppDatabase.persistWorkouts(workoutJsonArray: JSONArray) {
@@ -60,6 +63,20 @@ object TmpLoadWorkoutTest {
             }
             workoutSetDao.insert(workoutSetEntity)
         }
+    }
+
+    private fun AppDatabase.persistWeightPeriod() {
+        val weightPeriodDao = weightPeriodDao()
+
+        weightPeriodDao.insert(WeightPeriodEntity().apply {
+            start = LocalDate.of(2025, 8, 16)
+            end = LocalDate.of(2027, 8, 16)
+            initialWeight = 8100
+            initialBodyFatPercent = 900
+            gainGramsPerWeek = 80
+            loseGramsPerWeek = 350
+            expectedMuscleGain = 300
+        })
     }
 
     private fun AssetManager.fromJsonArrayFile(fileName: String): JSONArray = try {

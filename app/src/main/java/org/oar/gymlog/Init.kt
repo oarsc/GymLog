@@ -30,6 +30,8 @@ import org.oar.gymlog.model.Gym
 import org.oar.gymlog.model.Muscle
 import org.oar.gymlog.model.Training
 import org.oar.gymlog.model.Variation
+import org.oar.gymlog.model.WeightPeriod
+import org.oar.gymlog.model.WeightPeriodModification
 import org.oar.gymlog.model.Workout
 import org.oar.gymlog.model.WorkoutExercise
 import org.oar.gymlog.model.WorkoutSet
@@ -50,6 +52,7 @@ import org.oar.gymlog.util.extensions.DatabaseExts.dbThreadSuspend
 import org.oar.gymlog.util.extensions.PreferencesExts.loadBoolean
 import org.oar.gymlog.util.extensions.PreferencesExts.loadInteger
 import org.oar.gymlog.util.extensions.PreferencesExts.loadString
+import java.time.LocalDate
 import kotlin.coroutines.resume
 
 object Init {
@@ -226,6 +229,16 @@ object Init {
 
         db.trainingDao().getCurrentTraining()?.also {
             Data.training = Training(it)
+        }
+
+        db.weightPeriodDao().getWeightPeriodByDate(LocalDate.now())?.also { entity ->
+            Data.weightPeriod = WeightPeriod(entity).apply {
+                db.weightPeriodDao()
+                    .getModificationsByPeriodId(id)
+                    .forEach {
+                        modifications.add(WeightPeriodModification(it, this))
+                    }
+            }
         }
 
         Data.workouts.clear()

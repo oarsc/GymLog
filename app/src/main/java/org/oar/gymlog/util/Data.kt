@@ -7,6 +7,7 @@ import org.oar.gymlog.model.Gym
 import org.oar.gymlog.model.Muscle
 import org.oar.gymlog.model.Training
 import org.oar.gymlog.model.Variation
+import org.oar.gymlog.model.WeightPeriod
 import org.oar.gymlog.model.Workout
 
 object Data {
@@ -20,6 +21,7 @@ object Data {
 	var gym: Gym? = null
 	var training: Training? = null
 	var superSet: Int? = null
+	var weightPeriod: WeightPeriod? = null
 
 	fun getGym(gymId: Int): Gym = gyms
 		.filter { it.id == gymId }

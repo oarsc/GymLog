@@ -12,7 +12,7 @@ import com.dropbox.core.oauth.DbxCredential
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.oar.gymlog.TmpLoadWorkoutTest.persistTmpWorkouts
+import org.oar.gymlog.TmpPersistTest.persistTmpWorkouts
 import org.oar.gymlog.databinding.ActivityLoadBinding
 import org.oar.gymlog.service.DataBaseDumperService
 import org.oar.gymlog.service.dropbox.DropboxApiWrapper

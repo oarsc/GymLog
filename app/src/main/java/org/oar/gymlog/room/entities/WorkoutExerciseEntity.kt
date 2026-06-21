@@ -42,6 +42,6 @@ class WorkoutExerciseEntity {
         @Relation(
             parentColumn = "workoutExerciseId",
             entityColumn = "workoutExerciseId")
-        var sets: List<WorkoutSetEntity> = ArrayList()
+        var sets: List<WorkoutSetEntity> = emptyList()
     }
 }
