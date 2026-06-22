@@ -13,7 +13,9 @@ import org.oar.gymlog.room.Converters.toDate
 import org.oar.gymlog.room.Converters.toExerciseType
 import org.oar.gymlog.room.Converters.toGymRelation
 import org.oar.gymlog.room.Converters.toWeightSpecification
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KType
@@ -23,7 +25,6 @@ import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 
 object JsonUtils {
-
     val <T : Any> List<T>.toJsonArray: JSONArray
         get() = JSONArray().also { this.forEach { obj -> it.put(obj) } }
 
@@ -58,6 +59,7 @@ object JsonUtils {
                         Double::class -> json.put(fieldName, value as Double)
                         String::class -> json.put(fieldName, value as String)
                         LocalDateTime::class -> json.put(fieldName, fromDate(value as LocalDateTime))
+                        LocalDate::class -> json.put(fieldName, fromDate(value as LocalDate))
                         WeightSpecification::class ->
                             json.put(fieldName, fromWeightSpecification((value as WeightSpecification)).toInt())
                         ExerciseType::class ->
@@ -97,6 +99,7 @@ object JsonUtils {
                             Double::class -> getDouble(fieldName)
                             String::class -> getString(fieldName)
                             LocalDateTime::class -> toDate(getLong(fieldName))
+                            LocalDate::class -> toDate(getString(fieldName))
                             WeightSpecification::class -> toWeightSpecification(
                                 getInt(fieldName).toShort())
                             ExerciseType::class -> toExerciseType(
@@ -114,6 +117,10 @@ object JsonUtils {
             throw RuntimeException("An exception occurred", e)
         }
     }
+
+    private val localDateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+    private fun fromDate(localDate: LocalDate) = localDate.format(localDateFormatter)
+    private fun toDate(input: String) = LocalDate.parse(input, localDateFormatter)
 
     @Retention(AnnotationRetention.RUNTIME)
     @Target(AnnotationTarget.PROPERTY)

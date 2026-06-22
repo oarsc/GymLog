@@ -11,21 +11,21 @@ class WeightPeriod(
     var initialDate: LocalDate = LocalDate.EPOCH,
     var endDate: LocalDate = LocalDate.EPOCH,
     var initialWeight: BigDecimal,
-    var initialBodyFatPercent: BigDecimal,
     var gainGramsPerWeek: Int,
-    var loseGramsPerWeek: Int,
+    var lossGramsPerWeek: Int,
     var expectedMuscleGain: BigDecimal,
-    var modifications: MutableList<WeightPeriodModification> = mutableListOf()
+    var modifications: MutableList<WeightPeriodModification> = mutableListOf(),
+    var toleranceGrams: Int = 0
 ) : EntityMappable<WeightPeriodEntity> {
     constructor(entity: WeightPeriodEntity): this(
         id = entity.weightPeriodId,
         initialDate = entity.start,
         endDate = entity.end,
         initialWeight = entity.initialWeight.toBigDecimal() / ONE_HUNDRED,
-        initialBodyFatPercent = entity.initialBodyFatPercent.toBigDecimal() / ONE_HUNDRED,
         gainGramsPerWeek = entity.gainGramsPerWeek,
-        loseGramsPerWeek = entity.loseGramsPerWeek,
+        lossGramsPerWeek = entity.lossGramsPerWeek,
         expectedMuscleGain = entity.expectedMuscleGain.toBigDecimal() / ONE_HUNDRED,
+        toleranceGrams = entity.toleranceGrams,
     )
 
     override fun toEntity(): WeightPeriodEntity = WeightPeriodEntity().apply {
@@ -33,9 +33,9 @@ class WeightPeriod(
         initialDate = start
         endDate = end
         initialWeight = (this@WeightPeriod.initialWeight * ONE_HUNDRED).toInt()
-        initialBodyFatPercent = (this@WeightPeriod.initialBodyFatPercent * ONE_HUNDRED).toInt()
         gainGramsPerWeek = this@WeightPeriod.gainGramsPerWeek
-        loseGramsPerWeek = this@WeightPeriod.loseGramsPerWeek
+        lossGramsPerWeek = this@WeightPeriod.lossGramsPerWeek
         expectedMuscleGain = (this@WeightPeriod.expectedMuscleGain * ONE_HUNDRED).toInt()
+        toleranceGrams = this@WeightPeriod.toleranceGrams
     }
 }

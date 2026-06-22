@@ -48,7 +48,7 @@ class WorkoutDetailsSetListHandler(
 
                 val set = item.workoutSet
 
-                binding.root.alpha = if (set.warmUp) 0.5f else 1f
+                binding.root.alpha = if (set.warmUp) 0.75f else 1f
                 binding.reps.text = set.reps.toString()
                 binding.note.text = set.note
 

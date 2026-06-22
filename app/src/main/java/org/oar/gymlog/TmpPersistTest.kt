@@ -66,16 +66,15 @@ object TmpPersistTest {
     }
 
     private fun AppDatabase.persistWeightPeriod() {
-        val weightPeriodDao = weightPeriodDao()
+        val weightPeriodDao = weightDao()
 
-        weightPeriodDao.insert(WeightPeriodEntity().apply {
+        weightPeriodDao.insertPeriod(WeightPeriodEntity().apply {
             start = LocalDate.of(2025, 8, 16)
             end = LocalDate.of(2027, 8, 16)
             initialWeight = 8100
-            initialBodyFatPercent = 900
             gainGramsPerWeek = 80
-            loseGramsPerWeek = 350
-            expectedMuscleGain = 300
+            lossGramsPerWeek = 350
+            expectedMuscleGain = 3000
         })
     }
 

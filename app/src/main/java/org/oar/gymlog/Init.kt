@@ -231,9 +231,9 @@ object Init {
             Data.training = Training(it)
         }
 
-        db.weightPeriodDao().getWeightPeriodByDate(LocalDate.now())?.also { entity ->
+        db.weightDao().getPeriodByDate(LocalDate.now())?.also { entity ->
             Data.weightPeriod = WeightPeriod(entity).apply {
-                db.weightPeriodDao()
+                db.weightDao()
                     .getModificationsByPeriodId(id)
                     .forEach {
                         modifications.add(WeightPeriodModification(it, this))

@@ -16,10 +16,7 @@
         android:id="@+id/setsList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         tools:listitem="@layout/listitem_workout_details_set" />
-    
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="32dp" />
 
 </LinearLayout>

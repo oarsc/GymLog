@@ -13,10 +13,10 @@ class WeightPeriodEntity {
     var start: LocalDate = LocalDate.EPOCH
     var end: LocalDate = LocalDate.EPOCH
     var initialWeight: Int = 0
-    var initialBodyFatPercent: Int = 0
     var gainGramsPerWeek: Int = 0
-    var loseGramsPerWeek: Int = 0
+    var lossGramsPerWeek: Int = 0
     var expectedMuscleGain: Int = 0
+    var toleranceGrams: Int = 0
 
     class WithModifications {
         @Embedded
