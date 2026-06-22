@@ -1,7 +1,7 @@
 [{
 	"name": "Upper body",
 	"exercises": [{
-		"variation": 123,
+		"variation": 374,
 		"superSet": 0,
 		"sets": [
 			{
@@ -26,7 +26,7 @@
 			}
 		]
 	},{
-		"variation": 370,
+		"variation": 103,
 		"superSet": 0,
 		"sets": [
 			{
@@ -74,7 +74,7 @@
 			}
 		]
 	},{
-		"variation": 410,
+		"variation": 180,
 		"superSet": 0,
 		"sets": [
 			{

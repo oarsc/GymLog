@@ -9,4 +9,5 @@ class WeightEntity {
     @PrimaryKey(autoGenerate = false)
     var date: LocalDate = LocalDate.EPOCH
     var weight: Int = 0
+    var kilos = true
 }

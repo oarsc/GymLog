@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/detailsButton"
+        android:icon="@drawable/ic_notes_24dp"
+        android:title="@string/title_view_details"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/removeButton"
+        android:icon="@drawable/ic_remove_24dp"
+        android:title="@string/dialog_remove_weight_period"
+        app:showAsAction="ifRoom"/>
+
+</menu>

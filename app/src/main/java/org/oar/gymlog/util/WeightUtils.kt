@@ -20,10 +20,7 @@ object WeightUtils {
     }
 
     @StringRes
-    fun unit(internationalSystem: Boolean): Int {
-        return if (internationalSystem) R.string.text_kg else R.string.text_lb
-    }
-
+    fun unit(internationalSystem: Boolean): Int = if (internationalSystem) R.string.text_kg else R.string.text_lb
 
     fun BigDecimal.toKilograms(
         formatter: WeightFormatter = WeightFormatter.DEFAULT_WEIGHT_FORMATTER

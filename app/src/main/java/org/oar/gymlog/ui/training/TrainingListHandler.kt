@@ -14,7 +14,8 @@ import org.oar.gymlog.model.Bit
 import org.oar.gymlog.ui.common.components.listView.CommonListView
 import org.oar.gymlog.ui.common.components.listView.MultipleListHandler
 import org.oar.gymlog.ui.common.components.listView.MultipleListView
-import org.oar.gymlog.ui.common.components.listView.SimpleListView
+import org.oar.gymlog.ui.common.components.listView.MultipleListView.Companion.cast
+import org.oar.gymlog.ui.common.components.listView.SimpleListView.Companion.cast
 import org.oar.gymlog.ui.common.dialogs.EditBitLogDialogFragment
 import org.oar.gymlog.ui.training.rows.ITrainingBitRow
 import org.oar.gymlog.ui.training.rows.TrainingBitHeaderRow
@@ -45,7 +46,6 @@ class TrainingListHandler(
 
     override fun findItemInflaterIndex(item: TrainingRowData) = item.superSet?.let { 1 } ?: 0
 
-    @Suppress("UNCHECKED_CAST")
     override fun buildListView(
         binding: ViewBinding,
         item: TrainingRowData,
@@ -62,7 +62,7 @@ class TrainingListHandler(
                 }
             }
 
-            val bitList = binding.bitList as MultipleListView<ITrainingBitRow>
+            val bitList = binding.bitList.cast<ITrainingBitRow>()
             bitList.unScrollableVertically = true
 
             val bitHandler = TrainingBitListHandler(internationalSystem, showTotals)
@@ -100,7 +100,7 @@ class TrainingListHandler(
         } else {
             binding as ListitemHistorySupersetContainerBinding
 
-            val bitList = binding.exerciseList as SimpleListView<TrainingRowData, ListitemHistoryExerciseHeaderBinding>
+            val bitList = binding.exerciseList.cast<TrainingRowData, ListitemHistoryExerciseHeaderBinding>()
             bitList.unScrollableVertically = true
 
             val handler = TrainingListSuperSetHandler(context, internationalSystem, showTotals)
@@ -209,7 +209,7 @@ class TrainingListHandler(
             } else {
                 it as ListitemHistorySupersetContainerBinding
 
-                val bitList = it.exerciseList as SimpleListView<TrainingRowData, ListitemHistoryExerciseHeaderBinding>
+                val bitList = it.exerciseList.cast<TrainingRowData, ListitemHistoryExerciseHeaderBinding>()
                 val trainingListHandler = bitList.handler as TrainingListSuperSetHandler
 
                 bitList.applyToAll { subBinding, item, _ ->
@@ -233,7 +233,7 @@ class TrainingListHandler(
             } else {
                 it as ListitemHistorySupersetContainerBinding
 
-                val bitList = it.exerciseList as SimpleListView<TrainingRowData, ListitemHistoryExerciseHeaderBinding>
+                val bitList = it.exerciseList.cast<TrainingRowData, ListitemHistoryExerciseHeaderBinding>()
                 val trainingListHandler = bitList.handler as TrainingListSuperSetHandler
 
                 bitList.applyToAll { subBinding, item, _ ->

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.weight.details.WeightDetailsActivity"
+    android:fitsSystemWindows="true">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:title="@string/title_weight_period"
+        app:menu="@menu/weight_period_details_menu"
+        app:navigationIcon="@drawable/ic_arrow_back_24dp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/datesLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Dates:"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="0dp"
+        android:paddingVertical="4dp"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/startingDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/datesLabel"
+        app:layout_constraintBottom_toBottomOf="@id/datesLabel"
+        app:layout_constraintStart_toEndOf="@id/gainLossWeekLabel"/>
+
+    <ImageView
+        android:id="@+id/datesArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:paddingHorizontal="6dp"
+        android:src="@drawable/ic_arrow_right_24dp"
+        app:layout_constraintTop_toTopOf="@id/datesLabel"
+        app:layout_constraintBottom_toBottomOf="@id/datesLabel"
+        app:layout_constraintStart_toEndOf="@id/startingDate" />
+
+    <TextView
+        android:id="@+id/endingDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/startingDate"
+        app:layout_constraintStart_toEndOf="@id/datesArrow"/>
+
+    <TextView
+        android:id="@+id/weightLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Weight:"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="0dp"
+        android:paddingVertical="4dp"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/datesLabel"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/startingWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/weightLabel"
+        app:layout_constraintBottom_toBottomOf="@id/weightLabel"
+        app:layout_constraintEnd_toStartOf="@id/weightArrow"/>
+
+    <ImageView
+        android:id="@+id/weightArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:paddingHorizontal="6dp"
+        android:src="@drawable/ic_arrow_right_24dp"
+        app:layout_constraintTop_toTopOf="@id/weightLabel"
+        app:layout_constraintBottom_toBottomOf="@id/weightLabel"
+        app:layout_constraintStart_toStartOf="@id/datesArrow" />
+
+    <TextView
+        android:id="@+id/expectedWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/startingWeight"
+        app:layout_constraintStart_toEndOf="@id/weightArrow"/>
+
+    <TextView
+        android:id="@+id/gainLossWeekLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gain/Loss per week:"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="0dp"
+        android:paddingVertical="4dp"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/weightLabel"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/gainWeek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/gainLossWeekLabel"
+        app:layout_constraintBottom_toBottomOf="@id/gainLossWeekLabel"
+        app:layout_constraintEnd_toStartOf="@id/gainLossSlash"/>
+
+    <ImageView
+        android:id="@+id/gainLossSlash"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:paddingHorizontal="6dp"
+        android:src="@drawable/ic_substract_24dp"
+        app:layout_constraintTop_toTopOf="@id/gainLossWeekLabel"
+        app:layout_constraintBottom_toBottomOf="@id/gainLossWeekLabel"
+        app:layout_constraintStart_toStartOf="@id/datesArrow" />
+
+    <TextView
+        android:id="@+id/lossWeek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/gainWeek"
+        app:layout_constraintStart_toEndOf="@id/gainLossSlash"/>
+
+    <TextView
+        android:id="@+id/toleranceLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tolerance:"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="0dp"
+        android:paddingVertical="4dp"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/gainLossWeekLabel"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/tolerance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/toleranceLabel"
+        app:layout_constraintStart_toStartOf="@id/gainLossSlash"
+        app:layout_constraintEnd_toEndOf="@id/gainLossSlash"
+        app:layout_constraintBottom_toBottomOf="@id/toleranceLabel"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/backgroundAccent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/toleranceLabel"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/totalDaysLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Total days:"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="0dp"
+        android:paddingVertical="4dp"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/toleranceLabel"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/totalDays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/totalDaysLabel"
+        app:layout_constraintStart_toStartOf="@id/gainLossSlash"
+        app:layout_constraintEnd_toEndOf="@id/gainLossSlash"
+        app:layout_constraintBottom_toBottomOf="@id/totalDaysLabel"/>
+
+    <TextView
+        android:id="@+id/bulkDaysLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bulk days:"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="0dp"
+        android:paddingVertical="4dp"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/totalDaysLabel"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/bulkDays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/bulkDaysLabel"
+        app:layout_constraintStart_toStartOf="@id/gainLossSlash"
+        app:layout_constraintEnd_toEndOf="@id/gainLossSlash"
+        app:layout_constraintBottom_toBottomOf="@id/bulkDaysLabel"/>
+
+
+    <TextView
+        android:id="@+id/leanDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lean date:"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="0dp"
+        android:paddingVertical="4dp"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/bulkDaysLabel"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/leanDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/leanDateLabel"
+        app:layout_constraintStart_toStartOf="@id/gainLossSlash"
+        app:layout_constraintEnd_toEndOf="@id/gainLossSlash"
+        app:layout_constraintBottom_toBottomOf="@id/leanDateLabel"/>
+
+    <TextView
+        android:id="@+id/maxWeightLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Maximum weight:"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="0dp"
+        android:paddingVertical="4dp"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/leanDateLabel"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/maxWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/maxWeightLabel"
+        app:layout_constraintStart_toStartOf="@id/gainLossSlash"
+        app:layout_constraintEnd_toEndOf="@id/gainLossSlash"
+        app:layout_constraintBottom_toBottomOf="@id/maxWeightLabel"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/backgroundAccent"
+        app:layout_constraintTop_toTopOf="@id/modificationsList"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <org.oar.gymlog.ui.common.components.listView.MultipleListView
+        android:id="@+id/modificationsList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        tools:context=".ui.exercises.ExercisesActivity"
+        tools:listitem="@layout/listitem_weight_period_modification"
+        app:layout_constraintTop_toBottomOf="@id/maxWeightLabel"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,17 +32,23 @@ interface WeightDao {
     @Delete
     fun delete(weightEntity: WeightEntity)
 
+    @Query("DELETE FROM weight")
+    fun clear()
+
 
     // ## WEIGHT PERIOD ####
 
-    @Query("SELECT * FROM weight_period")
+    @Query("SELECT * FROM weight_period order by start")
     fun getAllPeriods(): List<WeightPeriodEntity>
 
     @Query("SELECT * FROM weight_period WHERE start <= :date AND :date < `end`")
     fun getPeriodByDate(date: LocalDate): WeightPeriodEntity?
 
     @Query("SELECT * FROM weight_period WHERE weightPeriodId = :weightPeriodId")
-    fun getPeriodWithModifications(weightPeriodId: Int): List<WeightPeriodEntity.WithModifications>
+    fun getPeriod(weightPeriodId: Int): WeightPeriodEntity
+
+    @Query("SELECT * FROM weight_period WHERE weightPeriodId = :weightPeriodId")
+    fun getPeriodWithModifications(weightPeriodId: Int): WeightPeriodEntity.WithModifications
 
     @Update
     fun updatePeriod(weightPeriodEntity: WeightPeriodEntity)
@@ -58,6 +64,9 @@ interface WeightDao {
 
 
     // ## WEIGHT PERIOD MODIFICATION ####
+
+    @Query("SELECT * FROM weight_period_modification WHERE weightPeriodModificationId = :weightPeriodModificationId")
+    fun getModification(weightPeriodModificationId: Int): WeightPeriodModificationEntity
 
     @Query("SELECT * FROM weight_period_modification WHERE weightPeriodId = :weightPeriodId")
     fun getModificationsByPeriodId(weightPeriodId: Int): List<WeightPeriodModificationEntity>

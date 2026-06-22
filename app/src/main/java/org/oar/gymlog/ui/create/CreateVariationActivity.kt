@@ -10,7 +10,9 @@ import org.oar.gymlog.model.ExerciseType
 import org.oar.gymlog.model.GymRelation
 import org.oar.gymlog.room.Converters
 import org.oar.gymlog.ui.common.BindingAppCompatActivity
-import org.oar.gymlog.ui.common.dialogs.EditTextDialogFragment
+import org.oar.gymlog.ui.common.createForm.CreateFormElement
+import org.oar.gymlog.ui.common.createForm.CreateFormElement.Companion.createStringFormElement
+import org.oar.gymlog.ui.common.createForm.CreateListHandler
 import org.oar.gymlog.ui.common.dialogs.MenuDialogFragment
 import org.oar.gymlog.ui.common.dialogs.MenuDialogFragment.Companion.DIALOG_CLOSED
 import org.oar.gymlog.util.Constants.IntentReference
@@ -23,7 +25,6 @@ class CreateVariationActivity : BindingAppCompatActivity<ActivityCreateBinding>(
 	private var type = ExerciseType.NONE
 	private var gymRelation = GymRelation.NO_RELATION
 
-	private lateinit var nameOption: CreateFormElement
 	private lateinit var typeOption: CreateFormElement
 	private lateinit var gymGlobalOption: CreateFormElement
 
@@ -48,7 +49,7 @@ class CreateVariationActivity : BindingAppCompatActivity<ActivityCreateBinding>(
 			setOnMenuItemClickListener(::onOptionsItemSelected)
 		}
 
-		binding.createFormList.init(createForm(), CreateExerciseListHandler)
+		binding.createFormList.init(createForm(), CreateListHandler)
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -56,40 +57,44 @@ class CreateVariationActivity : BindingAppCompatActivity<ActivityCreateBinding>(
 			return false
 		}
 
-		if (name.isBlank()) {
-			snackbar(R.string.validation_name)
+		when {
+            name.isBlank() -> snackbar(R.string.validation_name)
+            else -> {
+                val data = Intent()
 
-		} else {
-			val data = Intent()
+                if (caller === IntentReference.EDIT_VARIATION) {
+                    data.putExtra("variationId", variationId)
+                }
 
-			if (caller === IntentReference.EDIT_VARIATION) {
-				data.putExtra("variationId", variationId)
-			}
+                data.putExtra("name", name)
+                data.putExtra("type", type.name)
+                data.putExtra("gymRelation", gymRelation.ordinal)
 
-			data.putExtra("name", name)
-			data.putExtra("type", type.name)
-			data.putExtra("gymRelation", gymRelation.ordinal)
-
-			setResult(RESULT_OK, data)
-			finish()
-		}
+                setResult(RESULT_OK, data)
+                finish()
+            }
+        }
 		return true
 	}
 
 	private fun createForm(): List<CreateFormElement> {
 		val form = mutableListOf<CreateFormElement>()
 
-		nameOption = CreateFormElement(
+		createStringFormElement(
+			manager = supportFragmentManager,
 			title = R.string.form_name,
-			valueStr = name,
-			drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_label_black_24dp, null),
-			onClickListener = { showExerciseNameDialog(nameOption) }
+			property = this::name,
+			drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_label_black_24dp, null)
 		).also(form::add)
 
 		typeOption = CreateFormElement(
 			title = R.string.form_type,
 			value = type.literal,
-			drawable = if (type.icon == 0) null else ResourcesCompat.getDrawable(resources, type.icon, null),
+			drawable = if (type.icon == 0) null else ResourcesCompat.getDrawable(
+				resources,
+				type.icon,
+				null
+			),
 			onClickListener = { showExerciseTypeDialog(typeOption) }
 		).also(form::add)
 
@@ -101,15 +106,6 @@ class CreateVariationActivity : BindingAppCompatActivity<ActivityCreateBinding>(
 		).also(form::add)
 
 		return form
-	}
-
-	private fun showExerciseNameDialog(option: CreateFormElement) {
-		val dialog = EditTextDialogFragment(R.string.form_name, name, { result ->
-				name = result
-				option.valueStr = result
-				option.update()
-			})
-		dialog.show(supportFragmentManager, null)
 	}
 
 	private fun showExerciseTypeDialog(option: CreateFormElement) {

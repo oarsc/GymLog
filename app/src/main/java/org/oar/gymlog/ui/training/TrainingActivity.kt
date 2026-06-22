@@ -1,7 +1,6 @@
 package org.oar.gymlog.ui.training
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -16,7 +15,7 @@ import org.oar.gymlog.model.Training
 import org.oar.gymlog.room.AppDatabase
 import org.oar.gymlog.ui.common.DatabaseAppCompatActivity
 import org.oar.gymlog.ui.common.animations.ResizeHeightAnimation
-import org.oar.gymlog.ui.common.components.listView.MultipleListView
+import org.oar.gymlog.ui.common.components.listView.MultipleListView.Companion.cast
 import org.oar.gymlog.ui.common.dialogs.EditTrainingDialogFragment
 import org.oar.gymlog.ui.main.history.HistoryFragment.Companion.getTrainingData
 import org.oar.gymlog.ui.main.history.TrainingData
@@ -26,6 +25,7 @@ import org.oar.gymlog.util.Data
 import org.oar.gymlog.util.DateUtils.getDateString
 import org.oar.gymlog.util.DateUtils.getTimeString
 import org.oar.gymlog.util.DateUtils.minutesToTimeString
+import org.oar.gymlog.util.extensions.ComponentsExts.mustRefreshParent
 import org.oar.gymlog.util.extensions.DatabaseExts.dbThread
 import org.oar.gymlog.util.extensions.PreferencesExts.loadBoolean
 import java.math.BigDecimal
@@ -108,10 +108,7 @@ class TrainingActivity : DatabaseAppCompatActivity<ActivityTrainingBinding>(Acti
         }
 
         trainingListHandler.setOnBitChangedListener {
-            Intent().also {
-                it.putExtra("refresh", true)
-                setResult(RESULT_OK, it)
-            }
+            mustRefreshParent()
         }
     }
 
@@ -139,7 +136,7 @@ class TrainingActivity : DatabaseAppCompatActivity<ActivityTrainingBinding>(Acti
     }
 
     override fun onOptionsItemSelected(menuItem: MenuItem): Boolean {
-        val historyList = binding.historyList as MultipleListView<TrainingRowData>
+        val historyList = binding.historyList.cast<TrainingRowData>()
 
         when (menuItem.itemId) {
             R.id.expandButton -> {
@@ -243,10 +240,7 @@ class TrainingActivity : DatabaseAppCompatActivity<ActivityTrainingBinding>(Acti
 
                     if (noteRowVisibility != binding.noteRow.visibility) {
                         binding.trainingDetails.startAnimation(ResizeHeightAnimation(binding.trainingDetails))
-                        Intent().apply {
-                            putExtra("refresh", true)
-                            setResult(RESULT_OK, this)
-                        }
+                        mustRefreshParent()
                     }
 
                     dbThread { db ->

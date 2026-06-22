@@ -6,6 +6,7 @@
     <color name="cyan_dark">#068686</color>
     <color name="green">#7CBA08</color>
     <color name="red">#E5410F</color>
+    <color name="blue">#1596FF</color>
     <color name="black">#F000</color>
     <color name="darker">#F222</color>
     <color name="dark">#F333</color>
@@ -25,6 +26,9 @@
 
     <color name="pulseWrongAnimation">#FFFFD0D0</color>
     <color name="pulseSuccessAnimation">#FFE0E0E0</color>
+
+    <color name="bulkPeriod">#FF00CC</color>
+    <color name="leanPeriod">@color/cyan_light</color>
 
     <color name="pectoral">#9675CE</color>
     <color name="upper_back">#1073AE</color>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/detailsButton"
+        android:icon="@drawable/ic_notes_24dp"
+        android:title="@string/title_view_details"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/listButton"
+        android:icon="@drawable/ic_history_24dp"
+        android:title="@string/text_view_all_weight_periods"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/createButton"
+        android:icon="@drawable/ic_add_24dp"
+        android:title="@string/title_create_weight_period"
+        app:showAsAction="never"/>
+
+</menu>

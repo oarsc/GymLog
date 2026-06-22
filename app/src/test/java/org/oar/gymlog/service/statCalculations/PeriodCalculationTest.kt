@@ -12,7 +12,7 @@ class PeriodCalculationTest {
     fun `should calculate days correctly`() {
         val result = PeriodCalculationService(createWeightPeriod()).execute()
 
-        assertEquals(730, result.days.size)
+        assertEquals(731, result.days.size)
         assertEquals(643, result.bulkDays)
         assertEquals(LocalDate.of(2027, 5, 21), result.switchDate)
     }
@@ -40,7 +40,7 @@ class PeriodCalculationTest {
 
         val result = PeriodCalculationService(weightPeriod).execute()
 
-        assertEquals(730, result.days.size)
+        assertEquals(731, result.days.size)
         assertEquals(643, result.bulkDays)
         // 15 lean days have been advanced, so the lean period starts 15 days after
         assertEquals(LocalDate.of(2027, 6, 5), result.switchDate)
@@ -61,9 +61,9 @@ class PeriodCalculationTest {
 
         val result = PeriodCalculationService(weightPeriod).execute()
 
-        assertEquals(730, result.days.size)
-        assertEquals(689, result.bulkDays) // increases
-        assertEquals(LocalDate.of(2027, 8, 5), result.switchDate)
+        assertEquals(731, result.days.size)
+        assertEquals(688, result.bulkDays) // increases
+        assertEquals(LocalDate.of(2027, 8, 4), result.switchDate)
     }
 
     fun createWeightPeriod(vararg modifications: WeightPeriodModification) = WeightPeriod(

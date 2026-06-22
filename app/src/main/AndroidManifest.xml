@@ -60,7 +60,27 @@
             android:exported="false"
             android:theme="@style/Theme.GymLog.NoActionBar" />
         <activity
-            android:name=".ui.workoutDetails.WorkoutDetailsActivity"
+            android:name=".ui.workout.details.WorkoutDetailsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GymLog.NoActionBar" />
+        <activity
+            android:name=".ui.weight.details.WeightDetailsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GymLog.NoActionBar" />
+        <activity
+            android:name=".ui.weight.stats.PeriodStatsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GymLog.NoActionBar" />
+        <activity
+            android:name=".ui.weight.create.CreateWeightPeriodActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GymLog.NoActionBar" />
+        <activity
+            android:name=".ui.weight.createModification.CreateWeightPeriodModificationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GymLog.NoActionBar" />
+        <activity
+            android:name=".ui.weight.list.WeightPeriodsActivity"
             android:exported="false"
             android:theme="@style/Theme.GymLog.NoActionBar" />
         <activity

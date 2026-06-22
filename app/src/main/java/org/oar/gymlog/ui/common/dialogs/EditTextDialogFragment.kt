@@ -3,16 +3,17 @@ package org.oar.gymlog.ui.common.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
+import android.text.InputType.TYPE_CLASS_TEXT
 import android.view.WindowManager
 import androidx.annotation.StringRes
 import org.oar.gymlog.R
 import org.oar.gymlog.databinding.DialogEditTextBinding
 import java.util.function.Consumer
 
-
 class EditTextDialogFragment(
     @StringRes title: Int,
     override var initialValue: String = "",
+    val inputType: Int = TYPE_CLASS_TEXT,
     confirm: Consumer<String>,
     cancel: Runnable = Runnable {}
 ) : CustomDialogFragment<String>(title, confirm, cancel) {
@@ -21,6 +22,7 @@ class EditTextDialogFragment(
         val binding = DialogEditTextBinding.inflate(layoutInflater)
 
         binding.dialogText.setText(initialValue)
+        binding.dialogText.inputType = inputType
 
         return AlertDialog.Builder(activity)
             .setTitle(title)

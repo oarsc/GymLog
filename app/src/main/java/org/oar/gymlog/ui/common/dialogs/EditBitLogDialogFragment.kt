@@ -4,10 +4,9 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.widget.doOnTextChanged
 import org.oar.gymlog.R
 import org.oar.gymlog.databinding.DialogEditBitLogBinding
 import org.oar.gymlog.model.Bit
@@ -85,14 +84,10 @@ class EditBitLogDialogFragment (
                 updateConvertedWeight(initialWeight)
             }
 
-            editWeight.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(s: Editable) {}
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    val newWeight = s.toString().safeBigDecimal()
-                    updateConvertedWeight(newWeight)
-                }
-            })
+            editWeight.doOnTextChanged { s, _, _, _ ->
+                val newWeight = (s ?: "").toString().safeBigDecimal()
+                updateConvertedWeight(newWeight)
+            }
 
             // Init values
             weightModifier.setStep(initialValue.variation.step)

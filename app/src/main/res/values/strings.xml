@@ -3,17 +3,21 @@
 
     <string name="title_create_exercise">Create exercise</string>
     <string name="title_create_variation">Create variation</string>
+    <string name="title_create_weight_period">Create weight period</string>
     <string name="title_exercises">Exercises</string>
     <string name="title_history">History</string>
     <string name="title_latest">Latest exercises</string>
+    <string name="title_list_weight_period">List weight periods</string>
     <string name="title_registry">Registry</string>
     <string name="title_select_gym">Select Current Gym</string>
     <string name="title_search">Search</string>
     <string name="title_settings">Settings</string>
     <string name="title_stats">Stats</string>
+    <string name="title_weight_period">Weight Period</string>
     <string name="title_workout">Workout</string>
     <string name="title_top_records">Top Records</string>
     <string name="title_training">Training</string>
+    <string name="title_view_details">View details</string>
 
     <string name="group_abdominals">Abdominals</string>
     <string name="group_biceps">Biceps</string>
@@ -52,7 +56,9 @@
     <string name="compound_training_times">%1$s - %2$s (%3$s)</string>
     <string name="compound_training_times_ongoing">%1$s - <i>ongoing</i></string>
 
+    <string name="text_active_superset">Active Superset #%1$d</string>
     <string name="text_add">Add</string>
+    <string name="text_add_modification">Add modification</string>
     <string name="text_collapse_all">Collapse all</string>
     <string name="text_countdown">Countdown</string>
     <string name="text_current_countdown">Current countdown</string>
@@ -62,6 +68,7 @@
     <string name="text_expand_all">Expand all</string>
     <string name="text_export">Export</string>
     <string name="text_find_top_records">Find top records</string>
+    <string name="text_from">From</string>
     <string name="text_gym">Gym</string>
     <string name="text_import">Import</string>
     <string name="text_instantly">Instantly</string>
@@ -72,6 +79,7 @@
     <string name="text_none">None</string>
     <string name="text_notes">Notes</string>
     <string name="text_open">Open</string>
+    <string name="text_period_from">Period from</string>
     <string name="text_reps">Reps</string>
     <string name="text_reps_lowercase">reps</string>
     <string name="text_seconds">Seconds</string>
@@ -79,15 +87,17 @@
     <string name="text_show_totals">Show total weight</string>
     <string name="text_subtitle">Subtitle</string>
     <string name="text_superset">Superset</string>
-    <string name="text_active_superset">Active Superset #%1$d</string>
     <string name="text_test">-TEST-</string>
     <string name="text_time">Time</string>
     <string name="text_timestamp">Timestamp</string>
     <string name="text_title">Title</string>
+    <string name="text_to">to</string>
     <string name="text_variations">Variations</string>
+    <string name="text_view_all_weight_periods">View all weight periods</string>
     <string name="text_warm_up">Warm up</string>
     <string name="text_weight">Weight</string>
     <string name="text_yes">Yes</string>
+    <string name="text_yyyymmdd">yyyy-mm-dd</string>
 
     <string name="type_none">None</string>
     <string name="type_dumbbell">Dumbbell</string>
@@ -108,11 +118,16 @@
     <string name="dialog_write_new_gym">Write the name of the new Gym</string>
     <string name="dialog_remove_log">Remove log</string>
     <string name="dialog_remove_exercise">Remove exercise</string>
+    <string name="dialog_remove_weight_period">Remove weight period</string>
+    <string name="dialog_remove_weight_period_modification">Remove modification</string>
     <string name="dialog_confirm_remove_exercise_title">Removing exercise</string>
     <string name="dialog_confirm_remove_exercise_text">This process wil remove this exercise.
     All its history will be removed as well. Do you want to proceed?</string>
     <string name="dialog_confirm_remove_log_title">Removing log entry</string>
     <string name="dialog_confirm_remove_log_text">Are you sure you want to remove this log entry?</string>
+    <string name="dialog_confirm_remove_weight_period_title">Removing weight period</string>
+    <string name="dialog_confirm_remove_weight_period_text">This process wil remove this weight period.
+    Do you want to proceed?</string>
     <string name="dialog_confirm_init_training_title">Training not started</string>
     <string name="dialog_confirm_init_training_text">There is no training currently ongoing.
     Do you want to start training #%1$d?</string>
@@ -143,6 +158,7 @@
     <string name="symbol_s">s</string>
     <string name="symbol_space">&#160;</string>
     <string name="symbol_zero">0</string>
+    <string name="symbol_zero_dot_2zero">0.00</string>
 
     <string name="support_open_parentheses">(</string>
     <string name="support_close_parentheses">)</string>
@@ -155,30 +171,46 @@
     <string name="button_cancel">Cancel</string>
     <string name="button_clone">Clone</string>
 
-    <string name="form_end_training">End Training</string>
-    <string name="form_edit_training">Edit Training</string>
-    <string name="form_edit_variations">Edit Variations</string>
-    <string name="form_create_variation">Create variation</string>
-    <string name="form_image">Image</string>
-    <string name="form_gym_independent">Share registry with all gyms?</string>
-    <string name="form_name">Name</string>
-    <string name="form_type">Type</string>
-    <string name="form_primary_muscles">Primary Muscular Groups</string>
-    <string name="form_secondary_muscles">Secondary Muscular Groups</string>
-    <string name="form_requires_bar">Requires Bar</string>
-    <string name="form_no_bar_value">Doesn\'t require setting a bar</string>
     <string name="form_bar_value">Requires setting a bar</string>
+    <string name="form_create_variation">Create variation</string>
+    <string name="form_edit_training">Edit training</string>
+    <string name="form_edit_variations">Edit variations</string>
+    <string name="form_edit_weight_period">Edit weight period</string>
+    <string name="form_edit_weight_period_modification">Edit modification</string>
+    <string name="form_end_date">End date</string>
+    <string name="form_end_training">End Training</string>
+    <string name="form_expected_muscle_gain">Expected muscle gain</string>
+    <string name="form_gain_per_week">Gain per week</string>
+    <string name="form_gym_independent">Share registry with all gyms?</string>
+    <string name="form_image">Image</string>
+    <string name="form_loss_per_week">Loss per week</string>
+    <string name="form_name">Name</string>
+    <string name="form_no_bar_value">Doesn\'t require setting a bar</string>
+    <string name="form_primary_muscles">Primary Muscular Groups</string>
+    <string name="form_requires_bar">Requires Bar</string>
+    <string name="form_secondary_muscles">Secondary Muscular Groups</string>
+    <string name="form_start_date">Start date</string>
+    <string name="form_start_weight">Starting weight</string>
+    <string name="form_tolerance">Tolerance</string>
+    <string name="form_type">Type</string>
 
+    <string name="validation_cannot_clone">Cannot clone log. There isn\'t enough time.</string>
+    <string name="validation_dates_incorrect">The ending date should come after the starting date.</string>
+    <string name="validation_dates_overlap">The range of dates defined is affecting another period.</string>
+    <string name="validation_expected_muscle_gain_zero">The expected muscle gain must be higher than 0.</string>
+    <string name="validation_gains_per_week_zero">Gains per week must be higher than 0.</string>
     <string name="validation_image">Please, select an image</string>
-    <string name="validation_name">Please, introduce a valid name</string>
+    <string name="validation_initial_weight_zero">Starting weight must be higher than 0.</string>
+    <string name="validation_loss_per_week_zero">Loss per week must be higher than 0.</string>
     <string name="validation_muscles">Please, select at least one primary muscular group</string>
+    <string name="validation_name">Please, introduce a valid name</string>
+    <string name="validation_no_exercise_registered">At least a registry is needed on this training session</string>
     <string name="validation_should_have_bar">This exercise is set to have a bar</string>
     <string name="validation_shouldnt_have_bar">This exercise is not set to have a bar</string>
-    <string name="validation_super_set_must_be_in_touch">Super sets must be consecutive</string>
     <string name="validation_super_set_active">You must stop current superset first</string>
+    <string name="validation_super_set_must_be_in_touch">Super sets must be consecutive</string>
+    <string name="validation_too_old_date">The date specified is too old. Use a more recent date.</string>
     <string name="validation_training_not_started">A training session must be started first</string>
-    <string name="validation_no_exercise_registered">At least a registry is needed on this training session</string>
-    <string name="validation_cannot_clone">Cannot clone log. There isn\'t enough time.</string>
 
     <!-- Date -->
     <string name="day_monday_short">Mon</string>

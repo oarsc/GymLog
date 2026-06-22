@@ -12,7 +12,6 @@ abstract class CommonListView<T: Any, B: ViewBinding>(
     context: Context,
     attrs: AttributeSet? = null
 ) : RecyclerView(context, attrs) {
-
     protected lateinit var data: MutableList<T>
         private set
     protected lateinit var order: MutableList<Int>     // visualIndex -> original data index
