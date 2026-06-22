@@ -14,6 +14,7 @@ import org.oar.gymlog.ui.common.animations.ResizeHeightAnimation
 import org.oar.gymlog.ui.common.components.listView.CommonListView.ListElementState
 import org.oar.gymlog.ui.common.components.listView.SimpleListHandler
 import org.oar.gymlog.ui.common.components.listView.SimpleListView
+import org.oar.gymlog.ui.common.components.listView.SimpleListView.Companion.cast
 import org.oar.gymlog.ui.main.preferences.PreferencesDefinition
 import org.oar.gymlog.util.Constants.TODAY
 import org.oar.gymlog.util.DateUtils.getLetterFrom
@@ -76,9 +77,7 @@ class ExercisesListHandler(
 
         val variations = item.gymVariations
         if (variations.size > 1) {
-            @Suppress("UNCHECKED_CAST")
-            val variationList =
-                binding.variationsList as SimpleListView<Variation, ListitemExercisesVariationBinding>
+            val variationList = binding.variationsList.cast<Variation, ListitemExercisesVariationBinding>()
 
             variationList.init(variations, VariationsListHandler)
 

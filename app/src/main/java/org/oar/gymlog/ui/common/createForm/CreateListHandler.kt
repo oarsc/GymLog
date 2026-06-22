@@ -1,4 +1,4 @@
-package org.oar.gymlog.ui.create
+package org.oar.gymlog.ui.common.createForm
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,7 @@ import org.oar.gymlog.databinding.ListitemDefaultRowBinding
 import org.oar.gymlog.ui.common.components.listView.CommonListView.ListElementState
 import org.oar.gymlog.ui.common.components.listView.SimpleListHandler
 
-object CreateExerciseListHandler: SimpleListHandler<CreateFormElement, ListitemDefaultRowBinding> {
+object CreateListHandler: SimpleListHandler<CreateFormElement, ListitemDefaultRowBinding> {
     override val useListState = false
     override val itemInflater: (LayoutInflater, ViewGroup?, Boolean) -> ListitemDefaultRowBinding
         = ListitemDefaultRowBinding::inflate

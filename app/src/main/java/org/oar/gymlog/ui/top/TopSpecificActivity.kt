@@ -10,6 +10,7 @@ import org.oar.gymlog.room.entities.BitEntity
 import org.oar.gymlog.util.Constants
 import org.oar.gymlog.util.Data
 import org.oar.gymlog.util.DateUtils.timeInMillis
+import org.oar.gymlog.util.extensions.ComponentsExts.mustRefreshParent
 import java.time.LocalDate
 
 class TopSpecificActivity : TopActivity() {
@@ -60,10 +61,7 @@ class TopSpecificActivity : TopActivity() {
     override fun onActivityResult(intentReference: Constants.IntentReference, data: Intent) {
         if (data.getBooleanExtra("refresh", false)) {
             if (intentReference === Constants.IntentReference.TRAINING) {
-                Intent().apply {
-                    putExtra("refresh", true)
-                    setResult(RESULT_OK, this)
-                }
+                mustRefreshParent()
             }
         }
         super.onActivityResult(intentReference, data)

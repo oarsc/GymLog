@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.R.attr
 import org.oar.gymlog.R
 import org.oar.gymlog.databinding.ListitemLogBinding
 import org.oar.gymlog.model.Bit
@@ -30,7 +29,7 @@ class LogListHandler(
     override val useListState = false
 
     var fullyLoaded = false
-    private val defaultDayColor = context.getThemeColor(attr.colorSecondary)
+    private val defaultDayColor = context.getThemeColor(android.R.attr.colorAccent)
 
     private var onLoadMoreListener: Runnable? = null
     fun setOnLoadMoreListener(onLoadMoreListener: Runnable) {

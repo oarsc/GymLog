@@ -3,14 +3,13 @@ package org.oar.gymlog.ui.common.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.text.Editable
 import android.text.InputFilter
 import android.text.InputType
-import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
 import androidx.annotation.StringRes
+import androidx.core.widget.doOnTextChanged
 import org.oar.gymlog.R
 import org.oar.gymlog.databinding.DialogEditWeightBinding
 import org.oar.gymlog.model.Bar
@@ -77,15 +76,12 @@ class EditWeightFormDialogFragment(
                 else
                     ""
             })
-        weightValue.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val newWeight = s.toString().safeBigDecimal()
-                updateConvertedUnit(newWeight)
-                updateTotalWeight(newWeight)
-            }
-        })
+
+        weightValue.doOnTextChanged { s, _, _, _ ->
+            val newWeight = (s ?: "").toString().safeBigDecimal()
+            updateConvertedUnit(newWeight)
+            updateTotalWeight(newWeight)
+        }
 
         // STEP SELECTABLE
         stepBox.setOnClickListener {

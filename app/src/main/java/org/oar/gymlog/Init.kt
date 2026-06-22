@@ -30,8 +30,7 @@ import org.oar.gymlog.model.Gym
 import org.oar.gymlog.model.Muscle
 import org.oar.gymlog.model.Training
 import org.oar.gymlog.model.Variation
-import org.oar.gymlog.model.WeightPeriod
-import org.oar.gymlog.model.WeightPeriodModification
+import org.oar.gymlog.model.Weight
 import org.oar.gymlog.model.Workout
 import org.oar.gymlog.model.WorkoutExercise
 import org.oar.gymlog.model.WorkoutSet
@@ -48,11 +47,12 @@ import org.oar.gymlog.ui.main.preferences.PreferencesDefinition.UNIT_CONVERSION_
 import org.oar.gymlog.ui.main.preferences.PreferencesDefinition.UNIT_CONVERSION_STEP
 import org.oar.gymlog.util.Data
 import org.oar.gymlog.util.WeightUtils
+import org.oar.gymlog.util.extensions.CommonExts.divideByHundred
+import org.oar.gymlog.util.extensions.DataExts.updateTodayWeightPeriod
 import org.oar.gymlog.util.extensions.DatabaseExts.dbThreadSuspend
 import org.oar.gymlog.util.extensions.PreferencesExts.loadBoolean
 import org.oar.gymlog.util.extensions.PreferencesExts.loadInteger
 import org.oar.gymlog.util.extensions.PreferencesExts.loadString
-import java.time.LocalDate
 import kotlin.coroutines.resume
 
 object Init {
@@ -231,15 +231,7 @@ object Init {
             Data.training = Training(it)
         }
 
-        db.weightDao().getPeriodByDate(LocalDate.now())?.also { entity ->
-            Data.weightPeriod = WeightPeriod(entity).apply {
-                db.weightDao()
-                    .getModificationsByPeriodId(id)
-                    .forEach {
-                        modifications.add(WeightPeriodModification(it, this))
-                    }
-            }
-        }
+        db.updateTodayWeightPeriod()
 
         Data.workouts.clear()
         val workoutExercisesMap = db.workoutExerciseDao().getAll().groupBy { it.workoutId }
@@ -258,6 +250,14 @@ object Init {
 
                 Data.workouts.add(workout)
             }
+
+        Data.weights.clear()
+        db.weightDao().getAll().forEach { it ->
+            Data.weights[it.date] = Weight(
+                value = it.weight.divideByHundred().setScale(2),
+                internationalSystem = it.kilos
+            )
+        }
 
         val gymId = loadInteger(CURRENT_GYM)
         if (gymId > 0) {

@@ -9,29 +9,20 @@ import java.util.function.Function
 class Weight(val value: BigDecimal, val internationalSystem: Boolean) : Comparable<Weight> {
     val valid: Boolean get() = value < BigDecimal.ZERO
 
-    fun getValue(internationalSystem: Boolean): BigDecimal {
-        return if (internationalSystem) toKg() else toLbs()
-    }
+    fun getValue(internationalSystem: Boolean): BigDecimal =
+        if (internationalSystem) toKg() else toLbs()
 
-    fun getValue(internationalSystem: Boolean, formatter: WeightFormatter): BigDecimal {
-        return if (internationalSystem) toKg(formatter) else toLbs(formatter)
-    }
+    fun getValue(internationalSystem: Boolean, formatter: WeightFormatter): BigDecimal =
+        if (internationalSystem) toKg(formatter) else toLbs(formatter)
 
-    fun toKg(): BigDecimal {
-        return if (internationalSystem) value else value.toKilograms()
-    }
+    fun toKg(): BigDecimal = if (internationalSystem) value else value.toKilograms()
+    fun toLbs(): BigDecimal = if (internationalSystem) value.toPounds() else value
 
-    fun toLbs(): BigDecimal {
-        return if (internationalSystem) value.toPounds() else value
-    }
+    private fun toKg(formatter: WeightFormatter): BigDecimal =
+        if (internationalSystem) value else value.toKilograms(formatter)
 
-    private fun toKg(formatter: WeightFormatter): BigDecimal {
-        return if (internationalSystem) value else value.toKilograms(formatter)
-    }
-
-    private fun toLbs(formatter: WeightFormatter): BigDecimal {
-        return if (internationalSystem) value.toPounds(formatter) else value
-    }
+    private fun toLbs(formatter: WeightFormatter): BigDecimal =
+        if (internationalSystem) value.toPounds(formatter) else value
 
     fun add(weight: Weight): Weight {
         if (weight.internationalSystem != internationalSystem) {
@@ -61,16 +52,12 @@ class Weight(val value: BigDecimal, val internationalSystem: Boolean) : Comparab
             Weight(toLbs().subtract(weight.toLbs()),false)
     }
 
-    fun op(operation: Function<BigDecimal, BigDecimal>): Weight {
-        return Weight(
-            operation.apply(value),
-            internationalSystem
-        )
-    }
+    fun op(operation: Function<BigDecimal, BigDecimal>): Weight = Weight(
+        operation.apply(value),
+        internationalSystem
+    )
 
-    override fun compareTo(other: Weight): Int {
-        return value.compareTo(other.value)
-    }
+    override fun compareTo(other: Weight): Int = value.compareTo(other.value)
 
     companion object {
         val INVALID = Weight(BigDecimal(-1), true)

@@ -9,6 +9,7 @@ import org.oar.gymlog.room.entities.ExerciseMuscleCrossRef
 import org.oar.gymlog.room.entities.SecondaryExerciseMuscleCrossRef
 import org.oar.gymlog.room.entities.TrainingEntity
 import org.oar.gymlog.room.entities.VariationEntity
+import org.oar.gymlog.room.entities.WeightEntity
 import org.oar.gymlog.room.entities.WorkoutEntity
 import org.oar.gymlog.room.entities.WorkoutExerciseEntity
 import org.oar.gymlog.room.entities.WorkoutSetEntity
@@ -83,6 +84,20 @@ class DumperDataStructure(
             .transformToObject(WorkoutSetEntity::class)
         set(value) {
             jsonObject.put(DumperDataStructure::workoutSets.name, value.transformToJson())
+        }
+
+    var weights: List<WeightEntity>
+        get() = jsonObject.getJSONArray(DumperDataStructure::weights.name)
+            .transformToObject(WeightEntity::class)
+        set(value) {
+            jsonObject.put(
+                DumperDataStructure::weights.name,
+                value.transformToJson().apply {
+                    loopAll {
+                        removeFieldIf(BitEntity::kilos.name) { getBoolean(it) }
+                    }
+                }
+            )
         }
 
     private var notes: List<String>

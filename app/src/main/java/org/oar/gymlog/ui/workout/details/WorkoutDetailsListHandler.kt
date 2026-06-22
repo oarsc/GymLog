@@ -1,4 +1,4 @@
-package org.oar.gymlog.ui.workoutDetails
+package org.oar.gymlog.ui.workout.details
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,11 +8,11 @@ import org.oar.gymlog.databinding.ListitemWorkoutDetailsRowBinding
 import org.oar.gymlog.model.WorkoutExercise
 import org.oar.gymlog.model.WorkoutSet
 import org.oar.gymlog.ui.common.components.listView.CommonListView.ListElementState
-import org.oar.gymlog.ui.common.components.listView.MultipleListView
+import org.oar.gymlog.ui.common.components.listView.MultipleListView.Companion.cast
 import org.oar.gymlog.ui.common.components.listView.SimpleListHandler
-import org.oar.gymlog.ui.workoutDetails.rows.IWorkoutSetRow
-import org.oar.gymlog.ui.workoutDetails.rows.WorkoutSetHeaderRow
-import org.oar.gymlog.ui.workoutDetails.rows.WorkoutSetRow
+import org.oar.gymlog.ui.workout.details.rows.IWorkoutSetRow
+import org.oar.gymlog.ui.workout.details.rows.WorkoutSetHeaderRow
+import org.oar.gymlog.ui.workout.details.rows.WorkoutSetRow
 
 class WorkoutDetailsListHandler(
     val context: Context
@@ -51,7 +51,7 @@ class WorkoutDetailsListHandler(
             image.setImage(exercise.image, exercise.primaryMuscles[0].color)
         }
 
-        val variationList = binding.setsList as MultipleListView<IWorkoutSetRow>
+        val variationList = binding.setsList.cast<IWorkoutSetRow>()
 
         val handler = WorkoutDetailsSetListHandler(item)
         val items = buildList {

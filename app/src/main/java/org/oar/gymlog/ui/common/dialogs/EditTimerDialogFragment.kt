@@ -5,10 +5,9 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.widget.doOnTextChanged
 import org.oar.gymlog.R
 import org.oar.gymlog.databinding.DialogEditTimerBinding
 import org.oar.gymlog.model.Variation
@@ -76,16 +75,12 @@ class EditTimerDialogFragment(
 
         binding.editTimer.apply {
             setText(initialValue.toString())
-            addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(s: Editable) {}
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    if (isDefaultValue) {
-                        isDefaultValue = false
-                        setInputAlpha(1f)
-                    }
+            doOnTextChanged { _, _, _, _ ->
+                if (isDefaultValue) {
+                    isDefaultValue = false
+                    setInputAlpha(1f)
                 }
-            })
+            }
         }
 
         if (isDefaultValue) setInputAlpha(0.4f)

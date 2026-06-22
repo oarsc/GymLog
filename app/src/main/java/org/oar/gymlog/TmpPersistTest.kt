@@ -75,6 +75,7 @@ object TmpPersistTest {
             gainGramsPerWeek = 80
             lossGramsPerWeek = 350
             expectedMuscleGain = 3000
+            toleranceGrams = 1000
         })
     }
 

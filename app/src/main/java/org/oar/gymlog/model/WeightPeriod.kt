@@ -3,6 +3,7 @@ package org.oar.gymlog.model
 import org.oar.gymlog.room.EntityMappable
 import org.oar.gymlog.room.entities.WeightPeriodEntity
 import org.oar.gymlog.util.Constants.ONE_HUNDRED
+import org.oar.gymlog.util.Constants.ONE_THOUSAND
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -24,18 +25,18 @@ class WeightPeriod(
         initialWeight = entity.initialWeight.toBigDecimal() / ONE_HUNDRED,
         gainGramsPerWeek = entity.gainGramsPerWeek,
         lossGramsPerWeek = entity.lossGramsPerWeek,
-        expectedMuscleGain = entity.expectedMuscleGain.toBigDecimal() / ONE_HUNDRED,
+        expectedMuscleGain = entity.expectedMuscleGain.toBigDecimal() / ONE_THOUSAND,
         toleranceGrams = entity.toleranceGrams,
     )
 
     override fun toEntity(): WeightPeriodEntity = WeightPeriodEntity().apply {
         weightPeriodId = id
-        initialDate = start
-        endDate = end
+        start = initialDate
+        end = endDate
         initialWeight = (this@WeightPeriod.initialWeight * ONE_HUNDRED).toInt()
         gainGramsPerWeek = this@WeightPeriod.gainGramsPerWeek
         lossGramsPerWeek = this@WeightPeriod.lossGramsPerWeek
-        expectedMuscleGain = (this@WeightPeriod.expectedMuscleGain * ONE_HUNDRED).toInt()
+        expectedMuscleGain = (this@WeightPeriod.expectedMuscleGain * ONE_THOUSAND).toInt()
         toleranceGrams = this@WeightPeriod.toleranceGrams
     }
 }

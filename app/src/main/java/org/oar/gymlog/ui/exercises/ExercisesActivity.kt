@@ -12,7 +12,7 @@ import org.oar.gymlog.model.Order
 import org.oar.gymlog.model.Order.Companion.getByCode
 import org.oar.gymlog.model.Variation
 import org.oar.gymlog.ui.common.BindingAppCompatActivity
-import org.oar.gymlog.ui.common.components.listView.SimpleListView
+import org.oar.gymlog.ui.common.components.listView.SimpleListView.Companion.cast
 import org.oar.gymlog.ui.common.dialogs.MenuDialogFragment
 import org.oar.gymlog.ui.common.dialogs.TextDialogFragment
 import org.oar.gymlog.ui.create.CreateExerciseActivity
@@ -55,7 +55,7 @@ class ExercisesActivity : BindingAppCompatActivity<ActivityExercisesBinding>(Act
             }
         }
 
-        val exercisesListView = binding.exercisesList as SimpleListView<Exercise, ListitemExercisesRowBinding>
+        val exercisesListView = binding.exercisesList.cast<Exercise, ListitemExercisesRowBinding>()
         handler = ExercisesListHandler(this, exercisesListView, muscle)
         exercisesListView.init(exercises, handler)
         handler.init()

@@ -1,4 +1,4 @@
-package org.oar.gymlog.ui.workoutDetails
+package org.oar.gymlog.ui.workout.details
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -12,9 +12,9 @@ import org.oar.gymlog.model.WorkoutExercise
 import org.oar.gymlog.model.WorkoutSet
 import org.oar.gymlog.ui.common.components.listView.CommonListView.ListElementState
 import org.oar.gymlog.ui.common.components.listView.MultipleListHandler
-import org.oar.gymlog.ui.workoutDetails.rows.IWorkoutSetRow
-import org.oar.gymlog.ui.workoutDetails.rows.WorkoutSetHeaderRow
-import org.oar.gymlog.ui.workoutDetails.rows.WorkoutSetRow
+import org.oar.gymlog.ui.workout.details.rows.IWorkoutSetRow
+import org.oar.gymlog.ui.workout.details.rows.WorkoutSetHeaderRow
+import org.oar.gymlog.ui.workout.details.rows.WorkoutSetRow
 
 class WorkoutDetailsSetListHandler(
     workoutExercise: WorkoutExercise
@@ -48,7 +48,7 @@ class WorkoutDetailsSetListHandler(
 
                 val set = item.workoutSet
 
-                binding.root.alpha = if (set.warmUp) 0.75f else 1f
+                binding.root.alpha = if (set.warmUp) 0.5f else 1f
                 binding.reps.text = set.reps.toString()
                 binding.note.text = set.note
 

@@ -12,6 +12,7 @@ import org.oar.gymlog.databinding.ListitemHistoryExerciseHeaderBinding
 import org.oar.gymlog.model.Bit
 import org.oar.gymlog.ui.common.components.listView.CommonListView
 import org.oar.gymlog.ui.common.components.listView.MultipleListView
+import org.oar.gymlog.ui.common.components.listView.MultipleListView.Companion.cast
 import org.oar.gymlog.ui.common.components.listView.SimpleListHandler
 import org.oar.gymlog.ui.common.dialogs.EditBitLogDialogFragment
 import org.oar.gymlog.ui.training.rows.ITrainingBitRow
@@ -37,14 +38,13 @@ class TrainingListSuperSetHandler(
         this.onBitChangedListener = onBitChangedListener
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun buildListView(
         binding: ListitemHistoryExerciseHeaderBinding,
         item: TrainingRowData,
         index: Int,
         state: CommonListView.ListElementState?
     ) {
-        val bitList = binding.bitList as MultipleListView<ITrainingBitRow>
+        val bitList = binding.bitList.cast<ITrainingBitRow>()
         bitList.unScrollableVertically = true
 
         val bitHandler = TrainingBitListHandler(internationalSystem, showTotals)

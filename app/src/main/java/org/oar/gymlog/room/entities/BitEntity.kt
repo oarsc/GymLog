@@ -44,7 +44,7 @@ class BitEntity {
     var reps = 0
     @JsonFieldName("w")
     var totalWeight = 0
-    var kilos = false
+    var kilos = true
     var instant = false
     var note: String = ""
     @JsonFieldName("s")

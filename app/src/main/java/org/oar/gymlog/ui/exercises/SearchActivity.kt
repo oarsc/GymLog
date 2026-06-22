@@ -12,13 +12,14 @@ import org.oar.gymlog.model.Exercise
 import org.oar.gymlog.model.Muscle
 import org.oar.gymlog.model.Variation
 import org.oar.gymlog.ui.common.BindingAppCompatActivity
-import org.oar.gymlog.ui.common.components.listView.SimpleListView
+import org.oar.gymlog.ui.common.components.listView.SimpleListView.Companion.cast
 import org.oar.gymlog.ui.common.dialogs.MenuDialogFragment
 import org.oar.gymlog.ui.common.dialogs.TextDialogFragment
 import org.oar.gymlog.ui.create.CreateExerciseActivity
 import org.oar.gymlog.ui.top.TopActivity
 import org.oar.gymlog.util.Constants.IntentReference
 import org.oar.gymlog.util.Data
+import org.oar.gymlog.util.extensions.ComponentsExts.mustRefreshParent
 import org.oar.gymlog.util.extensions.DatabaseExts.dbThread
 import org.oar.gymlog.util.extensions.RedirectionExts.goToVariation
 import java.util.Locale
@@ -48,7 +49,7 @@ class SearchActivity : BindingAppCompatActivity<ActivitySearchBinding>(ActivityS
             ?.let { m -> Data.exercises.filter { it.primaryMuscles.contains(m) }.toMutableList()}
             ?: Data.exercises.toMutableList()
 
-        val exercisesList = binding.exercisesList as SimpleListView<Exercise, ListitemExercisesRowBinding>
+        val exercisesList = binding.exercisesList.cast<Exercise, ListitemExercisesRowBinding>()
         val handler = ExercisesListHandler(this, exercisesList, muscle)
         exercisesList.init(exercises, handler)
         exercisesList.sort(Comparator.comparing { it.name.lowercase(Locale.getDefault()) })
@@ -136,9 +137,7 @@ class SearchActivity : BindingAppCompatActivity<ActivitySearchBinding>(ActivityS
                                 Data.exercises.removeIf { it === exercise }
                                 exercises.removeIf { it === exercise }
 
-                                val data = Intent()
-                                data.putExtra("refresh", true)
-                                setResult(RESULT_OK, data)
+                                mustRefreshParent()
                             }
                         }
                     }

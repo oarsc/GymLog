@@ -38,9 +38,13 @@ object DateUtils {
     fun LocalDateTime.getTimeString(): String = parseDateToString("HH:mm")
     fun LocalDateTime.getTimeMillisString(): String = parseDateToString("HH:mm:ss.SSS")
     fun LocalDateTime.getDateString(): String = parseDateToString("yyyy-MM-dd")
+    fun LocalDate.getDateString(): String = parseDateToString("yyyy-MM-dd")
     fun LocalDateTime.getTimestampString(): String = parseDateToString("yyyyMMdd-HHmmss")
 
     private fun LocalDateTime.parseDateToString(format: String): String =
+        format(DateTimeFormatter.ofPattern(format))
+
+    private fun LocalDate.parseDateToString(format: String): String =
         format(DateTimeFormatter.ofPattern(format))
 
     fun Int.minutesToTimeString(): String {

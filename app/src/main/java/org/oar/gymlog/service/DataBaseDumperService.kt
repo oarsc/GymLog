@@ -48,7 +48,9 @@ class DataBaseDumperService {
         dataStructure.workouts = database.workoutDao().getAll()
         dataStructure.workoutExercises = database.workoutExerciseDao().getAll()
         dataStructure.workoutSets = database.workoutSetDao().getAll()
-        progressNotify.replaceRange(30, 90, "Logs")
+        progressNotify.replaceRange(30, 40, "Weights")
+        dataStructure.weights = database.weightDao().getAll()
+        progressNotify.replaceRange(40, 90, "Logs")
         dataStructure.setBits(bits)
 
         progressNotify.replaceRange(90, 100, "Writing file")
@@ -110,9 +112,13 @@ class DataBaseDumperService {
                 )
                 .toMap()
 
+            // WEIGHTS
+            progressNotify.replaceRange(30, 40, "Weights")
+            database.weightDao().clear()
+            database.weightDao().insertAll(dataStructure.weights)
 
             // BITS
-            progressNotify.replaceRange(30, 90, "Logs")
+            progressNotify.replaceRange(40, 90, "Logs")
             val bits = dataStructure.getBits()
                 .onEach { it.trainingId = trainingsIdMap[it.trainingId]!! }
                 .also {

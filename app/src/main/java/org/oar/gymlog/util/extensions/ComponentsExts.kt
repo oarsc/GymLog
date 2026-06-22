@@ -16,6 +16,13 @@ object ComponentsExts {
     fun Fragment.runOnUiThread(action: Runnable) = requireActivity().runOnUiThread(action)
     fun View.runOnUiThread(action: Runnable) = (context as Activity).runOnUiThread(action)
 
+    fun Activity.mustRefreshParent() {
+        Intent().apply {
+            putExtra("refresh", true)
+            setResult(Activity.RESULT_OK, this)
+        }
+    }
+
     fun Activity.startActivityWithSideTransaction(intent: Intent, toLeft: Boolean = true) {
         val options = if (toLeft) {
             ActivityOptions.makeCustomAnimation(this, R.anim.slide_in_right, R.anim.slide_out_left)

@@ -1,4 +1,4 @@
-package org.oar.gymlog.ui.workoutDetails
+package org.oar.gymlog.ui.workout.details
 
 import android.os.Bundle
 import org.oar.gymlog.databinding.ActivityWorkoutDetailsBinding
@@ -7,7 +7,7 @@ import org.oar.gymlog.model.Workout
 import org.oar.gymlog.model.WorkoutExercise
 import org.oar.gymlog.model.WorkoutSet
 import org.oar.gymlog.ui.common.BindingAppCompatActivity
-import org.oar.gymlog.ui.common.components.listView.SimpleListView
+import org.oar.gymlog.ui.common.components.listView.SimpleListView.Companion.cast
 import org.oar.gymlog.util.Data
 import org.oar.gymlog.util.extensions.RedirectionExts.goToVariation
 
@@ -31,7 +31,7 @@ class WorkoutDetailsActivity : BindingAppCompatActivity<ActivityWorkoutDetailsBi
             onSetClicked(::itemClicked)
         }
 
-        val workoutDetailsListView = binding.workoutDetailsList as SimpleListView<WorkoutExercise, ListitemWorkoutDetailsRowBinding>
+        val workoutDetailsListView = binding.workoutDetailsList.cast<WorkoutExercise, ListitemWorkoutDetailsRowBinding>()
         workoutDetailsListView.init(workout.exercises, handler)
     }
 

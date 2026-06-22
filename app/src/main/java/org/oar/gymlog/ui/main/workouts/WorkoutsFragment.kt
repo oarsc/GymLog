@@ -15,7 +15,7 @@ import org.oar.gymlog.ui.LoadActivity
 import org.oar.gymlog.ui.common.ResultLauncherFragment
 import org.oar.gymlog.ui.common.components.listView.CommonListView
 import org.oar.gymlog.ui.common.components.listView.SimpleListHandler
-import org.oar.gymlog.ui.workoutDetails.WorkoutDetailsActivity
+import org.oar.gymlog.ui.workout.details.WorkoutDetailsActivity
 import org.oar.gymlog.util.Constants.IntentReference
 import org.oar.gymlog.util.Data
 
@@ -78,7 +78,7 @@ class WorkoutsFragment : ResultLauncherFragment() {
 		) {
 			binding.apply {
 				root.setOnClickListener { onWorkoutClicked(item) }
-                content.text = item.name
+	            content.text = item.name
 				image.setImageResource(R.drawable.ic_workout_black_24dp)
 				image.imageTintList = ColorStateList.valueOf(
 					resources.getColor(android.R.color.white, null)

@@ -17,7 +17,9 @@ import org.oar.gymlog.model.Variation
 import org.oar.gymlog.room.Converters
 import org.oar.gymlog.ui.common.BindingAppCompatActivity
 import org.oar.gymlog.ui.common.activity.ImageSelectorActivity
-import org.oar.gymlog.ui.common.dialogs.EditTextDialogFragment
+import org.oar.gymlog.ui.common.createForm.CreateFormElement
+import org.oar.gymlog.ui.common.createForm.CreateFormElement.Companion.createStringFormElement
+import org.oar.gymlog.ui.common.createForm.CreateListHandler
 import org.oar.gymlog.ui.common.dialogs.MenuDialogFragment
 import org.oar.gymlog.ui.common.dialogs.MenuDialogFragment.Companion.DIALOG_CLOSED
 import org.oar.gymlog.ui.common.dialogs.TextSelectDialogFragment
@@ -37,7 +39,6 @@ class CreateExerciseActivity : BindingAppCompatActivity<ActivityCreateBinding>(A
 	private lateinit var exercise: Exercise
 
 	private lateinit var iconOption: CreateFormElement
-	private lateinit var nameOption: CreateFormElement
 	private lateinit var typeOption: CreateFormElement
 	private lateinit var gymGlobalOption: CreateFormElement
 	private lateinit var musclesOption: CreateFormElement
@@ -82,7 +83,7 @@ class CreateExerciseActivity : BindingAppCompatActivity<ActivityCreateBinding>(A
 			setOnMenuItemClickListener(::onOptionsItemSelected)
 		}
 
-		binding.createFormList.init(createForm(), CreateExerciseListHandler)
+		binding.createFormList.init(createForm(), CreateListHandler)
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -90,106 +91,102 @@ class CreateExerciseActivity : BindingAppCompatActivity<ActivityCreateBinding>(A
 			return false
 		}
 
-		if (exercise.image.isBlank()) {
-			snackbar(R.string.validation_image)
+		when {
+            exercise.image.isBlank() -> snackbar(R.string.validation_image)
+            exercise.name.isBlank() -> snackbar(R.string.validation_name)
+            exercise.primaryMuscles.isEmpty() -> snackbar(R.string.validation_muscles)
+            else -> {
+                val data = Intent()
 
-		} else if (exercise.name.isBlank()) {
-			snackbar(R.string.validation_name)
+                if (caller === IntentReference.EDIT_EXERCISE) {
+                    data.putExtra("exerciseId", exercise.id)
 
-		} else if (exercise.primaryMuscles.isEmpty()) {
-			snackbar(R.string.validation_muscles)
+                    val original = Data.getExercise(exercise.id)
 
-		} else {
-			val data = Intent()
+                    dbThread { db ->
+                        db.exerciseDao().update(exercise.toEntity())
 
-			if (caller === IntentReference.EDIT_EXERCISE) {
-				data.putExtra("exerciseId", exercise.id)
+                        // Muscles
+                        db.exerciseMuscleCrossRefDao()
+                            .clearMusclesFromExercise(exercise.id)
+                        db.exerciseMuscleCrossRefDao()
+                            .insertAll(exercise.toMuscleListEntities())
+                        db.exerciseMuscleCrossRefDao()
+                            .clearSecondaryMusclesFromExercise(exercise.id)
+                        db.exerciseMuscleCrossRefDao()
+                            .insertAllSecondaries(exercise.toSecondaryMuscleListEntities())
 
-				val original = Data.getExercise(exercise.id)
+                        // Variations
+                        exercise.toVariationListEntities()
+                            .filter { it.variationId > 0 }
+                            .also { db.variationDao().updateAll(it) }
 
-				dbThread { db ->
-					db.exerciseDao().update(exercise.toEntity())
+                        val newVariations = exercise.variations
+                            .filter { it.id == 0 }
 
-					// Muscles
-					db.exerciseMuscleCrossRefDao()
-						.clearMusclesFromExercise(exercise.id)
-					db.exerciseMuscleCrossRefDao()
-						.insertAll(exercise.toMuscleListEntities())
-					db.exerciseMuscleCrossRefDao()
-						.clearSecondaryMusclesFromExercise(exercise.id)
-					db.exerciseMuscleCrossRefDao()
-						.insertAllSecondaries(exercise.toSecondaryMuscleListEntities())
+                        val ids = newVariations
+                            .map { it.toEntity().apply { exerciseId = exercise.id } }
+                            .let { db.variationDao().insertAll(it) }
 
-					// Variations
-					exercise.toVariationListEntities()
-						.filter { it.variationId > 0 }
-						.also { db.variationDao().updateAll(it) }
+                        newVariations.withIndex().forEach { (idx, variation) ->
+                            variation.id = ids[idx].toInt()
+                        }
 
-					val newVariations = exercise.variations
-						.filter { it.id == 0 }
+                        original.name = exercise.name
+                        original.image = exercise.image
+                        original.primaryMuscles.apply {
+                            clear()
+                            addAll(exercise.primaryMuscles)
+                        }
 
-					val ids = newVariations
-						.map { it.toEntity().apply { exerciseId = exercise.id } }
-						.let { db.variationDao().insertAll(it) }
+                        original.secondaryMuscles.apply {
+                            clear()
+                            addAll(exercise.secondaryMuscles)
+                        }
 
-					newVariations.withIndex().forEach { (idx, variation) ->
-						variation.id = ids[idx].toInt()
-					}
+                        exercise.variations
+                            .map { it.copy(exercise = original) } // update exercise references
+                            .also {
+                                original.variations.apply {
+                                    clear()
+                                    addAll(it)
+                                }
+                            }
 
-					original.name = exercise.name
-					original.image = exercise.image
-					original.primaryMuscles.apply {
-						clear()
-						addAll(exercise.primaryMuscles)
-					}
+                        runOnUiThread {
+                            setResult(RESULT_OK, data)
+                            finish()
+                        }
+                    }
 
-					original.secondaryMuscles.apply {
-						clear()
-						addAll(exercise.secondaryMuscles)
-					}
+                } else {
 
-					exercise.variations
-						.map { it.copy(exercise = original) } // update exercise references
-						.also {
-							original.variations.apply {
-								clear()
-								addAll(it)
-							}
-						}
+                    dbThread { db ->
+                        val id = db.exerciseDao().insert(exercise.toEntity()).toInt()
+                        exercise.id = id
+                        data.putExtra("exerciseId", id)
 
-					runOnUiThread {
-						setResult(RESULT_OK, data)
-						finish()
-					}
-				}
+                        // Muscles
+                        db.exerciseMuscleCrossRefDao()
+                            .insertAll(exercise.toMuscleListEntities())
+                        db.exerciseMuscleCrossRefDao()
+                            .insertAllSecondaries(exercise.toSecondaryMuscleListEntities())
 
-			} else {
+                        // Variations
+                        val ids = db.variationDao().insertAll(exercise.toVariationListEntities())
+                        exercise.variations.withIndex().forEach { (idx, variation) ->
+                            variation.id = ids[idx].toInt()
+                        }
 
-				dbThread { db ->
-					val id = db.exerciseDao().insert(exercise.toEntity()).toInt()
-					exercise.id = id
-					data.putExtra("exerciseId", id)
-
-					// Muscles
-					db.exerciseMuscleCrossRefDao()
-						.insertAll(exercise.toMuscleListEntities())
-					db.exerciseMuscleCrossRefDao()
-						.insertAllSecondaries(exercise.toSecondaryMuscleListEntities())
-
-					// Variations
-					val ids = db.variationDao().insertAll(exercise.toVariationListEntities())
-					exercise.variations.withIndex().forEach { (idx, variation) ->
-						variation.id = ids[idx].toInt()
-					}
-
-					Data.exercises.add(exercise)
-					runOnUiThread {
-						setResult(RESULT_OK, data)
-						finish()
-					}
-				}
-			}
-		}
+                        Data.exercises.add(exercise)
+                        runOnUiThread {
+                            setResult(RESULT_OK, data)
+                            finish()
+                        }
+                    }
+                }
+            }
+        }
 		return true
 	}
 
@@ -203,18 +200,22 @@ class CreateExerciseActivity : BindingAppCompatActivity<ActivityCreateBinding>(A
 			onClickListener = { openImageSelectorActivity() }
 		).also(form::add)
 
-		nameOption = CreateFormElement(
-			title = R.string.form_name,
-			valueStr = exercise.name,
-			drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_label_black_24dp, null),
-			onClickListener = { showExerciseNameDialog(nameOption) }
+		createStringFormElement(
+            manager = supportFragmentManager,
+            title = R.string.form_name,
+			property = exercise::name,
+			drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_label_black_24dp, null)
 		).also(form::add)
 
 		val type = exercise.defaultVariation.type
 		typeOption = CreateFormElement(
 			title = R.string.form_type,
 			value = type.literal,
-			drawable = if (type.icon == 0) null else ResourcesCompat.getDrawable(resources, type.icon, null),
+			drawable = if (type.icon == 0) null else ResourcesCompat.getDrawable(
+				resources,
+				type.icon,
+				null
+			),
 			onClickListener = { showExerciseTypeDialog(typeOption) }
 		).also(form::add)
 
@@ -303,15 +304,6 @@ class CreateExerciseActivity : BindingAppCompatActivity<ActivityCreateBinding>(A
 			}
 			else -> {}
 		}
-	}
-
-	private fun showExerciseNameDialog(option: CreateFormElement) {
-		val dialog = EditTextDialogFragment(R.string.form_name, exercise.name, { result ->
-				exercise.name = result
-				option.valueStr = result
-				option.update()
-			})
-		dialog.show(supportFragmentManager, null)
 	}
 
 	private fun showExerciseTypeDialog(option: CreateFormElement) {

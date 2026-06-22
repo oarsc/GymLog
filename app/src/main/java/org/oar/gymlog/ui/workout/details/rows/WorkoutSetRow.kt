@@ -1,4 +1,4 @@
-package org.oar.gymlog.ui.workoutDetails.rows
+package org.oar.gymlog.ui.workout.details.rows
 
 import org.oar.gymlog.model.WorkoutSet
 

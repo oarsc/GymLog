@@ -17,7 +17,7 @@ class PeriodCalculationService(val weightPeriod: WeightPeriod) {
     private val toleranceKg = weightPeriod.toleranceGrams.toBigDecimal() / Constants.ONE_THOUSAND
 
     fun execute(): WeightCalculationResult {
-        val days = mutableMapOf<LocalDate, BigDecimal>()
+        val days = mutableMapOf<LocalDate, DayValue>()
         var pureBulkDays = weightPeriod.calculateBulkDays()
         var switchDate = weightPeriod.initialDate.plusDays(pureBulkDays.toLong())
         var bulkDaysCount = 0
@@ -29,7 +29,7 @@ class PeriodCalculationService(val weightPeriod: WeightPeriod) {
             val alreadyPassedDays = ChronoUnit.DAYS.between(weightPeriod.initialDate, it.endDate).toInt()
             val extraBulkDays = weightPeriod.calculateBulkDays(
                 totalDays = ChronoUnit.DAYS.between(it.endDate, weightPeriod.endDate).toInt(),
-                initialWeight = days[it.endDate.minusDays(1)]!!
+                initialWeight = days[it.endDate.minusDays(1)]!!.weight
             ).coerceAtLeast(0)
 
             pureBulkDays = alreadyPassedDays + extraBulkDays
@@ -41,24 +41,15 @@ class PeriodCalculationService(val weightPeriod: WeightPeriod) {
             )
         }
 
-        val daysInfo = days.mapValues { (_, weight) ->
-            val scaledWeight = weight.setScale(2, RoundingMode.HALF_UP)
-            DayInfo(
-                weight = scaledWeight,
-                limitWeight = scaledWeight + toleranceKg
-            )
-        }
-
         return WeightCalculationResult(
             weightPeriod = weightPeriod,
-            days = daysInfo,
-            maxWeight = daysInfo.values.maxOf { it.limitWeight },
+            days = days.mapToDayInfo(),
             switchDate = switchDate,
             bulkDays = bulkDaysCount
         )
     }
 
-    private fun MutableMap<LocalDate, BigDecimal>.fillPlannedDays(switchDate: LocalDate): Int {
+    private fun MutableMap<LocalDate, DayValue>.fillPlannedDays(switchDate: LocalDate): Int {
         val endDate = weightPeriod.modifications.minOfOrNull(WeightPeriodModification::initialDate) ?: weightPeriod.endDate
 
         var currentDate = weightPeriod.initialDate
@@ -66,56 +57,106 @@ class PeriodCalculationService(val weightPeriod: WeightPeriod) {
         var bulkDays = 0
 
         while (currentDate < endDate) {
-            this[currentDate] = weight
-            if (currentDate < switchDate) {
+            val isBulkDay = currentDate < switchDate
+            if (isBulkDay) {
                 weight += gainKgPerDay
                 bulkDays++
             } else {
                 weight -= lossKgPerDay
             }
+            this[currentDate] = DayValue(
+                weight = weight,
+                isBulkDay = isBulkDay
+            )
 
             currentDate = currentDate.plusDays(1)
         }
         return bulkDays
     }
 
-    private fun MutableMap<LocalDate, BigDecimal>.fillModificationDays(modification: WeightPeriodModification): Int {
+    private fun MutableMap<LocalDate, DayValue>.fillModificationDays(modification: WeightPeriodModification): Int {
+        val bulking = modification.gramsPerWeek > 0
         val kgPerDay = modification.gramsPerWeek.toBigDecimal().bigScaled() / SEVEN / Constants.ONE_THOUSAND
 
-        var currentDate = modification.initialDate
-        var weight = this[modification.initialDate.minusDays(1)]!! + kgPerDay
+        var currentDate: LocalDate
+        var weight: BigDecimal
+        if (modification.initialDate == weightPeriod.initialDate) {
+            currentDate = weightPeriod.initialDate
+            weight = weightPeriod.initialWeight
+        } else {
+            currentDate = modification.initialDate
+            weight = this[modification.initialDate.minusDays(1)]!!.weight
+        }
+
         var days = 0
 
         while (currentDate < modification.endDate) {
-            this[currentDate] = weight
             weight += kgPerDay
+            this[currentDate] = DayValue(
+                weight = weight,
+                isBulkDay = bulking
+            )
             currentDate = currentDate.plusDays(1)
             days++
         }
-        return if (modification.gramsPerWeek > 0) days else 0
+        return if (bulking) days else 0
     }
 
-    private fun MutableMap<LocalDate, BigDecimal>.fillGapsBetween(
+    private fun MutableMap<LocalDate, DayValue>.fillGapsBetween(
         switchDate: LocalDate,
         fillUntil: LocalDate,
     ): Int {
         var currentDate = this.keys.max()
-        var weight = this[currentDate]!!
+        var weight = this[currentDate]!!.weight
         var bulkDays = 0
 
         currentDate = currentDate.plusDays(1)
         while (currentDate < fillUntil) {
-            if (currentDate < switchDate) {
+            val isBulkDay = currentDate < switchDate
+            if (isBulkDay) {
                 weight += gainKgPerDay
                 bulkDays++
             } else {
                 weight -= lossKgPerDay
             }
-            this[currentDate] = weight
+            this[currentDate] = DayValue(
+                weight = weight,
+                isBulkDay = isBulkDay
+            )
 
             currentDate = currentDate.plusDays(1)
         }
         return bulkDays
+    }
+
+    private fun Map<LocalDate, DayValue>.mapToDayInfo(): Map<LocalDate, DayInfo> = buildMap {
+        var prevDay: DayValue? = null
+        var currentDate = weightPeriod.initialDate
+
+        while (currentDate <= weightPeriod.endDate) {
+            val currentDay = this@mapToDayInfo[currentDate]
+
+            val weight = (prevDay?.weight ?: weightPeriod.initialWeight).setScale(2, RoundingMode.HALF_UP)
+            this[currentDate] = DayInfo(
+                weight = weight,
+                limitWeight = weight + toleranceKg,
+                isBulkDay = currentDay?.isBulkDay ?: prevDay?.isBulkDay!!
+            )
+
+            prevDay = currentDay
+            currentDate = currentDate.plusDays(1)
+        }
+
+
+
+        mapValues { (_, dayValue) ->
+            val scaledWeight = dayValue.weight.setScale(2, RoundingMode.HALF_UP)
+            DayInfo(
+                weight = scaledWeight,
+                limitWeight = scaledWeight + toleranceKg,
+                isBulkDay = dayValue.isBulkDay
+            )
+        }
     }
 
     private fun WeightPeriod.calculateBulkDays(
@@ -128,6 +169,12 @@ class PeriodCalculationService(val weightPeriod: WeightPeriod) {
     }
 
     private fun BigDecimal.bigScaled() = setScale(BIG_SCALE)
+
+    data class DayValue(
+        // This weight represents the value at the end of the day
+        val weight: BigDecimal,
+        val isBulkDay: Boolean
+    )
 
     private companion object {
         private val SEVEN = 7.toBigDecimal()

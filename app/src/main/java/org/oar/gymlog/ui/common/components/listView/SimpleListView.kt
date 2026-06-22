@@ -44,4 +44,9 @@ open class SimpleListView<T: Any, B: ViewBinding>(
             handler.buildListView(holder.binding, item, index, state)
         }
     }
+
+    companion object {
+        @Suppress("UNCHECKED_CAST")
+        fun <T : Any, B : ViewBinding> SimpleListView<*, *>.cast() = this as SimpleListView<T, B>
+    }
 }
