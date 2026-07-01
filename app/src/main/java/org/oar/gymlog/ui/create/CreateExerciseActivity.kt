@@ -261,7 +261,7 @@ class CreateExerciseActivity : BindingAppCompatActivity<ActivityCreateBinding>(A
 			IntentReference.EDIT_VARIATION -> {
 				val variationId = data.getIntExtra("variationId", -1)
 				if (variationId > 0) {
-					val variation = exercise.variations.firstOrNull { it.id == variationId }!!
+					val variation = exercise.variations.first { it.id == variationId }
 					variation.name = data.getStringExtra("name")!!
 					variation.type = ExerciseType.valueOf(data.getStringExtra("type")!!)
 					val relation = data.getIntExtra("gymRelation", 0)
@@ -379,31 +379,29 @@ class CreateExerciseActivity : BindingAppCompatActivity<ActivityCreateBinding>(A
 	}
 
 	private fun editVariations() {
-		val options = exercise.gymVariations
+		val nonDefaultVariations = exercise.gymVariations
 			.filter { !it.default }
-			.map { it.name }
-			.toMutableList()
-			.apply { add(resources.getString(R.string.form_create_variation)) }
+
+		val options = nonDefaultVariations
+			.map { it.name } + resources.getString(R.string.form_create_variation)
 
 		val dialog = TextSelectDialogFragment(options) { idx, name ->
 			if (idx != DIALOG_CLOSED) {
-				if (idx == options.size-1) {
+				if (idx == options.size - 1) {
 					val intent = Intent(this, CreateVariationActivity::class.java)
 					intent.putExtra("type", exercise.defaultVariation.type.name)
 					intent.putExtra("gymRelation", exercise.defaultVariation.gymRelation.ordinal)
 					startActivityForResult(intent, IntentReference.CREATE_VARIATION)
 
 				} else {
-					exercise.variations
-						.find { it.name == name }
-						?.also {
-							val intent = Intent(this, CreateVariationActivity::class.java)
-							intent.putExtra("variationId", it.id)
-							intent.putExtra("name", it.name)
-							intent.putExtra("type", it.type.name)
-							intent.putExtra("gymRelation", it.gymRelation.ordinal)
-							startActivityForResult(intent, IntentReference.EDIT_VARIATION)
-						}
+					val variation = nonDefaultVariations[idx]
+
+					val intent = Intent(this, CreateVariationActivity::class.java)
+					intent.putExtra("variationId", variation.id)
+					intent.putExtra("name", variation.name)
+					intent.putExtra("type", variation.type.name)
+					intent.putExtra("gymRelation", variation.gymRelation.ordinal)
+					startActivityForResult(intent, IntentReference.EDIT_VARIATION)
 				}
 			}
 		}

@@ -44,7 +44,6 @@ class EditBitLogDialogFragment (
     private val confirmListener: BiConsumer<Bit, Boolean>,
     private val cancelListener: Consumer<Boolean> = Consumer {}
 ) : CustomDialogFragment<Bit>(title, {}, {}) {
-
     private lateinit var binding: DialogEditBitLogBinding
 
     private var timestampSelected = initialValue.timestamp
@@ -165,6 +164,7 @@ class EditBitLogDialogFragment (
 
                             cloned = true
                             runOnUiThread {
+                                binding.instantSwitch.isEnabled = true
                                 binding.editTimestamp.setText(timestampSelected.getTimeMillisString())
                                 neutralButton.visibility = View.GONE
                             }

@@ -7,9 +7,7 @@ import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.oar.gymlog.R
 import org.oar.gymlog.databinding.DialogEditNotesBinding
-import org.oar.gymlog.model.GymRelation
 import org.oar.gymlog.model.Variation
-import org.oar.gymlog.util.Data
 import org.oar.gymlog.util.extensions.ComponentsExts.runOnUiThread
 import org.oar.gymlog.util.extensions.DatabaseExts.dbThread
 import java.util.function.Consumer
@@ -20,7 +18,6 @@ class EditNotesDialogFragment(
     override var initialValue: String,
     confirm: Consumer<String>
 ) : CustomDialogFragment<String>(title, confirm, Runnable{}) {
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogEditNotesBinding.inflate(layoutInflater)
 
@@ -30,11 +27,7 @@ class EditNotesDialogFragment(
             layoutManager = LinearLayoutManager(context)
 
             dbThread { db ->
-                val notes = if (variation.gymRelation == GymRelation.NO_RELATION)
-                        db.bitDao().getNotesHistory(variation.id, 18)
-                    else
-                        db.bitDao().getNotesHistory(Data.gym?.id ?: 0, variation.id, 18)
-
+                val notes = db.bitDao().getNotesHistory(variation.id, 18)
                 runOnUiThread {
                     adapter = EditNotesRecyclerViewAdapter(notes) { binding.dialogText.setText(it) }
                 }

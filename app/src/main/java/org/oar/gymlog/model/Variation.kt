@@ -37,7 +37,7 @@ class Variation(
 
 	override fun toEntity(): VariationEntity = VariationEntity().apply {
 		variationId = id
-		name = if (default) "" else name
+		name = if (default) "" else this@Variation.name
 		def = default
 		exerciseId = exercise.id
 		type = this@Variation.type
