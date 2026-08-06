@@ -19,22 +19,48 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/listitem_weight_period"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+
     <LinearLayout
-        android:id="@+id/headerBlock"
+        android:id="@+id/weightChartBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" >
+        android:animateLayoutChanges="true"
+        app:layout_constraintTop_toBottomOf="@id/header" >
 
-        <include
-            android:id="@+id/header"
-            layout="@layout/listitem_weight_period"/>
+        <org.oar.gymlog.ui.main.stats.WeightChart
+            android:id="@+id/weightChart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/showChart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:id="@+id/showChartIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_down_24dp" />
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/backgroundAccent" />
-
     </LinearLayout>
 
     <org.oar.gymlog.ui.common.components.listView.MultipleListView
@@ -43,7 +69,7 @@
         android:layout_height="0dp"
         tools:context=".ui.main.stats.StatsFragment"
         tools:listitem="@layout/listitem_weight"
-        app:layout_constraintTop_toBottomOf="@id/headerBlock"
+        app:layout_constraintTop_toBottomOf="@id/weightChartBlock"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

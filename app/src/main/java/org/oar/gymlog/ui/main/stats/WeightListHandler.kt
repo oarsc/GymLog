@@ -10,24 +10,28 @@ import androidx.viewbinding.ViewBinding
 import org.oar.gymlog.R
 import org.oar.gymlog.databinding.ListitemSeparatorBinding
 import org.oar.gymlog.databinding.ListitemWeightBinding
-import org.oar.gymlog.ui.common.components.listView.CommonListView
+import org.oar.gymlog.ui.common.components.listView.CommonListView.ListElementState
 import org.oar.gymlog.ui.common.components.listView.MultipleListHandler
+import org.oar.gymlog.ui.common.components.listView.MultipleListView
 import org.oar.gymlog.ui.main.stats.rows.IWeightRow
 import org.oar.gymlog.ui.main.stats.rows.WeightRow
 import org.oar.gymlog.ui.main.stats.rows.WeightSeparatorRow
 import org.oar.gymlog.util.Constants.ONE_HUNDRED
 import org.oar.gymlog.util.DateUtils.getDateString
 import org.oar.gymlog.util.extensions.CommonExts.getThemeColor
+import org.oar.gymlog.util.extensions.CommonExts.selectableItemBackground
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
 class WeightListHandler(
 	private val context: Context,
-	private val unitLabel: String
+	private val unitLabel: String,
+	private val weightList: MultipleListView<IWeightRow>,
 ) : MultipleListHandler<IWeightRow> {
 	private val defaultDayColor = context.getThemeColor(android.R.attr.colorSecondary)
+	private var highlightedElement: IWeightRow? = null
 
-	override val useListState = false
+	override val useListState = true
 	override val itemInflaters = listOf<(LayoutInflater, ViewGroup?, Boolean) -> ViewBinding>(
 		ListitemWeightBinding::inflate,
 		ListitemSeparatorBinding::inflate
@@ -45,13 +49,20 @@ class WeightListHandler(
 		binding: ViewBinding,
 		item: IWeightRow,
 		index: Int,
-		state: CommonListView.ListElementState?
+		state: ListElementState?
 	) {
+		state!!
 		when(item) {
 			is WeightRow -> {
 				binding as ListitemWeightBinding
 
 				binding.apply {
+					if (state["highlight", false]) {
+						root.setBackgroundResource(R.color.grayLightAlpha)
+					} else {
+						root.background = context.selectableItemBackground
+					}
+
 					root.setOnClickListener { onClickListener?.invoke(item, index) }
 					if (item.day == LocalDate.now()) {
 //						day.setTextColor(context.getThemeColor(android.R.attr.colorAccent))
@@ -100,6 +111,24 @@ class WeightListHandler(
 
 	fun setOnClickListener(listener: (WeightRow, Int) -> Unit) {
 		onClickListener = listener
+	}
+
+	fun highlight(highlightedElement: IWeightRow?) {
+		if (highlightedElement == this.highlightedElement) return
+
+		if (this.highlightedElement != null) {
+			weightList.updateState(this.highlightedElement!!) {
+				it["highlight"] = false
+				true
+			}
+		}
+		if (highlightedElement != null) {
+			weightList.updateState(highlightedElement) {
+				it["highlight"] = true
+				true
+			}
+		}
+		this.highlightedElement = highlightedElement
 	}
 
 	private val LocalDate.isWeekend get() = this.dayOfWeek.value > 5

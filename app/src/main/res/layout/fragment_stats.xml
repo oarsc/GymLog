@@ -19,22 +19,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/listitem_weight_period"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+
     <LinearLayout
-        android:id="@+id/headerBlock"
+        android:id="@+id/weightChartBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" >
+        android:animateLayoutChanges="true"
+        app:layout_constraintTop_toBottomOf="@id/header" >
 
-        <include
-            android:id="@+id/header"
-            layout="@layout/listitem_weight_period"/>
+        <org.oar.gymlog.ui.main.stats.WeightChart
+            android:id="@+id/weightChart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <LinearLayout
+            android:id="@+id/showChart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:id="@+id/showChartIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_down_24dp" />
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/backgroundAccent" />
-
     </LinearLayout>
 
     <org.oar.gymlog.ui.common.components.listView.MultipleListView
@@ -43,7 +68,7 @@
         android:layout_height="0dp"
         tools:context=".ui.main.stats.StatsFragment"
         tools:listitem="@layout/listitem_weight"
-        app:layout_constraintTop_toBottomOf="@id/headerBlock"
+        app:layout_constraintTop_toBottomOf="@id/weightChartBlock"
         app:layout_constraintBottom_toTopOf="@id/input" />
 
     <View
@@ -53,7 +78,7 @@
         app:layout_constraintBottom_toTopOf="@id/input"
         app:layout_constraintRight_toRightOf="parent"/>
 
-    <EditText
+    <org.oar.gymlog.ui.common.components.CustomEditText
         android:id="@+id/input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -100,6 +125,19 @@
         android:layout_height="1dp"
         android:background="@color/backgroundAccent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/focusToday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin"
+        app:backgroundTint="@color/gray"
+        android:contentDescription="@string/text_add"
+        app:srcCompat="@drawable/ic_today_24dp"
+        app:layout_constraintBottom_toBottomOf="@id/weightList"
         app:layout_constraintRight_toRightOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

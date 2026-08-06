@@ -164,6 +164,11 @@ abstract class CommonListView<T: Any, B: ViewBinding>(
         }
     }
 
+    fun clearStates() {
+        states.clear()
+        adapter?.notifyItemRangeInserted(0, data.size)
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     fun notifyDataSetChanged() = adapter?.notifyDataSetChanged()
     private fun notifyItemInserted(position: Int) = adapter?.notifyItemInserted(position)

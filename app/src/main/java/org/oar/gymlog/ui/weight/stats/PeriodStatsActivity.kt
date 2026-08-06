@@ -1,10 +1,12 @@
 package org.oar.gymlog.ui.weight.stats
 
+import android.animation.LayoutTransition
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.isVisible
 import org.oar.gymlog.R
 import org.oar.gymlog.databinding.ActivityPeriodStatsBinding
 import org.oar.gymlog.model.Weight
@@ -40,10 +42,12 @@ import java.time.LocalDate
 class PeriodStatsActivity : DatabaseAppCompatActivity<ActivityPeriodStatsBinding>(ActivityPeriodStatsBinding::inflate) {
     private lateinit var weightPeriod: WeightPeriod
     private lateinit var weightCalculationResult: WeightCalculationResult
+    private lateinit var weightListHandler: WeightListHandler
 
     private var internationalSystem = false
     private var unitLabel = ""
     private val rows = mutableListOf<IWeightRow>()
+    private var chartLoaded = false
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
         internationalSystem = loadBoolean(PreferencesDefinition.UNIT_INTERNATIONAL_SYSTEM)
@@ -62,16 +66,37 @@ class PeriodStatsActivity : DatabaseAppCompatActivity<ActivityPeriodStatsBinding
     }
 
     override fun onDelayedCreate(savedInstanceState: Bundle?) {
-        binding.toolbar.apply {
-            setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
-            setOnMenuItemClickListener(::onOptionsItemSelected)
+        binding.apply {
+            toolbar.apply {
+                setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+                setOnMenuItemClickListener(::onOptionsItemSelected)
+            }
+
+            root.layoutTransition = LayoutTransition().apply {
+                enableTransitionType(LayoutTransition.APPEARING)
+                enableTransitionType(LayoutTransition.DISAPPEARING)
+                enableTransitionType(LayoutTransition.CHANGING)
+            }
+
+            showChart.setOnClickListener {
+                if (weightChart.isVisible) {
+                    weightChart.visibility = View.GONE
+                    showChartIcon.animate().rotation(0f).start()
+                } else {
+                    if (!chartLoaded) {
+                        updateChart()
+                    }
+                    weightChart.visibility = View.VISIBLE
+                    showChartIcon.animate().rotation(180f).start()
+                }
+            }
         }
         loadData()
     }
 
     private fun loadData() {
         binding.apply {
-            headerBlock.visibility = View.VISIBLE
+            header.root.visibility = View.VISIBLE
             val weightPeriod = weightCalculationResult.weightPeriod
             header.root.setOnClickListener {
                 val intent = Intent(this@PeriodStatsActivity, WeightPeriodsActivity::class.java)
@@ -84,9 +109,9 @@ class PeriodStatsActivity : DatabaseAppCompatActivity<ActivityPeriodStatsBinding
 
             fillRows()
             weightList.cast<IWeightRow>().apply {
-                val handler = WeightListHandler(this@PeriodStatsActivity, unitLabel)
-                init(rows, handler)
-                handler.setOnClickListener { row, idx ->
+                weightListHandler = WeightListHandler(this@PeriodStatsActivity, unitLabel, this)
+                init(rows, weightListHandler)
+                weightListHandler.setOnClickListener { row, idx ->
                     if (row.day <= LocalDate.now()) {
                         EditTextDialogFragment(
                             title = R.string.text_weight,
@@ -97,6 +122,35 @@ class PeriodStatsActivity : DatabaseAppCompatActivity<ActivityPeriodStatsBinding
                     }
                 }
             }
+
+            weightChart.onSelect = { focusList(it, true) }
+            if (weightChart.isVisible) {
+                updateChart()
+            } else {
+                chartLoaded = false
+            }
+        }
+    }
+
+    private fun updateChart() {
+        chartLoaded = true
+        binding.weightChart.apply {
+            val (minDate, maxDate) = weightCalculationResult
+                .let { it.days.keys.min() to it.days.keys.max() }
+
+            val dates = generateSequence(minDate) { if (it < maxDate) it.plusDays(1) else null }.toList()
+
+            val weights = dates
+                .mapNotNull { date ->
+                    Data.weights[date]?.let { date to it.getValue(internationalSystem) }
+                }
+                .toMap()
+
+            visibility = View.VISIBLE
+            setInfo(weights, weightCalculationResult)
+            update()
+            focus(minDate)
+            select(null)
         }
     }
 
@@ -122,6 +176,28 @@ class PeriodStatsActivity : DatabaseAppCompatActivity<ActivityPeriodStatsBinding
             if (currentDate.month != lastMonth) {
                 lastMonth = currentDate.month
                 rows.add(WeightSeparatorRow())
+            }
+        }
+    }
+
+    private fun focusList(date: LocalDate?, highlight: Boolean) {
+        if (date == null) {
+            weightListHandler.highlight(null)
+        } else {
+            val index = rows.indexOf(date)
+
+            if (index >= 0) {
+                binding.weightList.scrollToPosition(index, 300 /*binding.weightList.height / 2*/)
+
+            } else if (rows.isNotEmpty()) {
+                binding.weightList.scrollToPosition(rows.size - 1, 300)
+            }
+
+            if (highlight) {
+                val row = rows.first { it is WeightRow && it.day == date }
+                weightListHandler.highlight(row)
+            } else {
+                weightListHandler.highlight(null)
             }
         }
     }
@@ -186,6 +262,10 @@ class PeriodStatsActivity : DatabaseAppCompatActivity<ActivityPeriodStatsBinding
     }
 
     private fun List<IWeightRow>.getWeightRow(index: Int) = this[index] as WeightRow
+    private fun List<IWeightRow>.indexOf(date: LocalDate): Int = this.indexOfFirst {
+        if (it is WeightRow) it.day == date
+        else false
+    }
 
     override fun onActivityResult(intentReference: IntentReference, data: Intent) {
         when(intentReference) {

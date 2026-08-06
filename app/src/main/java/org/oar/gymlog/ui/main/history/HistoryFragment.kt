@@ -1,5 +1,6 @@
 package org.oar.gymlog.ui.main.history
 
+import android.animation.LayoutTransition
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -43,6 +44,12 @@ class HistoryFragment : ResultLauncherFragment() {
                 }
                 init(Data.muscles.sortToColumns, HistoryLegendListHandler(context))
             }
+
+			content.layoutTransition = LayoutTransition().apply {
+				enableTransitionType(LayoutTransition.APPEARING)
+				enableTransitionType(LayoutTransition.DISAPPEARING)
+				enableTransitionType(LayoutTransition.CHANGING)
+			}
 
             showLegend.setOnClickListener {
                 if (legend.isVisible) {

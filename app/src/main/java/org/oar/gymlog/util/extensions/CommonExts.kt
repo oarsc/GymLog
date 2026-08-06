@@ -1,6 +1,7 @@
 package org.oar.gymlog.util.extensions
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import org.oar.gymlog.util.Constants.ONE_HUNDRED
 import java.math.BigDecimal
@@ -43,9 +44,15 @@ object CommonExts {
         return scale() - leftZeroes
     }
 
-    fun Context.getThemeColor(resId: Int): Int {
-        val typedValue = TypedValue()
-        theme.resolveAttribute(resId, typedValue, true)
-        return typedValue.data
-    }
+    fun Context.getThemeColor(resId: Int): Int = TypedValue()
+        .apply { theme.resolveAttribute(resId, this, true) }
+        .data
+
+    val Context.selectableItemBackground: Drawable? get() =
+        obtainStyledAttributes(intArrayOf(android.R.attr.selectableItemBackground))
+            .let {
+                val drawable = it.getDrawable(0)
+                it.recycle()
+                drawable
+            }
 }

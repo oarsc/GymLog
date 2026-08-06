@@ -1,5 +1,6 @@
 package org.oar.gymlog.ui.main.stats
 
+import android.animation.LayoutTransition
 import android.content.Intent
 import android.icu.text.DecimalFormatSymbols
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import org.oar.gymlog.R
 import org.oar.gymlog.databinding.FragmentStatsBinding
@@ -42,12 +44,20 @@ import java.time.LocalDate
 class StatsFragment : ResultLauncherFragment() {
 	private var internationalSystem = false
 	private lateinit var binding: FragmentStatsBinding
+	private lateinit var weightListHandler: WeightListHandler
 
 	private var today = LocalDate.now()
 	private var unitLabel = ""
 	private var todayWeightValue = "0.00".toBigDecimal()
 	private var weightCalculationResult = Data.weightPeriod?.let(::PeriodCalculationService)?.execute()
 	private val rows = mutableListOf<IWeightRow>()
+	private var chartLoaded = false
+
+	private val layoutTransition = LayoutTransition().apply {
+		enableTransitionType(LayoutTransition.APPEARING)
+		enableTransitionType(LayoutTransition.DISAPPEARING)
+		enableTransitionType(LayoutTransition.CHANGING)
+	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -101,6 +111,31 @@ class StatsFragment : ResultLauncherFragment() {
 						?.replace('.', decimalSeparator)
 				}
 			)
+			input.setOnFocusChangeListener { _, hasFocus ->
+				if (hasFocus) {
+					binding.root.layoutTransition = null
+				}
+			}
+			input.setOnBackKeyboardListener {
+				input.clearFocus()
+				true
+			}
+
+			weightChart.visibility = View.GONE
+
+			showChart.setOnClickListener {
+				root.layoutTransition = layoutTransition
+				if (weightChart.isVisible) {
+					weightChart.visibility = View.GONE
+					showChartIcon.animate().rotation(0f).start()
+				} else {
+					if (!chartLoaded) {
+						updateChart()
+					}
+					weightChart.visibility = View.VISIBLE
+					showChartIcon.animate().rotation(180f).start()
+				}
+			}
 
 			loadData()
 		}
@@ -111,9 +146,9 @@ class StatsFragment : ResultLauncherFragment() {
 			binding.toolbar.menu.findItem(R.id.detailsButton).isVisible = weightCalculationResult != null
 
 			if (weightCalculationResult == null) {
-				headerBlock.visibility = View.GONE
+				header.root.visibility = View.GONE
 			} else {
-				headerBlock.visibility = View.VISIBLE
+				header.root.visibility = View.VISIBLE
 				val weightPeriod = weightCalculationResult!!.weightPeriod
 				header.root.setOnClickListener {
 					val intent = Intent(context, WeightPeriodsActivity::class.java)
@@ -126,10 +161,10 @@ class StatsFragment : ResultLauncherFragment() {
 
 			fillRows()
 			weightList.cast<IWeightRow>().apply {
-				val handler = WeightListHandler(requireContext(), unitLabel)
-				init(rows, handler)
-				listFocusToday()
-				handler.setOnClickListener { row, idx ->
+				weightListHandler = WeightListHandler(requireContext(), unitLabel, this)
+				init(rows, weightListHandler)
+				focusList(today, false)
+				weightListHandler.setOnClickListener { row, idx ->
 					if (row.day <= today) {
 						EditTextDialogFragment(
 							title = R.string.text_weight,
@@ -139,6 +174,12 @@ class StatsFragment : ResultLauncherFragment() {
 						).show(requireActivity().supportFragmentManager, null)
 					}
 				}
+			}
+
+			focusToday.setOnClickListener {
+				focusList(today, false)
+				weightChart.focus(today)
+				weightChart.select(null)
 			}
 
 			Data.weights[today]
@@ -154,6 +195,42 @@ class StatsFragment : ResultLauncherFragment() {
 					saveButton.alpha = 1f
 					saveButton.isClickable = true
 				}
+			}
+
+			weightChart.onSelect = { focusList(it, true) }
+			if (weightChart.isVisible) {
+				updateChart()
+			} else {
+				chartLoaded = false
+			}
+		}
+	}
+
+	private fun updateChart() {
+		chartLoaded = true
+		binding.weightChart.apply {
+			val (minDate, maxDate) = weightCalculationResult
+				?.let { it.days.keys.min() to it.days.keys.max() }
+				?: run { today.minusYears(1) to today.plusDays(7) }
+
+			val dates = generateSequence(minDate) { if (it < maxDate) it.plusDays(1) else null }.toList()
+
+			val weights = dates
+				.mapNotNull { date ->
+					Data.weights[date]?.let { date to it.getValue(internationalSystem) }
+				}
+				.toMap()
+
+			if (weightCalculationResult == null && weights.isEmpty()) {
+				visibility = View.GONE
+				clear()
+
+			} else {
+				visibility = View.VISIBLE
+				setInfo(weights, weightCalculationResult)
+				update()
+				focus()
+				select(null)
 			}
 		}
 	}
@@ -185,13 +262,25 @@ class StatsFragment : ResultLauncherFragment() {
 		}
 	}
 
-	private fun listFocusToday() {
-		val index = rows.indexOf(today)
+	private fun focusList(date: LocalDate?, highlight: Boolean) {
+		if (date == null) {
+			weightListHandler.highlight(null)
+		} else {
+			val index = rows.indexOf(date)
 
-		if (index >= 0) {
-			binding.weightList.scrollToPosition(index, 300)
-		} else if (rows.isNotEmpty()) {
-			binding.weightList.scrollToPosition(rows.size - 1, 300)
+			if (index >= 0) {
+				binding.weightList.scrollToPosition(index, 300 /*binding.weightList.height / 2*/)
+
+			} else if (rows.isNotEmpty()) {
+				binding.weightList.scrollToPosition(rows.size - 1, 300)
+			}
+
+			if (highlight) {
+				val row = rows.first { it is WeightRow && it.day == date }
+				weightListHandler.highlight(row)
+			} else {
+				weightListHandler.highlight(null)
+			}
 		}
 	}
 
@@ -223,6 +312,13 @@ class StatsFragment : ResultLauncherFragment() {
 			} else {
 				db.weightDao().insert(entity)
 				Data.weights[today] = todayWeight
+			}
+			runOnUiThread {
+				if (binding.weightChart.isVisible) {
+					updateChart()
+				} else {
+					chartLoaded = false
+				}
 			}
 		}
 
@@ -275,6 +371,13 @@ class StatsFragment : ResultLauncherFragment() {
 				db.weightDao().insert(entity)
 				Data.weights[date] = weight
 			}
+			runOnUiThread {
+				if (binding.weightChart.isVisible) {
+					updateChart()
+				} else {
+					chartLoaded = false
+				}
+			}
 		}
 
 		binding.weightList.update(rows.getWeightRow(index).copy(manualWeight = if (toRemove) null else weightValue), index)
@@ -307,9 +410,7 @@ class StatsFragment : ResultLauncherFragment() {
 	override fun onResume() {
 		super.onResume()
 		val today = LocalDate.now()
-		if (today == this.today) {
-			listFocusToday()
-		} else {
+		if (today != this.today) {
 			this.today = today
 			this.todayWeightValue = "0.00".toBigDecimal()
 			loadData()
