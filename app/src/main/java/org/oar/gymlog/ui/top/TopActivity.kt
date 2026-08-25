@@ -3,9 +3,11 @@ package org.oar.gymlog.ui.top
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
+import org.oar.gymlog.R
 import org.oar.gymlog.databinding.ActivityTopsBinding
 import org.oar.gymlog.databinding.ListitemTopBitBinding
 import org.oar.gymlog.databinding.ListitemTopHeadersBinding
@@ -14,6 +16,7 @@ import org.oar.gymlog.databinding.ListitemTopVariationBinding
 import org.oar.gymlog.exceptions.InternalException
 import org.oar.gymlog.model.Bit
 import org.oar.gymlog.model.Exercise
+import org.oar.gymlog.model.GymRelation
 import org.oar.gymlog.room.AppDatabase
 import org.oar.gymlog.ui.common.DatabaseAppCompatActivity
 import org.oar.gymlog.ui.common.components.listView.CommonListView
@@ -41,8 +44,10 @@ open class TopActivity : DatabaseAppCompatActivity<ActivityTopsBinding>(Activity
     private lateinit var exercise: Exercise
     private val listData = mutableListOf<ITopRow>()
     private var internationalSystem = false
+    protected var showAllGymsData = false
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
+        showAllGymsData = intent.extras!!.getBoolean("allGyms", false)
         val exerciseId = intent.extras!!.getInt("exerciseId")
         exercise = Data.exercises
             .filter { exercise -> exercise.id == exerciseId }
@@ -53,16 +58,29 @@ open class TopActivity : DatabaseAppCompatActivity<ActivityTopsBinding>(Activity
     }
 
     override fun onDelayedCreate(savedInstanceState: Bundle?) {
-        binding.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        // Toolbar
+        binding.toolbar.apply {
+            setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+            setOnMenuItemClickListener(::onOptionsItemSelected)
+            menu.findItem(R.id.allGyms).apply {
+                val noRelation = exercise.variations.all { it.gymRelation == GymRelation.NO_RELATION }
+                isEnabled = !noRelation
+                isChecked = showAllGymsData || !isEnabled
+            }
+        }
+
         internationalSystem = loadBoolean(PreferencesDefinition.UNIT_INTERNATIONAL_SYSTEM)
         setHeaderInfo()
         binding.variantTopList.init(listData, TopListHandler())
     }
 
-    protected open fun getBits(db: AppDatabase, exerciseId: Int): List<Bit> {
-        return db.bitDao().findTops(Data.gym?.id ?: 0, exerciseId)
+    protected open fun getBits(db: AppDatabase, exerciseId: Int): List<Bit> =
+        if (showAllGymsData) {
+            db.bitDao().findTops(exerciseId)
+        } else {
+            db.bitDao().findTops(Data.gym?.id ?: 0, exerciseId)
+        }
             .map { bitEntity -> Bit(bitEntity) }
-    }
 
     protected open fun order(): Comparator<in Bit> {
         return Comparator.comparing { bit -> bit.weight.getValue(internationalSystem).negate() }
@@ -90,17 +108,20 @@ open class TopActivity : DatabaseAppCompatActivity<ActivityTopsBinding>(Activity
     }
 
     protected fun onElementClicked(topBit: Bit) {
-        val intent = Intent(this, TrainingActivity::class.java)
-        intent.putExtra("trainingId", topBit.trainingId)
-        intent.putExtra("focusBit", topBit.id)
+        val intent = Intent(this, TrainingActivity::class.java).apply {
+            putExtra("trainingId", topBit.trainingId)
+            putExtra("focusBit", topBit.id)
+        }
         startActivityForResult(intent, IntentReference.TRAINING)
     }
 
     protected open fun onElementLongClicked(topBit: Bit) {
-        val intent = Intent(this, TopSpecificActivity::class.java)
-        intent.putExtra("exerciseId", topBit.variation.exercise.id)
-        intent.putExtra("weight", topBit.weight.value.multiplyByHundred())
-        intent.putExtra("variationId", topBit.variation.id)
+        val intent = Intent(this, TopSpecificActivity::class.java).apply {
+            putExtra("exerciseId", topBit.variation.exercise.id)
+            putExtra("weight", topBit.weight.value.multiplyByHundred())
+            putExtra("variationId", topBit.variation.id)
+            putExtra("allGyms", showAllGymsData)
+        }
         startActivityForResult(intent, IntentReference.TOP_RECORDS)
     }
 
@@ -115,6 +136,23 @@ open class TopActivity : DatabaseAppCompatActivity<ActivityTopsBinding>(Activity
                 }
             }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.allGyms -> {
+                item.isChecked = !item.isChecked
+                showAllGymsData = item.isChecked
+
+                val intent = Intent(this, TopActivity::class.java).apply {
+                    putExtra("exerciseId", exercise.id)
+                    putExtra("allGyms", showAllGymsData)
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                }
+                startActivityForResult(intent, IntentReference.TOP_RECORDS)
+            }
+        }
+        return false
     }
 
     private fun setHeaderInfo() {

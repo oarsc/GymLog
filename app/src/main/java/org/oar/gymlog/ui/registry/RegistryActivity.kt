@@ -67,6 +67,7 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
     private lateinit var exercise: Exercise
     private lateinit var variation: Variation
     private var defaultTimeColor = 0
+    private var showAllGymsData = false
     private var initInstantSetButtonHidden = true
     private var enableSuperSetNavigation = false
     private var lastSuperSet = 0
@@ -87,6 +88,7 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
     }
 
     override fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int {
+        showAllGymsData = intent.extras!!.getBoolean("allGyms", false)
         val exerciseId = intent.extras!!.getInt("exerciseId")
         val variationId = intent.extras!!.getInt("variationId", 0)
         reloadOnBack = intent.extras!!.getBoolean("reloadOnBack", false)
@@ -98,7 +100,7 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
             exercise.defaultVariation
         }
 
-        val log = if (variation.gymRelation == GymRelation.NO_RELATION)
+        val log = if (showAllGymsData || variation.gymRelation == GymRelation.NO_RELATION)
                 db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
             else
                 db.bitDao().getHistory(Data.gym?.id ?: 0, variation.id, LOG_PAGES_SIZE)
@@ -173,6 +175,11 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
 
             val latestButtonItem = menu.findItem(R.id.latestButton)
             latestButtonItem.isEnabled = latestVariationIds.getOrNull(0) != variation.id
+
+            menu.findItem(R.id.allGyms).apply {
+                isEnabled = variation.gymRelation != GymRelation.NO_RELATION
+                isChecked = showAllGymsData || !isEnabled
+            }
         }
 
         // Timer button:
@@ -394,10 +401,17 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
                 }
             }
             R.id.topRanking -> {
-                val intent = Intent(this, TopActivity::class.java)
-                intent.putExtra("exerciseId", exercise.id)
+                val intent = Intent(this, TopActivity::class.java).apply {
+                    putExtra("exerciseId", exercise.id)
+                    putExtra("allGyms", showAllGymsData)
+                }
                 startActivityForResult(intent, IntentReference.TOP_RECORDS)
                 return true
+            }
+            R.id.allGyms -> {
+                item.isChecked = !item.isChecked
+                showAllGymsData = item.isChecked
+                switchToVariation(variation)
             }
         }
         return false
@@ -412,7 +426,7 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
                 }
                 IntentReference.TRAINING -> {
                     dbThread { db ->
-                        val log = if (variation.gymRelation == GymRelation.NO_RELATION)
+                        val log = if (showAllGymsData || variation.gymRelation == GymRelation.NO_RELATION)
                             db.bitDao().getHistory(variation.id, LOG_PAGES_SIZE)
                         else
                             db.bitDao().getHistory(Data.gym?.id ?: 0, variation.id, LOG_PAGES_SIZE)
@@ -556,7 +570,7 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
             val bit = log[initialSize - 1]
             val date = bit.timestamp
 
-            val log = if (variation.gymRelation == GymRelation.NO_RELATION)
+            val log = if (showAllGymsData || variation.gymRelation == GymRelation.NO_RELATION)
                 db.bitDao().getHistory(variation.id, bit.trainingId, date, LOG_PAGES_SIZE)
             else
                 db.bitDao().getHistory(Data.gym?.id ?: 0, variation.id, bit.trainingId, date, LOG_PAGES_SIZE)
@@ -626,6 +640,7 @@ class RegistryActivity : DatabaseAppCompatActivity<ActivityRegistryBinding>(Acti
             Intent(this, RegistryActivity::class.java).apply {
                 putExtra("exerciseId", variation.exercise.id)
                 putExtra("variationId", variation.id)
+                putExtra("allGyms", showAllGymsData)
                 if (reloadOnBack) {
                     putExtra("reloadOnBack", true)
                     startActivityWithSideTransaction(this, left)

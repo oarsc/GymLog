@@ -14,4 +14,10 @@
         android:title="@string/text_find_top_records"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/allGyms"
+        android:checkable="true"
+        android:title="@string/text_show_all_gyms"
+        app:showAsAction="never"/>
+
 </menu>

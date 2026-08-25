@@ -90,6 +90,12 @@ interface BitDao {
         "GROUP BY totalWeight, bit.variationId ORDER BY timestamp")
     fun findTops(gymId: Int, exerciseId: Int): List<BitEntity>
 
+    @Query("SELECT MAX(reps) AS reps, bit.* FROM bit " +
+            "JOIN variation ON bit.variationId = variation.variationId " +
+            "WHERE exerciseId = :exerciseId " +
+            "GROUP BY totalWeight, bit.variationId ORDER BY timestamp")
+    fun findTops(exerciseId: Int): List<BitEntity>
+
     @Query("SELECT * FROM bit WHERE " +
             "variationId = :variationId AND totalWeight = :weight ORDER BY timestamp DESC")
     fun findAllByExerciseAndWeight(variationId: Int, weight: Int): List<BitEntity>

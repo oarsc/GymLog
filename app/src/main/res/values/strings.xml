@@ -84,6 +84,7 @@
     <string name="text_reps_lowercase">reps</string>
     <string name="text_seconds">Seconds</string>
     <string name="text_set">Set</string>
+    <string name="text_show_all_gyms">Show all gyms data</string>
     <string name="text_show_totals">Show total weight</string>
     <string name="text_subtitle">Subtitle</string>
     <string name="text_superset">Superset</string>
