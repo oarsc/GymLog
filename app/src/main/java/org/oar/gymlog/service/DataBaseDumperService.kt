@@ -50,7 +50,10 @@ class DataBaseDumperService {
         dataStructure.workoutSets = database.workoutSetDao().getAll()
         progressNotify.replaceRange(30, 40, "Weights")
         dataStructure.weights = database.weightDao().getAll()
-        progressNotify.replaceRange(40, 90, "Logs")
+        progressNotify.replaceRange(40, 45, "Weight Periods")
+        dataStructure.weightPeriods = database.weightDao().getAllPeriods()
+        dataStructure.weightPeriodModifications = database.weightDao().getAllModifications()
+        progressNotify.replaceRange(45, 90, "Logs")
         dataStructure.setBits(bits)
 
         progressNotify.replaceRange(90, 100, "Writing file")
@@ -117,8 +120,28 @@ class DataBaseDumperService {
             database.weightDao().clear()
             database.weightDao().insertAll(dataStructure.weights)
 
+            // WEIGHT PERIODS
+            progressNotify.replaceRange(40, 45, "Weight Periods")
+            database.weightDao().clearPeriods()
+            database.weightDao().clearModifications()
+            val weightPeriodsIdMap = dataStructure.weightPeriods
+                .map {
+                    val oldId = it.weightPeriodId
+                    it.weightPeriodId = 0 // create new id on database
+                    oldId
+                }
+                .zip(
+                    database.weightDao().insertAllPeriods(dataStructure.weightPeriods)
+                        .map { it.toInt() }
+                )
+                .toMap()
+
+            dataStructure.weightPeriodModifications
+                .onEach { it.weightPeriodId = weightPeriodsIdMap[it.weightPeriodId]!! }
+                .also { database.weightDao().insertAllModifications(it) }
+
             // BITS
-            progressNotify.replaceRange(40, 90, "Logs")
+            progressNotify.replaceRange(45, 90, "Logs")
             val bits = dataStructure.getBits()
                 .onEach { it.trainingId = trainingsIdMap[it.trainingId]!! }
                 .also {

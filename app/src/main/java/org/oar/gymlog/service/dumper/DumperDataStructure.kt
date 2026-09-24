@@ -10,6 +10,8 @@ import org.oar.gymlog.room.entities.SecondaryExerciseMuscleCrossRef
 import org.oar.gymlog.room.entities.TrainingEntity
 import org.oar.gymlog.room.entities.VariationEntity
 import org.oar.gymlog.room.entities.WeightEntity
+import org.oar.gymlog.room.entities.WeightPeriodEntity
+import org.oar.gymlog.room.entities.WeightPeriodModificationEntity
 import org.oar.gymlog.room.entities.WorkoutEntity
 import org.oar.gymlog.room.entities.WorkoutExerciseEntity
 import org.oar.gymlog.room.entities.WorkoutSetEntity
@@ -18,7 +20,9 @@ import org.oar.gymlog.util.JsonUtils.jsonify
 import org.oar.gymlog.util.JsonUtils.map
 import org.oar.gymlog.util.JsonUtils.objectify
 import org.oar.gymlog.util.JsonUtils.toJsonArray
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.reflect.KClass
 
 class DumperDataStructure(
@@ -87,17 +91,43 @@ class DumperDataStructure(
         }
 
     var weights: List<WeightEntity>
-        get() = jsonObject.getJSONArray(DumperDataStructure::weights.name)
-            .transformToObject(WeightEntity::class)
-        set(value) {
-            jsonObject.put(
-                DumperDataStructure::weights.name,
-                value.transformToJson().apply {
-                    loopAll {
-                        removeFieldIf(BitEntity::kilos.name) { getBoolean(it) }
+        get() {
+            val weightsObj = jsonObject.getJSONObject(DumperDataStructure::weights.name)
+            return weightsObj.keys().asSequence()
+                .map { key ->
+                    val value = weightsObj.getString(key)
+                    val unit = value.last()
+                    WeightEntity().apply {
+                        date = LocalDate.parse(key, localDateFormatter)
+                        weight = value.dropLast(1).toInt()
+                        kilos = unit == 'K'
                     }
                 }
-            )
+                .toList()
+        }
+        set(value) {
+            val weightsObj = JSONObject()
+            value.forEach { entity ->
+                weightsObj.put(
+                    entity.date.format(localDateFormatter),
+                    "${entity.weight}${if (entity.kilos) "K" else "L"}"
+                )
+            }
+            jsonObject.put(DumperDataStructure::weights.name, weightsObj)
+        }
+
+    var weightPeriods: List<WeightPeriodEntity>
+        get() = jsonObject.getJSONArray(DumperDataStructure::weightPeriods.name)
+            .transformToObject(WeightPeriodEntity::class)
+        set(value) {
+            jsonObject.put(DumperDataStructure::weightPeriods.name, value.transformToJson())
+        }
+
+    var weightPeriodModifications: List<WeightPeriodModificationEntity>
+        get() = jsonObject.getJSONArray(DumperDataStructure::weightPeriodModifications.name)
+            .transformToObject(WeightPeriodModificationEntity::class)
+        set(value) {
+            jsonObject.put(DumperDataStructure::weightPeriodModifications.name, value.transformToJson())
         }
 
     private var notes: List<String>
@@ -326,6 +356,8 @@ class DumperDataStructure(
     }
 
     companion object {
+        private val localDateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+
         private const val TRAININGS = "trainings"
         private const val BITS = "bits"
     }
