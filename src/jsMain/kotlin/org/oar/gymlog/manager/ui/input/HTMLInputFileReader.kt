@@ -58,6 +58,8 @@ class HTMLInputFileReader : HTMLBlock<HTMLInputElement>(INPUT, id = ID) {
             .associateBy { it.variationId }
             .mapValues { Pair(output.exercise[it.value.exerciseId]!!, it.value) }
             .toMutableMap()
+        output.workout = output.workouts.associateBy { it.workoutId }.toMutableMap()
+        output.weightPeriod = output.weightPeriods.associateBy { it.weightPeriodId }.toMutableMap()
 
         output.muscles = mutableMapOf(
             1 to Muscle(1, "Chest", 213, "#9675CE"),

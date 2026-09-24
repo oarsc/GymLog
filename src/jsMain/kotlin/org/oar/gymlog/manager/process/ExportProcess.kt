@@ -20,6 +20,7 @@ object ExportProcess {
     private fun Output.sort() {
         exercisesSort()
         variationsSort()
+        weightPeriodsSort()
 
         bits.sortBy { it.timestamp.getTime() }
         trainings.sortBy { it.trainingId }
@@ -31,6 +32,11 @@ object ExportProcess {
             { it.muscleId },
             { it.exerciseId }
         ))
+        workouts.sortBy { it.workoutId }
+        workoutExercises.sortBy { it.workoutExerciseId }
+        workoutSets.sortBy { it.workoutSetId }
+        weights.sortBy { it.date.getTime() }
+        weightPeriodModifications.sortBy { it.weightPeriodModificationId }
     }
 
     private fun Output.exercisesSort() {
@@ -70,14 +76,35 @@ object ExportProcess {
             { it.variationId }
         ))
 
-        bits.forEach {
-            it.variationId = variationsIdMap[it.variationId]!!
-        }
+        bits.forEach { it.variationId = variationsIdMap[it.variationId]!! }
+        workoutExercises.forEach { it.variationId = variationsIdMap[it.variationId]!! }
 
         variation = variations
             .associateBy { it.variationId }
             .mapValues { Pair(exercise[it.value.exerciseId]!!, it.value) }
             .toMutableMap()
+    }
+
+    private fun Output.weightPeriodsSort() {
+        if (weightPeriods.isEmpty()) {
+            weightPeriod = mutableMapOf()
+            return
+        }
+
+        weightPeriods.sortBy { it.weightPeriodId }
+        if (weightPeriods.last().weightPeriodId == weightPeriods.size) {
+            weightPeriod = weightPeriods.associateBy { it.weightPeriodId }.toMutableMap()
+            return
+        }
+
+        val weightPeriodIdMap = weightPeriods.map { it.weightPeriodId }
+            .zip(1..weightPeriods.size)
+            .toMap()
+
+        weightPeriods.forEach { it.weightPeriodId = weightPeriodIdMap[it.weightPeriodId]!! }
+        weightPeriodModifications.forEach { it.weightPeriodId = weightPeriodIdMap[it.weightPeriodId]!! }
+
+        weightPeriod = weightPeriods.associateBy { it.weightPeriodId }.toMutableMap()
     }
 
     private fun Output.removeDefaults() {
