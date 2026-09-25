@@ -101,7 +101,7 @@ class DataBaseDumperService {
             database.variationDao().insertAll(dataStructure.variations)
 
             // TRAININGS
-            progressNotify.replaceRange(20, 30, "Trainings")
+            progressNotify.replaceRange(20, 28, "Trainings")
             val trainings = dataStructure.getTrainings()
             val trainingsIdMap: Map<Int, Int> = trainings
                 .map {
@@ -115,15 +115,43 @@ class DataBaseDumperService {
                 )
                 .toMap()
 
+            // WORKOUTS
+            progressNotify.replaceRange(28, 30, "Workouts")
+            val workoutsIdMap: Map<Int, Int> = dataStructure.workouts
+                .map {
+                    val oldId = it.workoutId
+                    it.workoutId = 0 // create new id on database
+                    oldId
+                }
+                .zip(
+                    database.workoutDao().insertAll(dataStructure.workouts)
+                        .map { it.toInt() }
+                )
+                .toMap()
+
+            val workoutExercisesIdMap: Map<Int, Int> = dataStructure.workoutExercises
+                .map {
+                    val oldId = it.workoutExerciseId
+                    it.workoutExerciseId = 0 // create new id on database
+                    it.workoutId = workoutsIdMap[it.workoutId]!!
+                    oldId
+                }
+                .zip(
+                    database.workoutExerciseDao().insertAll(dataStructure.workoutExercises)
+                        .map { it.toInt() }
+                )
+                .toMap()
+
+            dataStructure.workoutSets
+                .onEach { it.workoutExerciseId = workoutExercisesIdMap[it.workoutExerciseId]!! }
+                .also(database.workoutSetDao()::insertAll)
+
             // WEIGHTS
             progressNotify.replaceRange(30, 40, "Weights")
-            database.weightDao().clear()
             database.weightDao().insertAll(dataStructure.weights)
 
             // WEIGHT PERIODS
             progressNotify.replaceRange(40, 45, "Weight Periods")
-            database.weightDao().clearPeriods()
-            database.weightDao().clearModifications()
             val weightPeriodsIdMap = dataStructure.weightPeriods
                 .map {
                     val oldId = it.weightPeriodId
