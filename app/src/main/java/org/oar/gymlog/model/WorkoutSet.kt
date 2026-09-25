@@ -8,7 +8,6 @@ import org.oar.gymlog.util.extensions.CommonExts.multiplyByHundred
 data class WorkoutSet(
 	var id: Int = 0,
 	var order: Int = 0,
-	var weight: Weight = Weight.INVALID,
 	var reps: Int = 0,
 	var note: String = "",
 	var restTime: Int = -1,
@@ -18,10 +17,6 @@ data class WorkoutSet(
 	constructor(entity: WorkoutSetEntity, workoutExercise: WorkoutExercise): this(
 		id = entity.workoutSetId,
 		order = entity.order,
-		weight = Weight(
-            value = entity.totalWeight.divideByHundred(),
-            internationalSystem = entity.kilos
-		),
 		reps = entity.reps,
 		note = entity.note,
 		restTime = entity.restTime,
@@ -33,8 +28,6 @@ data class WorkoutSet(
 		workoutSetId = id
 		workoutExerciseId = workoutExercise.id
 		order = this@WorkoutSet.order
-		totalWeight = weight.value.multiplyByHundred()
-		kilos = weight.internationalSystem
 		reps = this@WorkoutSet.reps
 		note = this@WorkoutSet.note
 		restTime = this@WorkoutSet.restTime
