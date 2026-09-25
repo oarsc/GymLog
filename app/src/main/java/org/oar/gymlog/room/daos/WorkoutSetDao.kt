@@ -16,4 +16,7 @@ interface WorkoutSetDao {
 
     @Insert
     fun insert(variation: WorkoutSetEntity): Long
+
+    @Insert
+    fun insertAll(workoutSets: List<WorkoutSetEntity>): LongArray
 }

@@ -2,8 +2,6 @@ package org.oar.gymlog.model
 
 import org.oar.gymlog.room.EntityMappable
 import org.oar.gymlog.room.entities.WorkoutSetEntity
-import org.oar.gymlog.util.extensions.CommonExts.divideByHundred
-import org.oar.gymlog.util.extensions.CommonExts.multiplyByHundred
 
 data class WorkoutSet(
 	var id: Int = 0,

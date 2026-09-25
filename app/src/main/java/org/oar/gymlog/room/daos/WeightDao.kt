@@ -32,9 +32,6 @@ interface WeightDao {
     @Delete
     fun delete(weightEntity: WeightEntity)
 
-    @Query("DELETE FROM weight")
-    fun clear()
-
 
     // ## WEIGHT PERIOD ####
 
@@ -62,9 +59,6 @@ interface WeightDao {
     @Delete
     fun deletePeriod(weightPeriodEntity: WeightPeriodEntity)
 
-    @Query("DELETE FROM weight_period")
-    fun clearPeriods()
-
 
     // ## WEIGHT PERIOD MODIFICATION ####
 
@@ -88,7 +82,4 @@ interface WeightDao {
 
     @Delete
     fun deleteModification(weightPeriodModificationEntity: WeightPeriodModificationEntity)
-
-    @Query("DELETE FROM weight_period_modification")
-    fun clearModifications()
 }
