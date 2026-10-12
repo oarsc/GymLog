@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import org.oar.gymlog.room.entities.WeightEntity
 import org.oar.gymlog.room.entities.WeightPeriodEntity
@@ -44,6 +45,7 @@ interface WeightDao {
     @Query("SELECT * FROM weight_period WHERE weightPeriodId = :weightPeriodId")
     fun getPeriod(weightPeriodId: Int): WeightPeriodEntity
 
+    @Transaction
     @Query("SELECT * FROM weight_period WHERE weightPeriodId = :weightPeriodId")
     fun getPeriodWithModifications(weightPeriodId: Int): WeightPeriodEntity.WithModifications
 

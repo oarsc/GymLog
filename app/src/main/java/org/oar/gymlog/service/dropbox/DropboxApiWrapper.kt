@@ -1,7 +1,7 @@
 package org.oar.gymlog.service.dropbox
 
 import android.content.Context
-import android.content.Intent
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
 import com.dropbox.core.DbxException
@@ -129,25 +129,21 @@ class DropboxApiWrapper(
 
     suspend fun uploadFile(localFile: File, remoteFolderPath: String): FileMetadataApiResult =
         withContext(ioDispatcher) {
-            if (localFile != null) {
-                // Note - this is not ensuring the name is a valid dropbox file name
-                val remoteFileName = localFile.name
-                try {
-                    FileInputStream(localFile).use { inputStream ->
-                        val metadata = dropboxClient.files().uploadBuilder(
-                            "$remoteFolderPath/$remoteFileName"
-                        )
-                            .withMode(WriteMode.OVERWRITE)
-                            .uploadAndFinish(inputStream)
-                        FileMetadataApiResult.Success(metadata)
-                    }
-                } catch (e: DbxException) {
-                    FileMetadataApiResult.Error(e)
-                } catch (e: IOException) {
-                    FileMetadataApiResult.Error(e)
+            // Note - this is not ensuring the name is a valid dropbox file name
+            val remoteFileName = localFile.name
+            try {
+                FileInputStream(localFile).use { inputStream ->
+                    val metadata = dropboxClient.files().uploadBuilder(
+                        "$remoteFolderPath/$remoteFileName"
+                    )
+                        .withMode(WriteMode.OVERWRITE)
+                        .uploadAndFinish(inputStream)
+                    FileMetadataApiResult.Success(metadata)
                 }
-            } else {
-                FileMetadataApiResult.Error(Exception("Local File to Upload Not Found"))
+            } catch (e: DbxException) {
+                FileMetadataApiResult.Error(e)
+            } catch (e: IOException) {
+                FileMetadataApiResult.Error(e)
             }
         }
 
@@ -179,9 +175,12 @@ class DropboxApiWrapper(
             }
 
             // Tell android about the file
-            val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-            intent.data = Uri.fromFile(file)
-            applicationContext.sendBroadcast(intent)
+            MediaScannerConnection.scanFile(
+                applicationContext,
+                arrayOf(file.absolutePath),
+                null,
+                null
+            )
             DownloadFileTaskResult.Success(file)
         } catch (e: DbxException) {
             DownloadFileTaskResult.Error(e)

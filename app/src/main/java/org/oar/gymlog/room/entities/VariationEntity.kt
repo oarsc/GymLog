@@ -34,6 +34,7 @@ import org.oar.gymlog.model.WeightSpecification
         Index("lastBarId"),
         Index("variationId"),
         Index("exerciseId"),
+        Index("gymId"),
     ]
 )
 class VariationEntity {

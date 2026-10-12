@@ -5,8 +5,8 @@ import androidx.annotation.StringRes
 import org.oar.gymlog.R
 
 enum class ExerciseType(
-    @DrawableRes val icon: Int,
-    @StringRes val literal: Int,
+    @param:DrawableRes val icon: Int,
+    @param:StringRes val literal: Int,
     val weightModes: List<WeightSpecification>,
 ) {
     NONE(

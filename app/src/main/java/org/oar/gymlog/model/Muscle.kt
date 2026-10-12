@@ -8,10 +8,10 @@ import org.oar.gymlog.room.EntityMappable
 import org.oar.gymlog.room.entities.MuscleEntity
 
 enum class Muscle(
-	@StringRes val text: Int,
-	@StringRes val textShort: Int,
-	@DrawableRes val icon: Int,
-	@ColorRes val color: Int
+	@param:StringRes val text: Int,
+	@param:StringRes val textShort: Int,
+	@param:DrawableRes val icon: Int,
+	@param:ColorRes val color: Int
 ) : EntityMappable<MuscleEntity> {
 	PECTORAL (
 		text = R.string.group_pectoral,

@@ -14,7 +14,7 @@ import java.time.LocalTime
 import java.util.function.Consumer
 
 class SelectTimeDialogFragment(
-    @StringRes private val title: Int = R.string.dialog_title_select_time,
+    @param:StringRes private val title: Int = R.string.dialog_title_select_time,
     private val time: LocalTime,
     private val showSeconds: Boolean = true,
     private val showMillis: Boolean = true,

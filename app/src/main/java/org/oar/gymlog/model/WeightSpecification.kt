@@ -7,8 +7,8 @@ import org.oar.gymlog.util.Constants
 import java.math.BigDecimal
 
 enum class WeightSpecification(
-    @DrawableRes val icon: Int,
-    @StringRes val literal: Int,
+    @param:DrawableRes val icon: Int,
+    @param:StringRes val literal: Int,
     val weightAffectation: BigDecimal = BigDecimal.ONE
 ) {
     TOTAL_WEIGHT(
