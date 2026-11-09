@@ -11,7 +11,7 @@ import org.oar.gymlog.model.Muscle
 import org.oar.gymlog.model.Order
 import org.oar.gymlog.model.Order.Companion.getByCode
 import org.oar.gymlog.model.Variation
-import org.oar.gymlog.ui.common.BindingAppCompatActivity
+import org.oar.gymlog.ui.common.DatabaseAppCompatActivity
 import org.oar.gymlog.ui.common.components.listView.SimpleListView.Companion.cast
 import org.oar.gymlog.ui.common.dialogs.MenuDialogFragment
 import org.oar.gymlog.ui.common.dialogs.TextDialogFragment
@@ -28,15 +28,13 @@ import org.oar.gymlog.util.extensions.PreferencesExts.save
 import org.oar.gymlog.util.extensions.RedirectionExts.goToVariation
 import org.oar.gymlog.util.extensions.model.ExerciseExts.gymVariations
 
-class ExercisesActivity : BindingAppCompatActivity<ActivityExercisesBinding>(ActivityExercisesBinding::inflate) {
+class ExercisesActivity : DatabaseAppCompatActivity<ActivityExercisesBinding>(ActivityExercisesBinding::inflate) {
     private lateinit var muscle: Muscle
     private lateinit var exercises: MutableList<Exercise>
 
     private lateinit var handler: ExercisesListHandler
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onDelayedCreate(savedInstanceState: Bundle?) {
         val muscleId = intent.extras!!.getInt("muscleId")
         muscle = Data.getMuscle(muscleId)
 

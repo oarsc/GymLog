@@ -15,7 +15,7 @@ import org.oar.gymlog.model.GymRelation
 import org.oar.gymlog.model.Muscle
 import org.oar.gymlog.model.Variation
 import org.oar.gymlog.room.Converters
-import org.oar.gymlog.ui.common.BindingAppCompatActivity
+import org.oar.gymlog.ui.common.DatabaseAppCompatActivity
 import org.oar.gymlog.ui.common.activity.ImageSelectorActivity
 import org.oar.gymlog.ui.common.createForm.CreateFormElement
 import org.oar.gymlog.ui.common.createForm.CreateFormElement.Companion.createStringFormElement
@@ -34,7 +34,7 @@ import org.oar.gymlog.util.extensions.model.VariationExts.copy
 import java.io.IOException
 import java.util.regex.Pattern
 
-class CreateExerciseActivity : BindingAppCompatActivity<ActivityCreateBinding>(ActivityCreateBinding::inflate) {
+class CreateExerciseActivity : DatabaseAppCompatActivity<ActivityCreateBinding>(ActivityCreateBinding::inflate) {
 
 	private lateinit var exercise: Exercise
 
@@ -45,9 +45,7 @@ class CreateExerciseActivity : BindingAppCompatActivity<ActivityCreateBinding>(A
 	private lateinit var musclesSecondaryOption: CreateFormElement
 	private val caller: IntentReference by lazy { getIntentCall() }
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-
+	override fun onDelayedCreate(savedInstanceState: Bundle?) {
 		if (caller === IntentReference.EDIT_EXERCISE) {
 			exercise = intent.extras!!.getInt("exerciseId")
 				.let { Data.getExercise(it) }

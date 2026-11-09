@@ -61,6 +61,7 @@ class LoadActivity : BindingAppCompatActivity<ActivityLoadBinding>(ActivityLoadB
             contentResolver.openInputStream(importUri).use { inputStream ->
                 dataBaseDumperService.load(this, inputStream!!, db, progressHandler)
                 Data.exercises.clear()
+                Data.loaded = false
             }
             return true
         } else {

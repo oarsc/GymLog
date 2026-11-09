@@ -9,7 +9,7 @@ import org.oar.gymlog.databinding.ActivityCreateBinding
 import org.oar.gymlog.model.ExerciseType
 import org.oar.gymlog.model.GymRelation
 import org.oar.gymlog.room.Converters
-import org.oar.gymlog.ui.common.BindingAppCompatActivity
+import org.oar.gymlog.ui.common.DatabaseAppCompatActivity
 import org.oar.gymlog.ui.common.createForm.CreateFormElement
 import org.oar.gymlog.ui.common.createForm.CreateFormElement.Companion.createStringFormElement
 import org.oar.gymlog.ui.common.createForm.CreateListHandler
@@ -18,7 +18,7 @@ import org.oar.gymlog.ui.common.dialogs.MenuDialogFragment.Companion.DIALOG_CLOS
 import org.oar.gymlog.util.Constants.IntentReference
 import org.oar.gymlog.util.extensions.MessagingExts.snackbar
 
-class CreateVariationActivity : BindingAppCompatActivity<ActivityCreateBinding>(ActivityCreateBinding::inflate) {
+class CreateVariationActivity : DatabaseAppCompatActivity<ActivityCreateBinding>(ActivityCreateBinding::inflate) {
 
 	private var variationId = 0
 	private var name = ""
@@ -30,9 +30,7 @@ class CreateVariationActivity : BindingAppCompatActivity<ActivityCreateBinding>(
 
 	private val caller: IntentReference by lazy { getIntentCall() }
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-
+	override fun onDelayedCreate(savedInstanceState: Bundle?) {
 		intent.extras!!.apply {
 			if (caller === IntentReference.EDIT_VARIATION) {
 				variationId = getInt("variationId", 0)

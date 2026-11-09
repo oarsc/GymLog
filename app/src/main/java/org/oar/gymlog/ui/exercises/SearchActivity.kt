@@ -11,7 +11,7 @@ import org.oar.gymlog.databinding.ListitemExercisesRowBinding
 import org.oar.gymlog.model.Exercise
 import org.oar.gymlog.model.Muscle
 import org.oar.gymlog.model.Variation
-import org.oar.gymlog.ui.common.BindingAppCompatActivity
+import org.oar.gymlog.ui.common.DatabaseAppCompatActivity
 import org.oar.gymlog.ui.common.components.listView.SimpleListView.Companion.cast
 import org.oar.gymlog.ui.common.dialogs.MenuDialogFragment
 import org.oar.gymlog.ui.common.dialogs.TextDialogFragment
@@ -25,16 +25,11 @@ import org.oar.gymlog.util.extensions.RedirectionExts.goToVariation
 import java.util.Locale
 
 
-class SearchActivity : BindingAppCompatActivity<ActivitySearchBinding>(ActivitySearchBinding::inflate) {
+class SearchActivity : DatabaseAppCompatActivity<ActivitySearchBinding>(ActivitySearchBinding::inflate) {
     private var muscle: Muscle? = null
     private lateinit var exercises: MutableList<Exercise>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+    override fun onDelayedCreate(savedInstanceState: Bundle?) {
         binding.toolbar.apply {
             setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
             setOnMenuItemClickListener(::onOptionsItemSelected)

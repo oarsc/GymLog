@@ -15,6 +15,10 @@ import java.time.LocalDate
 object Data {
 	val STEPS_KG = intArrayOf(50, 100, 125, 200, 250, 500, 1000, 1500, 2000, 2500)
 
+	// Whether the in-memory data has been loaded from the database for this process
+	@Volatile
+	var loaded = false
+
 	val exercises =  mutableListOf<Exercise>()
 	val workouts =  mutableListOf<Workout>()
 	val muscles: List<Muscle> = Muscle.entries

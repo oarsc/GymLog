@@ -92,6 +92,11 @@ object Init {
         }
     }
 
+    fun Context.ensureDataLoaded(db: AppDatabase) {
+        if (Data.loaded) return
+        loadData(db)
+    }
+
     suspend fun AppCompatActivity.firstLoad(filePickerHandler: FilePickerHandler, onEnd: () -> Unit) {
         val import = showConfirmDialogSuspend()
 
@@ -263,6 +268,8 @@ object Init {
         if (gymId > 0) {
             Data.gym = Data.getGym(gymId)
         }
+
+        Data.loaded = true
     }
 
     class FilePickerHandler(activity: AppCompatActivity) {

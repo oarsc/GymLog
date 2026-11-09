@@ -1,10 +1,12 @@
 package org.oar.gymlog.ui.common
 
 import android.content.Intent
+import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import org.oar.gymlog.util.Constants.IntentReference
+import org.oar.gymlog.util.Data
 
 abstract class ResultLauncherAppCompatActivity: AppCompatActivity() {
 
@@ -13,6 +15,14 @@ abstract class ResultLauncherAppCompatActivity: AppCompatActivity() {
     }
 
     private var intentResultId = IntentReference.NONE
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        // If the process was killed, the in-memory data is gone and restored
+        // fragments or views may depend on it, so they are not restored
+        super.onCreate(
+            savedInstanceState?.takeUnless { Data.exercises.isEmpty() }
+        )
+    }
 
     private val activityResultLauncher = registerForActivityResult(StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {

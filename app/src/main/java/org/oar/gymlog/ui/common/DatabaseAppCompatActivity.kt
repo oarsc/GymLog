@@ -3,8 +3,8 @@ package org.oar.gymlog.ui.common
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.viewbinding.ViewBinding
+import org.oar.gymlog.Init.ensureDataLoaded
 import org.oar.gymlog.room.AppDatabase
-import org.oar.gymlog.util.extensions.DatabaseExts.dbLooper
 import org.oar.gymlog.util.extensions.DatabaseExts.dbThread
 import org.oar.gymlog.util.extensions.MessagingExts.toast
 
@@ -23,6 +23,7 @@ abstract class DatabaseAppCompatActivity<T: ViewBinding>(
 
         preLoad(savedInstanceState)
         dbThread { db ->
+            ensureDataLoaded(db)
             val result = onLoad(savedInstanceState, db)
             if (result == CONTINUE) {
                 runOnUiThread {
@@ -38,12 +39,7 @@ abstract class DatabaseAppCompatActivity<T: ViewBinding>(
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        dbLooper.quitSafely()
-    }
-
     protected open fun preLoad(savedInstanceState: Bundle?) {}
-    protected abstract fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int
+    protected open fun onLoad(savedInstanceState: Bundle?, db: AppDatabase): Int = CONTINUE
     protected abstract fun onDelayedCreate(savedInstanceState: Bundle?)
 }

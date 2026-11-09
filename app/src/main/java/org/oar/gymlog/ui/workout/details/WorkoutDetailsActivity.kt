@@ -6,18 +6,16 @@ import org.oar.gymlog.databinding.ListitemWorkoutDetailsRowBinding
 import org.oar.gymlog.model.Workout
 import org.oar.gymlog.model.WorkoutExercise
 import org.oar.gymlog.model.WorkoutSet
-import org.oar.gymlog.ui.common.BindingAppCompatActivity
+import org.oar.gymlog.ui.common.DatabaseAppCompatActivity
 import org.oar.gymlog.ui.common.components.listView.SimpleListView.Companion.cast
 import org.oar.gymlog.util.Data
 import org.oar.gymlog.util.extensions.RedirectionExts.goToVariation
 
-class WorkoutDetailsActivity : BindingAppCompatActivity<ActivityWorkoutDetailsBinding>(ActivityWorkoutDetailsBinding::inflate) {
+class WorkoutDetailsActivity : DatabaseAppCompatActivity<ActivityWorkoutDetailsBinding>(ActivityWorkoutDetailsBinding::inflate) {
     private lateinit var workout: Workout
     private lateinit var handler: WorkoutDetailsListHandler
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onDelayedCreate(savedInstanceState: Bundle?) {
         workout = intent.extras!!.getInt("workoutId").let(Data::getWorkout)
 
         binding.toolbar.apply {
