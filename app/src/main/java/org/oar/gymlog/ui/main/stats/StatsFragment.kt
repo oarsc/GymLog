@@ -17,6 +17,7 @@ import org.oar.gymlog.databinding.FragmentStatsBinding
 import org.oar.gymlog.model.Weight
 import org.oar.gymlog.room.entities.WeightEntity
 import org.oar.gymlog.service.PeriodCalculationService
+import org.oar.gymlog.service.statCalculations.WeightCalculationResult
 import org.oar.gymlog.ui.common.ResultLauncherFragment
 import org.oar.gymlog.ui.common.components.listView.MultipleListView.Companion.cast
 import org.oar.gymlog.ui.common.dialogs.EditTextDialogFragment
@@ -49,7 +50,7 @@ class StatsFragment : ResultLauncherFragment() {
 	private var today = LocalDate.now()
 	private var unitLabel = ""
 	private var todayWeightValue = "0.00".toBigDecimal()
-	private var weightCalculationResult = Data.weightPeriod?.let(::PeriodCalculationService)?.execute()
+	private var weightCalculationResult: WeightCalculationResult? = null
 	private val rows = mutableListOf<IWeightRow>()
 	private var chartLoaded = false
 
@@ -142,6 +143,10 @@ class StatsFragment : ResultLauncherFragment() {
 		.root
 
 	private fun loadData() {
+		// Derive the current period at render time: the in-memory data may have
+		// been (re)loaded after this fragment was created
+		weightCalculationResult = Data.weightPeriod?.let(::PeriodCalculationService)?.execute()
+
 		binding.apply {
 			binding.toolbar.menu.findItem(R.id.detailsButton).isVisible = weightCalculationResult != null
 
@@ -236,6 +241,8 @@ class StatsFragment : ResultLauncherFragment() {
 	}
 
 	private fun fillRows() {
+		rows.clear()
+
 		val (minDate, maxDate) = weightCalculationResult
 			?.let { it.days.keys.min() to it.days.keys.max() }
 			?: run { today.minusYears(1) to today.plusDays(7) }
@@ -389,11 +396,9 @@ class StatsFragment : ResultLauncherFragment() {
 			IntentReference.CREATE_WEIGHT_PERIOD_DETAILS,
 			IntentReference.WEIGHT_PERIOD_DETAILS -> {
 				if (data.getBooleanExtra("refresh", false)) {
-					rows.clear()
 					dbThread { db ->
 						db.updateTodayWeightPeriod()
-						weightCalculationResult = Data.weightPeriod?.let(::PeriodCalculationService)?.execute()
-						runOnUiThread { loadData() }
+						runOnUiThread { if (view != null) loadData() }
 					}
 				}
 			}
@@ -413,7 +418,11 @@ class StatsFragment : ResultLauncherFragment() {
 		if (today != this.today) {
 			this.today = today
 			this.todayWeightValue = "0.00".toBigDecimal()
-			loadData()
+
+			dbThread { db ->
+				db.updateTodayWeightPeriod()
+				runOnUiThread { if (view != null) loadData() }
+			}
 		}
 	}
 }
