@@ -198,7 +198,6 @@
     <string name="validation_cannot_clone">Cannot clone log. There isn\'t enough time.</string>
     <string name="validation_dates_incorrect">The ending date should come after the starting date.</string>
     <string name="validation_dates_overlap">The range of dates defined is affecting another period.</string>
-    <string name="validation_expected_muscle_gain_zero">The expected muscle gain must be higher than 0.</string>
     <string name="validation_gains_per_week_zero">Gains per week must be higher than 0.</string>
     <string name="validation_image">Please, select an image</string>
     <string name="validation_initial_weight_zero">Starting weight must be higher than 0.</string>

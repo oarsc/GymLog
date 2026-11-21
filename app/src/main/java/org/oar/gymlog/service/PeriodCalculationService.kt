@@ -5,6 +5,7 @@ import org.oar.gymlog.model.WeightPeriodModification
 import org.oar.gymlog.service.statCalculations.DayInfo
 import org.oar.gymlog.service.statCalculations.WeightCalculationResult
 import org.oar.gymlog.util.Constants
+import org.oar.gymlog.util.Constants.ONE_THOUSAND
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
@@ -12,9 +13,9 @@ import java.time.temporal.ChronoUnit
 
 class PeriodCalculationService(val weightPeriod: WeightPeriod) {
     private val totalDays = ChronoUnit.DAYS.between(weightPeriod.initialDate, weightPeriod.endDate).toInt()
-    private val gainKgPerDay = weightPeriod.gainGramsPerWeek.toBigDecimal().bigScaled() / SEVEN / Constants.ONE_THOUSAND
-    private val lossKgPerDay = weightPeriod.lossGramsPerWeek.toBigDecimal().bigScaled() / SEVEN / Constants.ONE_THOUSAND
-    private val toleranceKg = weightPeriod.toleranceGrams.toBigDecimal() / Constants.ONE_THOUSAND
+    private val gainKgPerDay = weightPeriod.gainGramsPerWeek.toBigDecimal().bigScaled() / SEVEN / ONE_THOUSAND
+    private val lossKgPerDay = weightPeriod.lossGramsPerWeek.toBigDecimal().bigScaled() / SEVEN / ONE_THOUSAND
+    private val toleranceKg = weightPeriod.toleranceGrams.toBigDecimal().divide(ONE_THOUSAND)
 
     fun execute(): WeightCalculationResult {
         val days = mutableMapOf<LocalDate, DayValue>()
@@ -76,7 +77,7 @@ class PeriodCalculationService(val weightPeriod: WeightPeriod) {
 
     private fun MutableMap<LocalDate, DayValue>.fillModificationDays(modification: WeightPeriodModification): Int {
         val bulking = modification.gramsPerWeek > 0
-        val kgPerDay = modification.gramsPerWeek.toBigDecimal().bigScaled() / SEVEN / Constants.ONE_THOUSAND
+        val kgPerDay = modification.gramsPerWeek.toBigDecimal().bigScaled() / SEVEN / ONE_THOUSAND
 
         var currentDate: LocalDate
         var weight: BigDecimal

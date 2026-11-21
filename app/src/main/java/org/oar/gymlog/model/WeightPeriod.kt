@@ -22,10 +22,10 @@ class WeightPeriod(
         id = entity.weightPeriodId,
         initialDate = entity.start,
         endDate = entity.end,
-        initialWeight = entity.initialWeight.toBigDecimal() / ONE_HUNDRED,
+        initialWeight = entity.initialWeight.toBigDecimal().divide(ONE_HUNDRED),
         gainGramsPerWeek = entity.gainGramsPerWeek,
         lossGramsPerWeek = entity.lossGramsPerWeek,
-        expectedMuscleGain = entity.expectedMuscleGain.toBigDecimal() / ONE_THOUSAND,
+        expectedMuscleGain = entity.expectedMuscleGain.toBigDecimal().divide(ONE_THOUSAND),
         toleranceGrams = entity.toleranceGrams,
     )
 

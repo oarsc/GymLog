@@ -91,7 +91,8 @@ class CreateWeightPeriodActivity : DatabaseAppCompatActivity<ActivityCreateBindi
 
 		createKgFormElement(
 			title = R.string.form_expected_muscle_gain,
-			property = weightPeriod::expectedMuscleGain
+			property = weightPeriod::expectedMuscleGain,
+			signed = true
 		).also(::add)
 
 		createGramFormElement(
@@ -111,7 +112,6 @@ class CreateWeightPeriodActivity : DatabaseAppCompatActivity<ActivityCreateBindi
             weightPeriod.initialWeight <= ZERO -> snackbar(R.string.validation_initial_weight_zero)
             weightPeriod.gainGramsPerWeek <= 0 -> snackbar(R.string.validation_gains_per_week_zero)
             weightPeriod.lossGramsPerWeek <= 0 -> snackbar(R.string.validation_loss_per_week_zero)
-            weightPeriod.expectedMuscleGain <= ZERO -> snackbar(R.string.validation_expected_muscle_gain_zero)
             weightPeriod.initialDate >= weightPeriod.endDate -> snackbar(R.string.validation_dates_incorrect)
             else -> {
                 dbThread { db ->
@@ -191,7 +191,7 @@ class CreateWeightPeriodActivity : DatabaseAppCompatActivity<ActivityCreateBindi
 		return form
 	}
 
-	private fun createKgFormElement(title: Int, property: KMutableProperty0<BigDecimal>): CreateFormElement {
+	private fun createKgFormElement(title: Int, property: KMutableProperty0<BigDecimal>, signed: Boolean = false): CreateFormElement {
 		lateinit var form: CreateFormElement
 		form = CreateFormElement(
             title = title,
@@ -200,7 +200,8 @@ class CreateWeightPeriodActivity : DatabaseAppCompatActivity<ActivityCreateBindi
 				EditTextDialogFragment(
 					title = title,
 					initialValue = property.get().setScale(2, HALF_UP).toPlainString(),
-					inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL,
+					inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or
+							if (signed) InputType.TYPE_NUMBER_FLAG_SIGNED else 0,
 					confirm = { result ->
 						val value = result.safeBigDecimal().setScale(2, HALF_UP)
 						property.set(value)
