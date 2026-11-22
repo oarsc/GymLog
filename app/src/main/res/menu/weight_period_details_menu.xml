@@ -8,4 +8,10 @@
         android:title="@string/form_edit_weight_period"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/removeButton"
+        android:icon="@drawable/ic_remove_24dp"
+        android:title="@string/dialog_remove_weight_period"
+        app:showAsAction="never"/>
+
 </menu>

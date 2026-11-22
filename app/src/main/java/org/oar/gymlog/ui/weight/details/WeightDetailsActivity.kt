@@ -15,11 +15,13 @@ import org.oar.gymlog.ui.common.DatabaseAppCompatActivity
 import org.oar.gymlog.ui.common.components.listView.MultipleListView
 import org.oar.gymlog.ui.common.components.listView.MultipleListView.Companion.cast
 import org.oar.gymlog.ui.common.dialogs.MenuDialogFragment
+import org.oar.gymlog.ui.common.dialogs.TextDialogFragment
 import org.oar.gymlog.ui.weight.create.CreateWeightPeriodActivity
 import org.oar.gymlog.ui.weight.createModification.CreateWeightPeriodModificationActivity
 import org.oar.gymlog.ui.weight.details.rows.IWeightPeriodModificationRow
 import org.oar.gymlog.ui.weight.details.rows.WeightPeriodModificationCreateRow
 import org.oar.gymlog.ui.weight.details.rows.WeightPeriodModificationRow
+import org.oar.gymlog.ui.weight.list.WeightPeriodsActivity
 import org.oar.gymlog.util.Constants.IntentReference
 import org.oar.gymlog.util.DateUtils.getDateString
 import org.oar.gymlog.util.extensions.ComponentsExts.mustRefreshParent
@@ -123,6 +125,27 @@ class WeightDetailsActivity : DatabaseAppCompatActivity<ActivityWeightPeriodDeta
             val intent = Intent(this, CreateWeightPeriodActivity::class.java)
             intent.putExtra("weightPeriodId", weightPeriod.id)
             startActivityForResult(intent, IntentReference.EDIT_WEIGHT_PERIOD_DETAILS)
+            true
+        }
+        R.id.removeButton -> {
+            TextDialogFragment(
+                R.string.dialog_confirm_remove_weight_period_title,
+                R.string.dialog_confirm_remove_weight_period_text
+            ) { confirmed ->
+                if (confirmed) {
+                    dbThread { db ->
+                        db.weightDao().deletePeriod(weightPeriod.toEntity())
+                        runOnUiThread {
+                            mustRefreshParent()
+                            Intent(this, WeightPeriodsActivity::class.java).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                startActivity(this)
+                            }
+                            finish()
+                        }
+                    }
+                }
+            }.show(supportFragmentManager, null)
             true
         }
         else -> false

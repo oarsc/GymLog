@@ -99,9 +99,9 @@ class PeriodStatsActivity : DatabaseAppCompatActivity<ActivityPeriodStatsBinding
             header.root.visibility = View.VISIBLE
             val weightPeriod = weightCalculationResult.weightPeriod
             header.root.setOnClickListener {
-                val intent = Intent(this@PeriodStatsActivity, WeightPeriodsActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivityForResult(intent, IntentReference.LIST_WEIGHT_PERIOD_DETAILS)
+                val intent = Intent(this@PeriodStatsActivity, WeightDetailsActivity::class.java)
+                intent.putExtra("weightId", weightPeriod.id)
+                startActivityForResult(intent, IntentReference.WEIGHT_PERIOD_DETAILS)
             }
             header.from.text = weightPeriod.initialDate.getDateString()
             header.to.text = weightPeriod.endDate.getDateString()
@@ -203,27 +203,10 @@ class PeriodStatsActivity : DatabaseAppCompatActivity<ActivityPeriodStatsBinding
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.detailsButton -> {
-            val intent = Intent(this, WeightDetailsActivity::class.java)
-            intent.putExtra("weightId", weightCalculationResult.weightPeriod.id)
-            startActivityForResult(intent, IntentReference.WEIGHT_PERIOD_DETAILS)
-            true
-        }
-        R.id.removeButton -> {
-            TextDialogFragment(
-                R.string.dialog_confirm_remove_weight_period_title,
-                R.string.dialog_confirm_remove_weight_period_text
-            ) { confirmed ->
-                if (confirmed) {
-                    dbThread { db ->
-                        db.weightDao().deletePeriod(weightPeriod.toEntity())
-                        runOnUiThread {
-                            mustRefreshParent()
-                            finish()
-                        }
-                    }
-                }
-            }.show(supportFragmentManager, null)
+        R.id.listButton -> {
+            val intent = Intent(this, WeightPeriodsActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivityForResult(intent, IntentReference.LIST_WEIGHT_PERIOD_DETAILS)
             true
         }
         else -> false

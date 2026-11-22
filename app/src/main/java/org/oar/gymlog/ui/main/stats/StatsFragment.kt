@@ -81,17 +81,6 @@ class StatsFragment : ResultLauncherFragment() {
 						startActivityForResult(intent, IntentReference.LIST_WEIGHT_PERIOD_DETAILS)
 						return@setOnMenuItemClickListener true
 					}
-					R.id.detailsButton -> {
-						val intent = Intent(requireContext(), WeightDetailsActivity::class.java)
-						intent.putExtra("weightId", weightCalculationResult!!.weightPeriod.id)
-						startActivityForResult(intent, IntentReference.WEIGHT_PERIOD_DETAILS)
-						return@setOnMenuItemClickListener true
-					}
-					R.id.createButton -> {
-						val intent = Intent(context, CreateWeightPeriodActivity::class.java)
-						startActivityForResult(intent, IntentReference.CREATE_WEIGHT_PERIOD_DETAILS)
-						return@setOnMenuItemClickListener true
-					}
 				}
 				false
 			}
@@ -148,16 +137,15 @@ class StatsFragment : ResultLauncherFragment() {
 		weightCalculationResult = Data.weightPeriod?.let(::PeriodCalculationService)?.execute()
 
 		binding.apply {
-			binding.toolbar.menu.findItem(R.id.detailsButton).isVisible = weightCalculationResult != null
-
 			if (weightCalculationResult == null) {
 				header.root.visibility = View.GONE
 			} else {
 				header.root.visibility = View.VISIBLE
 				val weightPeriod = weightCalculationResult!!.weightPeriod
 				header.root.setOnClickListener {
-					val intent = Intent(context, WeightPeriodsActivity::class.java)
-					startActivityForResult(intent, IntentReference.LIST_WEIGHT_PERIOD_DETAILS)
+					val intent = Intent(requireContext(), WeightDetailsActivity::class.java)
+					intent.putExtra("weightId", weightPeriod.id)
+					startActivityForResult(intent, IntentReference.WEIGHT_PERIOD_DETAILS)
 				}
 				header.from.text = weightPeriod.initialDate.getDateString()
 				header.to.text = weightPeriod.endDate.getDateString()
@@ -393,7 +381,6 @@ class StatsFragment : ResultLauncherFragment() {
 	override fun onActivityResult(intentReference: IntentReference, data: Intent) {
 		when(intentReference) {
 			IntentReference.LIST_WEIGHT_PERIOD_DETAILS,
-			IntentReference.CREATE_WEIGHT_PERIOD_DETAILS,
 			IntentReference.WEIGHT_PERIOD_DETAILS -> {
 				if (data.getBooleanExtra("refresh", false)) {
 					dbThread { db ->
